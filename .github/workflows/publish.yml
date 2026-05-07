@@ -1,5 +1,5 @@
 # GitHub Pages workflow for Quarto
-name: Publish Course
+name: Publish to GitHub Pages
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -28,8 +28,8 @@ jobs:
       - name: Render to HTML
         run: quarto render --to html
 
-      - name: Copy PDF
-        run: cp _book/Fundamentos-de-Ciberseguridad.pdf _site/
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
