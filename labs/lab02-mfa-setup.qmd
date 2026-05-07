@@ -1,0 +1,358 @@
+---
+title: "Lab 2: Configuracion MFA Phishing-Resistant"
+module: "lab-02"
+type: "lab"
+description: "Practica de configuracion de autenticacion multifactor con FIDO2 y Passkeys"
+---
+
+# Lab 2: Configuracion MFA Phishing-Resistant
+
+## Objetivo del Laboratorio
+
+En este laboratorio, vas a **configurar autenticacion multifactor** usando protocolos phishing-resistant (FIDO2/WebAuthn). Este ejercicio te permitira:
+
+- Configurar un servidor de autenticacion
+- Implementar MFA con TOTP y FIDO2
+- Probar resistencia al phishing
+- Diseñar politicas de acceso condicional
+
+::: {.callout-warning}
+## ADVERTENCIA DE SEGURIDAD
+
+- NO executar comandos en sistemas de produccion
+- Usar exclusivamente entornos aislados (VM, Docker)
+- Los comandos deben probarse primero en desarrollo
+- Este laboratorio es educativo - NO usar para sistemas reales
+:::
+
+## Duracion
+
+- Tiempo estimado: 90 minutos
+- Tipo: Individual
+- IMPORTANTE: DEBES teclear todos los comandos manualmente
+
+---
+
+## Paso 1: Preparar el Entorno
+
+### 1.1 Crear directorio de trabajo
+
+```{.bash filename="terminal"}
+# Crear directorio para el lab
+mkdir -p ~/cybersec-lab/mfa-setup
+cd ~/cybersec-lab/mfa-setup
+
+# Inicializar Git
+git init
+
+# Crear estructura de directorios
+mkdir -p config scripts test-keys
+```
+
+### 1.2 Instalar dependencias (Ubuntu 22.04+)
+
+```{.bash filename="terminal"}
+# Actualizar paquetes
+sudo apt update && sudo apt upgrade -y
+
+# Instalar dependencias para MFA
+sudo apt install -y \
+    libpam-oath \
+    oathtool \
+    wget \
+    chromium-browser \
+    opensc
+
+# Verificar instalacion
+which oathtool
+which opensc-tool
+```
+
+---
+
+## Paso 2: Configurar TOTP (MFA Basado en Tiempo)
+
+### 2.1 Generar secreto TOTP
+
+```{.bash filename="terminal"}
+# Generar secreto TOTP
+oathtool --totp -s 30 -w 6 --random > totp-secret.txt
+cat totp-secret.txt
+
+# Generar URL para configuracion (para Google Auth, Authy, etc.)
+# NOTA: Este es un ejemplo - NO usar en produccion
+echo "otpauth://totp/Ciberseguridad:estudiante@ejemplo.com?secret=BASE32SECRET&issuer=Ciberseguridad"
+```
+
+### 2.2 Crear script de verificacion TOTP
+
+```{.bash filename="terminal"}
+cat > scripts/verificar-totp.sh << 'EOF'
+#!/bin/bash
+
+# Verificar codigo TOTP
+echo "=== Verificador TOTP ==="
+echo "Ingresa el codigo de 6 digitos de tu app de autenticacion:"
+read -r codigo
+
+# Validar que sea numerico y de 6 digitos
+if [[ ! "$codigo" =~ ^[0-9]{6}$ ]]; then
+    echo "ERROR: El codigo debe tener exactamente 6 digitos numericos"
+    exit 1
+fi
+
+echo "Codigo capturado: $codigo"
+echo "Verificando..."
+
+# En un escenario real, verificarias contra el servidor
+#Aqui solo Validamos el formato
+echo "Formato valido"
+EOF
+
+chmod +x scripts/verificar-totp.sh
+```
+
+---
+
+## Paso 3: Configurar FIDO2/WebAuthn (Simulado)
+
+### 3.1 Estructura de archivos de configuracion FIDO2
+
+```{.bash filename="terminal"}
+# Crear configuracion de relying party (RP)
+cat > config/fido2 rp-config.json << 'EOF'
+{
+  "rp": {
+    "name": "Ciberseguridad Lab",
+    "id": "lab.ejemplo.com"
+  },
+  "user": {
+    "displayName": "Estudiante",
+    "id": "ESTUDIANTE001"
+  },
+  "pubKeyCredParams": [
+    {
+      "type": "public-key",
+      "alg": -7 // ES256
+    },
+    {
+      "type": "public-key", 
+      "alg": -257 // RS256
+    }
+  ],
+  "timeout": 60000,
+  "attestation": "discouraged",
+  "excludeCredentials": [],
+  "authenticatorSelection": {
+    "authenticatorAttachment": "platform",
+    "requireResidentKey": false,
+    "userVerification": "preferred"
+  }
+}
+EOF
+```
+
+### 3.2 Crear script de registro (simulado)
+
+```{.bash filename="terminal"}
+cat > scripts/fido2-register.sh << 'EOF'
+#!/bin/bash
+
+echo "=== Registro FIDO2 (Simulado) ==="
+echo "En un entorno real, esto crearia un key pair"
+echo "El dispositivo de seguridad (security key) generaria"
+echo "un par de claves:"
+echo ""
+echo "  - Private Key: almaeen el dispositivo (nunca sale)"
+echo "  - Public Key: enviada al servidor"
+echo ""
+echo "En este lab simulado, creamos las claves:"
+openssl ecparam -genkey -name prime256v1 -out test-keys/server-key.pem
+openssl ecparam -genkey -name prime256v1 -out test-keys/authenticator-key.pem
+
+echo "Claves creadas en test-keys/"
+ls -la test-keys/
+EOF
+
+chmod +x scripts/fido2-register.sh
+```
+
+---
+
+## Paso 4: Configurar Politicas de Acceso Condicional
+
+### 4.1 Crear politica de MFA
+
+```{.bash filename="terminal"}
+cat > config/politica-mfa.json << 'EOF'
+{
+  "policy_name": "MFA_Required_High_Risk",
+  "description": "Politica que requiere MFA para accesos de alto riesgo",
+  "rules": [
+    {
+      "condition": {
+        "authentication_factor": "PASSWORD_ONLY"
+      },
+      "action": "REQUIRE_MFA"
+    },
+    {
+      "condition": {
+        "authentication_factor": "TOTP"
+      },
+      "action": "ALLOW"
+    },
+    {
+      "condition": {
+        "authentication_factor": "FIDO2"
+      },
+      "action": "ALLOW"
+    },
+    {
+      "condition": {
+        "ip_address": "INTERNAL_NETWORK"
+      },
+      "action": "SKIP_MFA"
+    }
+  ]
+}
+EOF
+
+echo "Politica de MFA creada"
+cat config/politica-mfa.json
+```
+
+### 4.2 Script de evaluacion de politica
+
+```{.bash filename="terminal"}
+cat > scripts/verificar-politica.sh << 'EOF'
+#!/bin/bash
+
+echo "=== Evaluador de Politica de Acceso ==="
+echo ""
+echo "Selecciona el metodo de autenticacion:"
+echo "1) Solo contrasena"
+echo "2) TOTP (codigo temporal)"
+echo "3) FIDO2 (security key)"
+read -r metodo
+
+case $metodo in
+  1)
+    echo "ACCION: requerir MFA adicional"
+    echo "Razon: autenticacion con solo contrasena no es suficuente"
+    ;;
+  2)
+    echo "ACCION: permitir acceso"
+    echo "Razon: TOTP proporciona segundo factor"
+    ;;
+  3)
+    echo "ACCION: permitir acceso"
+    echo "Razon: FIDO2 es phishing-resistant"
+    ;;
+  *)
+    echo "Opcion invalida"
+    ;;
+esac
+EOF
+
+chmod +x scripts/verificar-politica.sh
+```
+
+---
+
+## Paso 5: Testing de Resistencia al Phishing
+
+### 5.1 Escenario de prueba
+
+```{.bash filename="terminal"}
+cat > test-keys/phishing-test.sh << 'EOF'
+#!/bin/bash
+
+echo "=== Prueba de Resistencia al Phishing ==="
+echo ""
+echo "ESCENARIO: Recibes un email que dice"
+echo "'Tu cuenta fue comprometida. Haz click aqui para verificar.'"
+echo ""
+echo "QUE DEBERIAS HACER:"
+echo "1) NO hacer click en el enlace"
+echo "2) Verificar la URL manualmente"
+echo "3) Acceder por tu cuenta al sitio oficial"
+echo "4) Reportar el email como phishing"
+echo ""
+echo "Con MFA tradicional (SMS/TOTP):"
+echo "- Un atacante podria interceptar el codigo"
+echo "- Phishing convence al usuario de revelar el codigo"
+echo ""
+echo "Con FIDO2/Phishing-resistant MFA:"
+echo "- El atacante NO tiene la security key"
+echo "- La clave privada nunca sale del dispositivo"
+echo "- El sitio de phishing recibe un challenge diferente"
+echo ""
+echo "=== RESULTADO: FIDO2 protege contra phishing ==="
+EOF
+
+chmod +x test-keys/phishing-test.sh
+```
+
+---
+
+## Desafio Final: Completar la Configuracion
+
+### Objetivo
+
+ Configura un sistema MFA completo con:
+
+1. Generar secreto TOTP
+2. Crear configuracion FIDO2
+3. Definir politica de acceso condicional
+4. Probar resistencia al phishing
+
+### Entregables
+
+1. Archivo `totp-secret.txt` con secreto generado
+2. Archivo `config/fido2-rp-config.json` completo
+3. Archivo `config/politica-mfa.json` con al menos 3 reglas
+4. Ejecucion de `test-keys/phishing-test.sh`
+
+### Criterios de Evaluacion
+
+| Criterio | Puntos |
+|---------|--------|
+| Completitud (todos los archivos) | 30 pts |
+| Configuracion correcta JSON | 30 pts |
+| Politica de MFA logica | 25 pts |
+| Comandos ejecutados | 15 pts |
+
+---
+
+## Comandos Clave del Lab
+
+```{.bash filename="resumen"}
+# Preparacion
+mkdir -p ~/cybersec-lab/mfa-setup
+cd ~/cybersec-lab/mfa-setup
+
+# TOTP
+oathtool --totp -s 30 -w 6 --random
+
+# FIDO2 keys
+openssl ecparam -genkey -name prime256v1 -out test-keys/key.pem
+
+# Testing
+./test-keys/phishing-test.sh
+```
+
+---
+
+## Recursos Adicionales
+
+- [FIDO2 Specification](https://fidoalliance.org/specs/fido2/)
+- [WebAuthn Guide](https://webauthn.guide/)
+- [NIST SP 800-63B](https://pages.nist.gov/800-63-3/sp800-63b.html)
+
+---
+
+::: {.callout-tip}
+Duracion: 90 minutos — NO copies/pegues los comandos — escribelos manualmente
+:::
+
+*Lab 2/7 del curso Fundamentos de Ciberseguridad*

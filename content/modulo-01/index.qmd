@@ -1,0 +1,198 @@
+---
+title: "Módulo 1: Fundamentos y Marco NIST CSF 2.0"
+module: "modulo-01"
+type: "content"
+description: "Introducción al NIST Cybersecurity Framework 2.0 - Los 6 pilares de la ciberseguridad"
+---
+
+# Módulo 1: Fundamentos y Marco NIST CSF 2.0
+
+## 🎯 Objetivos de Aprendizaje
+
+Al finalizar este módulo, serás capaz de:
+
+- 🏛️ Comprender los **6 pilares** del NIST CSF 2.0
+- 📊 Mapear controles de seguridad a **funciones del framework**
+- 🔍 Realizar **autoevaluación** de madurez organizacional
+- 📋 Interpretar **perfiles de riesgo** personalizados
+
+---
+
+## 📖 Contenido
+
+### 1.1 Evolución del NIST CSF
+
+```
+NIST CSF 1.1 (2018)          NIST CSF 2.0 (2024)
+├─ Identify             ───► ├─ Govern (NUEVO)
+├─ Protect                ├─ Identify
+├─ Detect                ├─ Protect
+├─ Respond               ├─ Detect
+├─ Recover               ├─ Respond
+└─ Recover               └─ Recover
+```
+
+**Cambios clave en 2.0**:
+
+| Aspecto | Cambio |
+|--------|-------|
+| Govern | Añadido como función principal |
+| Perfiles | Formalización de perfiles |
+| Medición | Métricas estandarizadas |
+| Implementación | Guías sectoriales |
+
+### 1.2 Las Seis Funciones del NIST CSF 2.0
+
+#### 🔹 GOVERN (Gobernanza)
+
+- 📋 Estrategia de seguridad
+- 📝 Políticas y procedimientos
+- ⚖️ Cumplimiento normativo
+- 👥 Roles y responsabilidades
+
+**Categorías GOV**:
+
+- GOV01: Organización establecida
+- GOV02: Situación organizacional
+- GOV03: Estrategia de riesgo
+- GOV04: Gestión de riesgo de terceros
+
+#### 🔹 IDENTIFY (Identificación)
+
+- 🏢 Activos digitales
+- 👤 Identidades
+- 🖥️ Infraestructura
+
+**Categorías ID**:
+
+- ID.AM: Gestión de activos
+- ID.IM: Gestión de identidad
+
+#### 🔹 PROTECT (Protección)
+
+- 🛡️ Controles de acceso
+- 🔐 Cifrado de datos
+- 🔒 Políticas de seguridad
+- 📴 Protección de usuarios
+
+**Categorías PR**:
+
+- PR.AA: Gestión de identidad
+- PR.DS: Seguridad de datos
+- PR.IP: Tecnología de protección
+- PR.MA: Mantenimiento
+- PR.PS: Protección de usuarios
+
+#### 🔹 DETECT (Detección)
+
+- 🔍 Monitoreo continuo
+- 📡 Detección de anomalías
+- 📊 Logging centralizado
+
+**Categorías DE**:
+
+- DE.AE: Eventos anómalos
+- DE.CM: Gestión de continuidad
+- DE.DP: Procesos de detección
+
+#### 🔹 RESPOND (Respuesta)
+
+- 🚨 Plan de respuesta
+- 📞 Comunicación
+- 🧹 Análisis causa raíz
+- 📝 Lecciones aprendidas
+
+**Categorías RS**:
+
+- RS.MI: Gestión de incidentes
+- RS.AN: Análisis
+- RS.CO: Comunicación
+- RS.MI: Mejoras
+
+#### 🔹 RECOVER (Recuperación)
+
+- 🔄 Plan de recuperación
+- 💾 Backups
+- 📈 Mejora continua
+
+**Categorías RC**:
+
+- RC.RP: Plan de recuperación
+- RC.CO: Comunicación
+- RC.IM: Mejoras
+
+### 1.3 Relación entre Funciones
+
+```
+         ┌─────────────────────────────────────┐
+         │            GOVERN                    │
+         │   (Estrategia y supervisión)        │
+         └──────────────┬──────────────────┘
+                      │
+    ┌───────────────┼───────────────┐
+    ▼               ▼               ▼
+┌─────────┐   ┌─────────┐   ┌─────────┐
+│IDENTIFY │──►│PROTECT │──►│ DETECT  │
+│(Qué    )│   │(Cómo   )│   │(Qué    )
+│proteger)│   │proteger)│   │sucede   )
+└─────────┘   └─────────┘   └─────────┘
+    │               │               │
+    └───────────────┼───────────────┘
+                ▼
+    ┌───────────────────────────────┐
+    │        RESPOND            │
+    │  (Qué hacer después)     │
+    └───────────┬───────────────┘
+                │
+    ┌──────────▼──────────┐
+    │      RECOVER        │
+    │  (Recuperar)       │
+    └──────────────────┘
+```
+
+---
+
+## 📋 Ejercicios de Refuerzo
+
+### Desafío 1.1: Clasificación de Controles
+
+🅰️ **Clasifica** cada control en su función NIST CSF correspondiente:
+
+1. Firewall perimetral → `?`
+2. Autenticación multifactor → `?`
+3. Plan de respuesta a incidentes → `?`
+4. Inventario de activos → `?`
+5. Backups automáticos → `?`
+6. SIEM de monitoreo → `?`
+
+### Desafío 1.2: Análisis de Madurez
+
+🅱️ **Evalúa** el nivel de madurez de cada función:
+
+| Función | Nivel (1-5) | Evidencia |
+|---------|---------------|-----------|
+| Govern | ? | |
+| Identify | ? | |
+| Protect | ? | |
+| Detect | ? | |
+| Respond | ? | |
+| Recover | ? | |
+
+---
+
+## 📊 Resumen del Módulo
+
+### Puntos Clave
+
+- ✅ NIST CSF 2.0 tiene **6 funciones** (añadiuse Govern)
+- ✅ Ciclo de vida: **IDENTIFY → PROTECT → DETECT → RESPOND → RECOVER**
+- ✅ **Govern** supervisa todas las demás funciones
+- ✅ Perfiles permiten **personalización**
+
+### Siguiente: Módulo 2
+
+En el próximo módulo aprenderemos sobre **Gestión de Identidad y Acceso** (IAM) con enfoque en autenticación multifactor.
+
+---
+
+*📖 Tiempo estimado: 6 horas • 🎯 6 desafíos • 🧪 1 laboratorio*

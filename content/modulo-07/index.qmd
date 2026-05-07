@@ -1,0 +1,195 @@
+---
+title: "Modulo 7: Respuesta a Incidentes"
+module: "modulo-07"
+type: "content"
+description: "IR lifecycle, NIST SP 800-61r2 y simulaciones 2026"
+---
+
+# Modulo 7: Respuesta a Incidentes
+
+## Objetivos
+
+- Comprender el ciclo de vida IR
+- Aplicar metodologia NIST SP 800-61r2
+- Coordinar equipo de respuesta
+- Documentar y aprender de incidentes
+
+---
+
+## Contenido
+
+### 7.1 Ciclo de Vida IR
+
+```
+NIST SP 800-61r2 - INCIDENT RESPONSE LIFECYCLE
+=========================================
+
+     ┌─────────────────┐
+     │    PREPARATION   │ ←──────────┐
+     │  (Preparacion)   │            │
+     └────────┬────────┘            │
+              │                     │
+     ┌────────▼────────┐            │
+     │    DETECTION    │            │
+     │    AND          │            │
+     │    ANALYSIS    │            │
+     └────────┬────────┘            │
+              │                     │
+     ┌────────▼────────┐            │
+     │    CONTAINMENT│            │
+     │    ERADICATION│            │
+     │    AND        │────────────┘
+     │    RECOVERY   │
+     └────────┬────────┘
+              │
+     ┌────────▼────────┐
+     │   POST-ACTIVITY│
+     │   (Lecciones)  │
+     └─────────────────┘
+```
+
+### 7.2 Fases Detalladas
+
+#### Preparation
+
+| Actividad | Descripcion |
+|----------|-------------|
+| Politicas IR | Definir procedimientos |
+| Equipo CSIRT | Formar equipo de respuesta |
+| Herramientas | SIEM, forensics, communication |
+| Training | Ejercicios y simulacros |
+| Comunicacion | Plan de escalation |
+
+#### Detection and Analysis
+
+| Seal | Descripcion |
+|------|-------------|
+| SIEM alerts | Reglas de correlacion |
+| IDS/IPS | Deteccion de anomalias |
+| Logs | Analisis de evidencia |
+| Threat Intel | IOCs conocidos |
+| Users | Reportes internos |
+
+#### Containment, Eradication, Recovery
+
+```
+CONTENEDOR (Corto plazo)
+├── Aislar sistema infectado
+├── Bloquear IP/dominio malicioso
+└── Deshabilitar cuenta comprometida
+
+CONTENEDOR (Largo plazo)
+├── Aplicar parches
+├── Cambiar credenciales
+└── Actualizarfirmware
+
+ERRADICACION
+├── Remover malware
+├── Cerrar vulnerabilidad
+└── Verificar limpieza
+
+RECUPERACION
+├── Restaurar from backup
+├── Monitoreo intensificado
+└── Return to operations
+```
+
+#### Post-Activity
+
+```
+POST-MORTEM
+============
+
+1. Lecciones aprendidas
+2. Actualizardocumentacion
+3. Mejorar deteccion
+4. Actualizar playbooks
+5. Feedback al equipo
+```
+
+---
+
+### 7.3 Tipos de Incidentes 2026
+
+| Tipo | Frecuencia | Impacto |
+|------|-----------|---------|
+| Ransomware | Alta | Critico |
+| Phishing | Muy alta | Medio |
+| Data breach | Alta | Alto |
+| DDoS | Media | Variable |
+| Insider threat | Baja | Alto |
+
+### 7.4 Playbook: Ransomware
+
+```
+PLAYBOOK RANSOMWARE
+==================
+
+[1] DETECCION
+├── SIEM: Extension .encrypted
+├── Usuario reporta archivos bloqueados
+└── Team identifica variante
+
+[2] CONTENEDOR
+├── Aislar equipos afectados
+├── Bloquear comunicacion C2
+└── Apagar sistemas no afectados
+
+[3] ANALISIS
+├── Identificar variante
+├── Verificar si hay decryptor
+└── Evaluar alcance
+
+[4] COMUNICACION
+├── Reportar a liderazgo
+├── Notificar regulators (si aplica)
+└── Comunicacion interna
+
+[5] ERRADICACION
+├── Remover malware
+├── Cerrar vector de entrada
+└── Verificar no hay persistencia
+
+[6] RECUPERACION
+├── Restaurar from backups
+├── Verificar integridad
+└── Return to operations
+
+[7] POST-MORTEM
+├── Documentar lecciones
+├── Actualizar controles
+└── Ejercicio anual
+```
+
+---
+
+### 7.5 MetricAS IR
+
+| Metrica | Descripcion | Objetivo |
+|---------|-------------|----------|
+| MTTD | Mean Time to Detect | < 24 horas |
+| MTTC | Mean Time to Contain | < 4 horas |
+| MTTR | Mean Time to Recover | < 48 horas |
+| False Positive Rate | Alertas falsas | < 20% |
+
+---
+
+## Ejercicios
+
+1. Completar checklist de preparacion
+2. Simular respuesta a phishing
+3. Crear playbook para un escenario
+
+---
+
+## Resumen
+
+- IR es ciclo: Preparation → Detection → Containment → Recovery → Lessons
+- Playbooks son esenciales
+- Post-mortem mejora continua
+- Medir: MTTD, MTTC, MTTR
+
+---
+
+*Modulo 7 - Respuesta a Incidentes - 4 horas*
+*Curso Fundamentos de Ciberseguridad - CC BY-SA 4.0*

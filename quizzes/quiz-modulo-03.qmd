@@ -1,0 +1,255 @@
+---
+title: "Quiz 3: Arquitectura Zero Trust"
+module: "quiz-03"
+type: "quiz"
+description: "Evaluacion del modulo 3: Arquitectura Zero Trust"
+---
+
+# Quiz 3: Arquitectura Zero Trust
+
+## Instrucciones
+
+- Tiempo: 30 minutos
+- Preguntas: 20 preguntas
+- Aprobacion: 70% o superior (14/20 correctas)
+- Restricciones: Sin materiales externos
+
+---
+
+## Seccion A: Fundamentos de Zero Trust
+
+### Pregunta 1
+
+El principio fundamental de Zero Trust es:
+
+- [ ] Confiar en la red interna
+- [ ] Nunca confiar, siempre verificar
+- [ ] Solo verificar una vez al inicio
+- [ ] Confiar pero limitado
+
+### Pregunta 2
+
+Quien propuso originalmente el concepto de "Never Trust, Always Verify"?
+
+- [ ] NIST
+- [ ] Google (BeyondCorp)
+- [ ] Forrester
+- [ ] AWS
+
+### Pregunta 3
+
+NIST SP 800-207 fue publicado en:
+
+- [ ] 2010
+- [ ] 2015
+- [ ] 2020
+- [ ] 2025
+
+---
+
+## Seccion B: Comparacion VPN vs ZTNA
+
+### Pregunta 4
+
+Como trata VPN tradicional la red interna?
+
+- [ ] No confiable
+- [ ] Confiable por defecto
+- [ ] No aplicable
+- [ ] Depende del protocolo
+
+### Pregunta 5
+
+ZTNA proporciona acceso a:
+
+- [ ] Toda la red
+- [ ] Solo recursos especificos
+- [ ] Solo internet
+- [ ] Solo red local
+
+### Pregunta 6
+
+El "lateral movement" es mas dificil con:
+
+- [ ] VPN tradicional
+- [ ] ZTNA
+- [ ] Proxy clasico
+- [ ] DNS
+
+---
+
+## Seccion C: Componentes Zero Trust
+
+### Pregunta 7
+
+El Policy Engine (PE) se encarga de:
+
+- [ ] Monitorear trafico
+- [ ] Tomar decisiones de acceso
+- [ ] Cifrar comunicaciones
+- [ ] Gestionar usuarios
+
+### Pregunta 8
+
+El PEP (Policy Enforcement Point) se encarga de:
+
+- [ ] Analizar comportamiento
+- [ ] Aplicar politicas de acceso
+- [ ] Generar reportes
+- [ ] Gestionar claves
+
+### Pregunta 9
+
+CDM en contexto ZTNA significa:
+
+- [ ] Continuous Data Management
+- [ ] Continuous Diagnostics and Monitoring
+- [ ] Central Data Management
+- [ ] Cloud Data Migration
+
+---
+
+## Seccion D: Microsegmentacion
+
+### Preguna 10
+
+La microsegmentacion ayuda a:
+
+- [ ] Aumentar velocidad
+- [ ] Limitar movimiento lateral
+- [ ] Reducir costos
+- [ ] Mejorar UX
+
+### Pregunta 11
+
+Un ejemplo de microsegmentacion a nivel de applicacion es:
+
+- [ ] VLANs
+- [ ] Subnets
+- [ ] Service mesh
+- [ ] NAT
+
+### Pregunta 12
+
+En Kubernetes, NetworkPolicy se aplica a nivel de:
+
+- [ ] Cluster completo
+- [ ] Namespace
+- [ ] Pod individual
+- [ ] Nodo
+
+---
+
+## Seccion E: Implementacion
+
+### Pregunta 13
+
+WireGuard es una implementacion de:
+
+- [ ] VPN tradicional
+- [ ] VPN baseda en Zero Trust
+- [ ] Proxy
+- [ ] Firewall
+
+### Pregunta 14
+
+Cual NO es un provider de ZTNA comercial?
+
+- [ ] Cloudflare Zero Trust
+- [ ] Palo Alto Prisma Access
+- [ ] OpenVPN
+- [ ] Zscaler Private Access
+
+### Pregunta 15
+
+CISA Zero Trust Maturity Model tiene:
+
+- [ ] 2 pilares
+- [ ] 3 pilares
+- [ ] 5 pilares
+- [ ] 7 pilares
+
+---
+
+## Seccion F: Casos de Uso
+
+### Pregunta 16
+
+Para accesoREMOTO, que es mejor?
+
+- [ ] VPN tradicional
+- [ ] ZTNA
+- [ ] DNS clasico
+- [ ] Proxy Squid
+
+### Pregunta 17
+
+Para segmentar cargas de trabajo en la nube, se usa:
+
+- [ ] VLANs tradicionales
+- [ ] Microsegmentacion de workloads
+- [ ] NAT
+- [ ] VPN site-to-site
+
+### Pregunta 18
+
+El modelo "assume breach" significa:
+
+- [ ] Asumir que ya fuiste comprometido
+- [ ] Asumir que la red es seguras
+- [ ] Asumir que los usuarios son confiables
+- [ ] Asumir que no habra ataques
+
+---
+
+## Practica
+
+### Pregunta 19
+
+Una politica simple permite:
+
+```
+source: 10.0.0.10
+dest: 10.0.0.1:443
+action: ALLOW
+
+source: 10.0.0.10
+dest: ANY
+action: DENY
+```
+
+Que representa esta politica?
+
+- [ ] Acceso total
+- [ ] Acceso limitado a un servicio
+- [ ] Bloqueo total
+- [ ] Sin restricciones
+
+### Pregunta 20
+
+Que nivel de madurez CISA permite MFA basado en riesgo?
+
+- [ ] Nivel 1
+- [ ] Nivel 2
+- [ ] Nivel 3
+- [ ] Nivel 4
+
+---
+
+## Resultado
+
+| Score | Estado |
+|-------|--------|
+| 14/20 (70%) o superior | Aprobado |
+| Menos de 14/20 | Reprobado |
+
+Puntuacion: ____/20 = ____%
+
+**Siguiente paso**:
+
+- Aprobado -> Continuar al Modulo 4: Inteligencia Artificial en Seguridad
+- Reprobado -> Repasar Modulo 3 y tomar quiz nuevamente
+
+---
+
+*Quiz 3/7 - Curso Fundamentos de Ciberseguridad - CC BY-SA 4.0*

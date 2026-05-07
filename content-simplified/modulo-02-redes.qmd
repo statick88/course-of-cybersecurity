@@ -1,0 +1,121 @@
+---
+title: "Módulo 2: Seguridad en Redes"
+module: "modulo-02"
+type: "content"
+description: "Aprende la diferencia entre VPN y ZTNA de forma sencilla"
+---
+
+# Módulo 2: Seguridad en Redes
+
+## 🎯 Objetivos de Aprendizaje
+
+Al finalizar este módulo, serás capaz de:
+
+- ✅ Explicar qué es una conexión VPN y cómo funciona
+- ✅ Entender qué es ZTNA (Zero Trust Network Access)
+- ✅ Diferenciar cuándo usar cada uno
+
+---
+
+## 🤔 El Problema: Acceder a tus Cosas desde Cualquier Lugar
+
+Hoy en día, muchas personas trabajan desde su casa, una cafetería, o mientras viajan. Pero si tu trabajo está en archivos que están en la computadora de la oficina, ¿cómo puedes acceder a ellos sin que nadie espíe tu conexión?
+
+Imaginemos dos escenarios:
+
+**Escenario 1:** Tienes un diario secreto que quieres leer desde la casa de tu abuela. ¿Cómo lo haces sin que nadie pueda verlo?
+
+**Escenario 2:** Vas a un edificio muy seguro. ¿Qué pasa cuando llegas? Muestras tu identificación en la puerta y listo.
+
+Esto es exactamente lo que vamos a aprender: cómo acceder a tus recursos digitales de forma segura.
+
+---
+
+## 📖 VPN: El Túnel Privado
+
+### ¿Qué es?
+
+Una **VPN** (Red Privada Virtual) funciona como un **túnel subterráneo secreto** desde donde estás tú hasta donde están tus archivos.
+
+**Analogía:**
+
+> Cuando usas una VPN, es como si excavaras un túnel secreto desde tu casa hasta tu cuarto donde guardas tu diario. Nadie que pase por la calle puede verte o escuchar lo que dices. Estás conectado directamente a tu casa, como si estuvieras ahí.
+
+### ¿Cómo se ve en la práctica?
+
+- Te conectas a la VPN
+- Parece que estuvieras físicamente en la oficina
+- Puedes acceder a todos los archivos
+- Pero si alguien roba tu contraseña, puede ver TODO
+
+### ⚠️ Limitación
+
+Una vez que tienes acceso a la VPN, es como tener un pase que abre TODAS las puertas del edificio. Si alguien te lo roba, puede entrar a cualquier lugar.
+
+---
+
+## 📖 ZTNA: El Mayordomo Digital Inteligente
+
+### ¿Qué es?
+
+**ZTNA** (Zero Trust Network Access) significa "Acceso de Red de Confianza Cero". Suena complicado, pero es muy sencillo.
+
+**Analogía:**
+
+> En lugar de hacer un túnel, tienes un mayordomo muy inteligente. Cuando necesitas el diario, le pides: "¿Me traes el diario de matemáticas?" El mayordomo verifica que eres tú, que tienes permiso para verlo, y SÓLO ENTONCES te lo trae. No puedes ver nada más porque el mayordomo no te lo trae.
+
+### ¿Cómo funciona en la práctica?
+
+- Cada vez que quieres acceder a algo, pregunta: "¿Quién eres?"
+- Verifica tu identidad
+- Solo te da acceso AL EXACTO recurso que necesitas
+- No puedes ver nada más
+
+### ✨ Ventaja
+
+Aunque alguien robe tu contraseña, solo puede ver LO QUE TÚ podías ver. No toda la red.
+
+---
+
+## 📊 Comparación: VPN vs ZTNA
+
+| Aspecto | VPN | ZTNA |
+|--------|-----|------|
+| **Cómo funciona** | Túnel a toda la red | Solo al recurso específico |
+| **Cuánto puedes ver** | Toda la red | Solo lo que necesitas |
+| **Cuándo verifica** | Solo al conectar | Cada vez que accedes |
+| **Si te roban credenciales** | El atacante ve TODO | El atacante solo ve lo que tú veías |
+
+---
+
+## 💡 Analogía Final
+
+Puedes explicarle a cualquier persona:
+
+> **VPN:** Es como tener un pase que abre TODAS las puertas del edificio. Una vez dentro, puedes ir a cualquier cuarto.
+>
+> **ZTNA:** Es como llegar al edificio y cada vez que quieres entrar a un cuarto, un guardia verifica quién eres Y si tienes permiso específico para ese cuarto.
+
+---
+
+## 📚 Fuentes
+
+- Checkpoint. (2021). *ZTNA frente a VPN*. https://www.checkpoint.com/es/cyber-hub/network-security/what-is-zero-trust-network-access-ztna/ztna-vs-vpn/
+- Zscaler. (2024). *¿Cómo reemplaza ZTNA a las soluciones VPN tradicionales?* https://www.zscaler.com/es/zpedia/how-does-ztna-replace-traditional-vpn-solutions
+
+---
+
+## ✅ Resumen del Módulo
+
+| Concepto | Explicación Simple |
+|----------|-----------------|
+| VPN | Túnel privado a toda la red |
+| ZTNA | Verificación en cada puerta específica |
+| Cuándo usar VPN | Acceso básico y rápido |
+| Cuándo usar ZTNA | Alta seguridad, información sensible |
+
+---
+
+## ➡️ Siguiente: Módulo 3
+
+En el próximo módulo, aprenderemos sobre gestión de identidades y contraseñas.

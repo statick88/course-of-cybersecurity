@@ -1,0 +1,127 @@
+---
+title: "Módulo 5: Respuesta a Incidentes"
+module: "modulo-05"
+type: "content"
+description: "Aprende qué hacer cuando ocurre un incidente de seguridad"
+---
+
+# Módulo 5: Respuesta a Incidentes
+
+## 🎯 Objetivos de Aprendizaje
+
+Al finalizar este módulo, serás capaz de:
+
+- ✅ Explicar qué es un incidente de seguridad
+- ✅ Describir las 4 fases del ciclo de respuesta a incidentes
+- ✅ Entender qué hacer en cada fase
+
+---
+
+## 🤔 ¿Qué es un Incidente de Seguridad?
+
+Imaginemos que alguien intenta entrar a tu casa. Eso es un "incidente". No es solo una alarma que suena; es cuando algo malo está pasando o ya afectó tus sistemas.
+
+**En términos técnicos:** Un incidente de seguridad es un evento no deseado que compromete la confidencialidad, integridad o disponibilidad de tu información [NIST, 2012].
+
+**Ejemplos incluye:**
+- Un malware que infecta tu computadora
+- Alguien robando tus archivos
+- Tu servicio favorito está caído
+- Tu información personal fue filtrada
+
+---
+
+## 📖 El Ciclo de Vida de Respuesta a Incidentes
+
+El NIST definió 4 fases para manejar incidentes [NIST, 2012]:
+
+### Fase 1: PREPARACIÓN
+
+**Analogía:** Es como tener un extintor de incendios en tu cocina antes de que ocurra un incendio.
+
+**¿Qué hacer?**
+- Crear un plan de respuesta
+- Tener contactos de emergencia
+- Mantener respaldos actualizados
+- Saber a quién contactar si algo pasa
+
+### Fase 2: DETECCIÓN Y ANÁLISIS
+
+**Analogía:** Es como una alarma que suena cuando alguien entra a tu casa sin permiso.
+
+**¿Qué hacer?**
+- Monitorear tus sistemas
+- Investigar alertas
+- Determinar si es un ataque real o falso positivo
+
+### Fase 3: CONTENCIÓN, ERRADICACIÓN Y RECUPERACIÓN
+
+**Analogía:**
+- **Contención:** Cerrar la puerta cuando alguien está entrando
+- **Erradicación:** Sacar al intruso de tu casa
+- **Recuperación:** Reparar lo que dañó y volver a la normalidad
+
+**¿Qué hacer?**
+- Aislar sistemas afectados
+- Eliminar la amenaza
+- Restaurar desde respaldos
+
+### Fase 4: ACTIVIDAD POST-INCIDENTE
+
+**Analogía:** Después de un robo, revisar cómo entró el ladrón y mejorar la seguridad.
+
+**¿Qué hacer?**
+- Documentar qué ocurrió
+- Evaluar qué tan bien funcionó la respuesta
+- Mejorar el plan para la próxima vez
+
+---
+
+## 💡 Analogía Final
+
+Puedes explicarle a cualquier persona:
+
+> "Es como un plan de emergencias:
+> 1. Preparación: Tener un extintor y conocer las salidas
+> 2. Detección: Las alarmas suenan
+> 3. Contención/Erradicación/Recuperación: Cerrar puertas, sacar al intruso, reparar daños
+> 4. Lecciones aprendidas: Mejora el plan para la próxima vez"
+
+---
+
+## 📚 Fuentes
+
+- NIST. (2012). *Computer Security Incident Handling Guide*. https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-61r2.pdf
+- CrowdStrike. (2024). *Plan de respuesta a incidentes*. https://www.crowdstrike.com/es-es/cybersecurity-101/incident-response/incident-response-steps/
+
+---
+
+## ✅ Resumen del Módulo
+
+| Fase | Analogía | Acción |
+|------|----------|--------|
+| Preparación | Extintor | Planificar antes de que pase |
+| Detección | Alarma | Notificar cuando algo pasa |
+| Contención/Erradicación/Recuperación | Puertas/cerradura | Detener, eliminar, restaurar |
+| Post-Activity | Lecciones | Mejorar para la próxima vez |
+
+---
+
+## 🎉 Felicitaciones
+
+¡Completaste los 5 módulos de Fundamentos de Ciberseguridad!
+
+Ahora tienes las bases para:
+- ✅ Entender el marco NIST CSF 2.0
+- ✅ Diferenciar VPN de ZTNA
+- ✅ Implementar autenticación segura
+- ✅ Entender vulnerabilidades básicas
+- ✅ Saber cómo responder a incidentes
+
+---
+
+## 📚 Recursos Adicionales
+
+- NIST Cybersecurity Framework: https://www.nist.gov/cyberframework
+- CISA: https://www.cisa.gov
+--first.org/cvss: https://www.first.org/cvss/

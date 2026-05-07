@@ -1,0 +1,179 @@
+---
+title: "Modulo 6: Criptografia Post-Cuantica"
+module: "modulo-06"
+type: "content"
+description: "Preparacion para la era cuantica con estandares NIST 2024"
+---
+
+# Modulo 6: Criptografia Post-Cuantica
+
+## Objetivos
+
+- Comprender la amenaza cuantica a la criptografia actual
+- Conocer los estandares NIST PQC
+- Planificar migracion a criptografia post-cuantica
+- Implementar inventory criptografico
+
+---
+
+## Contenido
+
+### 6.1 La Amenaza Cuantica
+
+```
+COMPUTADORA CUANTICA
+===================
+
+Qubits:     bits cuanticos (superposicion)
+Impacto:     Algoritmos de Shor/ Grover
+
+AFECTADO:
+- RSA (factoreo)
+- DSA (logaritmo discreto)
+- ECDSA (curvas elipticas)
+- Diffie-Hellman
+
+NO AFECTADO:
+- AES-256
+- SHA-3
+- Simetrica moderna
+```
+
+### 6.2 Cronograma
+
+| Ano | Milestone |
+|-----|-----------|
+| 2024 | NIST publica estandares finales |
+| 2025 | Inicio de migracion en gobiernos |
+| 2030 | Productos criticos deben estar listos |
+| 2035 | Meta federal USA |
+| 2040+ | Estimado: criptografia clasica rota |
+
+### 6.3 Estandares NIST PQC
+
+| Estandar | Algoritmo | Uso |
+|----------|-----------|-----|
+| FIPS 203 | ML-KEM (Kyber) | Cifrado de clave |
+| FIPS 204 | ML-DSA (Dilithium) | Firmas digitales |
+| FIPS 205 | SLH-DSA (SPHINCS+) | Firmas hash-based |
+| Draft | ML-KEM-3 | Estandar adicional |
+
+### 6.4 Tipos de Criptografia
+
+#### Lattice-Based (Mas populares)
+
+```
+ML-KEM (Module-LWE-Based Key Encapsulation)
+==========================================
+- Basado en Learning With Errors (LWE)
+- Resistente a ataques cuanticos
+- Estandar NIST FIPS 203
+
+ML-DSA (Module-Lattice-Based DSA)
+==================================
+- Firmas digitales
+- Resistente a ataques cuanticos
+- Estandar NIST FIPS 204
+```
+
+#### Hash-Based
+
+```
+SLH-DSA (Stateless Hash-Based DSA)
+================================
+- Basado solo en funciones hash
+- Muy conservador
+- Mas lento pero mas simple
+- FIPS 205
+```
+
+### 6.5 Plan de Migracion
+
+```
+ROADMAP DE MIGRACION PQC
+=======================
+
+FASE 1: Inventario (2024-2025)
+├── Identificar todos los sistemas criptograficos
+├── Categorizar por criticidad
+└── Documentar algoritmos en uso
+
+FASE 2: Evaluacion (2025-2026)
+├── Analizar proveedores con soporte PQC
+├── Evaluar compatibilidad
+└── Crear plan de reemplazo
+
+FASE 3: Pilotaje (2026-2028)
+├── Implementar en sistemas no criticos
+├── Probar integracion
+└── Documentar lecciones
+
+FASE 4: Despliegue (2028-2035)
+├── Migrar sistemas criticos
+├── Hibrido: clasico + PQC
+└── Verificar cumplimiento
+```
+
+### 6.6 Inventory Criptografico
+
+```python
+# Ejemplo: Script de inventory
+#!/usr/bin/env python3
+
+def inventory_crypto():
+    """Ejemplo de inventory criptografico"""
+    
+    systems = [
+        {
+            "name": "VPN Gateway",
+            "algo": "AES-256-GCM",
+            "type": "symmetric",
+            "pqc_ready": True
+        },
+        {
+            "name": "Web TLS Certificate",
+            "algo": "RSA-2048",
+            "type": "asymmetric",
+            "pqc_ready": False,
+            "migration_date": "2027-Q2"
+        },
+        {
+            "name": "Password Hash",
+            "algo": "bcrypt",
+            "type": "hashing",
+            "pqc_ready": True
+        }
+    ]
+    
+    # Analisis
+    pqc_ready = sum(1 for s in systems if s["pqc_ready"])
+    total = len(systems)
+    
+    print(f"Systems: {total}")
+    print(f"PQC Ready: {pqc_ready} ({pqc_ready/total*100:.1f}%)")
+    print(f"Needs Migration: {total-pqc_ready}")
+
+inventory_crypto()
+```
+
+---
+
+## Ejercicios
+
+1. Crear inventory de sistemas criptograficos
+2. Identificar sistemas que requieren migracion
+3. Disenar plan de migracion para una empresa
+
+---
+
+## Resumen
+
+- Computacion cuantica rompera RSA, DSA, ECDSA
+- NIST tiene 3 estandares finales (ML-KEM, ML-DSA, SLH-DSA)
+- Migracion gradual 2024-2035
+- Empezar con inventory ahora
+
+---
+
+*Modulo 6 - Criptografia Post-Cuantica - 5 horas*
+*Curso Fundamentos de Ciberseguridad - CC BY-SA 4.0*

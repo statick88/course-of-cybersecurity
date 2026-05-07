@@ -1,0 +1,66 @@
+# Configuracion de Quarto para el curso de Ciberseguridad
+
+project:
+  type: book
+  output-dir: _book
+
+book:
+  title: "Fundamentos de Ciberseguridad"
+  author: "Diego Saavedra"
+  date: "2026-05-06"
+  description: "Curso profesional de ciberseguridad"
+  cover-image: images/cover.png
+  favicon: images/favicon.png
+  
+  # Chapters - Curso Original (Avanzado)
+  chapters:
+    - index.qmd
+    - content/modulo-01/index.qmd
+    - content/modulo-02/index.qmd
+    - content/modulo-03/index.qmd
+    - content/modulo-04/index.qmd
+    - content/modulo-05/index.qmd
+    - content/modulo-06/index.qmd
+    - content/modulo-07/index.qmd
+    - labs/lab-anexo-openclaw-security.qmd
+    - labs/lab-anexo-llm-security.qmd
+    - labs/lab-anexo-ethical-hacking.qmd
+    - labs/lab-anexo-herramientas-base.qmd
+    
+  # Appendices - Curso Simplificado (Fundamentos)
+  appendices:
+    - content-simplified/index.qmd
+    - content-simplified/modulo-01-seguridad-basica.qmd
+    - content-simplified/modulo-02-redes.qmd
+    - content-simplified/modulo-03-identidades.qmd
+    - content-simplified/modulo-04-vulnerabilidades.qmd
+    - content-simplified/modulo-05-incidentes.qmd
+
+# Format output
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    number-sections: true
+     
+  pdf:
+    documentclass: report
+    papersize: a4
+    margin-left: 2cm
+    margin-right: 2cm
+
+# Code execution
+execute:
+  echo: false
+  eval: false
+
+# Language
+language:
+  lang: es
+
+# Exclude files
+exclude:
+  - "*.qmd~"
+  - ".git/*"
+  - "*.log"

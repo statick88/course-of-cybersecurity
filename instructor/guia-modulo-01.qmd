@@ -1,0 +1,186 @@
+---
+title: "Guía del Instructor: Módulo 1 - Fundamentos NIST CSF 2.0"
+module: "guia-01"
+type: "instructor"
+description: "Guía detallada para instructores del módulo 1"
+---
+
+# Guía del Instructor: Módulo 1 - Fundamentos NIST CSF 2.0
+
+## 📋 Overview del Módulo
+
+| Aspecto | Detalle |
+|--------|--------|
+| Duración | 6 horas |
+| Objetivos | 4 principales |
+| Labs | 1 (Mapeo de controles) |
+| Quiz | 20 preguntas, ≥70% para aprobar |
+| Prerrequisitos | Ninguno |
+
+---
+
+## 🎯 Objetivos de Aprendizaje (Expected)
+
+Al completar el Módulo 1, los estudiantes podrán:
+
+1. **Comprender** los 6 pilares del NIST CSF 2.0 (Govern, Identify, Protect, Detect, Respond, Recover)
+2. **Mapear** controles de seguridad existentes a las funciones del framework
+3. **Realizar** una autoevaluación básica de madurez organizacional
+4. **Interpretar** perfiles de riesgo personalizados
+
+---
+
+## 📖 Contenido del Módulo (Breakdown)
+
+### Sesión 1: Fundamentos Teóricos (2 horas)
+
+| Tema | Tiempo | Actividades |
+|------|--------|-------------|
+| Evolución NIST CSF | 30 min | Explicación + discusión |
+| Las 6 funciones | 45 min | Presentación + ejemplos |
+| Ciclo de vida | 30 min | Diagrama interactivo |
+|autoevaluación | 15 min | Q&A |
+
+### Sesión 2: Profundización (2 horas)
+
+| Tema | Tiempo | Actividades |
+|------|--------|-------------|
+| Categorías por función | 45 min | Tablas de referencia |
+| Perfiles | 30 min | Casos de uso |
+| Métricas | 30 min | Cálculos prácticos |
+| Revisión | 15 min | Preguntas |
+
+### Sesión 3: Laboratorio (2 horas)
+
+| Actividad | Tiempo |
+|----------|--------|
+| Setup | 15 min |
+| Inventario | 30 min |
+| Mapping | 45 min |
+| Reporte | 20 min |
+| Discusión | 10 min |
+
+---
+
+## 🎓 Guía de Discusión
+
+### Preguntas Frecuentes
+
+**P: ¿Por qué es importante NIST CSF?**
+
+R: NIST CSF 2.0 es el estándar de facto para ciberseguridad en EE.UU. y globalmente. Proporciona un lenguaje común para comunicar riesgos de seguridad y permite comparaciones entre organizaciones.
+
+**P: ¿Cuál es la diferencia entre NIST CSF 1.1 y 2.0?**
+
+R: Laprincipal diferencia es la adición de "Govern" como función principal, formalización de perfiles, y métricas más estandarizadas.
+
+**P: ¿Necesito implementar todas las funciones?**
+
+R: Las funciones están interrelacionadas. Se recomienda comenzar con Identify y Protect (fundamentos), luego Detect y Respond, y finalmente Recover. Govern supervisa todo.
+
+---
+
+## 📝 Soluciones: Ejercicios
+
+### Desafío 1.1: Clasificación de Controles
+
+| Control | Función NIST CSF |
+|---------|---------------|
+| Firewall perimetral | **Protect** (PR.IP) |
+| Autenticación multifactor | **Protect** (PR.AA) |
+| Plan de respuesta a incidentes | **Respond** (RS.MI) |
+| Inventario de activos | **Identify** (ID.AM) |
+| Backups automáticos | **Recover** (RC.RP) |
+| SIEM de monitoreo | **Detect** (DE.CM) |
+
+### Desafío 1.2: Niveles de Madurez
+
+| Nivel | Rango | Descripción |
+|-------|------|------------|
+| 1 | 0-25% | Parcial - Procesos no formalizados |
+| 2 | 26-50% | Informado - Ejecutado ad-hoc |
+| 3 | 51-75% | Repetible - Procesos establecidos |
+| 4 | 76-90% | Adaptativo - Mejora continua |
+| 5 | 91-100% | Optimizado - Optimización proactiva |
+
+---
+
+## 🧪 Solución: Lab 1 - Mapeo de Controles NIST CSF
+
+### Paso 1: Setup
+
+```bash
+# ✅ Comandos correctos
+mkdir -p ~/cybersec-lab/nist-mapping
+cd ~/cybersec-lab/nist-mapping
+git init
+mkdir -p{controls,assessment,reports}
+```
+
+### Paso 2: Controles
+
+```bash
+# ✅ Verificar creación
+ls -la controls/
+# ✅ Output esperado: directorio controls/ creado
+
+cat controls/nist-csf-functions.txt | head -20
+# ✅ Output esperado: lista de funciones NIST CSF
+```
+
+### Paso 3: Mapping
+
+```bash
+# ✅ Ejecutar script
+chmod +x assessment/map-controls.sh
+./assessment/map-controls.sh
+
+# ✅ Output esperado:
+# AC-1 -> PR.AA (Protect: Access Control)
+# IR-1 -> RS.MI (Respond: Incident Management)
+# CP-1 -> RC.RP (Recover: Recovery Plan)
+```
+
+---
+
+## 📊 Rúbrica de Evaluación
+
+| Criterio | Excelente (90-100%) | Bueno (70-89%) | Necesita Mejora (<70%) |
+|----------|-------------------|-----------------|----------------------|
+| **Completitud** | >20 controles mapeados | 15-20 controles | <15 controles |
+| **Accuracy** | 100% correcto | 80-99% correcto | <80% correcto |
+| **Reporte** | Completo con gaps + recomendaciones | Parcial | Básico/ausente |
+| **Comandos** | Todos ejecutados | ≥80% ejecutados | <80% ejecutados |
+
+---
+
+## 🚨 Errores Comunes
+
+| Error | Causa | Solución |
+|-------|------|---------|
+| "command not found" | Directorio incorrecto | `cd` al directorio correcto |
+| "permission denied" | Falta `sudo` | Ejecutar con `sudo` o verificar permisos |
+| Output vacío |Archivo no creado | Verificar con `ls -la` |
+| Git no inicializado | No se ejecutó `git init` | Ejecutar `git init` |
+
+---
+
+## 📚 Recursos Adicionales
+
+- 📖 NIST CSF 2.0: https://csrc.nist.gov/pubs/sp/800/53/r2/upd1/final
+- 📖 NIST SP 800-181: https://csrc.nist.gov/pubs/sp/800/181/r1/final
+- 📖 CSF Tool empresarial: https://www.nist.gov/itl/capability/cybersecurity-framework-tool
+- 🎥 Introducción NIST CSF: [Buscar en NIST CSRC YouTube]
+
+---
+
+## ✅ Checklist de Cierre
+
+- [ ] Estudiantes completaron lab
+- [ ] ≥70% aprobaron quiz
+- [ ] Dudas resueltas
+- [ ] Siguiente módulo introduced
+
+---
+
+*Guía del Instructor - Módulo 1 • Curso Fundamentos de Ciberseguridad • CC BY-SA 4.0*

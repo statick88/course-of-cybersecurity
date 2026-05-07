@@ -1,0 +1,1022 @@
+---
+title: "Lab Anexo: Local LLMs for Cybersecurity - Ollama & LM Studio (Advanced)"
+module: "lab-anexo-02"
+type: "lab"
+description: "Practica avanzada con LLMs locales para pentesting, vulnerability analysis, threat hunting y RAG"
+---
+
+# Lab Anexo: Local LLMs for Cybersecurity with Ollama & LM Studio
+
+## Objetivo del Laboratorio
+
+En este laboratorio avanzado, vas a **implementar y utilizar LLMs locales** para tareas de ciberseguridad de nivel medio-alto. Este ejercicio te permitira:
+
+- Configurar Ollama y LM Studio con soporte GPU
+- Ejecutar modelos especializados para security
+- Aplicar LLMs a vulnerability assessment
+- Integrar con Burp Suite, Metasploit, Nuclei
+- Realizar threat hunting automatizado
+- Construir RAG con bases de conocimiento
+- Desarrollar agentes deIA para pentesting
+
+::: {.callout-warning}
+## ADVERTENCIA
+
+- NO enviar datos sensibles a LLMs externos sin autorizacion
+- USAR SOLO LLMs locales para datos confidenciales
+- Este laboratorio es EDUCATIVO - aprender a defenderse
+- Los modelos generan contenido - verificar SIEMPRE
+- La explotacion sin consentimiento es ILEGAL
+:::
+
+## Requisitos Previos
+
+- Experiencia con pentesting (OWASP, PTES)
+- Conocimiento de APIs REST
+- Fundamentos de ML/AI
+- Experiencia con Linux CLI
+
+## Duracion
+
+- Tiempo estimado: 5 horas
+- Tipo: Individual
+- IMPORTANTE: DEBES teclear todos los comandos manualmente
+
+---
+
+## Paso 1: Preparacion del Entorno de Alto Rendimiento
+
+### 1.1 Requisitos de Sistema y GPU Setup
+
+```bash
+#!/bin/bash
+# 1_system_check.sh
+
+echo "=== Verificando Sistema para LLMs ==="
+
+# RAM
+RAM_TOTAL=$(free -h --total | grep Mem | awk '{print $2}')
+RAM_AVAILABLE=$(free -h --available | grep Mem | awk '{print $2}')
+echo "RAM Total: $RAM_TOTAL | Disponible: $RAM_AVAILABLE"
+
+# GPU - Multiple vendors
+echo ""
+echo "=== GPU Information ==="
+
+# NVIDIA
+if command -v nvidia-smi &> /dev/null; then
+    nvidia-smi --query-gpu=name,memory.total,mrive_util --format=csv
+    echo "CUDA Version: $(nvidia-smi | grep 'CUDA Version' | awk '{print $NF}')"
+    
+    # GPU Compute Capability
+    nvidia-smi --query-gpu=compute_cap --format=csv,noheader
+    
+    # Driver version
+    nvidia-smi | grep "Driver Version"
+fi
+
+# Apple Metal
+if command -v system_profiler &> /dev/null; then
+    system_profiler SPDisplaysDataType | grep -E "Chip|VRAM"
+fi
+
+#ROCm (AMD)
+if command -v rocm-smi &> /dev/null; then
+    rocm-smi --showgpuinfo
+fi
+
+# CPU
+echo ""
+echo "=== CPU ==="
+lscpu | grep -E "Model name|CPU\(s\)|Thread"
+
+# Disco
+echo ""
+echo "=== Storage ==="
+df -h / | tail -1
+
+echo ""
+echo "=== Requisitos Minimos ==="
+echo "RAM: 8GB (16GB recomendado)"
+echo "GPU: 8GB VRAM (16GB ideal)"
+echo "Storage: 50GB libres"
+```
+
+### 1.2 Instalacion Completa de Ollama con GPU
+
+```bash
+#!/bin/bash
+# 2_install_ollama_full.sh
+
+echo "=== Instalando Ollama con Soporte GPU ==="
+
+# Verificar prerequisites
+echo "[1] Verificando prerequisites..."
+command -v curl &> /dev/null || sudo apt install -y curl
+command -v docker &> /dev/null || sudo apt install -y docker
+
+# Instalar Ollama
+echo "[2] Instalando Ollama..."
+curl -fsSL https://ollama.com/install.sh | sh
+
+# Verificar instalacion
+echo "[3] Verificando..."
+ollama --version
+
+# Configurar GPU
+echo "[4] Configurando GPU..."
+
+# Para NVIDIA: verificar GPU
+if command -v nvidia-smi &> /dev/null; then
+    echo "GPU NVIDIA detectada"
+    # Verificar que Ollama usa GPU
+    export OLLAMA_GPU_OVERHEAD=0
+fi
+
+# Metodo alternativo: Docker con GPU
+cat > Dockerfile.ollama << 'EOF'
+FROM ollama/ollama:latest
+
+# Agregar usuario no-root
+RUN useradd -m -s /bin/bash ollama
+USER ollama
+
+# Directorios
+RUN mkdir /app && chown ollama:ollama /app
+
+WORKDIR /app
+EOF
+
+# Construir imagen
+docker build -t ollama:security -f Dockerfile.ollama .
+
+# Ejecutar con GPU
+docker run -d \
+    --gpus all \
+    -v ollama_data:/root/.ollama \
+    -p 11434:11434 \
+    --name ollama-security \
+    ollama:security
+
+echo ""
+echo "=== Ollama con GPU instalado ==="
+echo "API: http://localhost:11434"
+```
+
+### 1.3 LM Studio con Configuracion Avanzada
+
+```bash
+#!/bin/bash
+# 3_install_lmstudio.sh
+
+echo "=== Instalando LM Studio ==="
+
+# Detectar OS
+OS=$(uname -s)
+ARCH=$(uname -m)
+
+echo "Sistema: $OS $ARCH"
+
+# Descargar segun plataforma
+case "$OS" in
+    Linux)
+        if [[ "$ARCH" == "x86_64" ]]; then
+            cd /tmp
+            wget -q https://releases.lmstudio.ai/linux/x86/LM-Studio-latest.AppImage
+            chmod +x LM-Studio-*.AppImage
+            sudo mv LM-Studio-*.AppImage /usr/local/bin/lmstudio
+        elif [[ "$ARCH" == "arm64" ]]; then
+            cd /tmp
+            wget -q https://releases.lmstudio.ai/linux/arm64/LM-Studio-latest.AppImage
+            chmod +x LM-Studio-*.AppImage
+            sudo mv LM-Studio-*.AppImage /usr/local/bin/lmstudio
+        fi
+        ;;
+    Darwin)
+        brew install --cask lm-studio
+        ;;
+    MINGW*|CYGWIN*|MSYS*)
+        winget install LMStudio.LMStudio
+        ;;
+esac
+
+# Verificar
+lmstudio --version 2>/dev/null || echo "LM Studio CLI ready"
+
+# Configurar directorio de modelos
+mkdir -p ~/.lmstudio/models
+
+echo ""
+echo "=== LM Studio instalado ==="
+echo "GUI: Abre la aplicacion (Linux: /usr/local/bin/lmstudio)"
+```
+
+---
+
+## Paso 2: Modelos Especializados para Security
+
+### 2.1 Modelos con Analisis Profundo
+
+```bash
+#!/bin/bash
+# 4_download_security_models.sh
+
+echo "=== Descargando Modelos Especializados ==="
+
+# Funcion helper para descargar con progreso
+descargar_modelo() {
+    local MODEL=$1
+    echo "[*] Descargando $MODEL..."
+    if ollama pull "$MODEL" 2>&1 | grep -q "pulling"; then
+        echo "[+] $MODEL listo"
+    else
+        echo "[!] Error en $MODEL"
+    fi
+}
+
+# Modelos especializados para security
+echo ""
+echo "[1] Modelos especializados..."
+ descargar_modelo "xploiter/the-xploiter"
+ descargar_modelo "xploiter/pentester"
+ descargar_modelo "f0rc3ps/nu11secur1tyAI"
+ descargar_modelo "ALIENTELLIGENCE/cybersecuritythreatanalysisv2"
+
+# Modelos para coding/analysis
+echo ""
+echo "[2] Modelos de analisis..."
+ descargar_modelo "llama3.1:8b-instruct-q4_K_M"
+ descargar_modelo "mistral:7b-instruct"
+ descargar_modelo "qwen2.5:7b-instruct-q4_K_M"
+ descargar_modelo "phi4:14b-chat-q4_K_M"
+
+# Listar todos
+echo ""
+echo "=== Modelos Instalados ==="
+ollama list
+```
+
+### 2.2 Comparativa y Seleccion
+
+```bash
+cat > security_models_analysis.md << 'EOF'
+# Analisis Profundo: Modelos para Ciberseguridad
+
+## Matriz de Capacidades
+
+| Modelo | Tamano | VRAM | Pentest | Code Review | TH | Malware | Costo |
+|--------|--------|------|---------|-----------|-----|---------|-------|
+| The-Xploiter | 9.2GB | 10GB | +++ | ++ | ++ | + | Alto |
+| Pentester | 7B | 8GB | +++ | +++ | + | + | Medio |
+| nu11secur1tyAI | 3.3GB | 4GB | ++ | ++ | +++ | ++ | Bajo |
+| CyberThreat | 8GB | 9GB | + | ++ | +++ | +++ | Alto |
+| Llama 3.1 8B | 4.9GB | 6GB | ++ | +++ | ++ | + | Bajo |
+| Mistral 7B | 4.1GB | 5GB | + | ++ | + | + | Bajo |
+
+##Seleccion por Objetivo
+
+### Pentesting Activo
+1. The-Xploiter (primario)
+2. Pentester (backup)
+3. Mistral (rapidez)
+
+### CodeReview
+1. Llama 3.1 8B (precisión)
+2. Qwen 2.5 (velocidad)
+3. Mistral (balance)
+
+### Threat Hunting
+1. nu11secur1tyAI (velocidad)
+2. CyberThreatAnalysis (accuracy)
+3. Llama 3.1 (contexto)
+
+### MalwareAnalysis
+1. The-Xploiter (profundidad)
+2. Qwen 2.5 (velocidad)
+
+## Configuracion por Hardware
+
+| VRAM |ModeloPrimario | Alternativa |
+|------|---------------|--------------|
+| 4GB | nu11secur1tyAI | Mistral |
+| 8GB | The-Xploiter | Pentester |
+| 16GB+ | Multiple | Ensemble |
+EOF
+
+cat security_models_analysis.md
+```
+
+---
+
+## Paso 3: Integracion Avanzada con Tools de Security
+
+### 3.1 Burp Suite Integration con AI
+
+```python
+#!/usr/bin/env python3
+"""
+Burp Suite Extension: Ollama AI Pentesting Assistant
+Nivel: Advanced
+Guardar como: ollama_security_burp.py
+Cargar: Extender > Add > Python
+"""
+
+from burp import IBurpExtender
+from burp import IHttpListener
+from burp import IHttpRequestResponse
+from burp import IScannerListener
+import requests
+import json
+import threading
+import time
+
+class OllamaSecurityAI(IBurpExtender, IHttpListener):
+    def registerExtenderCallbacks(self, callbacks):
+        self._callbacks = callbacks
+        self._helpers = callbacks.getHelpers()
+        
+        # Register
+        callbacks.registerHttpListener(self)
+        callbacks.registerScannerListener(self)
+        
+        callbacks.setExtensionName("Ollama AI Security Suite")
+        
+        # Config
+        self.ollama_url = "http://localhost:11434"
+        self.model = "xploiter/the-xploiter"
+        self.enabled = True
+        self.analysis_queue = []
+        
+        # Output
+        self._callbacks.print("=" * 50)
+        self._callbacks.print("Ollama AI Security Suite v1.0")
+        self._callbacks.print("Model: " + self.model)
+        self._callbacks.print("API: " + self.ollama_url)
+        self._callbacks.print("=" * 50)
+        
+        # Start analysis thread
+        self.analysis_thread = threading.Thread(target=self.analysis_worker)
+        self.analysis_thread.daemon = True
+        self.analysis_thread.start()
+    
+    def processHttpMessage(self, toolFlag, messageIsRequest, messageInfo):
+        if not self.enabled:
+            return
+        
+        # Solo procesar requests
+        if not messageIsRequest:
+            return
+        
+        # Solo Burp Proxy, Spider, Scanner
+        if toolFlag not in [1, 2, 4, 8]:
+            return
+        
+        # Get request
+        request = messageInfo.getRequest()
+        url = str(self._helpers.analyzeRequest(messageInfo).getUrl())
+        
+        # Queue para analisis
+        self.analysis_queue.append({
+            "url": url,
+            "request": request,
+            "message": messageInfo
+        })
+    
+    def analysis_worker(self):
+        """Worker para analisis asincrono"""
+        while True:
+            if self.analysis_queue:
+                item = self.analysis_queue.pop(0)
+                
+                try:
+                    # Analyze con Ollama
+                    analysis = self.analyze_request(
+                        item["url"],
+                        bytes(item["request"])
+                    )
+                    
+                    # Log results
+                    self._callbacks.print("\n[AI Analysis] " + item["url"])
+                    self._callbacks.print(analysis)
+                    
+                except Exception as e:
+                    self._callbacks.print(f"[Error] {e}")
+            else:
+                time.sleep(1)
+    
+    def analyze_request(self, url, request_bytes):
+        """Enviar a Ollama para analisis"""
+        
+        # Extraer datos relevantes
+        request_str = request_bytes.decode("utf-8", errors="ignore")
+        
+        prompt = f"""Analiza esta peticion HTTP para vulnerabilidades:
+
+URL: {url}
+Request:
+{request_str[:2000]}
+
+Proporciona:
+1. Vulnerabilidades potenciales
+2.severidad
+3. Vector de explotacion
+4. Remediation"""
+
+        try:
+            response = requests.post(
+                f"{self.ollama_url}/api/chat",
+                json={
+                    "model": self.model,
+                    "messages": [{"role": "user", "content": prompt}],
+                    "stream": False
+                },
+                timeout=30
+            )
+            
+            if response.status_code == 200:
+                return response.json()["message"]["content"]
+            else:
+                return f"Error: {response.status_code}"
+                
+        except Exception as e:
+            return f"API Error: {str(e)}"
+
+# Guardar como ollama_security_burp.py y cargar en Burp Suite
+```
+
+### 3.2 integration con Metasploit
+
+```bash
+#!/bin/bash
+# 5_metasploit_ai.sh
+
+cat > msf_ai_assistant.rb << 'RUBY'
+# Metasploit AI Assistant
+# Guardar en: ~/.msf4/modules/auxiliary/ai/
+# Usage: use auxiliary/ai/msf_ai_assistant
+
+require 'rubygems'
+require 'json'
+require 'net/http'
+
+class Metasploit::Auxiliary::MsfAiAssistant < Msf::Auxiliary
+    include Msf::Exploit::Remote::HttpClient
+    
+    def initialize
+        super(
+            'Name' => 'AI Assistant for Pentesting',
+            'Description' => 'AI-powered pentesting assistant using local LLM',
+            'Author' => ['security-researcher'],
+            'License' => MSF_LICENSE,
+            'References' => [
+                ['URL', 'https://ollama.com']
+            ]
+        )
+        
+        register_options([
+            OptString.new('OLLAMA_URL', [true, 'Ollama URL', 'http://localhost:11434']),
+            OptString.new('MODEL', [true, 'Model to use', 'xploiter/the-xploiter']),
+            OptString.new('TARGET', [false, 'Target URL']),
+            OptEnum.new('MODE', [true, 'Operation mode', 'analyze', ['analyze', 'exploit', 'recon', 'scan']])
+        ])
+    end
+    
+    def run
+        print_status("AI Assistant starting...")
+        
+        case datastore['MODE']
+        when 'analyze'
+            analyze_target
+        when 'recon'
+            recon_target
+        when 'scan'
+            scan_target
+        end
+    end
+    
+    def analyze_target
+        target = datastore['TARGET'] || rhost
+        prompt = "Analiza el objetivo #{target} para vulnerabilidades conhecidas y sugiere vectores de ataque."
+        
+        result = query_ollama(prompt)
+        print_good("Analysis result:")
+        print_line(result)
+    end
+    
+    def recon_target
+        # Recopilar informacion
+        print_status("Recopilando informacion...")
+        prompt = "Genera un plan de reconocimiento para #{datastore['TARGET']}"
+        result = query_ollama(prompt)
+        print_good("Recon plan:")
+        print_line(result)
+    end
+    
+    def scan_target
+        prompt = "Sugiere comandos de Metasploit para escanear #{datastore['TARGET']}"
+        result = query_ollama(prompt)
+        print_good("Scan commands:")
+        print_line(result)
+    end
+    
+    def query_ollama(prompt)
+        uri = URI("#{datastore['OLLAMA_URL']}/api/generate")
+        http = Net::HTTP.new(uri.host, uri.port)
+        
+        req = Net::HTTP::Post.new(uri.path, 'Content-Type' => 'application/json')
+        req.body = {
+            model: datastore['MODEL'],
+            prompt: prompt,
+            stream: false
+        }.to_json
+        
+        res = http.request(req)
+        JSON.parse(res.body)['response']
+    end
+end
+RUBY
+
+# Instalar modulo
+mkdir -p ~/.msf4/modules/auxiliary/ai/
+cp msf_ai_assistant.rb ~/.msf4/modules/auxiliary/ai/
+
+echo "Modulo Metasploit instalado"
+echo "Usage: use auxiliary/ai/msf_ai_assistant"
+```
+
+### 3.3 Integration con Nuclei
+
+```bash
+#!/bin/bash
+# 6_nuclei_ai.sh
+
+cat > nuclei_ai_analyzer.py << 'PYEOF'
+#!/usr/bin/env python3
+"""
+Nuclei AI Analyzer
+Analiza resultados de Nuclei con IA local
+"""
+
+import json
+import subprocess
+import requests
+from pathlib import Path
+
+class NucleiAIAnalyzer:
+    def __init__(self, ollama_url="http://localhost:11434"):
+        self.url = ollama_url
+        self.model = "xploiter/the-xploiter"
+    
+    def run_nuclei_scan(self, target):
+        """Ejecutar Nuclei scan y obtener resultados"""
+        print(f"[*] Ejecutando Nuclei en {target}...")
+        
+        result = subprocess.run(
+            ["nuclei", "-u", target, "-json"],
+            capture_output=True,
+            text=True
+        )
+        
+        # Parsear resultados JSON
+        findings = []
+        for line in result.stdout.split('\n'):
+            if line.strip():
+                try:
+                    findings.append(json.loads(line))
+                except:
+                    pass
+        
+        return findings
+    
+    def analyze_with_ai(self, findings):
+        """Analizar hallazgos con IA"""
+        # Preparar prompt
+        finding_text = json.dumps(findings[:10], indent=2)
+        
+        prompt = f"""Eres experto en seguridad. Analiza estos hallazgos de Nuclei:
+        
+{finding_text}
+
+Proporciona:
+1. Priorizacion por riesgo
+2. Falsos positivos potenciales
+3. Remediation especifica
+4. Criterios de falsos positivos
+5. Recomendaciones de testing adicional"""
+
+        #Enviar a Ollama
+        response = requests.post(
+            f"{self.url}/api/generate",
+            json={
+                "model": self.model,
+                "prompt": prompt,
+                "stream": False
+            }
+        )
+        
+        if response.status_code == 200:
+            return response.json()['response']
+        return "Error en analisis"
+    
+    def full_analysis(self, target):
+        """Analisis completo target"""
+        findings = self.run_nuclei_scan(target)
+        print(f"[*] {len(findings)} hallazgos encontrados")
+        
+        analysis = self.analyze_with_ai(findings)
+        
+        print("\n" + "="*60)
+        print("ANALISIS DE NUCLEI CON IA")
+        print("="*60)
+        print(analysis)
+        
+        return analysis
+
+# Usage
+if __name__ == "__main__":
+    import sys
+    analyzer = NucleiAIAnalyzer()
+    
+    if len(sys.argv) > 1:
+        target = sys.argv[1]
+    else:
+        target = "http://localhost"
+    
+    analyzer.full_analysis(target)
+PYEOF
+
+chmod +x nuclei_ai_analyzer.py
+echo "Nuclei AI Analyzer listo"
+```
+
+---
+
+## Paso 4: Threat Hunting Automation
+
+### 4.1 Automated Threat Hunter
+
+```python
+#!/usr/bin/env python3
+"""
+Automated Threat Hunter con Ollama
+Nivel: Advanced - Enterprise
+"""
+
+import requests
+import json
+import time
+import hashlib
+import re
+from datetime import datetime, timedelta
+from collections import defaultdict
+
+class AutomatedThreatHunter:
+    def __init__(self, ollama_url="http://localhost:11434"):
+        self.url = ollama_url
+        self.model = "ALIENTELLIGENCE/cybersecuritythreatanalysisv2"
+        self.findings = []
+    
+    def collect_logs(self, log_sources):
+        """Recopilar logs de multiples fuentes"""
+        logs = {}
+        
+        for source, path in log_sources.items():
+            try:
+                with open(path) as f:
+                    logs[source] = f.readlines()
+            except:
+                logs[source] = []
+        
+        return logs
+    
+    def detect_anomalies(self, logs):
+        """Deteccion de anomalias con IA"""
+        # Preparar datos para analisis
+        log_summary = ""
+        for source, lines in logs.items():
+            recent = lines[-1000:] if len(lines) > 1000 else lines
+            log_summary += f"\n=== {source} ({len(recent)} entries) ===\n"
+            log_summary += "".join(recent[:50])  # First 50 lines
+        
+        prompt = f"""Analiza estos logs para detectar anomalias de seguridad:
+
+{log_summary}
+
+Busca:
+1. IPs sospechosas
+2. Patrones de ataque (brute force, injection, etc.)
+3. Comportamiento anomalo
+4. IoCs potenciales
+5. Recomendaciones de respuesta"""
+
+        try:
+            response = requests.post(
+                f"{self.url}/api/chat",
+                json={
+                    "model": self.model,
+                    "messages": [{"role": "user", "content": prompt}]
+                },
+                timeout=60
+            )
+            
+            if response.status_code == 200:
+                return response.json()['message']['content']
+        except Exception as e:
+            return f"Error: {e}"
+        
+        return "No se pudo completar el analisis"
+    
+    def hunt_ioc(self, iocs):
+        """Hunt especifico para IoCs"""
+        prompt = f"""Investiga estos IoCs y proporciona:
+1. Evaluacion de riesgo
+2. Correlacion con actores conocidos (APT)
+3. Posibles vectores de compromiso
+4. Recomendaciones de respuesta y contenirment
+
+IoCs:
+{json.dumps(iocs, indent=2)}"""
+
+        try:
+            response = requests.post(
+                f"{self.url}/api/chat",
+                json={
+                    "model": self.model,
+                    "messages": [{"role": "user", "content": prompt}]
+                }
+            )
+            return response.json()['message']['content']
+        except:
+            return "Error en IOC hunt"
+    
+    def generate_report(self, findings):
+        """Generar reporte de threat hunting"""
+        return {
+            "timestamp": datetime.now().isoformat(),
+            "findings": findings,
+            "recommendations": "Ver analisis detallado"
+        }
+
+# Demo
+hunter = AutomatedThreatHunter()
+
+#Example log collection
+log_sources = {
+    "ssh": "/var/log/auth.log",
+    "apache": "/var/log/apache2/access.log",
+    "nginx": "/var/log/nginx/access.log"
+}
+
+# Run hunt
+anomalies = hunter.detect_anomalies(log_sources)
+print(anomalies)
+```
+
+### 4.2 Malware Analysis Assistant
+
+```python
+#!/usr/bin/env python3
+"""
+Malware Analysis Assistant
+Analisis assisted por LLM local
+"""
+
+import subprocess
+import hashlib
+import requests
+
+class MalwareAnalyzer:
+    def __init__(self, ollama_url="http://localhost:11434"):
+        self.url = ollama_url
+        self.model = "xploiter/the-xploiter"
+    
+    def analyze_file(self, filepath):
+        """Analizar archivo sospechoso"""
+        # Calculate hashes
+        with open(filepath, 'rb') as f:
+            content = f.read()
+        
+        md5 = hashlib.md5(content).hexdigest()
+        sha1 = hashlib.sha1(content).hexdigest()
+        sha256 = hashlib.sha256(content).hexdigest()
+        
+        # Static analysis con strings
+        strings_output = subprocess.run(
+            ["strings", filepath],
+            capture_output=True,
+            text=True
+        ).stdout[:5000]
+        
+        # Analyze con IA
+        prompt = f"""Analiza este malware potenciales ( hashes: {sha256}):
+
+strings relevantes:
+{strings_output}
+
+Proporciona:
+1. Tipo de malware probable
+2. Funcionalidad observada
+3.Indicadores de compromiso
+4. Analisis de comportamiento
+5. Recomendaciones de disinfection"""
+
+        response = requests.post(
+            f"{self.url}/api/chat",
+            json={
+                "model": self.model,
+                "messages": [{"role": "user", "content": prompt}]
+            }
+        )
+        
+        return response.json()['message']['content']
+
+# Demo: analizar archivo
+# analyzer = MalwareAnalyzer()
+# result = analyzer.analyze_file("/tmp/suspicious_file")
+# print(result)
+```
+
+---
+
+## Paso 5: RAG Enterprise pentru Security
+
+### 5.1 Knowledge Base with Embeddings
+
+```bash
+#!/bin/bash
+# build_security_kb.sh
+
+echo "=== Construyendo Knowledge Base para Security ==="
+
+#Crear estructura
+mkdir -p kb/{owasp,mitre,nist,cve,vulns,tools}
+cd kb
+
+# Descargar documentacion critica
+echo "[1] OWASP..."
+curl -sL "https://raw.githubusercontent.com/OWASP/Top10/master/2023/OWASP-Top-10-for-2023.md" -o owasp/top10-2023.md
+
+echo "[2] MITRE ATT&CK..."
+curl -sL "https://attack.mitre.org/resources/attack-search/static/enterprise.json" -o mitre/attack-enterprise.json
+
+echo "[3] CWE Top 25..."
+curl -sL "https://cwe.mitre.org/data/aggregated/expanded/1000.csv" -o cwe/cwe-top-25.csv
+
+echo "[4] CVE Recientes..."
+curl -sL "https://curl.se/vuln.html" -o cve/recent-cves.html
+
+echo "[5] Tools Documentation...
+# Nuclei templates
+curl -sL "https://raw.githubusercontent.com/projectdiscovery/nuclei-templates/main/FUZZ.yaml" -o tools/fuzz-templates.yaml
+
+echo "Knowledge Base construida"
+echo ""
+ls -la */
+```
+
+### 5.2 RAG System Completo
+
+```python
+#!/usr/bin/env python3
+"""
+Enterprise Security RAG con Ollama
+"""
+
+import os
+import requests
+import json
+from pathlib import Path
+
+class SecurityRAG:
+    def __init__(self, kb_path="./kb", ollama_url="http://localhost:11434"):
+        self.kb_path = Path(kb_path)
+        self.url = ollama_url
+    
+    def search_context(self, query, max_files=5):
+        """Buscar contexto relevante"""
+        results = []
+        query_lower = query.lower()
+        
+        #Search en archivos
+        extensions = ['.md', '.txt', '.json', '.yaml', '.yml', '.csv']
+        
+        for ext in extensions:
+            for file_path in self.kb_path.rglob(f"*{ext}"):
+                try:
+                    with open(file_path) as f:
+                        content = f.read()
+                        
+                        # Simple relevance check
+                        if query_lower in content.lower():
+                            # Get relevant snippet
+                            lines = content.split('\n')
+                            relevant = [l for l in lines if query_lower in l.lower()]
+                            
+                            if relevant:
+                                results.append({
+                                    "file": str(file_path),
+                                    "lines": relevant[:10]
+                                })
+                except:
+                    pass
+        
+        return results[:max_files]
+    
+    def query(self, user_query, use_context=True):
+        """Query con RAG"""
+        if use_context:
+            # Get context
+            context_docs = self.search_context(user_query)
+            
+            # Build context string
+            context = "\n\n".join([
+                f"--- {doc['file']} ---\n" + "\n".join(doc['lines'])
+                for doc in context_docs
+            ])
+            
+            prompt = f"""Eres un experto en ciberseguridad. Responde la pregunta usando UNICAMENTE la documentacion proporcionada.
+
+DOCUMENTACION DE REFERENCIA:
+{context}
+
+PREGUNTA: {user_query}
+
+Si la respuesta no esta en la documentacion, indica que no tienes esa informacion especifica."""
+        else:
+            prompt = user_query
+        
+        # Query Ollama
+        response = requests.post(
+            f"{self.url}/api/chat",
+            json={
+                "model": "llama3.1:8b-instruct-q4_K_M",
+                "messages": [{"role": "user", "content": prompt}]
+            }
+        )
+        
+        return {
+            "response": response.json()['message']['content'],
+            "sources": [doc['file'] for doc in context_docs]
+        }
+    
+    def query_cybersecurity(self, question):
+        """Query especifico para ciberseguridad"""
+        return self.query(
+            question,
+            use_context=True
+        )
+
+# Demo
+rag = SecurityRAG()
+result = rag.query_cybersecurity("Como prevenir SQL Injection?")
+print(result['response'])
+print("\nFuentes:", result['sources'])
+```
+
+---
+
+## Ejercicio Final: Centro de Comando de Security AI
+
+### Objetivo
+
+Construir un centro de comandos integrado que combine:
+
+1. Ollama/LM Studio con modelos especializados
+2. Integracion con Burp Suite, Metasploit, Nuclei
+3. Threat Hunting automatizado
+4. RAG con documentacion
+5. Sistema de alertas
+
+### Criterios de Evaluacion (Nivel Medio-Alto)
+
+| Criterio | Puntos |
+|---------|-------|
+| Ollama + LM Studio configurados | 10 pts |
+| Modelos especializados instalados | 10 pts |
+|API con herramientas de pentest | 20 pts |
+| Threat Hunting automatizado | 20 pts |
+| RAG con KB completa | 20 pts |
+| Centro de comandos functional | 20 pts |
+
+### Entregable
+
+- Sistema integrado de AI Security Operations
+- Documentacion de uso
+- Runbook de respuesta a incidentes
+
+---
+
+## Recursos
+
+- Ollama Docs: https://docs.ollama.com
+- LM Studio: https://lmstudio.ai
+- Modelos Security: https://ollama.com/library
+- Ollama Pentesting: https://github.com/steveschofield/Ollama-Pentesting-AI
+- RAG Implementation: https://python.langchain.com
+
+---
+
+*Lab Anexo: Local LLMs for Cybersecurity (Advanced)*
+*Duration: 5 horas*
+*Level: Intermediate-Advanced*
+*License: CC BY-SA 4.0*

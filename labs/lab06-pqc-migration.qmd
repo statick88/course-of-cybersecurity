@@ -1,0 +1,383 @@
+---
+title: "Lab 6: Crypto Inventory para Migracion Post-Cuantica"
+module: "lab-06"
+type: "lab"
+description: "Practica de inventory criptografico y plan de migracion PQC"
+---
+
+# Lab 6: Crypto Inventory para Migracion Post-Cuantica
+
+## Objetivo del Laboratorio
+
+En este laboratorio, vas a **crear un inventory de sistemas criptograficos** para planificar la migracion post-cuantica. Este ejercicio te permitira:
+
+- Identificar todos los sistemas criptograficos
+- Categorizar por criticidad
+- Crear plan de migracion
+- Evaluar proveedores
+
+::: {.callout-warning}
+## ADVERTENCIA
+
+- NO ejecutar en sistemas de produccion sin autorizacion
+- Usar entornos de prueba exclusivamente
+- Este laboratorio es educativo
+:::
+
+## Duracion
+
+- Tiempo estimado: 75 minutos
+- Tipo: Individual
+- IMPORTANTE: DEBES teclear todos los comandos manualmente
+
+---
+
+## Paso 1: Preparar el Entorno
+
+### 1.1 Crear directorio
+
+```bash
+mkdir -p ~/cybersec-lab/pqc-migration
+cd ~/cybersec-lab/pqc-migration
+
+git init
+mkdir -p inventory reports templates
+```
+
+### 1.2 Instalar herramientas
+
+```bash
+# Python
+sudo apt update
+sudo apt install -y python3 python3-pip
+
+# Librerias crypto
+pip3 install cryptography pyopenssl
+
+# Verificar
+python3 --version
+python3 -c "from cryptography.hazmat.primitives import hashes; print('OK')"
+```
+
+---
+
+## Paso 2: Inventory de Algoritmos
+
+### 2.1 Herramienta de discovery
+
+```bash
+cat > inventory/discover.py << 'EOF'
+#!/usr/bin/env python3
+"""
+Crypto Inventory - Phase 1: Identify Systems
+"""
+
+def scan_tls():
+    """Escanear configuraciones TLS"""
+    
+    # Common TLS configurations to check
+    tls_configs = [
+        {"name": "TLS 1.3", "secure": True, "pqc_ready": True},
+        {"name": "TLS 1.2", "secure": True, "pqc_ready": False},
+        {"name": "TLS 1.1", "secure": False, "pqc_ready": False},
+        {"name": "TLS 1.0", "secure": False, "pqc_ready": False},
+    ]
+    
+    return tls_configs
+
+def scan_certs():
+    """Escanear certificados"""
+    
+    certs = [
+        {
+            "subject": "web.example.com",
+            "algo": "RSA-2048",
+            "key_size": 2048,
+            "vulnerable": True,
+            "migration": "2027-Q2",
+            "pqc_ready": False
+        },
+        {
+            "subject": "api.example.com", 
+            "algo": "ECDSA-P256",
+            "key_size": 256,
+            "vulnerable": True,
+            "migration": "2027-Q2",
+            "pqc_ready": False
+        },
+        {
+            "subject": "internal.example.com",
+            "algo": "RSA-4096",
+            "key_size": 4096,
+            "vulnerable": False,
+            "migration": None,
+            "pqc_ready": False
+        }
+    ]
+    
+    return certs
+
+def scan_hashing():
+    """Escanear funciones hash"""
+    
+    hashes = [
+        {"name": "SHA-256", "secure": True, "pqc_ready": True},
+        {"name": "SHA-512", "secure": True, "pqc_ready": True},
+        {"name": "SHA-1", "secure": False, "pqc_ready": False},
+        {"name": "MD5", "secure": False, "pqc_ready": False},
+        {"name": "bcrypt", "secure": True, "pqc_ready": True},
+        {"name": "Argon2", "secure": True, "pqc_ready": True},
+    ]
+    
+    return hashes
+
+def main():
+    print("=== Crypto Inventory Scanner ===")
+    print()
+    
+    # Scan TLS
+    print("[1] TLS Configurations:")
+    for cfg in scan_tls():
+        status = "VULNERABLE" if not cfg["secure"] else "OK"
+        print(f"  {cfg['name']:<12} {status}")
+    
+    print()
+    print("[2] Certificates:")
+    for cert in scan_certs():
+        status = "REQUIRES MIGRATION" if cert["vulnerable"] else "OK"
+        mig = f" ({cert['migration']})" if cert.get("migration") else ""
+        print(f"  {cert['subject']:<25} {cert['algo']:<15} {status}{mig}")
+    
+    print()
+    print("[3] Hash Functions:")
+    for h in scan_hashing():
+        status = "VULNERABLE" if not h["secure"] else "OK"
+        print(f"  {h['name']:<12} {status}")
+    
+    print()
+    print("Summary: Run full discovery in production")
+
+if __name__ == "__main__":
+    main()
+EOF
+
+chmod +x inventory/discover.py
+```
+
+---
+
+## Paso 3: Matriz de Riesgo
+
+### 3.1 Calculadora de riesgo
+
+```bash
+cat > inventory/risk_matrix.py << 'EOF'
+#!/usr/bin/env python3
+"""
+Risk Matrix para priorizacion de migracion
+"""
+
+def calculate_migration_risk(system):
+    """Calcula riesgo de migracion"""
+    
+    # Factors
+    data_sensitivity = system.get("data_sensitivity", "medium")
+    exposure = system.get("exposure", "internal")
+    user_count = system.get("users", 0)
+    current_algo = system.get("algo", "RSA")
+    
+    # Risk factors
+    risk = 0
+    
+    if data_sensitivity == "high":
+        risk += 30
+    elif data_sensitivity == "medium":
+        risk += 15
+    
+    if exposure == "public":
+        risk += 30
+    elif exposure == "partner":
+        risk += 15
+    
+    if user_count > 1000:
+        risk += 20
+    elif user_count > 100:
+        risk += 10
+    
+    # Algorithm vulnerability
+    vulnerable_algos = ["RSA-2048", "RSA-4096", "ECDSA", "DSA", "DH"]
+    if current_algo in vulnerable_algos:
+        risk += 20
+    
+    return risk
+
+def recommend_migration(systems):
+    """Recomienda orden de migracion"""
+    
+    recommendations = []
+    
+    for sys in systems:
+        risk = calculate_migration_risk(sys)
+        
+        if risk >= 80:
+            timeline = "Q2 2026"
+            priority = "P1-CRITICAL"
+        elif risk >= 60:
+            timeline = "Q4 2026"
+            priority = "P2-HIGH"
+        elif risk >= 40:
+            timeline = "Q2 2027"
+            priority = "P3-MEDIUM"
+        else:
+            timeline = "Q4 2027"
+            priority = "P4-LOW"
+        
+        recommendations.append({
+            "name": sys["name"],
+            "risk": risk,
+            "timeline": timeline,
+            "priority": priority,
+            "action": f"Replace {sys.get('algo')} with ML-KEM"
+        })
+    
+    # Sort by risk
+    recommendations.sort(key=lambda x: x["risk"], reverse=True)
+    return recommendations
+
+def main():
+    # Example systems
+    systems = [
+        {"name": "Web TLS Gateway", "algo": "RSA-2048", "data_sensitivity": "high", "exposure": "public", "users": 5000},
+        {"name": "API Gateway", "algo": "ECDSA", "data_sensitivity": "high", "exposure": "public", "users": 2500},
+        {"name": "Email Server", "algo": "RSA-2048", "data_sensitivity": "medium", "exposure": "internal", "users": 500},
+        {"name": "File Storage", "algo": "AES-256", "data_sensitivity": "high", "exposure": "internal", "users": 200},
+        {"name": "Dev Tools", "algo": "RSA-4096", "data_sensitivity": "low", "exposure": "internal", "users": 50},
+    ]
+    
+    recs = recommend_migration(systems)
+    
+    print("=== Migration Risk Matrix ===")
+    print()
+    print(f"{'System':<20} {'Risk':>6} {'Priority':<12} {'Timeline':<12} {'Action'}")
+    print("-" * 80)
+    
+    for r in recs:
+        print(f"{r['name']:<20} {r['risk']:>6} {r['priority']:<12} {r['timeline']:<12} {r['action']}")
+    
+    print()
+    print("Recommendations:")
+    print("1. P1: Migrate in Q2 2026")
+    print("2. P2: Migrate in Q4 2026")
+    print("3. P3: Migrate in Q2 2027")
+    print("4. P4: Migrate in Q4 2027")
+
+if __name__ == "__main__":
+    main()
+EOF
+
+chmod +x inventory/risk_matrix.py
+```
+
+---
+
+## Paso 4: Estandares NIST PQC
+
+### 4.1 Reference de algoritmos
+
+```bash
+cat > inventory/pqc_reference.py << 'EOF'
+#!/usr/bin/env python3
+"""
+NIST PQC Standards Reference
+"""
+
+PQC_ALGORITHMS = {
+    "key_encapsulation": {
+        "ml_kem": {
+            "name": "ML-KEM (Kyber)",
+            "standard": "FIPS 203",
+            "security": "NIST Level 3",
+            "status": "Final",
+            "use": "Key encapsulation"
+        }
+    },
+    "digital_signature": {
+        "ml_dsa": {
+            "name": "ML-DSA (Dilithium)", 
+            "standard": "FIPS 204",
+            "security": "NIST Level 3",
+            "status": "Final",
+            "use": "Digital signatures"
+        },
+        "slh_dsa": {
+            "name": "SLH-DSA (SPHINCS+)",
+            "standard": "FIPS 205",
+            "security": "NIST Level 5",
+            "status": "Final", 
+            "use": "Hash-based signatures"
+        }
+    }
+}
+
+def show_reference():
+    """Muestra referencia"""
+    
+    print("=== NIST PQC Standards ===")
+    print()
+    
+    print("Key Encapsulation:")
+    for k, v in PQC_ALGORITHMS["key_encapsulation"].items():
+        print(f"  {v['name']}")
+        print(f"    Standard: {v['standard']}")
+        print(f"    Security: {v['security']}")
+        print(f"    Use: {v['use']}")
+        print()
+    
+    print("Digital Signatures:")
+    for k, v in PQC_ALGORITHMS["digital_signature"].items():
+        print(f"  {v['name']}")
+        print(f"    Standard: {v['standard']}")
+        print(f"    Security: {v['security']}")
+        print(f"    Use: {v['use']}")
+        print()
+
+if __name__ == "__main__":
+    show_reference()
+EOF
+
+chmod +x inventory/pqc_reference.py
+```
+
+---
+
+## Ejercicio: Crear Migration Plan
+
+### Objetivo
+
+1. Completar inventory de sistemas
+2. Evaluar riesgo de migracion
+3. Crear timeline de migracion
+
+### Entregables
+
+1. Plan en `reports/migration_plan.md`
+
+---
+
+## Comandos
+
+```bash
+# Discovery
+python3 inventory/discover.py
+
+# Risk Matrix
+python3 inventory/risk_matrix.py
+
+# Reference
+python3 inventory/pqc_reference.py
+```
+
+---
+
+*Lab 6/7 - Curso Fundamentos de Ciberseguridad*
+*Duration: 75 minutes*

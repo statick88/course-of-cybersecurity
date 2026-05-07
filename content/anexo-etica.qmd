@@ -1,0 +1,224 @@
+---
+title: "Anexo: Uso Etico en Ciberseguridad"
+module: "anexo-02"
+type: "anexo"
+description: "Marco etico y legal para profesionales de ciberseguridad"
+---
+
+# Anexo: Uso Etico en Ciberseguridad
+
+## Importancia de la Etica en Ciberseguridad
+
+Los profesionales de ciberseguridad tienen un poder unico: la capacidad de encontrar vulnerabilidades, acceder a sistemas, y potentially detener ataques. Sin embargo, este poder debe exercised con responsabilidad.
+
+---
+
+## Principios Eticos Fundamentales
+
+### 1. Integridad
+
+> "Haz lo correcto, incluso cuando nadie esta mirando"
+
+- No exploits vulnerabilidades sin autorizacion
+- No roees informacion sensible
+- Reporta hallazgos de manera responsable
+
+### 2. Confidencialidad
+
+- Mantener en secreto la informacion obtenida
+- No compartir con terceros sin autorizacion
+- Proteger datos de los clientes
+
+### 3. Competencia
+
+- Solo realizar actividades dentro de tu experiencia
+- Mantenerte actualizado
+- Buscar ayuda cuando sea necesario
+
+### 4. Responsabilidad
+
+- Asumir responsabilidad de tus acciones
+- Documentar todo el trabajo
+- Proporcionar recomendaciones de mejora
+
+---
+
+## Marco Legal
+
+### Leyes Aplicables en Ecuador
+
+| Ley | Descripcion | Penas |
+|-----|-------------|-------|
+| CODIGO PENAL ART. 202-203 | Acceso ilegitimo | 1-3 anos |
+| LOGIDP | Proteccion de datos | Multas hasta $500K |
+| Ley de Delitos Informaticos | Cibercrimen | Variable |
+
+### Leyes en Otros Paises LATAM
+
+| Pais | Ley Principal | Jurisdiccion |
+|------|---------------|--------------|
+| Colombia | Ley 1273 (Delitos informaticos) | Nacional |
+| Peru | Decreto Legislativo 1352 | Nacional |
+| Chile | Ley 19.223 (Delitos informaticos) | Nacional |
+| Argentina | Ley 26388 (Delitos informaticos) | Nacional |
+
+---
+
+## Consentimiento y Autorizacion
+
+### Reglas de Oro
+
+1. **NUNCA** realices pruebas sin autorizacion por escrito
+2. **SIEMPRE** define el alcance (scope) en el contrato
+3. **DOCUMENTA** todo lo que haces
+4. **REPORTA** inmediatamente cualquier hallazgo critico
+
+### Ejemplo de Clause de Autorizacion
+
+```
+AUTORIZACION DE PRUEBA DE SEGURIDAD
+
+Yo, [NOMBRE CLIENTE], representante legal de [EMPRESA],
+autorizo a [NOMBRE CONSULTOR] a realizar pruebas de seguridad
+en los siguientes sistemas:
+
+- Sistema: [DESCRIPCION]
+- IP/Dominio: [DIRECCIONES]
+- Alcance: [LIMITACIONES]
+- Periodo: [FECHAS]
+
+El alcance NO incluye:
+- Sistemas de produccion criticos
+- Datos de clientes reales
+- Redes de terceros
+
+Firma: _____________  Fecha: _____________
+```
+
+---
+
+## Bug Bounty: Cuando es Etico?
+
+### Programas Publicos
+
+| Plataforma | Tipo | Reglas |
+|------------|------|--------|
+| HackerOne | Bug bounty | Seguir rules del programa |
+| Bugcrowd | Bug bounty | Scope definido |
+| OpenBugBounty | Vulnerability disclosure | Responsable |
+
+### Reglas de Engagement
+
+1. **Leer** los terminos del programa
+2. **Respetar** el scope definido
+3. **NO Explotar** mas alla de lo necesario
+4. **REPORTAR** de manera responsable
+5. **NO extorner** a las empresas
+
+---
+
+## Como Reportar una Vulnerabilidad
+
+### Best Practices
+
+1. **NO публичный el hallazgo** antes de dar tiempo al vendor
+2. **COORDINAR** con el equipo de seguridad
+3. **DOCUMENTAR** conPoC (Proof of Concept)
+4. **SEGUIR** el proceso de responsible disclosure
+
+### Template de Reporte
+
+```
+REPORTE DE VULNERABILIDAD
+
+Titulo: [Resumen ejecutivo]
+Severidad: [Critica/Alta/Media/Baja]
+Sistemaafectado: [URL/IP]
+Descripcion: [Que encontraste]
+Impacto: [Que podria pasar]
+PoC: [Comandos de prueba]
+Recomendacion: [Como mitigar]
+```
+
+### Plazos de Responsible Disclosure
+
+| Severidad | Plazo de espera |
+|-----------|------------------|
+| Critica | 7 dias |
+| Alta | 14 dias |
+| Media | 30 dias |
+| Baja | 90 dias |
+
+---
+
+## Casos Eticos: Que Hacer?
+
+### Escenario 1: Encuentras datos sensibles sin encryption
+
+**QUE HACER**:
+
+- Documentar el hallazgo
+- Reportar internamente
+- NO descargar los datos
+- NO compartir con nadie
+
+### Escenario 2: Tu cliente te pide que hackees a su competencia
+
+**QUE HACER**:
+
+- Rechazar la solicitud
+- Explicar las consecuencias legales
+- Ofrecer servicios eticos alternativos
+
+### Escenario 3: Encuentras vulnerabilidad critica en un sistema sin autorizacion
+
+**QUE HACER**:
+
+- NO explotarla
+- Documentar offline
+- Reportar al CERT local
+- Esperar respuesta antes de revelar
+
+---
+
+## Recursos de Etica
+
+### Codigos de Etica
+
+- (ISC)2 Code of Ethics
+- ISACA Code of Professional Ethics
+- EC-Council Code of Ethics
+
+### Organismos de referencia
+
+- FIRST: Forum of Incident Response Teams
+- ISAC: Information Sharing and Analysis Centers
+- CERTs nacionales
+
+---
+
+## Juramento del Profesional de Seguridad
+
+```
+Yo, como profesional de ciberseguridad, jurando:
+
+- Usare mis conocimientos de manera etica
+- Protectere la informacion confidencial
+- No causare dano intencional
+- Mantendre actualizada mi competencia
+- Reportare vulnerabilidades responsablemente
+- Defendere el bien comun digitales
+
+Este es mi compromiso.
+```
+
+---
+
+## Siguiente Modulo
+
+Continuamos con el **Modulo 3: Arquitectura Zero Trust**
+
+---
+
+*Anexo 2 - Etica en Ciberseguridad - Curso Fundamentos de Ciberseguridad*
+*CC BY-SA 4.0 - Autor: Diego Saavedra*

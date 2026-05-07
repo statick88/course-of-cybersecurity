@@ -1,0 +1,112 @@
+---
+title: "Módulo 1: Introducción a la Ciberseguridad"
+module: "modulo-01"
+type: "content"
+description: "Aprende los fundamentos del marco NIST CSF 2.0 de forma sencilla"
+---
+
+# Módulo 1: Introducción a la Ciberseguridad
+
+## 🎯 Objetivos de Aprendizaje
+
+Al finalizar este módulo, serás capaz de:
+
+- ✅ Explicar qué es la ciberseguridad en tus propias palabras
+- ✅ Describir las 6 funciones del marco NIST CSF 2.0
+- ✅ Entender por qué este marco es importante para cualquier persona
+
+---
+
+## 🤔 ¿Qué es la Ciberseguridad?
+
+Imaginemos que tienes una casa. Para protegerla, instalas cerraduras en las puertas, pones cámaras de seguridad, y tal vez una alarma. Todo esto para evitar que entren ladrones.
+
+**La ciberseguridad es exactamente lo mismo pero para tu vida digital:**
+
+| Tu Casa | Tu Vida Digital |
+|--------|----------------|
+| Cerraduras | Contraseñas seguras |
+| Cámara de seguridad | Antivirus |
+| Alarma | Alertas de seguridad |
+| Vecino vigilant | Monitoreo activo |
+
+**En términos simples:** La ciberseguridad es proteger tu información y tus dispositivos digitales de personas malas que quieren robar tus datos o dañarte.
+
+---
+
+## 📖 Las 6 Funciones del NIST CSF 2.0
+
+El **NIST** (Instituto Nacional de Estándares y Tecnología de EE.UU.) creó un marco llamado **NIST CSF 2.0** que es como un "escudo de protección" para cualquier organización [NIST, 2024].
+
+Este marco tiene **6 funciones** que representan las diferentes partes de estar seguro:
+
+### 1. 🏛️ GOBERNAR (Govern)
+
+**Analogía:** Es como las reglas de tu casa. ¿Quién tiene llaves? ¿Qué haces si alguien llama a la puerta?
+
+**En términos sencillos:** Establecer las políticas y normas de seguridad.
+
+### 2. 🔍 IDENTIFICAR (Identify)
+
+**Analogía:** Hacer un inventario de tus cosas valiosas. ¿Qué tienes? ¿Qué es más importante proteger?
+
+**En términos sencillos:** Conocer tus activos, datos y sistemas.
+
+### 3. 🛡️ PROTEGER (Protect)
+
+**Analogía:** Instalar cerraduras, alarmas, cámaras.
+
+**En términos sencillos:** Implementar controles para evitar ataques.
+
+### 4. 👁️ DETECTAR (Detect)
+
+**Analogía:** Tener sensores que te avisan cuando alguien se acerca.
+
+**En términos sencillos:** Monitorear y detectar amenazas.
+
+### 5. 🚀 RESPONDER (Respond)
+
+**Analogía:** Saber qué hacer cuando suena la alarma.
+
+**En términos sencillos:** Actuar cuando ocurre un incidente.
+
+### 6. ♻️ RECUPERAR (Recover)
+
+**Analogía:** Tener un respaldo de tus cosas importantes.
+
+**En términos sencillos:** Restaurar sistemas después de un ataque.
+
+---
+
+## 💡 Analogía Final: El Escudo de Protección
+
+Puedes explicarle a cualquier persona (incluso tu abuela):
+
+> "Imagina que tu vida digital es una casa. El NIST CSF es cómo organizar todas las medidas de seguridad: primero sabes qué tienes (identificar), luego pones cerraduras (proteger), después instalas una alarma (detectar), tienes un plan si alguien entra (responder), y guardas tus cosas en un lugar seguro (recuperar)."
+
+---
+
+## 📚 Fuentes
+
+- NIST. (2024). *Spanish Translation of the NIST Cybersecurity Framework 2.0*. https://www.nist.gov/publications/spanish-translation-nist-cybersecurity-framework-20
+
+---
+
+## ✅ Resumen del Módulo
+
+| Concepto | Explicación Simple |
+|----------|-----------------|
+| Ciberseguridad | Proteger tu vida digital igual que tu casa |
+| NIST CSF 2.0 | Un "escudo" con 6 funciones de protección |
+| Gobernar | Establecer reglas |
+| Identificar | Saber qué proteger |
+| Proteger | Instalar cerraduras |
+| Detectar | Alarmas y sensores |
+| Responder | Plan de acción |
+| Recuperar | Respaldo y restauración |
+
+---
+
+## ➡️ Siguiente: Módulo 2
+
+En el próximo módulo, aprenderemos sobre seguridad en redes: ¿qué es una VPN y por qué ZTNA es diferente?

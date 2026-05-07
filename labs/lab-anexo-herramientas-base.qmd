@@ -1,0 +1,800 @@
+---
+title: "Lab Anexo: Herramientas Avanzadas de Hacking"
+module: "lab-anexo-05"
+type: "lab"
+description: "Herramientas profesionales de pentesting: hydra, john, medusa, hashcat, crunch, cewl, dirb, gobuster, amass, nikto, wpscan, theHarvester, recon-ng, aircrack-ng y mas"
+---
+
+# Lab Anexo: Herramientas Avanzadas de Hacking
+
+## Objetivo del Laboratorio
+
+En este laboratorio vas a dominar las herramientas profesionales de pentesting y hacking etico:
+
+- Ejecutar ataques de password con hydra, john, medusa, hashcat, crunch, cewl
+- Enumerar directorios y subdominios
+- Escanear vulnerabilidades web
+- Realizar OSINT avanzado
+- Ejecutar ataques wireless
+- Crear laboratorios vulnerables para practica
+
+::: {.callout-warning}
+## ADVERTENCIA LEGAL
+
+- Estas herramientas son para uso ETICO y EDUCATIVO EXCLUSIVAMENTE
+- NUNCA usar en sistemas sin autorizacion escrita y vigente
+- Siempre practicar en laboratorios controlados o CTF legales
+- Conocer y cumplir la legislacion local sobre ciberseguridad
+- Obtener permisos escritos antes de cualquier pentest
+- Violar estas reglas puede ser ilegal y penalizable
+:::
+
+## Requisitos
+
+- Conocimiento de Linux CLI
+- Familiaridad con redes TCP/IP
+- Acceso a laboratorio vulnerable (proporcionado en este lab)
+- Importante: DEBES teclear todos los comandos manualmente
+
+## Duracion
+
+- Tiempo estimado: 12 horas
+- Tipo: Individual
+- IMPORTANTE: DEBES teclear todos los comandos - NO copy-paste
+
+---
+
+# Workflow 1: Ataques de Password
+
+## Objetivo
+
+Dominar las herramientas de cracking de passwords: hydra, john the ripper, medusa, hashcat, crunch y cewl
+
+## Escenario
+
+Eres un pentester autorizado. Tu cliente te ha dado permiso para probar la robustez de sus passwords en el laboratorio vulnerable.
+
+## Pasos
+
+### Paso 1: Hydra - Brute Force de Servicios
+
+**Objetivo:** Realizar ataques de fuerza bruta contra servicios remotos
+
+**Tu tarea:** Instalar hydra y ejecutar un ataque de fuerza bruta basico contra SSH
+
+**Pista:** Hydra es parte de la suite THC. El flag "-l" es para login simple, "-L" para archivo de logins
+
+**Comando parcial para completar:**
+`hydra -l admin -P /usr/share/wordlists/rockyou.txt`
+
+**Resultado esperado:** Si el password es debil, hydra lo crackeara y mostrara el password
+
+### Paso 2: John the Ripper - Crack de Hashes
+
+**Objetivo:** Crackear hashes de passwords almacenados
+
+**Tu tarea:** Usar john para crackear un hash MD5 conocido
+
+**Pista:** John puede detectar el tipo de hash automaticamente. Primero crea un archivo con el hash
+
+**Comando esperado (parcial):**
+`echo "5d41402abc4b2a76b9719d911017c592" > hash.txt`
+
+**Siguiente paso:** Ejecutar john contra el archivo
+`john`
+
+**Resultado esperado:** John mostrara el password crackeado
+
+### Paso 3: Medusa - Brute Force Paralelo
+
+**Objetivo:** Ejecutar ataques de fuerza bruta usando Medusa
+
+**Tu tarea:** Comparar hydra y medusa contra el mesmo objetivo
+
+**Pista:** Medusa usa "-h" para host y "-u" para usuario
+
+**Comando parcial:**
+`medusa -h 127.0.0.1 -u admin -P`
+
+**Resultado esperado:** Similar a hydra pero con diferente motor
+
+### Paso 4: Hashcat - GPU Acceleration
+
+**Objetivo:** Usar hashcat para cracking rapido con GPU
+
+**Tu tarea:** Verificar que hashcat detecta el modo de hash correcto
+
+**Pista:** El flag "-m" especifica el modo de hash, "-a" el modo de ataque
+
+**Comando parcial:**
+`hashcat -m 0 -a 0`
+
+**Resultado esperado:** Lista de modos disponibles
+
+### Paso 5: Crunch - Generador de Wordlists
+
+**Objetivo:** Generar wordlists personalizadas
+
+**Tu tarea:** Crear una wordlist minima para practicar
+
+**Pista:** Formato: minimo maximo caracteres
+
+**Comando parcial:**
+`crunch 4 6`
+
+**Resultado esperado:** Generara todas las combinaciones de 4-6 caracteres
+
+### Paso 6: CEWL - Wordlist desde Web
+
+**Objetivo:** Extraer palabras de un sitio web para wordlist
+
+**Tu tarea:** Usar cewl para crear una wordlist desde una URL
+
+**Pista:** CEWL tiene flag "-d" para profundidad
+
+**Comando parcial:**
+`cewl http://localhost:8888`
+
+**Resultado esperado:** Archivo con palabras del sitio
+
+## Verificacion
+
+| Herramienta | Instalada | Functional | Password Crackeado |
+|-------------|----------|------------|---------------------|
+| hydra | ⬜ | ⬜ | ⬜ |
+| john | ⬜ | ⬜ | ⬜ |
+| medusa | ⬜ | ⬜ | ⬜ |
+| hashcat | ⬜ | ⬜ | ⬜ |
+| crunch | ⬜ | ⬜ | ⬜ |
+| cewl | ⬜ | ⬜ | ⬜ |
+
+---
+
+# Workflow 2: Enumeracion de Directorios
+
+## Objetivo
+
+Dominar dirb y gobuster para descubrir directorios y archivos ocultos
+
+## Escenario
+
+Estas auditando una aplicacion web. Necesitas descubrir rutas escondidas que puedan revelar vulnerabilidades.
+
+## Pasos
+
+### Paso 1: DIRB - Enumeracion basica
+
+**Objetivo:** Descubrir directorios ocultos en un servidor web
+
+**Tu tarea:** Usar dirb contra el servidor vulnerable
+
+**Pista:** dirb necesita una URL base y opcionalmente una wordlist
+
+**Comando parcial:**
+`dirb http://localhost:8888`
+
+**Resultado esperado:** Lista de directorios y archivos encontrados
+
+### Paso 2: GOBUSTER - Enumeracion rapida
+
+**Objetivo:** Usar gobuster para descubrimiento de directorios
+
+**Tu tarea:** Ejecutar gobuster en modo dir contra el mismo objetivo
+
+**Pista:** Gobuster requiere el flag "dir" para modo enumeracion
+
+**Comando parcial:**
+`gobuster dir -u`
+
+**Resultado esperado:** Resultados en formato diferente a dirb
+
+### Paso 3: WFuzz - Fuzzing avanzado
+
+**Objetivo:** Usar wfuzz para fuzzing personalizado
+
+**Tu tarea:** Probar wfuzz con parametros personalizados
+
+**Pista:** El flag "-z" define el tamano del payload
+
+**Comando parcial:**
+`wfuzz -c -z`
+
+**Resultado esperado:** Resultados con indicadores visuales
+
+## Verificacion
+
+| Herramienta | Instalada | Functional | Directorios Encontrados |
+|-------------|----------|------------|--------------------------|
+| dirb | ⬜ | ⬜ | ⬜ |
+| gobuster | ⬜ | ⬜ | ⬜ |
+| wfuzz | ⬜ | ⬜ | ⬜ |
+
+---
+
+# Workflow 3: Enumeracion de Subdominios
+
+## Objetivo
+
+Dominar herramientas para descubrir subdominios
+
+## Pasos
+
+### Paso 1: AMASS - Enumeracion profunda
+
+**Objetivo:** Usar amass para descubrir subdominios
+
+**Tu tarea:** Ejecutar amass en modo enumeracion
+
+**Pista:** Amass tiene submódulos para diferentes tecnicas
+
+**Comando parcial:**
+`amass enum -d`
+
+**Resultado esperado:** Lista de subdominios descubiertos
+
+### Paso 2: Sublist3r - Enumeracion rapida
+
+**Objetivo:** Usar sublist3r para descubrimiento rapido
+
+**Tu tarea:** Ejecutar sublist3r contra un dominio
+
+**Pista:** El flag "-d" especifica el dominio
+
+**Comando parcial:**
+`python3 sublist3r.py -d`
+
+**Resultado esperado:** Subdominios encontrados
+
+### Paso 3: DNSMAP - Enumeracion DNS
+
+**Objetivo:** Usar dnsmap para mapeo DNS
+
+**Tu tarea:** Ejecutar dnsmap contra un dominio
+
+**Pista:** dnsmap puede usar wordlists
+
+**Comando parcial:**
+`dnsmap`
+
+**Resultado esperado:** Servidores DNS y registros encontrados
+
+### Paso 4: FIERCE - Reconocimiento DNS
+
+**Objetivo:** Usar fierce para descubrimiento de subdominios
+
+**Tu tarea:** Ejecutar fierce contra un objetivo
+
+**Pista:** Fierce es mas simple que amass
+
+**Comando parcial:**
+`fierce --domain`
+
+**Resultado esperado:** Subdominios y rangos de IP
+
+## Verificacion
+
+| Herramienta | Instalada | Functional | Subdominios Encontrados |
+|-------------|----------|------------|--------------------------|
+| amass | ⬜ | ⬜ | ⬜ |
+| sublist3r | ⬜ | ⬜ | ⬜ |
+| dnsmap | ⬜ | ⬜ | ⬜ |
+| fierce | ⬜ | ⬜ | ⬜ |
+
+---
+
+# Workflow 4: Escaneo de Vulnerabilidades Web
+
+## Objetivo
+
+Dominar nikto, wpscan, skipfish y w3af para auditing web
+
+## Pasos
+
+### Paso 1: NIKTO - Escaneo basico
+
+**Objetivo:** Ejecutar nikto contra un servidor web
+
+**Tu tarea:** Ejecutar un escaneo basico con nikto
+
+**Pista:** El flag "-h" especifica el host
+
+**Comando parcial:**
+`nikto -h http://localhost:8888`
+
+**Resultado esperado:** Lista de vulnerabilidades potenciales
+
+### Paso 2: WPSCAN - WordPress
+
+**Objetivo:** Escanear sitios WordPress
+
+**Tu tarea:** Ejecutar wpscan contra un sitio WordPress
+
+**Pista:** WPScan tiene flags especiales para enumeracion
+
+**Comando parcial:**
+`wpscan --url`
+
+**Resultado esperado:** Plugins, temas y usuarios vulnerables
+
+### Paso 3: SKIPFISH - Crawling seguro
+
+**Objetivo:** Usar skipfish para crawling automatizado
+
+**Tu tarea:** Preparar skipfish para un escaneo
+
+**Pista:** Skipfish necesita un diccionario
+
+**Comando parcial:**
+`skipfish -o`
+
+**Resultado esperado:** Reporte HTML con hallazgos
+
+### Paso 4: W3AF - Framework completo
+
+**Objetivo:** Usar w3af para auditing completo
+
+**Tu tarea:** Iniciar w3af en modo consola
+
+**Pista:** w3af tiene interfaz grafica y CLI
+
+**Comando parcial:**
+`w3af_console`
+
+**Resultado esperado:** Consola interactiva
+
+## Verificacion
+
+| Herramienta | Instalada | Functional | Vulnerabilidades Encontradas |
+|-------------|----------|------------|------------------------------|
+| nikto | ⬜ | ⬜ | ⬜ |
+| wpscan | ⬜ | ⬜ | ⬜ |
+| skipfish | ⬜ | ⬜ | ⬜ |
+| w3af | ⬜ | ⬜ | ⬜ |
+
+---
+
+# Workflow 5: OSINT
+
+## Objetivo
+
+Dominar herramientas de recopilacion de informacion
+
+## Pasos
+
+### Paso 1: theHarvester - Emails y mas
+
+**Objetivo:** Recopilar emails y subdominios
+
+**Tu tarea:** Ejecutar theHarvester contra un dominio
+
+**Pista:** El flag "-b" especifica la fuente
+
+**Comando parcial:**
+`theHarvester -d example.com -b`
+
+**Resultado esperado:** Emails, subdominios y mas
+
+### Paso 2: RECON-NG - Framework
+
+**Objetivo:** Usar recon-ng para OSINT avanzado
+
+**Tu tarea:** Iniciar recon-ng y mostrar workspaces
+
+**Pista:** Recon-ng es un modulo CLI como msfconsole
+
+**Comando parcial:**
+`recon-ng`
+
+**Resultado esperada:** Consola interactiva
+
+### Paso 3: SPFO - SPF Analysis
+
+**Objetivo:** Analizar registros SPF
+
+**Tu tarea:** Usar/spfgo para analizar SPF
+
+**Pista:** spfgo analiza la configuracion de email
+
+**Comando parcial:**
+`spfgo`
+
+**Resultado esperado:** Analisis de registros SPF
+
+### Paso 4: SOCIAL-SEARCHER - Redes sociales
+
+**Objetivo:** Buscar en redes sociales
+
+**Tu tarea:** Usar social-searcher para busqueda
+
+**Pista:** social-searcher busca en multiple plataformas
+
+**Comando parcial:**
+`python3 social_searcher.py`
+
+**Resultado esperado:** Resultados de redes sociales
+
+## Verificacion
+
+| Herramienta | Instalada | Functional | Informacion Recopilada |
+|-------------|----------|------------|-----------------------|
+| theHarvester | ⬜ | ⬜ | ⬜ |
+| recon-ng | ⬜ | ⬜ | ⬜ |
+| spfgo | ⬜ | ⬜ | ⬜ |
+| social-searcher | ⬜ | ⬜ | ⬜ |
+
+---
+
+# Workflow 6: Ataques Wireless
+
+## Objetivo
+
+Dominar herramientas para auditoria de redes wireless
+
+## Escenario
+
+Estas en un laboratorio controlado con redes wireless de prueba. Has obtenido autorización específica para auditar estas redes.
+
+::: {.callout-warning}
+## ADVERTENCIA ESPECIAL
+
+- Solo audita redes que TE PERTENECAN o para las cuales TIENES AUTORIZACION ESCRITA
+- Auditar redes ajenas sin permiso es ILEGAL en la mayoria de paises
+- Usalaboresatorios controlados para practicar
+:::
+
+## Pasos
+
+### Paso 1: AIRCRACK-NG - Fundamentos
+
+**Objetivo:** Poner la tarjeta en modo monitor
+
+**Tu tarea:** Poner tu interfaz wireless en modo monitor
+
+**Pista:** airmon-ng es la herramienta principal
+
+**Comando parcial:**
+`airmon-ng start`
+
+**Resultado esperado:** Interfaz en modo monitor (ej: wlan0mon)
+
+### Paso 2: AIRODUMP-NG - Captura
+
+**Objetivo:** Capturar trafico wireless
+
+**Tu tarea:** Usar airodump-ng para ver redes
+
+**Pista:** El flag "--channel" filtra un canal especifico
+
+**Comando parcial:**
+`airodump-ng wlan0mon`
+
+**Resultado esperado:** Lista de redes y clientes
+
+### Paso 3: AIREPLAY-NG - Deauthentication
+
+**Objetivo:** Capturar handshakes
+
+**Tu tarea:** Enviar paquetes deauth para capturar handshake
+
+**Pista:** Necesitas la MAC del AP y del cliente
+
+**Comando parcial:**
+`aireplay-ng --deauth`
+
+**Resultado esperado:** Captura del handshake
+
+### Paso 4: AIRCRACK-NG - Crack
+
+**Objetivo:** Crackear el password
+
+**Tu tarea:** Usar aircrack-ng contra el handshake
+
+**Pista:** Se necesita una wordlist
+
+**Comando parcial:**
+`aircrack-ng -w`
+
+**Resultado esperado:** Password crackeado
+
+### Paso 5: REAVER - WPS
+
+**Objetivo:** Atacar WPS
+
+**Tu tarea:** Usar reaver contra un AP con WPS
+
+**Pista:** WPS es mas vulnerable que WPA
+
+**Comando parcial:**
+`reaver -i`
+
+**Resultado esperado:** PIN WPS y password
+
+### Paso 6: WIFITE - Automatizacion
+
+**Objetivo:** Usar wifite para automatizacion
+
+**Tu tarea:** Ejecutar wifite y observar su flujo
+
+**Pista:** wifite automatiza todo el proceso
+
+**Comando parcial:**
+`wifite`
+
+**Resultado esperado:** Interfaz interactiva
+
+## Verificacion
+
+| Herramienta | Instalada | Modo Monitor | Captura Exitosa |
+|-------------|----------|-------------|-----------------|
+| aircrack-ng | ⬜ | ⬜ | ⬜ |
+| aireplay-ng | ⬜ | ⬜ | ⬜ |
+| airodump-ng | ⬜ | ⬜ | ⬜ |
+| reaver | ⬜ | ⬜ | ⬜ |
+| wifite | ⬜ | ⬜ | ⬜ |
+
+---
+
+# Laboratorio Docker: Vulnerable Labs
+
+## Objetivo
+
+Crear un laboratorio vulnerables profesionales para practicar
+
+## Docker Compose
+
+```bash
+#!/bin/bash
+# docker_security_lab.sh
+
+cat > docker-compose.yml << 'EOF'
+version: '3.8'
+
+services:
+  # DVWA - Web Vulnerable
+  dvwa:
+    image: vulnerables/dvwa
+    ports:
+      - "8888:80"
+    environment:
+      - SECURITY_LEVEL=low
+    privileged: true
+    networks:
+      -SecLab
+  
+  # Metasploitable
+  metasploitable:
+    image: metasploitable/metasploitable2
+    ports:
+      - "8889:21"
+      - "8890:22"
+      - "8891:80"
+    networks:
+      -SecLab
+  
+  # OWASP Juice Shop
+  juice-shop:
+    image: bkimminich/juice-shop
+    ports:
+      - "3000:3000"
+    networks:
+      -SecLab
+  
+  # SQLi Labs
+  sqli-labs:
+    image: acgp/sqli-labs
+    ports:
+      - "8887:80"
+    networks:
+      -SecLab
+  
+  # PentesterLab
+  pentesterlab:
+    image: ghcr.io/vulhub/pentesterlab:latest
+    ports:
+      - "8886:80"
+    networks:
+      -SecLab
+
+networks:
+  SecLab:
+    driver: bridge
+EOF
+
+echo "=== Laboratorio Listo ==="
+echo "docker-compose up -d"
+echo ""
+echo "Servicios:"
+echo "  DVWA: http://localhost:8888 (admin/password)"
+echo "  Metasploitable: ssh localhost -p 8890 (msfadmin/msfadmin)"
+echo "  Juice Shop: http://localhost:3000"
+echo "  SQLi Labs: http://localhost:8887"
+echo "  PentesterLab: http://localhost:8886"
+```
+
+---
+
+# Comandos de Herramientas Adicionales
+
+##WHOIS y DNS
+
+```bash
+#!/bin/bash
+# whois_dns_tools.sh
+
+cat > referencia_whois_dns.md << 'EOF'
+# Herramientas WHOIS y DNS
+
+## WHOIS
+whois dominio.com
+
+## NSLOOKUP
+nslookup dominio.com
+nslookup -type=mx dominio.com
+nslookup -type=any dominio.com
+
+## DIG
+dig dominio.com
+dig mx dominio.com
+dig any dominio.com
+dig +short dominio.com
+dig +trace dominio.com
+
+## HOST
+host dominio.com
+host -t mx dominio.com
+host -l dominio.com
+
+## MXTOOLBOX
+# Web-based: mxtoolbox.com
+# API disponible
+
+## WHATWEB
+whatweb dominio.com
+whatweb -A 4 dominio.com
+
+## AMASS (ya cubierto)
+amass enum -d dominio.com
+
+## SUBLIST3R
+python3 sublist3r.py -d dominio.com
+EOF
+
+cat referencia_whois_dns.md
+```
+
+---
+
+# Scripts de Automatizacion
+
+## Script Integrado de Pentesting
+
+```bash
+#!/bin/bash
+# auto_pt_tools.sh
+
+cat > pt_automatizado.sh << 'EOF'
+#!/bin/bash
+# Pentest automatizado con todas las herramientas
+
+TARGET=$1
+OUTPUT_DIR="pt_$(date +%Y%m%d_%H%M%S)"
+
+if [ -z "$TARGET" ]; then
+    echo "Uso: $0 <target>"
+    exit 1
+fi
+
+mkdir -p $OUTPUT_DIR
+
+echo "=== Pentest Automatizado ==="
+echo "Objetivo: $TARGET"
+echo "Output: $OUTPUT_DIR"
+echo ""
+
+# 1. Escaneo de puertos
+echo "[1/6] Escaneo de puertos..."
+nmap -p- -T4 -oA $OUTPUT_DIR/nmap $TARGET
+
+# 2. Servicios
+echo "[2/6] Servicios y versiones..."
+nmap -sV -T4 -oA $OUTPUT_DIR/services $TARGET
+
+# 3. Web scan
+echo "[3/6] Escaneo web..."
+if which nikto >/dev/null 2>&1; then
+    nikto -h $TARGET -o $OUTPUT_DIR/nikto.txt 2>/dev/null
+fi
+
+# 4. Directorios
+echo "[4/6] Enumeracion de directorios..."
+if which dirb >/dev/null 2>&1; then
+    dirb http://$TARGET/ -o $OUTPUT_DIR/dirb.txt 2>/dev/null
+fi
+
+# 5. Subdominios
+echo "[5/6] Enumeracion de subdominios..."
+if which fierce >/dev/null 2>&1; then
+    fierce --domain $TARGET -o $OUTPUT_DIR/fierce.txt 2>/dev/null
+fi
+
+# 6. DNS
+echo "[6/6] Enumeracion DNS..."
+if which dig >/dev/null 2>&1; then
+    dig any $TARGET > $OUTPUT_DIR/dns.txt
+fi
+
+echo ""
+echo "=== COMPLETADO ==="
+echo "Resultados en: $OUTPUT_DIR/"
+ls -la $OUTPUT_DIR/
+EOF
+
+chmod +x pt_automatizado.sh
+echo "Script creado: ./pt_automatizado.sh <target>"
+```
+
+---
+
+# Quick Reference Card
+
+| Categoria | Herramienta | Comando Basico |
+|-----------|-----------|-------------|
+| Password | hydra | hydra -L users.txt -P passwords.txt target service |
+| Password | john | john hash.txt |
+| Password | medusa | medusa -h target -u user -P passwords.txt -M service |
+| Password | hashcat | hashcat -m 0 hash.txt wordlist.txt |
+| Password | crunch | crunch min max charset |
+| Password | cewl | cewl http://target.com |
+| Directorios | dirb | dirb http://target.com/ |
+| Directorios | gobuster | gobuster dir -u http://target.com/ |
+| Subdominios | amass | amass enum -d domain.com |
+| Subdominios | sublist3r | python3 sublist3r.py -d domain.com |
+| Subdominios | dnsmap | dnsmap domain.com |
+| Subdominios | fierce | fierce --domain domain.com |
+| Web | nikto | nikto -h http://target.com |
+| Web | wpscan | wpscan --url http://target.com |
+| OSINT | theHarvester | theHarvester -d domain.com -b all |
+| OSINT | recon-ng | recon-ng |
+| Wireless | aircrack-ng | aircrack-ng handshake.cap |
+| Wireless | aireplay-ng | aireplay-ng --deauth |
+| Wireless | airodump-ng | airodump-ng wlan0mon |
+| Wireless | reaver | reaver -i wlan0mon -b MAC -vv |
+| Wireless | wifite | wifite |
+
+---
+
+# Ejercicio Final
+
+## Objetivo
+
+Dominar todas las herramientas de este laboratorio en un escenario integrado
+
+## Criterios de Evaluacion
+
+| Criterio | Puntos |
+|---------|-------|
+| Password attacks operativos | 20 pts |
+| Directory enumeration funcional | 15 pts |
+| Subdomain enumeration exitosa | 15 pts |
+| Web vulnerability scan completo | 15 pts |
+| OSINT efectivo | 15 pts |
+| Wireless attack (laboratorio) | 20 pts |
+
+---
+
+# Recursos
+
+- Kali Linux Tools: https://www.kali.org/tools/
+- THC Hydra: https://github.com/vanhauser-thc/hydra
+- John the Ripper: https://www.openwall.com/john/
+- Hashcat: https://hashcat.net/hashcat/
+- OWASP: https://owasp.org
+- Aircrack-ng: https://aircrack-ng.org/
+
+---
+
+*Lab Anexo: Herramientas Avanzadas de Hacking*
+*Duracion: 12 horas*
+*Nivel: Intermedio-Avanzado*
+*Licencia: CC BY-SA 4.0*
+*ADVERTENCIA: Solo para uso educativo y etico*

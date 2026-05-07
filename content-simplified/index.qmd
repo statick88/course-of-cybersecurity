@@ -1,0 +1,75 @@
+---
+title: "Fundamentos de Ciberseguridad (Versión Simplificada)"
+module: "index"
+type: "index"
+description: "Curso de introducción a la ciberseguridad para personas SIN conocimientos técnicos previos"
+license: "CC BY-SA 4.0"
+author: "Diego Saavedra"
+---
+
+# Fundamentos de Ciberseguridad
+
+## Versión Simplificada
+
+Este curso está diseñado especialmente para **personas sin conocimientos técnicos previos**. Cada tema se explica con analogías simples del día a día.
+
+---
+
+## Información del Curso
+
+| Aspecto | Detalle |
+|---------|---------|
+| Duración | 5 módulos |
+| Nivel | Introducción |
+| Requisitos | Ninguno (para principiantes) |
+| Incluye | Explicaciones simples + analogías + citas oficiales |
+
+---
+
+## Estructura del Curso
+
+| Módulo | Tema | Objetivo |
+|--------|------|----------|
+| 1 | Introducción a la Ciberseguridad | Entender el marco NIST CSF 2.0 |
+| 2 | Seguridad en Redes | Diferenciar VPN de ZTNA |
+| 3 | Gestión de Identidades | Implementar MFA seguro |
+| 4 | Seguridad Básica | Entender vulnerabilidades y CVSS |
+| 5 | Respuesta a Incidentes | Conocer el ciclo de IR |
+
+---
+
+## ¿Para quién es este curso?
+
+Este curso es perfecto para:
+- Personas sin experiencia en tecnología
+- Profesionales de otras áreas que quieren entender ciberseguridad básica
+- Cualquier persona interesada en proteger su información personal
+- Estudiantes que empiezan desde cero
+
+---
+
+## Metodología
+
+Cada módulo incluye:
+- ✅ Explicación en lenguaje sencillo
+- ✅ Analogías de la vida cotidiana
+- ✅ Tablas comparativas
+- ✅ Fuentes oficiales cited
+
+---
+
+## Comenzar el Curso
+
+### Módulo 1: Introducción a la Ciberseguridad
+
+[Comenzar →](modulo-01-seguridad-basica.html)
+
+---
+
+## Licencia
+
+Este curso está bajo licencia **Creative Commons Compartir Igual 4.0 (CC BY-SA 4.0)**
+
+---
+
+*Curso actualizado Mayo 2026 - 5 módulos - CC BY-SA 4.0*

