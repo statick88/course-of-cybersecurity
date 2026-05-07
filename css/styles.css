@@ -28,6 +28,54 @@
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
 }
 
+/* --- Títulos en header oscuro (Quarto usa quarto-dark) --- */
+.navbar,
+.quarto-dark .navbar,
+.dark .navbar,
+.navbar-dark {
+  color: #ffffff !important;
+}
+
+.navbar h1,
+.navbar .title,
+.navbar-brand,
+.nav-link {
+  color: #ffffff !important !important;
+}
+
+/* --- Sidebar titles in dark mode (Quarto) --- */
+.quarto-dark .sidebar-title,
+.quarto-dark .sidebar-section,
+.quarto-dark .section-normal,
+.dark .sidebar-title,
+.dark .sidebar-section,
+.dark .section-normal {
+  color: #ffffff !important;
+}
+
+/* --- Navigation links (Quarto) --- */
+.quarto-dark .nav-link,
+.quarto-dark .toc-link,
+.dark .nav-link,
+.dark .toc-link {
+  color: #b0b0b0 !important;
+}
+
+.quarto-dark .nav-link:hover,
+.quarto-dark .toc-link:hover,
+.dark .nav-link:hover,
+.dark .toc-link:hover {
+  color: #2ecc71 !important;
+}
+
+/* --- Logo en sidebar (Quarto) --- */
+.quarto-dark #quarto-sidebar,
+.quarto-dark #quarto-sidebar *,
+.dark #quarto-sidebar,
+.dark #quarto-sidebar * {
+  color: #ffffff !important;
+}
+
 /* --- Títulos en header oscuro --- */
 .navbar,
 .dark .navbar,
@@ -43,10 +91,14 @@
 }
 
 /* --- Titulos principales en modo oscuro --- */
-.dark h1 {
-  color: #ffffff !important;
-}
-
+/* Títulos en modo oscuro (Quarto usa quarto-dark) */
+.quarto-dark h1,
+.quarto-dark h2, 
+.quarto-dark h3, 
+.quarto-dark h4, 
+.quarto-dark h5, 
+.quarto-dark h6,
+.dark h1,
 .dark h2, 
 .dark h3, 
 .dark h4, 
@@ -186,16 +238,20 @@ hr {
   color: var(--color-success);
 }
 
-/* --- Títulos de secciones --- */
+/* --- Títulos de secciones (Quarto) --- */
 h1, h2, h3, h4, h5, h6 {
   color: #1a1a2e;
 }
 
+.quarto-dark h1, .quarto-dark h2, .quarto-dark h3, .quarto-dark h4, .quarto-dark h5, .quarto-dark h6,
 .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
   color: #ffffff !important;
 }
 
-/* --- Encabezado del libro en dark mode --- */
+/* --- Encabezado del libro en dark mode (Quarto) --- */
+.quarto-dark .book-header h1,
+.quarto-dark .book-header h2,
+.quarto-dark .book-title,
 .dark .book-header h1,
 .dark .book-header h2,
 .dark .book-title {
