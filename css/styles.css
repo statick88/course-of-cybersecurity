@@ -29,18 +29,22 @@
 }
 
 /* --- Títulos en header oscuro (Quarto usa quarto-dark) --- */
-.navbar,
-.quarto-dark .navbar,
-.dark .navbar,
-.navbar-dark {
+html.quarto-dark .navbar,
+html .quarto-dark .navbar,
+body.quarto-dark .navbar,
+.navbar {
   color: #ffffff !important;
 }
 
+html.quarto-dark .navbar h1,
+html.quarto-dark .navbar .title,
+html.quarto-dark .navbar-brand,
+html.quarto-dark .nav-link,
 .navbar h1,
 .navbar .title,
 .navbar-brand,
 .nav-link {
-  color: #ffffff !important !important;
+  color: #ffffff !important;
 }
 
 /* --- Sidebar titles in dark mode (Quarto) --- */
@@ -238,23 +242,40 @@ hr {
   color: var(--color-success);
 }
 
-/* --- Títulos de secciones (Quarto) --- */
+/* --- Títulos de secciones (Quarto) - Alta especificidad --- */
 h1, h2, h3, h4, h5, h6 {
   color: #1a1a2e;
 }
 
-.quarto-dark h1, .quarto-dark h2, .quarto-dark h3, .quarto-dark h4, .quarto-dark h5, .quarto-dark h6,
-.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+/* Forzar títulos blancos en modo oscuro */
+html.quarto-dark h1, 
+html.quarto-dark h2, 
+html.quarto-dark h3, 
+html.quarto-dark h4, 
+html.quarto-dark h5, 
+html.quarto-dark h6,
+html .quarto-dark h1, 
+html .quarto-dark h2, 
+html .quarto-dark h3, 
+html .quarto-dark h4, 
+html .quarto-dark h5, 
+html .quarto-dark h6,
+body.quarto-dark h1,
+body.quarto-dark h2,
+body.quarto-dark h3,
+body.quarto-dark h4,
+body.quarto-dark h5,
+body.quarto-dark h6 {
   color: #ffffff !important;
 }
 
 /* --- Encabezado del libro en dark mode (Quarto) --- */
-.quarto-dark .book-header h1,
-.quarto-dark .book-header h2,
-.quarto-dark .book-title,
-.dark .book-header h1,
-.dark .book-header h2,
-.dark .book-title {
+html.quarto-dark .book-header h1,
+html.quarto-dark .book-header h2,
+html.quarto-dark .book-title,
+body.quarto-dark .book-header h1,
+body.quarto-dark .book-header h2,
+body.quarto-dark .book-title {
   color: #ffffff !important;
 }
 
