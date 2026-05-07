@@ -28,6 +28,62 @@
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
 }
 
+/* --- Títulos en header oscuro --- */
+.navbar,
+.dark .navbar,
+.navbar-dark {
+  color: #ffffff !important;
+}
+
+.navbar h1,
+.navbar .title,
+.navbar-brand,
+.nav-link {
+  color: #ffffff !important !important;
+}
+
+/* --- Titulos principales en modo oscuro --- */
+.dark h1 {
+  color: #ffffff !important;
+}
+
+.dark h2, 
+.dark h3, 
+.dark h4, 
+.dark h5, 
+.dark h6 {
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+/* --- Sidebar titles in dark mode --- */
+.dark .sidebar-title,
+.dark .sidebar-section .不正常,
+.dark .section-normal {
+  color: #ffffff !important;
+}
+
+/* --- Navigation links --- */
+.dark .nav-link,
+.dark .toc-link {
+  color: #b0b0b0 !important;
+}
+
+.dark .nav-link:hover,
+.dark .toc-link:hover {
+  color: #2ecc71 !important;
+}
+
+/* --- Logo en sidebar --- */
+#quarto-sidebar,
+#quarto-sidebar * {
+  color: #ffffff !important;
+}
+
+#quarto-sidebar .svg-container {
+  filter: brightness(0) invert(1);
+}
+
 /* --- Tablas mejoradas --- */
 table {
   border-collapse: collapse;
@@ -136,7 +192,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
-  color: #ecf0f1;
+  color: #ffffff !important;
+}
+
+/* --- Encabezado del libro en dark mode --- */
+.dark .book-header h1,
+.dark .book-header h2,
+.dark .book-title {
+  color: #ffffff !important;
 }
 
 /* --- Sidebar improvements --- */
