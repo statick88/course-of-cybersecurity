@@ -4,6 +4,12 @@ project:
   type: book
   output-dir: _book
 
+# GitHub Pages output
+github:
+  title: "Fundamentos de Ciberseguridad"
+  description: "Curso profesional de ciberseguridad - NIST CSF 2.0, VPN, ZTNA, MFA, CVSS"
+  branch: main
+
 book:
   title: "Fundamentos de Ciberseguridad"
   author: "Diego Saavedra"
