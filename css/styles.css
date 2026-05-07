@@ -242,31 +242,26 @@ hr {
   color: var(--color-success);
 }
 
-/* --- Títulos de secciones (Quarto) - Alta especificidad --- */
+/* --- Títulos de secciones (Quarto) - Máxima especificidad --- */
 h1, h2, h3, h4, h5, h6 {
   color: #1a1a2e;
 }
 
-/* Forzar títulos blancos en modo oscuro */
+/* Forzar títulos blancos en modo oscuro - TODOS los selectores posibles */
+body.quarto-dark h1, 
+body.quarto-dark h2, 
+body.quarto-dark h3, 
+body.quarto-dark h4, 
+body.quarto-dark h5, 
+body.quarto-dark h6,
 html.quarto-dark h1, 
 html.quarto-dark h2, 
 html.quarto-dark h3, 
 html.quarto-dark h4, 
 html.quarto-dark h5, 
-html.quarto-dark h6,
-html .quarto-dark h1, 
-html .quarto-dark h2, 
-html .quarto-dark h3, 
-html .quarto-dark h4, 
-html .quarto-dark h5, 
-html .quarto-dark h6,
-body.quarto-dark h1,
-body.quarto-dark h2,
-body.quarto-dark h3,
-body.quarto-dark h4,
-body.quarto-dark h5,
-body.quarto-dark h6 {
+html.quarto-dark h6 {
   color: #ffffff !important;
+  background-color: transparent !important;
 }
 
 /* --- Encabezado del libro en dark mode (Quarto) --- */
