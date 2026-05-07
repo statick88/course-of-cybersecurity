@@ -1,23 +1,57 @@
 # Configuracion de Quarto para el curso de Ciberseguridad
+# Licensed under CC BY-NC-SA 4.0 - Diego Saavedra 2026
 
 project:
   type: book
   output-dir: _site
-
-# GitHub Pages output
-github:
-  title: "Fundamentos de Ciberseguridad"
-  description: "Curso profesional de ciberseguridad - NIST CSF 2.0, VPN, ZTNA, MFA, CVSS"
-  branch: main
+  resources:
+    - "images/*.png"
+    - "images/*.jpg"
+    - "images/*.svg"
 
 book:
   title: "Fundamentos de Ciberseguridad"
+  subtitle: "Protege tu vida digital — Aprende ciberseguridad desde cero"
   author: "Diego Saavedra"
   date: "2026-05-06"
-  description: "Curso profesional de ciberseguridad"
-  cover-image: images/cover.png
+  description: "Curso profesional de ciberseguridad con NIST CSF 2.0, VPN, ZTNA, MFA, CVSS"
   favicon: images/favicon.png
+  cover-image: images/cover.png
   
+  # Professional navigation features
+  reader-mode: true
+  back-to-top-navigation: true
+  page-navigation: true
+  search: true
+
+  # Sidebar config
+  sidebar:
+    logo: images/favicon.png
+    search: true
+    collapse-level: 1
+    pinned: true
+
+  # Repository info
+  repo-url: https://github.com/statick88/course-of-cybersecurity
+  repo-branch: main
+  repo-actions:
+    - edit
+    - issue
+
+  # Cover image
+  image: images/cover.svg
+  image-alt: "Fundamentos de Ciberseguridad"
+
+  # Professional footer
+  page-footer:
+    border: true
+    left: |
+      © 2026 **Diego Saavedra**. Licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+    center: |
+      Material educativo para **Abacom Capacitación y Servicios**
+    right: |
+      Built with [Quarto](https://quarto.org/)
+
   # Chapters - Curso Original (Avanzado)
   chapters:
     - index.qmd
@@ -42,14 +76,25 @@ book:
     - content-simplified/modulo-04-vulnerabilidades.qmd
     - content-simplified/modulo-05-incidentes.qmd
 
+  # Sharing
+  sharing:
+    - twitter
+    - linkedin
+
 # Format output
 format:
   html:
-    theme: cosmo
+    theme:
+      dark: solar
+      light: cosmo
     toc: true
     toc-depth: 3
     number-sections: true
-     
+    link-external-icon: true
+    link-external-newwindow: true
+    css:
+      - css/styles.css
+      
   pdf:
     documentclass: report
     papersize: a4
