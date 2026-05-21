@@ -1,5 +1,5 @@
 # GitHub Pages workflow for Quarto
-# Official Quarto publish action - manages gh-pages branch automatically
+# Uses GitHub Actions as Pages source (configured in Settings > Pages)
 # https://quarto.org/docs/publishing/github-pages.html
 
 on:
@@ -25,5 +25,6 @@ jobs:
         uses: quarto-dev/quarto-actions/publish@v2
         with:
           target: gh-pages
+          render: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

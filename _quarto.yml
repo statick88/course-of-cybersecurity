@@ -106,6 +106,7 @@ format:
 execute:
   echo: false
   eval: false
+  freeze: auto
 
 # Language
 language:
