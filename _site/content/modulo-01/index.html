@@ -24,6 +24,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -361,13 +396,13 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../labs/lab-anexo-llm-security.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Lab Anexo: Local LLMs for Cybersecurity - Ollama &amp; LM Studio (Advanced)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Lab Anexo: Local LLMs for Cybersecurity with Ollama &amp; LM Studio</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../labs/lab-anexo-ethical-hacking.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Lab Anexo: Ethical Hacking Environment - Kali Linux VM + MCP + Specialized Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Lab Anexo: Ethical Hacking Environment - Kali Linux VM + MCP</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -393,38 +428,158 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../labs/lab-anexo-dvwa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Apéndice: DVWA — Laboratorio de Explotación Web</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../labs/lab-anexo-webgoat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Apéndice: OWASP WebGoat — Laboratorio de Explotación Web</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../minicursos/minicurso-git-github.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Minicurso: Git y GitHub</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../minicursos/minicurso-docker.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Minicurso: Docker</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../minicursos/minicurso-nvim.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">Minicurso: Neovim (nvim)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../minicursos/minicurso-tmux.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Minicurso: Tmux</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../minicursos/minicurso-bash.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">Minicurso: Bash Scripting</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../minicursos/minicurso-curl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">I</span>&nbsp; <span class="chapter-title">Minicurso: Curl</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../minicursos/minicurso-ssh.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">J</span>&nbsp; <span class="chapter-title">Minicurso: SSH</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../minicursos/minicurso-openssl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">K</span>&nbsp; <span class="chapter-title">Minicurso: OpenSSL</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../minicursos/minicurso-nmap.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">L</span>&nbsp; <span class="chapter-title">Minicurso: Nmap</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../minicursos/minicurso-burp-suite.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">M</span>&nbsp; <span class="chapter-title">Minicurso: Burp Suite</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../minicursos/minicurso-metasploit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">N</span>&nbsp; <span class="chapter-title">Minicurso: Metasploit Framework</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../minicursos/minicurso-wireshark.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">O</span>&nbsp; <span class="chapter-title">Minicurso: Wireshark</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../minicursos/minicurso-sqlmap.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">P</span>&nbsp; <span class="chapter-title">Minicurso: SQLMap</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../minicursos/minicurso-hashcat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">Q</span>&nbsp; <span class="chapter-title">Minicurso: Hashcat</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../minicursos/minicurso-hydra.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">R</span>&nbsp; <span class="chapter-title">Minicurso: Hydra</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../minicursos/minicurso-gobuster.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">S</span>&nbsp; <span class="chapter-title">Minicurso: Gobuster</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../minicursos/minicurso-netcat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">T</span>&nbsp; <span class="chapter-title">Minicurso: Netcat</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../minicursos/minicurso-tcpdump.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">U</span>&nbsp; <span class="chapter-title">Minicurso: Tcpdump</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../content-simplified/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Fundamentos de Ciberseguridad (Versión Simplificada)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">V</span>&nbsp; <span class="chapter-title">Fundamentos de Ciberseguridad (Versión Simplificada)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content-simplified/modulo-01-seguridad-basica.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Módulo 1: Introducción a la Ciberseguridad</span></span></a>
+ <span class="menu-text"><span class="chapter-number">W</span>&nbsp; <span class="chapter-title">Módulo 1: Introducción a la Ciberseguridad</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content-simplified/modulo-02-redes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Módulo 2: Seguridad en Redes</span></span></a>
+ <span class="menu-text"><span class="chapter-number">X</span>&nbsp; <span class="chapter-title">Módulo 2: Seguridad en Redes</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content-simplified/modulo-03-identidades.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Módulo 3: Gestión de Identidades y Contraseñas</span></span></a>
+ <span class="menu-text"><span class="chapter-number">Y</span>&nbsp; <span class="chapter-title">Módulo 3: Gestión de Identidades y Contraseñas</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content-simplified/modulo-04-vulnerabilidades.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">Módulo 4: Seguridad Básica - Vulnerabilidades</span></span></a>
+ <span class="menu-text"><span class="chapter-number">Z</span>&nbsp; <span class="chapter-title">Módulo 4: Seguridad Básica - Vulnerabilidades</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content-simplified/modulo-05-incidentes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Módulo 5: Respuesta a Incidentes</span></span></a>
+ <span class="menu-text"></span></a>
   </div>
 </li>
       </ul>
@@ -441,22 +596,39 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#módulo-1-fundamentos-y-marco-nist-csf-2.0" id="toc-módulo-1-fundamentos-y-marco-nist-csf-2.0" class="nav-link active" data-scroll-target="#módulo-1-fundamentos-y-marco-nist-csf-2.0"><span class="header-section-number">3</span> Módulo 1: Fundamentos y Marco NIST CSF 2.0</a>
   <ul class="collapse">
-  <li><a href="#objetivos-de-aprendizaje" id="toc-objetivos-de-aprendizaje" class="nav-link" data-scroll-target="#objetivos-de-aprendizaje"><span class="header-section-number">3.1</span> 🎯 Objetivos de Aprendizaje</a></li>
-  <li><a href="#contenido" id="toc-contenido" class="nav-link" data-scroll-target="#contenido"><span class="header-section-number">3.2</span> 📖 Contenido</a>
+  <li><a href="#objetivos-smart" id="toc-objetivos-smart" class="nav-link" data-scroll-target="#objetivos-smart"><span class="header-section-number">3.1</span> 🎯 Objetivos SMART</a></li>
+  <li><a href="#w1h-marco-de-referencia" id="toc-w1h-marco-de-referencia" class="nav-link" data-scroll-target="#w1h-marco-de-referencia"><span class="header-section-number">3.2</span> 📋 5W1H — Marco de Referencia</a>
   <ul class="collapse">
-  <li><a href="#evolución-del-nist-csf" id="toc-evolución-del-nist-csf" class="nav-link" data-scroll-target="#evolución-del-nist-csf"><span class="header-section-number">3.2.1</span> 1.1 Evolución del NIST CSF</a></li>
-  <li><a href="#las-seis-funciones-del-nist-csf-2.0" id="toc-las-seis-funciones-del-nist-csf-2.0" class="nav-link" data-scroll-target="#las-seis-funciones-del-nist-csf-2.0"><span class="header-section-number">3.2.2</span> 1.2 Las Seis Funciones del NIST CSF 2.0</a></li>
-  <li><a href="#relación-entre-funciones" id="toc-relación-entre-funciones" class="nav-link" data-scroll-target="#relación-entre-funciones"><span class="header-section-number">3.2.3</span> 1.3 Relación entre Funciones</a></li>
+  <li><a href="#qué-qué-es-el-nist-csf-2.0" id="toc-qué-qué-es-el-nist-csf-2.0" class="nav-link" data-scroll-target="#qué-qué-es-el-nist-csf-2.0"><span class="header-section-number">3.2.1</span> ¿Qué? — ¿Qué es el NIST CSF 2.0?</a></li>
+  <li><a href="#cómo-cómo-funciona-el-framework" id="toc-cómo-cómo-funciona-el-framework" class="nav-link" data-scroll-target="#cómo-cómo-funciona-el-framework"><span class="header-section-number">3.2.2</span> ¿Cómo? — ¿Cómo funciona el framework?</a></li>
+  <li><a href="#cuándo-cuándo-aplicar-el-nist-csf-2.0" id="toc-cuándo-cuándo-aplicar-el-nist-csf-2.0" class="nav-link" data-scroll-target="#cuándo-cuándo-aplicar-el-nist-csf-2.0"><span class="header-section-number">3.2.3</span> ¿Cuándo? — ¿Cuándo aplicar el NIST CSF 2.0?</a></li>
+  <li><a href="#dónde-dónde-se-aplica" id="toc-dónde-dónde-se-aplica" class="nav-link" data-scroll-target="#dónde-dónde-se-aplica"><span class="header-section-number">3.2.4</span> ¿Dónde? — ¿Dónde se aplica?</a></li>
+  <li><a href="#por-qué-por-qué-es-importante" id="toc-por-qué-por-qué-es-importante" class="nav-link" data-scroll-target="#por-qué-por-qué-es-importante"><span class="header-section-number">3.2.5</span> ¿Por qué? — ¿Por qué es importante?</a></li>
+  <li><a href="#para-qué-qué-objetivo-cumple" id="toc-para-qué-qué-objetivo-cumple" class="nav-link" data-scroll-target="#para-qué-qué-objetivo-cumple"><span class="header-section-number">3.2.6</span> ¿Para qué? — ¿Qué objetivo cumple?</a></li>
+  <li><a href="#relación-entre-funciones" id="toc-relación-entre-funciones" class="nav-link" data-scroll-target="#relación-entre-funciones"><span class="header-section-number">3.2.7</span> Relación entre Funciones</a></li>
   </ul></li>
-  <li><a href="#ejercicios-de-refuerzo" id="toc-ejercicios-de-refuerzo" class="nav-link" data-scroll-target="#ejercicios-de-refuerzo"><span class="header-section-number">3.3</span> 📋 Ejercicios de Refuerzo</a>
+  <li><a href="#conceptos-clave" id="toc-conceptos-clave" class="nav-link" data-scroll-target="#conceptos-clave"><span class="header-section-number">3.3</span> 🔑 Conceptos Clave</a></li>
+  <li><a href="#ejemplos" id="toc-ejemplos" class="nav-link" data-scroll-target="#ejemplos"><span class="header-section-number">3.4</span> 💡 Ejemplos</a>
   <ul class="collapse">
-  <li><a href="#desafío-1.1-clasificación-de-controles" id="toc-desafío-1.1-clasificación-de-controles" class="nav-link" data-scroll-target="#desafío-1.1-clasificación-de-controles"><span class="header-section-number">3.3.1</span> Desafío 1.1: Clasificación de Controles</a></li>
-  <li><a href="#desafío-1.2-análisis-de-madurez" id="toc-desafío-1.2-análisis-de-madurez" class="nav-link" data-scroll-target="#desafío-1.2-análisis-de-madurez"><span class="header-section-number">3.3.2</span> Desafío 1.2: Análisis de Madurez</a></li>
+  <li><a href="#ejemplo-1-brecha-de-change-healthcare-febrero-2024" id="toc-ejemplo-1-brecha-de-change-healthcare-febrero-2024" class="nav-link" data-scroll-target="#ejemplo-1-brecha-de-change-healthcare-febrero-2024"><span class="header-section-number">3.4.1</span> Ejemplo 1: Brecha de Change Healthcare (febrero 2024)</a></li>
+  <li><a href="#ejemplo-2-techcorp-empresa-ficticia-del-curso" id="toc-ejemplo-2-techcorp-empresa-ficticia-del-curso" class="nav-link" data-scroll-target="#ejemplo-2-techcorp-empresa-ficticia-del-curso"><span class="header-section-number">3.4.2</span> Ejemplo 2: TechCorp — Empresa Ficticia del Curso</a></li>
   </ul></li>
-  <li><a href="#resumen-del-módulo" id="toc-resumen-del-módulo" class="nav-link" data-scroll-target="#resumen-del-módulo"><span class="header-section-number">3.4</span> 📊 Resumen del Módulo</a>
+  <li><a href="#práctica-guiada" id="toc-práctica-guiada" class="nav-link" data-scroll-target="#práctica-guiada"><span class="header-section-number">3.5</span> 🛠️ Práctica Guiada</a>
   <ul class="collapse">
-  <li><a href="#puntos-clave" id="toc-puntos-clave" class="nav-link" data-scroll-target="#puntos-clave"><span class="header-section-number">3.4.1</span> Puntos Clave</a></li>
-  <li><a href="#siguiente-módulo-2" id="toc-siguiente-módulo-2" class="nav-link" data-scroll-target="#siguiente-módulo-2"><span class="header-section-number">3.4.2</span> Siguiente: Módulo 2</a></li>
+  <li><a href="#ejercicio-mapeo-de-controles-al-nist-csf-2.0" id="toc-ejercicio-mapeo-de-controles-al-nist-csf-2.0" class="nav-link" data-scroll-target="#ejercicio-mapeo-de-controles-al-nist-csf-2.0"><span class="header-section-number">3.5.1</span> Ejercicio: Mapeo de Controles al NIST CSF 2.0</a></li>
+  </ul></li>
+  <li><a href="#laboratorio" id="toc-laboratorio" class="nav-link" data-scroll-target="#laboratorio"><span class="header-section-number">3.6</span> 🧪 Laboratorio</a>
+  <ul class="collapse">
+  <li><a href="#lab-1-autoevaluación-de-madurez-nist-csf-2.0-para-techcorp" id="toc-lab-1-autoevaluación-de-madurez-nist-csf-2.0-para-techcorp" class="nav-link" data-scroll-target="#lab-1-autoevaluación-de-madurez-nist-csf-2.0-para-techcorp"><span class="header-section-number">3.6.1</span> Lab 1: Autoevaluación de Madurez NIST CSF 2.0 para TechCorp</a></li>
+  </ul></li>
+  <li><a href="#tarea-project-based-learning" id="toc-tarea-project-based-learning" class="nav-link" data-scroll-target="#tarea-project-based-learning"><span class="header-section-number">3.7</span> 📝 Tarea (Project-Based Learning)</a>
+  <ul class="collapse">
+  <li><a href="#proyecto-evaluación-de-madurez-nist-csf-2.0-para-techcorp" id="toc-proyecto-evaluación-de-madurez-nist-csf-2.0-para-techcorp" class="nav-link" data-scroll-target="#proyecto-evaluación-de-madurez-nist-csf-2.0-para-techcorp"><span class="header-section-number">3.7.1</span> Proyecto: Evaluación de Madurez NIST CSF 2.0 para TechCorp</a></li>
+  </ul></li>
+  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">3.8</span> 📊 Resumen</a>
+  <ul class="collapse">
+  <li><a href="#puntos-clave" id="toc-puntos-clave" class="nav-link" data-scroll-target="#puntos-clave"><span class="header-section-number">3.8.1</span> Puntos Clave</a></li>
+  <li><a href="#conexión-con-el-proyecto" id="toc-conexión-con-el-proyecto" class="nav-link" data-scroll-target="#conexión-con-el-proyecto"><span class="header-section-number">3.8.2</span> Conexión con el Proyecto</a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -487,255 +659,659 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="módulo-1-fundamentos-y-marco-nist-csf-2.0" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Módulo 1: Fundamentos y Marco NIST CSF 2.0</h1>
-<section id="objetivos-de-aprendizaje" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="objetivos-de-aprendizaje"><span class="header-section-number">3.1</span> 🎯 Objetivos de Aprendizaje</h2>
+<section id="objetivos-smart" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="objetivos-smart"><span class="header-section-number">3.1</span> 🎯 Objetivos SMART</h2>
 <p>Al finalizar este módulo, serás capaz de:</p>
-<ul>
-<li>🏛️ Comprender los <strong>6 pilares</strong> del NIST CSF 2.0</li>
-<li>📊 Mapear controles de seguridad a <strong>funciones del framework</strong></li>
-<li>🔍 Realizar <strong>autoevaluación</strong> de madurez organizacional</li>
-<li>📋 Interpretar <strong>perfiles de riesgo</strong> personalizados</li>
-</ul>
+<ol type="1">
+<li><strong>Explicar</strong> las 6 funciones del NIST CSF 2.0 y sus relaciones, con al menos 2 ejemplos por función</li>
+<li><strong>Mapear</strong> 10+ controles de seguridad a sus categorías oficiales (GV.OC, PR.DS, DE.AE, etc.) con 90% de precisión</li>
+<li><strong>Realizar</strong> una autoevaluación de madurez organizacional usando perfiles NIST CSF 2.0 para una empresa ficticia (TechCorp)</li>
+<li><strong>Interpretar</strong> un perfil de riesgo y proponer al menos 3 mejoras priorizadas por función del framework</li>
+</ol>
 <hr>
 </section>
-<section id="contenido" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="contenido"><span class="header-section-number">3.2</span> 📖 Contenido</h2>
-<section id="evolución-del-nist-csf" class="level3" data-number="3.2.1">
-<h3 data-number="3.2.1" class="anchored" data-anchor-id="evolución-del-nist-csf"><span class="header-section-number">3.2.1</span> 1.1 Evolución del NIST CSF</h3>
-<pre><code>NIST CSF 1.1 (2018)          NIST CSF 2.0 (2024)
-├─ Identify             ───► ├─ Govern (NUEVO)
-├─ Protect                ├─ Identify
-├─ Detect                ├─ Protect
-├─ Respond               ├─ Detect
-├─ Recover               ├─ Respond
-└─ Recover               └─ Recover</code></pre>
-<p><strong>Cambios clave en 2.0</strong>:</p>
+<section id="w1h-marco-de-referencia" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="w1h-marco-de-referencia"><span class="header-section-number">3.2</span> 📋 5W1H — Marco de Referencia</h2>
+<section id="qué-qué-es-el-nist-csf-2.0" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="qué-qué-es-el-nist-csf-2.0"><span class="header-section-number">3.2.1</span> ¿Qué? — ¿Qué es el NIST CSF 2.0?</h3>
+<p>El <strong>NIST Cybersecurity Framework (CSF) 2.0</strong> es un conjunto de estándares, guías y mejores prácticas para gestionar el riesgo de ciberseguridad. Publicado por el National Institute of Standards and Technology (NIST) de EE.UU., es el framework más adoptado a nivel mundial.</p>
+<p>La versión 2.0 (febrero 2024) amplió el framework original de 5 a <strong>6 funciones</strong>, añadiendo <strong>Govern (Gobernanza)</strong> como pilar central. Usa una notación de categorías con <strong>notación punto</strong> (ej: <code>GV.OC</code> para Governance - Organizational Context).</p>
+<div class="compact-diagram" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:16px 20px;margin:16px 0;">
+<svg viewbox="0 0 440 90" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:440px;">
+<!-- Title -->
+<text x="220" y="14" text-anchor="middle" fill="#1e293b" font-size="10" font-weight="bold">Evolución NIST CSF 1.1 (2018) → 2.0 (2024)</text> <!-- Left: 1.1 --> <rect x="10" y="24" width="170" height="56" rx="6" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"></rect> <text x="95" y="38" text-anchor="middle" fill="#475569" font-size="9" font-weight="bold">CSF 1.1 — 5 funciones</text> <text x="20" y="52" fill="#64748b" font-family="monospace" font-size="8">Identify · Protect · Detect</text> <text x="20" y="64" fill="#64748b" font-family="monospace" font-size="8">Respond · Recover</text> <!-- Arrow --> <polygon points="195,52 210,52 207,49 210,55" fill="#94a3b8"></polygon> <text x="210" y="72" text-anchor="middle" fill="#94a3b8" font-size="7">+ Govern</text> <!-- Right: 2.0 --> <rect x="220" y="24" width="210" height="56" rx="6" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"></rect> <text x="325" y="38" text-anchor="middle" fill="#1d4ed8" font-size="9" font-weight="bold">CSF 2.0 — 6 funciones</text> <text x="230" y="52" fill="#3b82f6" font-family="monospace" font-size="8">★ Govern · Identify · Protect</text> <text x="230" y="64" fill="#3b82f6" font-family="monospace" font-size="8">Detect · Respond · Recover</text>
+</svg>
+</div>
+</section>
+<section id="cómo-cómo-funciona-el-framework" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="cómo-cómo-funciona-el-framework"><span class="header-section-number">3.2.2</span> ¿Cómo? — ¿Cómo funciona el framework?</h3>
+<p>El NIST CSF 2.0 organiza la ciberseguridad en <strong>3 niveles jerárquicos</strong>:</p>
+<ol type="1">
+<li><strong>Funciones</strong> (6): Govern, Identify, Protect, Detect, Respond, Recover</li>
+<li><strong>Categorías</strong> (23): Subdivisiones dentro de cada función (ej: <code>GV.OC</code>, <code>PR.DS</code>)</li>
+<li><strong>Subcategorías</strong> (106+): Acciones específicas y medibles</li>
+</ol>
+<p>El framework funciona como un <strong>ciclo continuo</strong>: Govern establece la estrategia → Identify descubre qué proteger → Protect implementa controles → Detect monitorea anomalías → Respond actúa ante incidentes → Recover restaura operaciones → y el ciclo se repite con lecciones aprendidas.</p>
+</section>
+<section id="cuándo-cuándo-aplicar-el-nist-csf-2.0" class="level3" data-number="3.2.3">
+<h3 data-number="3.2.3" class="anchored" data-anchor-id="cuándo-cuándo-aplicar-el-nist-csf-2.0"><span class="header-section-number">3.2.3</span> ¿Cuándo? — ¿Cuándo aplicar el NIST CSF 2.0?</h3>
+<ul>
+<li><strong>Al iniciar</strong> un programa de ciberseguridad desde cero</li>
+<li><strong>Al evaluar</strong> la madurez actual de seguridad de una organización</li>
+<li><strong>Al comunicar</strong> el estado de seguridad a la dirección ejecutiva</li>
+<li><strong>Al planificar</strong> inversiones en controles de seguridad</li>
+<li><strong>Al auditar</strong> cumplimiento regulatorio (ISO 27001, SOC 2, GDPR)</li>
+<li><strong>Después de un incidente</strong> para identificar gaps y mejorar</li>
+</ul>
+</section>
+<section id="dónde-dónde-se-aplica" class="level3" data-number="3.2.4">
+<h3 data-number="3.2.4" class="anchored" data-anchor-id="dónde-dónde-se-aplica"><span class="header-section-number">3.2.4</span> ¿Dónde? — ¿Dónde se aplica?</h3>
+<p>El NIST CSF 2.0 es <strong>agnóstico al sector y tamaño</strong>:</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
-<th>Aspecto</th>
-<th>Cambio</th>
+<th>Contexto</th>
+<th>Aplicación</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Govern</td>
-<td>Añadido como función principal</td>
+<td>Empresas pequeñas</td>
+<td>Autoevaluación básica, priorización de controles</td>
 </tr>
 <tr class="even">
-<td>Perfiles</td>
-<td>Formalización de perfiles</td>
+<td>Grandes corporaciones</td>
+<td>Programa formal de gestión de riesgo</td>
 </tr>
 <tr class="odd">
-<td>Medición</td>
-<td>Métricas estandarizadas</td>
+<td>Sector público</td>
+<td>Cumplimiento obligatorio (EE.UU.)</td>
 </tr>
 <tr class="even">
-<td>Implementación</td>
-<td>Guías sectoriales</td>
+<td>Sector salud</td>
+<td>Protección de PHI (HIPAA)</td>
+</tr>
+<tr class="odd">
+<td>Sector financiero</td>
+<td>Gestión de riesgo operativo</td>
+</tr>
+<tr class="even">
+<td>Infraestructura crítica</td>
+<td>Protección de sistemas esenciales</td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="las-seis-funciones-del-nist-csf-2.0" class="level3" data-number="3.2.2">
-<h3 data-number="3.2.2" class="anchored" data-anchor-id="las-seis-funciones-del-nist-csf-2.0"><span class="header-section-number">3.2.2</span> 1.2 Las Seis Funciones del NIST CSF 2.0</h3>
-<section id="govern-gobernanza" class="level4" data-number="3.2.2.1">
-<h4 data-number="3.2.2.1" class="anchored" data-anchor-id="govern-gobernanza"><span class="header-section-number">3.2.2.1</span> 🔹 GOVERN (Gobernanza)</h4>
+<section id="por-qué-por-qué-es-importante" class="level3" data-number="3.2.5">
+<h3 data-number="3.2.5" class="anchored" data-anchor-id="por-qué-por-qué-es-importante"><span class="header-section-number">3.2.5</span> ¿Por qué? — ¿Por qué es importante?</h3>
 <ul>
-<li>📋 Estrategia de seguridad</li>
-<li>📝 Políticas y procedimientos</li>
-<li>⚖️ Cumplimiento normativo</li>
-<li>👥 Roles y responsabilidades</li>
-</ul>
-<p><strong>Categorías GOV</strong>:</p>
-<ul>
-<li>GOV01: Organización establecida</li>
-<li>GOV02: Situación organizacional</li>
-<li>GOV03: Estrategia de riesgo</li>
-<li>GOV04: Gestión de riesgo de terceros</li>
+<li><strong>68% de las brechas</strong> involucran el factor humano (Verizon DBIR 2024)</li>
+<li>Las organizaciones con framework formal reducen <strong>40% el tiempo de detección</strong></li>
+<li>El costo promedio de una brecha es <strong>$4.88M</strong> (IBM 2024)</li>
+<li>Es el framework <strong>más reconocido</strong> por aseguradoras de ciberseguridad</li>
+<li>Permite <strong>hablar el mismo idioma</strong> entre técnicos y ejecutivos</li>
 </ul>
 </section>
-<section id="identify-identificación" class="level4" data-number="3.2.2.2">
-<h4 data-number="3.2.2.2" class="anchored" data-anchor-id="identify-identificación"><span class="header-section-number">3.2.2.2</span> 🔹 IDENTIFY (Identificación)</h4>
-<ul>
-<li>🏢 Activos digitales</li>
-<li>👤 Identidades</li>
-<li>🖥️ Infraestructura</li>
-</ul>
-<p><strong>Categorías ID</strong>:</p>
-<ul>
-<li>ID.AM: Gestión de activos</li>
-<li>ID.IM: Gestión de identidad</li>
-</ul>
+<section id="para-qué-qué-objetivo-cumple" class="level3" data-number="3.2.6">
+<h3 data-number="3.2.6" class="anchored" data-anchor-id="para-qué-qué-objetivo-cumple"><span class="header-section-number">3.2.6</span> ¿Para qué? — ¿Qué objetivo cumple?</h3>
+<p>El NIST CSF 2.0 sirve para:</p>
+<ol type="1">
+<li><strong>Evaluar</strong> dónde estás hoy (perfil actual)</li>
+<li><strong>Definir</strong> dónde quieres estar (perfil objetivo)</li>
+<li><strong>Priorizar</strong> inversiones en seguridad basadas en riesgo</li>
+<li><strong>Comunicar</strong> el estado de seguridad a stakeholders</li>
+<li><strong>Demostrar</strong> diligencia debida ante reguladores y aseguradoras</li>
+<li><strong>Mejorar continuamente</strong> con métricas estandarizadas</li>
+</ol>
 </section>
-<section id="protect-protección" class="level4" data-number="3.2.2.3">
-<h4 data-number="3.2.2.3" class="anchored" data-anchor-id="protect-protección"><span class="header-section-number">3.2.2.3</span> 🔹 PROTECT (Protección)</h4>
-<ul>
-<li>🛡️ Controles de acceso</li>
-<li>🔐 Cifrado de datos</li>
-<li>🔒 Políticas de seguridad</li>
-<li>📴 Protección de usuarios</li>
-</ul>
-<p><strong>Categorías PR</strong>:</p>
-<ul>
-<li>PR.AA: Gestión de identidad</li>
-<li>PR.DS: Seguridad de datos</li>
-<li>PR.IP: Tecnología de protección</li>
-<li>PR.MA: Mantenimiento</li>
-<li>PR.PS: Protección de usuarios</li>
-</ul>
-</section>
-<section id="detect-detección" class="level4" data-number="3.2.2.4">
-<h4 data-number="3.2.2.4" class="anchored" data-anchor-id="detect-detección"><span class="header-section-number">3.2.2.4</span> 🔹 DETECT (Detección)</h4>
-<ul>
-<li>🔍 Monitoreo continuo</li>
-<li>📡 Detección de anomalías</li>
-<li>📊 Logging centralizado</li>
-</ul>
-<p><strong>Categorías DE</strong>:</p>
-<ul>
-<li>DE.AE: Eventos anómalos</li>
-<li>DE.CM: Gestión de continuidad</li>
-<li>DE.DP: Procesos de detección</li>
-</ul>
-</section>
-<section id="respond-respuesta" class="level4" data-number="3.2.2.5">
-<h4 data-number="3.2.2.5" class="anchored" data-anchor-id="respond-respuesta"><span class="header-section-number">3.2.2.5</span> 🔹 RESPOND (Respuesta)</h4>
-<ul>
-<li>🚨 Plan de respuesta</li>
-<li>📞 Comunicación</li>
-<li>🧹 Análisis causa raíz</li>
-<li>📝 Lecciones aprendidas</li>
-</ul>
-<p><strong>Categorías RS</strong>:</p>
-<ul>
-<li>RS.MI: Gestión de incidentes</li>
-<li>RS.AN: Análisis</li>
-<li>RS.CO: Comunicación</li>
-<li>RS.MI: Mejoras</li>
-</ul>
-</section>
-<section id="recover-recuperación" class="level4" data-number="3.2.2.6">
-<h4 data-number="3.2.2.6" class="anchored" data-anchor-id="recover-recuperación"><span class="header-section-number">3.2.2.6</span> 🔹 RECOVER (Recuperación)</h4>
-<ul>
-<li>🔄 Plan de recuperación</li>
-<li>💾 Backups</li>
-<li>📈 Mejora continua</li>
-</ul>
-<p><strong>Categorías RC</strong>:</p>
-<ul>
-<li>RC.RP: Plan de recuperación</li>
-<li>RC.CO: Comunicación</li>
-<li>RC.IM: Mejoras</li>
-</ul>
-</section>
-</section>
-<section id="relación-entre-funciones" class="level3" data-number="3.2.3">
-<h3 data-number="3.2.3" class="anchored" data-anchor-id="relación-entre-funciones"><span class="header-section-number">3.2.3</span> 1.3 Relación entre Funciones</h3>
-<pre><code>         ┌─────────────────────────────────────┐
-         │            GOVERN                    │
-         │   (Estrategia y supervisión)        │
-         └──────────────┬──────────────────┘
-                      │
-    ┌───────────────┼───────────────┐
-    ▼               ▼               ▼
-┌─────────┐   ┌─────────┐   ┌─────────┐
-│IDENTIFY │──►│PROTECT │──►│ DETECT  │
-│(Qué    )│   │(Cómo   )│   │(Qué    )
-│proteger)│   │proteger)│   │sucede   )
-└─────────┘   └─────────┘   └─────────┘
-    │               │               │
-    └───────────────┼───────────────┘
-                ▼
-    ┌───────────────────────────────┐
-    │        RESPOND            │
-    │  (Qué hacer después)     │
-    └───────────┬───────────────┘
-                │
-    ┌──────────▼──────────┐
-    │      RECOVER        │
-    │  (Recuperar)       │
-    └──────────────────┘</code></pre>
+<section id="relación-entre-funciones" class="level3" data-number="3.2.7">
+<h3 data-number="3.2.7" class="anchored" data-anchor-id="relación-entre-funciones"><span class="header-section-number">3.2.7</span> Relación entre Funciones</h3>
+<div class="compact-diagram" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:16px 20px;margin:16px 0;">
+<svg viewbox="0 0 460 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:460px;">
+<text x="230" y="14" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="bold">NIST CSF 2.0 — Relación entre Funciones</text> <!-- Govern at top center --> <rect x="130" y="24" width="200" height="30" rx="6" fill="#8b5cf6"></rect><text x="230" y="44" text-anchor="middle" fill="white" font-size="10" font-weight="bold">GOVERN — Estrategia y supervisión</text> <!-- Arrow down from Govern --> <line x1="230" y1="54" x2="230" y2="70" stroke="#94a3b8" stroke-width="2"></line> <!-- Three columns: Identify, Protect, Detect --> <rect x="10" y="74" width="135" height="36" rx="6" fill="#3b82f6"></rect><text x="77" y="90" text-anchor="middle" fill="white" font-size="9" font-weight="bold">IDENTIFY</text><text x="77" y="103" text-anchor="middle" fill="#dbeafe" font-size="8">¿Qué proteger?</text> <rect x="162" y="74" width="135" height="36" rx="6" fill="#10b981"></rect><text x="230" y="90" text-anchor="middle" fill="white" font-size="9" font-weight="bold">PROTECT</text><text x="230" y="103" text-anchor="middle" fill="#d1fae5" font-size="8">¿Cómo proteger?</text> <rect x="314" y="74" width="135" height="36" rx="6" fill="#f59e0b"></rect><text x="382" y="90" text-anchor="middle" fill="white" font-size="9" font-weight="bold">DETECT</text><text x="382" y="103" text-anchor="middle" fill="#fef3c7" font-size="8">¿Qué sucede?</text> <!-- Arrows between columns --> <polygon points="145,92 162,92 159,89 162,95" fill="#94a3b8"></polygon> <polygon points="297,92 314,92 311,89 314,95" fill="#94a3b8"></polygon> <!-- Arrow down from middle column --> <line x1="230" y1="110" x2="230" y2="126" stroke="#94a3b8" stroke-width="2"></line> <!-- Respond --> <rect x="130" y="130" width="200" height="30" rx="6" fill="#ef4444"></rect><text x="230" y="150" text-anchor="middle" fill="white" font-size="10" font-weight="bold">RESPOND — ¿Qué hacer?</text> <!-- Arrow down --> <line x1="230" y1="160" x2="230" y2="174" stroke="#94a3b8" stroke-width="2"></line> <!-- Recover --> <rect x="150" y="177" width="160" height="28" rx="6" fill="#6366f1"></rect><text x="230" y="195" text-anchor="middle" fill="white" font-size="10" font-weight="bold">RECOVER — Recuperar</text>
+</svg>
+</div>
 <hr>
 </section>
 </section>
-<section id="ejercicios-de-refuerzo" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="ejercicios-de-refuerzo"><span class="header-section-number">3.3</span> 📋 Ejercicios de Refuerzo</h2>
-<section id="desafío-1.1-clasificación-de-controles" class="level3" data-number="3.3.1">
-<h3 data-number="3.3.1" class="anchored" data-anchor-id="desafío-1.1-clasificación-de-controles"><span class="header-section-number">3.3.1</span> Desafío 1.1: Clasificación de Controles</h3>
-<p>🅰️ <strong>Clasifica</strong> cada control en su función NIST CSF correspondiente:</p>
-<ol type="1">
-<li>Firewall perimetral → <code>?</code></li>
-<li>Autenticación multifactor → <code>?</code></li>
-<li>Plan de respuesta a incidentes → <code>?</code></li>
-<li>Inventario de activos → <code>?</code></li>
-<li>Backups automáticos → <code>?</code></li>
-<li>SIEM de monitoreo → <code>?</code></li>
-</ol>
+<section id="conceptos-clave" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="conceptos-clave"><span class="header-section-number">3.3</span> 🔑 Conceptos Clave</h2>
+<ul>
+<li><strong>Perfil de Ciberseguridad</strong>: Combinación personalizada de funciones, categorías y subcategorías que una organización selecciona según su contexto de negocio y riesgo. No todas las subcategorías aplican a todas las organizaciones.</li>
+<li><strong>Nivel de Madurez (Tiers 1-4)</strong>: Grado de formalización del programa de ciberseguridad. Tier 1 = Ad hoc/informal, Tier 2 = En desarrollo, Tier 3 = Definido y repetible, Tier 4 = Adaptativo y optimizado.</li>
+<li><strong>Govern (Gobernanza)</strong>: Nueva función en CSF 2.0 que establece la estrategia, políticas y supervisión de seguridad. Es el “cerebro” que dirige las demás funciones. Sin Govern, las demás funciones operan sin dirección estratégica.</li>
+<li><strong>Notación Punto (Dot Notation)</strong>: Sistema oficial de NIST para identificar categorías. Ej: <code>GV.OC</code> = Governance → Organizational Context, <code>PR.DS</code> = Protect → Data Security, <code>RS.MA</code> = Respond → Incident Management, <code>RS.IM</code> = Respond → Improvements.</li>
+<li><strong>Risk Profile</strong>: Documento que describe el riesgo actual de la organización, comparado con el riesgo aceptable definido por la dirección. Se construye usando perfiles NIST CSF.</li>
+</ul>
+<hr>
 </section>
-<section id="desafío-1.2-análisis-de-madurez" class="level3" data-number="3.3.2">
-<h3 data-number="3.3.2" class="anchored" data-anchor-id="desafío-1.2-análisis-de-madurez"><span class="header-section-number">3.3.2</span> Desafío 1.2: Análisis de Madurez</h3>
-<p>🅱️ <strong>Evalúa</strong> el nivel de madurez de cada función:</p>
+<section id="ejemplos" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="ejemplos"><span class="header-section-number">3.4</span> 💡 Ejemplos</h2>
+<section id="ejemplo-1-brecha-de-change-healthcare-febrero-2024" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="ejemplo-1-brecha-de-change-healthcare-febrero-2024"><span class="header-section-number">3.4.1</span> Ejemplo 1: Brecha de Change Healthcare (febrero 2024)</h3>
+<p><strong>Contexto</strong>: Change Healthcare, subsidiaria de UnitedHealth Group, sufrió un ataque de ransomware que afectó a más de 100 millones de pacientes y paralizó el sistema de facturación farmacéutica de EE.UU.</p>
+<p><strong>Análisis con NIST CSF 2.0</strong>:</p>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 43%">
+<col style="width: 36%">
+</colgroup>
 <thead>
 <tr class="header">
 <th>Función</th>
-<th>Nivel (1-5)</th>
-<th>Evidencia</th>
+<th>Falla identificada</th>
+<th>Categoría NIST</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Govern</strong></td>
+<td>Sin supervisión de seguridad de terceros</td>
+<td><code>GV.SC</code> (Supply Chain Risk)</td>
+</tr>
+<tr class="even">
+<td><strong>Identify</strong></td>
+<td>Acceso remoto sin MFA en servidor comprometido</td>
+<td><code>ID.IM</code> (Identity Management)</td>
+</tr>
+<tr class="odd">
+<td><strong>Protect</strong></td>
+<td>Sin segmentación de red adecuada</td>
+<td><code>PR.AA</code> (Access Management)</td>
+</tr>
+<tr class="even">
+<td><strong>Detect</strong></td>
+<td>6 días sin detectar la intrusión</td>
+<td><code>DE.AE</code> (Anomalous Events)</td>
+</tr>
+<tr class="odd">
+<td><strong>Respond</strong></td>
+<td>Plan de respuesta insuficiente para escala del ataque</td>
+<td><code>RS.MA</code> (Incident Management)</td>
+</tr>
+<tr class="even">
+<td><strong>Recover</strong></td>
+<td>Semanas para restaurar servicios críticos</td>
+<td><code>RC.RP</code> (Recovery Planning)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Lección</strong>: Un solo punto de falla en Identify/Protect escaló porque Govern no supervisó el riesgo de cadena de suministro y Detect no alertó a tiempo.</p>
+</section>
+<section id="ejemplo-2-techcorp-empresa-ficticia-del-curso" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="ejemplo-2-techcorp-empresa-ficticia-del-curso"><span class="header-section-number">3.4.2</span> Ejemplo 2: TechCorp — Empresa Ficticia del Curso</h3>
+<p><strong>Contexto</strong>: TechCorp es una empresa de 50 empleados con infraestructura en la nube (AWS), sin equipo dedicado de seguridad, sin políticas documentadas y sin plan de respuesta a incidentes.</p>
+<p><strong>Evaluación inicial con NIST CSF 2.0</strong>:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 23%">
+<col style="width: 29%">
+<col style="width: 29%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Función</th>
+<th>Tier actual</th>
+<th>Tier objetivo</th>
+<th>Gap principal</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Govern</strong></td>
+<td>Tier 1 (Ad hoc)</td>
+<td>Tier 2</td>
+<td>No hay política de seguridad formal</td>
+</tr>
+<tr class="even">
+<td><strong>Identify</strong></td>
+<td>Tier 1</td>
+<td>Tier 2</td>
+<td>Sin inventario de activos actualizado</td>
+</tr>
+<tr class="odd">
+<td><strong>Protect</strong></td>
+<td>Tier 1</td>
+<td>Tier 3</td>
+<td>Sin MFA, sin cifrado de datos en reposo</td>
+</tr>
+<tr class="even">
+<td><strong>Detect</strong></td>
+<td>Tier 1</td>
+<td>Tier 2</td>
+<td>Sin monitoreo centralizado de logs</td>
+</tr>
+<tr class="odd">
+<td><strong>Respond</strong></td>
+<td>Tier 1</td>
+<td>Tier 2</td>
+<td>Sin plan de respuesta documentado</td>
+</tr>
+<tr class="even">
+<td><strong>Recover</strong></td>
+<td>Tier 1</td>
+<td>Tier 2</td>
+<td>Backups existentes pero no probados</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Priorización</strong>: El gap más crítico es <code>PR.AA</code> (Access Management) — implementar MFA para todos los accesos es la mejora de mayor impacto con menor costo.</p>
+<hr>
+</section>
+</section>
+<section id="práctica-guiada" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="práctica-guiada"><span class="header-section-number">3.5</span> 🛠️ Práctica Guiada</h2>
+<section id="ejercicio-mapeo-de-controles-al-nist-csf-2.0" class="level3" data-number="3.5.1">
+<h3 data-number="3.5.1" class="anchored" data-anchor-id="ejercicio-mapeo-de-controles-al-nist-csf-2.0"><span class="header-section-number">3.5.1</span> Ejercicio: Mapeo de Controles al NIST CSF 2.0</h3>
+<p>En este ejercicio, clasificarás controles de seguridad reales en las funciones y categorías del NIST CSF 2.0. Trabaja con papel y lápiz — escribe cada respuesta antes de verificar.</p>
+<p><strong>Paso 1</strong>: Lee cada control de seguridad:</p>
+<ol type="1">
+<li>Firewall perimetral que bloquea tráfico no autorizado</li>
+<li>Autenticación multifactor (MFA) para todos los empleados</li>
+<li>Plan de respuesta a incidentes documentado y probado</li>
+<li>Inventario actualizado de todos los servidores y aplicaciones</li>
+<li>Backups automáticos diarios con prueba de restauración mensual</li>
+<li>SIEM que correlaciona logs de múltiples fuentes</li>
+<li>Política de seguridad aprobada por la dirección</li>
+<li>Evaluación de riesgos de proveedores antes de contratar</li>
+<li>Cifrado AES-256 para datos sensibles en reposo</li>
+<li>Programa de concienciación en phishing para empleados</li>
+</ol>
+<p><strong>Paso 2</strong>: Para cada control, identifica: - La <strong>función</strong> principal (Govern, Identify, Protect, Detect, Respond, Recover) - La <strong>categoría</strong> específica (usando notación punto)</p>
+<p><strong>Paso 3</strong>: Verifica tus respuestas:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>#</th>
+<th>Control</th>
+<th>Función</th>
+<th>Categoría</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Firewall perimetral</td>
+<td>Protect</td>
+<td><code>PR.IP</code> (Technology Protection)</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>MFA para empleados</td>
+<td>Protect</td>
+<td><code>PR.AA</code> (Access Management)</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>Plan de respuesta</td>
+<td>Respond</td>
+<td><code>RS.MA</code> (Incident Management)</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>Inventario de activos</td>
+<td>Identify</td>
+<td><code>ID.AM</code> (Asset Management)</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>Backups con prueba</td>
+<td>Recover</td>
+<td><code>RC.RP</code> (Recovery Planning)</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>SIEM con correlación</td>
+<td>Detect</td>
+<td><code>DE.AE</code> (Anomalous Events)</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>Política de seguridad</td>
+<td>Govern</td>
+<td><code>GV.PS</code> (Security Policy)</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>Evaluación de proveedores</td>
+<td>Govern</td>
+<td><code>GV.SC</code> (Supply Chain Risk)</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>Cifrado AES-256</td>
+<td>Protect</td>
+<td><code>PR.DS</code> (Data Security)</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>Concienciación phishing</td>
+<td>Protect</td>
+<td><code>PR.PS</code> (User Protection)</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Tip Profesional
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Algunos controles pueden mapearse a múltiples funciones. Por ejemplo, los backups también contribuyen a <code>PR.DS</code> (protección de datos). Lo importante es identificar la función <strong>principal</strong> donde el control tiene mayor impacto.</p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="laboratorio" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="laboratorio"><span class="header-section-number">3.6</span> 🧪 Laboratorio</h2>
+<section id="lab-1-autoevaluación-de-madurez-nist-csf-2.0-para-techcorp" class="level3" data-number="3.6.1">
+<h3 data-number="3.6.1" class="anchored" data-anchor-id="lab-1-autoevaluación-de-madurez-nist-csf-2.0-para-techcorp"><span class="header-section-number">3.6.1</span> Lab 1: Autoevaluación de Madurez NIST CSF 2.0 para TechCorp</h3>
+<p><strong>Objetivo</strong>: Realizar una evaluación de madurez de las 6 funciones del NIST CSF 2.0 para la empresa TechCorp, usando una metodología estructurada.</p>
+<p><strong>Requisitos Previos</strong>: - Haber completado la Práctica Guiada (mapeo de controles) - Comprender las 6 funciones y sus categorías principales</p>
+<p><strong>Entorno Necesario</strong>: - Terminal con acceso a internet - Editor de texto (VS Code, nano, o tu preferido)</p>
+<p><strong>Duración estimada</strong>: 45 minutos</p>
+<section id="paso-1-crear-el-archivo-de-evaluación" class="level4" data-number="3.6.1.1">
+<h4 data-number="3.6.1.1" class="anchored" data-anchor-id="paso-1-crear-el-archivo-de-evaluación"><span class="header-section-number">3.6.1.1</span> Paso 1: Crear el archivo de evaluación</h4>
+<p>Abre tu terminal y crea un directorio de trabajo:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/cybersecurity-labs/nist-csf</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/cybersecurity-labs/nist-csf</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="paso-2-estructurar-la-evaluación" class="level4" data-number="3.6.1.2">
+<h4 data-number="3.6.1.2" class="anchored" data-anchor-id="paso-2-estructurar-la-evaluación"><span class="header-section-number">3.6.1.2</span> Paso 2: Estructurar la evaluación</h4>
+<p>Abre el archivo en tu editor y escribe la siguiente estructura:</p>
+<p><strong>NIST CSF 2.0 Assessment — TechCorp</strong></p>
+<p><strong>Informacion General</strong></p>
+<ul>
+<li>Empresa: TechCorp</li>
+<li>Empleados: 50</li>
+<li>Infraestructura: AWS (cloud)</li>
+<li>Equipo de seguridad: 0 dedicado</li>
+<li>Fecha de evaluacion: [hoy]</li>
+</ul>
+</section>
+<section id="paso-3-evaluar-cada-funcion" class="level4" data-number="3.6.1.3">
+<h4 data-number="3.6.1.3" class="anchored" data-anchor-id="paso-3-evaluar-cada-funcion"><span class="header-section-number">3.6.1.3</span> Paso 3: Evaluar cada funcion</h4>
+<p>Para cada una de las 6 funciones, evalua el nivel de madurez usando esta escala:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 24%">
+<col style="width: 41%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Nivel</th>
+<th>Descripcion</th>
+<th>Criterio</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>0</strong></td>
+<td>Inexistente</td>
+<td>No hay ningun control ni conciencia</td>
+</tr>
+<tr class="even">
+<td><strong>1</strong></td>
+<td>Ad hoc</td>
+<td>Controles informales, no documentados</td>
+</tr>
+<tr class="odd">
+<td><strong>2</strong></td>
+<td>En desarrollo</td>
+<td>Algunos controles documentados, implementacion parcial</td>
+</tr>
+<tr class="even">
+<td><strong>3</strong></td>
+<td>Definido</td>
+<td>Controles documentados, implementados y consistentes</td>
+</tr>
+<tr class="odd">
+<td><strong>4</strong></td>
+<td>Optimizado</td>
+<td>Controles medidos, mejorados continuamente</td>
+</tr>
+</tbody>
+</table>
+<p>Escribe en tu archivo la evaluacion de cada funcion. Por ejemplo:</p>
+<p><strong>GOVERN (Gobernanza)</strong></p>
+<ul>
+<li>Nivel actual: 1</li>
+<li>Evidencia: No existe politica de seguridad formal. El CEO toma decisiones de seguridad reactivamente.</li>
+<li>Categorias evaluadas:
+<ul>
+<li>GV.OC (Contexto organizacional): Nivel 1</li>
+<li>GV.RM (Gestion de riesgo): Nivel 0</li>
+<li>GV.PS (Politica de seguridad): Nivel 0</li>
+<li>GV.SC (Cadena de suministro): Nivel 0</li>
+</ul></li>
+<li>Mejora prioritaria: Crear politica de seguridad formal (GV.PS)</li>
+</ul>
+<p>Repite este proceso para las 6 funciones. Usa el contexto de TechCorp proporcionado en los ejemplos.</p>
+</section>
+<section id="paso-4-calcular-el-puntaje-total" class="level4" data-number="3.6.1.4">
+<h4 data-number="3.6.1.4" class="anchored" data-anchor-id="paso-4-calcular-el-puntaje-total"><span class="header-section-number">3.6.1.4</span> Paso 4: Calcular el puntaje total</h4>
+<p>Al final de tu archivo, anade un resumen:</p>
+<p><strong>Resumen de Madurez</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Funcion</th>
+<th>Nivel (0-4)</th>
+<th>Prioridad</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>Govern</td>
 <td>?</td>
-<td></td>
+<td>?</td>
 </tr>
 <tr class="even">
 <td>Identify</td>
 <td>?</td>
-<td></td>
+<td>?</td>
 </tr>
 <tr class="odd">
 <td>Protect</td>
 <td>?</td>
-<td></td>
+<td>?</td>
 </tr>
 <tr class="even">
 <td>Detect</td>
 <td>?</td>
-<td></td>
+<td>?</td>
 </tr>
 <tr class="odd">
 <td>Respond</td>
 <td>?</td>
-<td></td>
+<td>?</td>
 </tr>
 <tr class="even">
 <td>Recover</td>
 <td>?</td>
+<td>?</td>
+</tr>
+<tr class="odd">
+<td><strong>Promedio</strong></td>
+<td><strong>?</strong></td>
 <td></td>
 </tr>
 </tbody>
 </table>
+<p>Calcula el promedio y determina la prioridad de cada funcion (las de menor nivel son mayor prioridad).</p>
+</section>
+<section id="paso-5-proponer-un-plan-de-mejora" class="level4" data-number="3.6.1.5">
+<h4 data-number="3.6.1.5" class="anchored" data-anchor-id="paso-5-proponer-un-plan-de-mejora"><span class="header-section-number">3.6.1.5</span> Paso 5: Proponer un plan de mejora</h4>
+<p>Basado en tu evaluacion, propone al menos 3 acciones de mejora priorizadas:</p>
+<p><strong>Plan de Mejora Priorizado</strong></p>
+<ol type="1">
+<li><strong>[Prioridad Alta]</strong> Accion especifica → Funcion/Categoria → Costo estimado → Tiempo</li>
+<li><strong>[Prioridad Media]</strong> Accion especifica → Funcion/Categoria → Costo estimado → Tiempo</li>
+<li><strong>[Prioridad Baja]</strong> Accion especifica → Funcion/Categoria → Costo estimado → Tiempo</li>
+</ol>
+<p><strong>Resultados Esperados</strong>: - Archivo <code>nist-csf-assessment.md</code> con evaluación completa de las 6 funciones - Puntaje de madurez por función (0-4) - Plan de mejora con al menos 3 acciones priorizadas</p>
+<p><strong>Troubleshooting</strong>:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Problema</th>
+<th>Solución</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>No sé qué nivel asignar</td>
+<td>Usa la tabla de criterios: si no está documentado, máximo nivel 1</td>
+</tr>
+<tr class="even">
+<td>No conozco las categorías</td>
+<td>Revisa la sección de Conceptos Clave y los ejemplos</td>
+</tr>
+<tr class="odd">
+<td>Dudo entre dos niveles</td>
+<td>Elige el nivel más bajo — es mejor ser conservador en la evaluación</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Regla Obligatoria
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>DEBES teclear todos los comandos y contenido manualmente. NO uses copy-paste. La memoria muscular es parte del aprendizaje.</p>
+</div>
+</div>
 <hr>
 </section>
 </section>
-<section id="resumen-del-módulo" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="resumen-del-módulo"><span class="header-section-number">3.4</span> 📊 Resumen del Módulo</h2>
-<section id="puntos-clave" class="level3" data-number="3.4.1">
-<h3 data-number="3.4.1" class="anchored" data-anchor-id="puntos-clave"><span class="header-section-number">3.4.1</span> Puntos Clave</h3>
+</section>
+<section id="tarea-project-based-learning" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="tarea-project-based-learning"><span class="header-section-number">3.7</span> 📝 Tarea (Project-Based Learning)</h2>
+<section id="proyecto-evaluación-de-madurez-nist-csf-2.0-para-techcorp" class="level3" data-number="3.7.1">
+<h3 data-number="3.7.1" class="anchored" data-anchor-id="proyecto-evaluación-de-madurez-nist-csf-2.0-para-techcorp"><span class="header-section-number">3.7.1</span> Proyecto: Evaluación de Madurez NIST CSF 2.0 para TechCorp</h3>
+<p><strong>Contexto del Proyecto General</strong>: Durante este curso, realizarás un <strong>Security Assessment completo</strong> de TechCorp, una empresa ficticia de 50 empleados con infraestructura cloud en AWS. Cada módulo contribuye a un entregable final que será un reporte de evaluación de seguridad profesional.</p>
+<p><strong>Tu rol</strong>: Consultor de ciberseguridad contratado por TechCorp para evaluar su postura de seguridad usando el framework NIST CSF 2.0.</p>
+<section id="entregable" class="level4" data-number="3.7.1.1">
+<h4 data-number="3.7.1.1" class="anchored" data-anchor-id="entregable"><span class="header-section-number">3.7.1.1</span> Entregable</h4>
+<p>Crea un documento profesional llamado <code>techcorp-nist-csf-assessment.md</code> que incluya:</p>
+<ol type="1">
+<li><p><strong>Executive Summary</strong> (1 párrafo): Resumen del estado de seguridad de TechCorp en lenguaje no técnico, dirigido al CEO.</p></li>
+<li><p><strong>Metodología</strong>: Explica brevemente qué es el NIST CSF 2.0 y por qué lo elegiste como framework de evaluación.</p></li>
+<li><p><strong>Perfil Actual</strong>: Tabla con las 6 funciones, su nivel de madurez (0-4), y evidencia concreta para cada nivel.</p></li>
+<li><p><strong>Perfil Objetivo</strong>: Define el nivel de madurez objetivo para cada función (realista para una empresa de 50 empleados en 12 meses).</p></li>
+<li><p><strong>Gap Analysis</strong>: Tabla comparativa Perfil Actual vs Perfil Objetivo con el gap numérico.</p></li>
+<li><p><strong>Plan de Acción</strong>: Mínimo 5 acciones priorizadas, cada una con:</p>
 <ul>
-<li>✅ NIST CSF 2.0 tiene <strong>6 funciones</strong> (añadiuse Govern)</li>
-<li>✅ Ciclo de vida: <strong>IDENTIFY → PROTECT → DETECT → RESPOND → RECOVER</strong></li>
-<li>✅ <strong>Govern</strong> supervisa todas las demás funciones</li>
-<li>✅ Perfiles permiten <strong>personalización</strong></li>
+<li>Acción específica</li>
+<li>Función y categoría NIST CSF 2.0 que aborda</li>
+<li>Prioridad (Alta/Media/Baja)</li>
+<li>Costo estimado (Bajo/Medio/Alto)</li>
+<li>Tiempo estimado de implementación</li>
+<li>Métrica de éxito (cómo sabrás que se completó)</li>
+</ul></li>
+<li><p><strong>Roadmap Visual</strong>: Un diagrama SVG simple mostrando la secuencia de implementación en los próximos 12 meses.</p></li>
+</ol>
+</section>
+<section id="criterios-de-evaluación" class="level4" data-number="3.7.1.2">
+<h4 data-number="3.7.1.2" class="anchored" data-anchor-id="criterios-de-evaluación"><span class="header-section-number">3.7.1.2</span> Criterios de Evaluación</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 8%">
+<col style="width: 25%">
+<col style="width: 23%">
+<col style="width: 29%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Criterio</th>
+<th>Peso</th>
+<th>Excelente (100%)</th>
+<th>Aceptable (70%)</th>
+<th>Insuficiente (&lt;50%)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Evaluación completa (6 funciones)</td>
+<td>30%</td>
+<td>Todas evaluadas con evidencia</td>
+<td>4-5 funciones evaluadas</td>
+<td>Menos de 4 funciones</td>
+</tr>
+<tr class="even">
+<td>Justificación de niveles</td>
+<td>25%</td>
+<td>Cada nivel tiene evidencia concreta</td>
+<td>La mayoría tiene justificación</td>
+<td>Justificación vaga o ausente</td>
+</tr>
+<tr class="odd">
+<td>Plan de acción priorizado</td>
+<td>25%</td>
+<td>5+ acciones con métricas de éxito</td>
+<td>3-4 acciones</td>
+<td>Menos de 3 acciones</td>
+</tr>
+<tr class="even">
+<td>Calidad del Executive Summary</td>
+<td>10%</td>
+<td>Claro, conciso, no técnico</td>
+<td>Comprensible pero técnico</td>
+<td>Demasiado técnico o vago</td>
+</tr>
+<tr class="odd">
+<td>Diagrama de roadmap</td>
+<td>10%</td>
+<td>SVG claro con timeline</td>
+<td>Diagrama básico</td>
+<td>Sin diagrama</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="fecha-de-entrega" class="level4" data-number="3.7.1.3">
+<h4 data-number="3.7.1.3" class="anchored" data-anchor-id="fecha-de-entrega"><span class="header-section-number">3.7.1.3</span> Fecha de Entrega</h4>
+<p>Al finalizar el Módulo 1. Este entregable será la base del reporte final de Security Assessment.</p>
+<hr>
+</section>
+</section>
+</section>
+<section id="resumen" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="resumen"><span class="header-section-number">3.8</span> 📊 Resumen</h2>
+<section id="puntos-clave" class="level3" data-number="3.8.1">
+<h3 data-number="3.8.1" class="anchored" data-anchor-id="puntos-clave"><span class="header-section-number">3.8.1</span> Puntos Clave</h3>
+<ul>
+<li>✅ NIST CSF 2.0 tiene <strong>6 funciones</strong>: Govern, Identify, Protect, Detect, Respond, Recover</li>
+<li>✅ <strong>Govern</strong> es la nueva función (2024) que establece estrategia y supervisión</li>
+<li>✅ La notación oficial usa <strong>punto</strong>: <code>GV.OC</code>, <code>PR.DS</code>, <code>DE.AE</code>, <code>RS.MA</code>, etc.</li>
+<li>✅ Los <strong>niveles de madurez (Tiers)</strong> van de 1 (informal) a 4 (optimizado)</li>
+<li>✅ El framework es un <strong>ciclo continuo</strong>, no un checklist lineal</li>
+<li>✅ Un <strong>perfil</strong> es la combinación personalizada de controles según el contexto de cada organización</li>
 </ul>
 </section>
-<section id="siguiente-módulo-2" class="level3" data-number="3.4.2">
-<h3 data-number="3.4.2" class="anchored" data-anchor-id="siguiente-módulo-2"><span class="header-section-number">3.4.2</span> Siguiente: Módulo 2</h3>
-<p>En el próximo módulo aprenderemos sobre <strong>Gestión de Identidad y Acceso</strong> (IAM) con enfoque en autenticación multifactor.</p>
+<section id="conexión-con-el-proyecto" class="level3" data-number="3.8.2">
+<h3 data-number="3.8.2" class="anchored" data-anchor-id="conexión-con-el-proyecto"><span class="header-section-number">3.8.2</span> Conexión con el Proyecto</h3>
+<p>Tu evaluación de madurez NIST CSF 2.0 de TechCorp es el <strong>primer pilar</strong> del Security Assessment. En el Módulo 2, diseñarás las políticas de identidad y acceso (IAM) que abordarán los gaps identificados en las funciones Identify y Protect.</p>
 <hr>
-<p><em>📖 Tiempo estimado: 6 horas • 🎯 6 desafíos • 🧪 1 laboratorio</em></p>
+<p><em>📖 Tiempo estimado: 6 horas • 🎯 6 objetivos SMART • 🧪 1 laboratorio • 📝 1 tarea PBL</em></p>
 
 
 </section>
