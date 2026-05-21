@@ -24,6 +24,7 @@ Al finalizar este módulo, serás capaz de:
 **Identity and Access Management (IAM)** es el conjunto de políticas, tecnologías y procesos que garantizan que las personas correctas tengan acceso a los recursos correctos, en el momento correcto, por las razones correctas.
 
 IAM responde a tres preguntas fundamentales:
+
 - **¿Quién eres?** → Autenticación (Authentication)
 - **¿Qué puedes hacer?** → Autorización (Authorization)
 - **¿Qué hiciste?** → Auditoría (Accounting)
@@ -47,7 +48,12 @@ IAM opera mediante **4 componentes interconectados**:
 3. **Autorización**: Determina qué recursos puede acceder cada identidad, basado en roles (RBAC) o atributos (ABAC)
 4. **Gobernanza**: Supervisa el acceso, audita actividades y gestiona el ciclo de vida (crear, modificar, eliminar accesos)
 
-El flujo típico es: Usuario solicita acceso → IAM autentica (¿quién eres?) → IAM autoriza (¿qué puedes hacer?) → Se registra la actividad (auditoría).
+El flujo típico es:
+
+1. Usuario solicita acceso
+2. IAM autentica (¿quién eres?)
+3. IAM autoriza (¿qué puedes hacer?)
+4. Se registra la actividad (auditoría)
 
 ### ¿Cuándo? — ¿Cuándo implementar IAM robusto?
 
