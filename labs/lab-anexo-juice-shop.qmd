@@ -95,35 +95,34 @@ docker ps | grep juice-shop
 # http://localhost:3000
 ```
 
-```mermaid
-flowchart TB
-    subgraph Client["Frontend (Angular)"]
-        A[Navbar] --> B[Search Bar]
-        A --> C[Login Button]
-        A --> D[Basket Icon]
-        B --> E[Product Cards]
-    end
-    subgraph Server["Backend (Express.js)"]
-        F[Auth API] --> G[Products API]
-        F --> H[Basket API]
-        F --> I[User API]
-    end
-    subgraph DB["Database (SQLite)"]
-        J[(Users)]
-        K[(Products)]
-        L[(Baskets)]
-    end
-    Client -->|HTTP/REST| Server
-    Server -->|SQL| DB
-    classDef client fill:#3b82f6,stroke:#1e40af,color:#fff
-    classDef server fill:#10b981,stroke:#047857,color:#fff
-    classDef db fill:#f59e0b,stroke:#b45309,color:#fff
-    class A,B,C,D,E client
-    class F,G,H,I server
-    class J,K,L db
-```
-
-*Figura 1: Arquitectura de OWASP Juice Shop — SPA Angular + API REST Express + SQLite*
+<div class="mermaid-diagram" style="background: #1e293b; border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid #334155;">
+<div style="color: #94a3b8; font-size: 0.85em; margin-bottom: 10px; font-family: monospace;">Figura 1: Arquitectura de OWASP Juice Shop</div>
+<svg viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;">
+<rect x="10" y="10" width="580" height="80" rx="8" fill="#3b82f6" opacity="0.2" stroke="#3b82f6" stroke-width="2"/>
+<text x="300" y="30" text-anchor="middle" fill="#93c5fd" font-size="14" font-weight="bold">Frontend (Angular)</text>
+<rect x="30" y="40" width="100" height="35" rx="4" fill="#3b82f6"/><text x="80" y="62" text-anchor="middle" fill="white" font-size="11">Navbar</text>
+<rect x="150" y="40" width="100" height="35" rx="4" fill="#3b82f6"/><text x="200" y="62" text-anchor="middle" fill="white" font-size="11">Search Bar</text>
+<rect x="270" y="40" width="100" height="35" rx="4" fill="#3b82f6"/><text x="320" y="62" text-anchor="middle" fill="white" font-size="11">Login</text>
+<rect x="390" y="40" width="100" height="35" rx="4" fill="#3b82f6"/><text x="440" y="62" text-anchor="middle" fill="white" font-size="11">Basket</text>
+<rect x="510" y="40" width="60" height="35" rx="4" fill="#3b82f6"/><text x="540" y="62" text-anchor="middle" fill="white" font-size="11">Products</text>
+<rect x="10" y="105" width="580" height="80" rx="8" fill="#10b981" opacity="0.2" stroke="#10b981" stroke-width="2"/>
+<text x="300" y="125" text-anchor="middle" fill="#6ee7b7" font-size="14" font-weight="bold">Backend (Express.js)</text>
+<rect x="30" y="135" width="100" height="35" rx="4" fill="#10b981"/><text x="80" y="157" text-anchor="middle" fill="white" font-size="11">Auth API</text>
+<rect x="150" y="135" width="100" height="35" rx="4" fill="#10b981"/><text x="200" y="157" text-anchor="middle" fill="white" font-size="11">Products API</text>
+<rect x="270" y="135" width="100" height="35" rx="4" fill="#10b981"/><text x="320" y="157" text-anchor="middle" fill="white" font-size="11">Basket API</text>
+<rect x="390" y="135" width="100" height="35" rx="4" fill="#10b981"/><text x="440" y="157" text-anchor="middle" fill="white" font-size="11">User API</text>
+<rect x="510" y="135" width="60" height="35" rx="4" fill="#10b981"/><text x="540" y="157" text-anchor="middle" fill="white" font-size="11">Feedback</text>
+<rect x="100" y="200" width="400" height="65" rx="8" fill="#f59e0b" opacity="0.2" stroke="#f59e0b" stroke-width="2"/>
+<text x="300" y="220" text-anchor="middle" fill="#fcd34d" font-size="14" font-weight="bold">Database (SQLite)</text>
+<ellipse cx="180" cy="245" rx="50" ry="15" fill="#f59e0b"/><text x="180" y="249" text-anchor="middle" fill="white" font-size="11">Users</text>
+<ellipse cx="300" cy="245" rx="50" ry="15" fill="#f59e0b"/><text x="300" y="249" text-anchor="middle" fill="white" font-size="11">Products</text>
+<ellipse cx="420" cy="245" rx="50" ry="15" fill="#f59e0b"/><text x="420" y="249" text-anchor="middle" fill="white" font-size="11">Baskets</text>
+<line x1="300" y1="90" x2="300" y2="105" stroke="#64748b" stroke-width="2"/><polygon points="300,105 295,95 305,95" fill="#64748b"/>
+<text x="310" y="100" fill="#94a3b8" font-size="10">HTTP/REST</text>
+<line x1="300" y1="185" x2="300" y2="200" stroke="#64748b" stroke-width="2"/><polygon points="300,200 295,190 305,190" fill="#64748b"/>
+<text x="310" y="195" fill="#94a3b8" font-size="10">SQL</text>
+</svg>
+</div>
 
 ### Verificación del Entorno
 
@@ -149,24 +148,30 @@ Juice Shop incluye un panel de progreso integrado que trackea los challenges res
 http://localhost:3000/#/score-board
 ```
 
-```mermaid
-gantt
-    title Juice Shop Challenge Progress
-    dateFormat  X
-    axisFormat %s
-    section Easy (1-2★)
-    Login Admin      :done, 0, 10
-    DOM XSS          :done, 10, 20
-    IDOR Basket      :done, 20, 30
-    section Medium (3-4★)
-    Reflected XSS    :active, 30, 40
-    Directory Traversal :active, 40, 50
-    section Hard (5-6★)
-    JWT Tampering    :crit, 50, 60
-    API XSS          :crit, 60, 70
-```
-
-*Figura 2: Score Board — Progreso de challenges por dificultad*
+<div class="mermaid-diagram" style="background: #1e293b; border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid #334155;">
+<div style="color: #94a3b8; font-size: 0.85em; margin-bottom: 10px; font-family: monospace;">Figura 2: Score Board — Progreso de challenges</div>
+<svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;">
+<text x="300" y="20" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">Challenge Progress by Difficulty</text>
+<rect x="20" y="35" width="560" height="30" rx="4" fill="#1e293b" stroke="#334155"/>
+<text x="30" y="55" fill="#94a3b8" font-size="11">Easy (1-2★)</text>
+<rect x="120" y="38" width="80" height="24" rx="4" fill="#22c55e"/><text x="160" y="54" text-anchor="middle" fill="white" font-size="9">Login Admin</text>
+<rect x="210" y="38" width="80" height="24" rx="4" fill="#22c55e"/><text x="250" y="54" text-anchor="middle" fill="white" font-size="9">DOM XSS</text>
+<rect x="300" y="38" width="80" height="24" rx="4" fill="#22c55e"/><text x="340" y="54" text-anchor="middle" fill="white" font-size="9">IDOR Basket</text>
+<rect x="20" y="75" width="560" height="30" rx="4" fill="#1e293b" stroke="#334155"/>
+<text x="30" y="95" fill="#94a3b8" font-size="11">Medium (3-4★)</text>
+<rect x="120" y="78" width="100" height="24" rx="4" fill="#3b82f6"/><text x="170" y="94" text-anchor="middle" fill="white" font-size="9">Reflected XSS</text>
+<rect x="230" y="78" width="120" height="24" rx="4" fill="#3b82f6"/><text x="290" y="94" text-anchor="middle" fill="white" font-size="9">Directory Traversal</text>
+<rect x="20" y="115" width="560" height="30" rx="4" fill="#1e293b" stroke="#334155"/>
+<text x="30" y="135" fill="#94a3b8" font-size="11">Hard (5-6★)</text>
+<rect x="120" y="118" width="120" height="24" rx="4" fill="#ef4444"/><text x="180" y="134" text-anchor="middle" fill="white" font-size="9">JWT Tampering</text>
+<rect x="250" y="118" width="100" height="24" rx="4" fill="#ef4444"/><text x="300" y="134" text-anchor="middle" fill="white" font-size="9">API XSS</text>
+<rect x="20" y="160" width="560" height="30" rx="4" fill="#1e293b" stroke="#334155"/>
+<text x="30" y="180" fill="#94a3b8" font-size="11">Legend:</text>
+<rect x="100" y="165" width="15" height="15" rx="3" fill="#22c55e"/><text x="120" y="177" fill="#94a3b8" font-size="10">Completed</text>
+<rect x="210" y="165" width="15" height="15" rx="3" fill="#3b82f6"/><text x="230" y="177" fill="#94a3b8" font-size="10">In Progress</text>
+<rect x="330" y="165" width="15" height="15" rx="3" fill="#ef4444"/><text x="350" y="177" fill="#94a3b8" font-size="10">Not Started</text>
+</svg>
+</div>
 
 ::: {.callout-warning}
 ## ADVERTENCIA DE AISLAMIENTO
@@ -319,23 +324,28 @@ curl -X POST http://localhost:3000/rest/user/login \
   -d "{\"email\":\"' OR 1=1 --\",\"password\":\"anything\"}"
 ```
 
-```mermaid
-sequenceDiagram
-    participant U as Attacker
-    participant B as Browser
-    participant S as Juice Shop Server
-    participant D as SQLite DB
-    U->>B: Email: ' OR 1=1--
-    U->>B: Password: anything
-    B->>S: POST /rest/user/login
-    S->>D: SELECT * FROM Users WHERE email='' OR 1=1--'
-    D-->>S: Returns ALL users (first=admin)
-    S-->>B: 200 OK + JWT (role:admin)
-    B-->>U: Logged in as admin@juice-sh.op
-    Note over U,D: SQL Injection bypasses authentication
-```
-
-*Figura 3: Flujo de ataque SQLi — Login Admin bypass*
+<div class="mermaid-diagram" style="background: #1e293b; border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid #334155;">
+<div style="color: #94a3b8; font-size: 0.85em; margin-bottom: 10px; font-family: monospace;">Figura 3: Flujo de ataque SQLi</div>
+<svg viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;">
+<text x="300" y="20" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">SQLi Login Attack Flow</text>
+<line x1="80" y1="35" x2="80" y2="270" stroke="#64748b" stroke-width="1"/>
+<line x1="200" y1="35" x2="200" y2="270" stroke="#64748b" stroke-width="1"/>
+<line x1="350" y1="35" x2="350" y2="270" stroke="#64748b" stroke-width="1"/>
+<line x1="500" y1="35" x2="500" y2="270" stroke="#64748b" stroke-width="1"/>
+<rect x="40" y="25" width="80" height="25" rx="4" fill="#ef4444"/><text x="80" y="42" text-anchor="middle" fill="white" font-size="11">Attacker</text>
+<rect x="160" y="25" width="80" height="25" rx="4" fill="#3b82f6"/><text x="200" y="42" text-anchor="middle" fill="white" font-size="11">Browser</text>
+<rect x="310" y="25" width="80" height="25" rx="4" fill="#10b981"/><text x="350" y="42" text-anchor="middle" fill="white" font-size="11">Server</text>
+<rect x="460" y="25" width="80" height="25" rx="4" fill="#f59e0b"/><text x="500" y="42" text-anchor="middle" fill="white" font-size="11">SQLite DB</text>
+<polygon points="80,70 350,70 345,65 350,75" fill="#94a3b8"/><text x="215" y="65" text-anchor="middle" fill="#e2e8f0" font-size="10">Email: ' OR 1=1--</text>
+<polygon points="80,95 350,95 345,90 350,100" fill="#94a3b8"/><text x="215" y="90" text-anchor="middle" fill="#e2e8f0" font-size="10">Password: anything</text>
+<polygon points="200,120 350,120 345,115 350,125" fill="#94a3b8"/><text x="275" y="115" text-anchor="middle" fill="#e2e8f0" font-size="10">POST /rest/user/login</text>
+<polygon points="350,145 500,145 495,140 500,150" fill="#94a3b8"/><text x="425" y="140" text-anchor="middle" fill="#e2e8f0" font-size="9">SELECT * WHERE email='' OR 1=1</text>
+<polygon points="500,170 350,170 355,165 350,175" fill="#94a3b8" stroke-dasharray="4,2"/><text x="425" y="165" text-anchor="middle" fill="#e2e8f0" font-size="10">Returns ALL users</text>
+<polygon points="350,195 200,195 205,190 200,200" fill="#94a3b8" stroke-dasharray="4,2"/><text x="275" y="190" text-anchor="middle" fill="#e2e8f0" font-size="10">200 OK + JWT (admin)</text>
+<polygon points="200,220 80,220 85,215 80,225" fill="#94a3b8" stroke-dasharray="4,2"/><text x="140" y="215" text-anchor="middle" fill="#e2e8f0" font-size="10">Logged in as admin</text>
+<rect x="120" y="240" width="360" height="30" rx="6" fill="#7f1d1d" stroke="#ef4444"/><text x="300" y="260" text-anchor="middle" fill="#fca5a5" font-size="11">⚠ SQL Injection bypasses authentication</text>
+</svg>
+</div>
 
 ### 💥 Cómo explotarla
 
@@ -1040,30 +1050,33 @@ PASO 3: Probar alg:none
   └── Enviar como nuevo token
 ```
 
-```mermaid
-flowchart TB
-    subgraph Header["Header (Base64)"]
-        A1[{"alg":"HS256"}]
-        A2[{"typ":"JWT"}]
-    end
-    subgraph Payload["Payload (Base64)"]
-        B1[{"data":{"email":"user@juice-sh.op"}}]
-        B2[{"role":"customer"}]
-        B3[{"iat":1234567890}]
-    end
-    subgraph Signature["Signature (HMAC)"]
-        C1[HMAC-SHA256(header.payload, secret)]
-    end
-    Header -->|.| Payload -->|.| Signature
-    classDef h fill:#3b82f6,stroke:#1e40af,color:#fff
-    classDef p fill:#f59e0b,stroke:#b45309,color:#fff
-    classDef s fill:#10b981,stroke:#047857,color:#fff
-    class A1,A2 h
-    class B1,B2,B3 p
-    class C1 s
-```
-
-*Figura 8: Estructura JWT — Header, Payload, Signature*
+<div class="mermaid-diagram" style="background: #1e293b; border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid #334155;">
+<div style="color: #94a3b8; font-size: 0.85em; margin-bottom: 10px; font-family: monospace;">Figura 8: Estructura JWT</div>
+<svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;">
+<text x="300" y="20" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">JWT Token Structure</text>
+<rect x="20" y="35" width="170" height="150" rx="8" fill="#1e3a5f" stroke="#3b82f6" stroke-width="2"/>
+<text x="105" y="55" text-anchor="middle" fill="#93c5fd" font-size="13" font-weight="bold">Header</text>
+<text x="30" y="75" fill="#e2e8f0" font-family="monospace" font-size="10">{"alg":"HS256"}</text>
+<text x="30" y="92" fill="#e2e8f0" font-family="monospace" font-size="10">{"typ":"JWT"}</text>
+<rect x="210" y="35" width="180" height="150" rx="8" fill="#451a03" stroke="#f59e0b" stroke-width="2"/>
+<text x="300" y="55" text-anchor="middle" fill="#fcd34d" font-size="13" font-weight="bold">Payload</text>
+<text x="220" y="75" fill="#e2e8f0" font-family="monospace" font-size="10">{"data":{</text>
+<text x="230" y="92" fill="#e2e8f0" font-family="monospace" font-size="10">"email":"user@..."</text>
+<text x="230" y="109" fill="#e2e8f0" font-family="monospace" font-size="10">"role":"customer"</text>
+<text x="220" y="126" fill="#e2e8f0" font-family="monospace" font-size="10">}}</text>
+<text x="220" y="148" fill="#e2e8f0" font-family="monospace" font-size="10">"iat":1234567890</text>
+<text x="220" y="165" fill="#e2e8f0" font-family="monospace" font-size="10">"exp":9999999999</text>
+<rect x="410" y="35" width="170" height="150" rx="8" fill="#1a3a2a" stroke="#10b981" stroke-width="2"/>
+<text x="495" y="55" text-anchor="middle" fill="#6ee7b7" font-size="13" font-weight="bold">Signature</text>
+<text x="420" y="80" fill="#e2e8f0" font-family="monospace" font-size="9">HMACSHA256(</text>
+<text x="420" y="97" fill="#e2e8f0" font-family="monospace" font-size="9">  base64Url(header) + "." +</text>
+<text x="420" y="114" fill="#e2e8f0" font-family="monospace" font-size="9">  base64Url(payload),</text>
+<text x="420" y="131" fill="#e2e8f0" font-family="monospace" font-size="9">  secret</text>
+<text x="420" y="148" fill="#e2e8f0" font-family="monospace" font-size="9">)</text>
+<text x="195" y="110" fill="#64748b" font-size="20">.</text>
+<text x="395" y="110" fill="#64748b" font-size="20">.</text>
+</svg>
+</div>
 
 ### 💥 Cómo explotarla
 
@@ -1155,32 +1168,27 @@ print(f"Status: {resp.status_code}")
 print(f"Response: {resp.json()}")
 ```
 
-```mermaid
-flowchart TB
-    subgraph Original["Original JWT"]
-        A1[alg: HS256] --> A2[email: user@juice-sh.op]
-        A2 --> A3[role: customer]
-        A3 --> A4[Valid Signature]
-    end
-    subgraph Forged["Forged JWT (alg:none)"]
-        B1[alg: none] --> B2[email: jwtn3d@juice-sh.op]
-        B2 --> B3[role: admin]
-        B3 --> B4[Signature: (empty)]
-    end
-    subgraph Result["Server Accepts"]
-        C1[No signature verification]
-        C2[User impersonated as admin]
-    end
-    Forged --> Result
-    classDef orig fill:#3b82f6,stroke:#1e40af,color:#fff
-    classDef forged fill:#ef4444,stroke:#b91c1c,color:#fff
-    classDef result fill:#10b981,stroke:#047857,color:#fff
-    class A1,A2,A3,A4 orig
-    class B1,B2,B3,B4 forged
-    class C1,C2 result
-```
-
-*Figura 9: JWT alg:none — Token forjado sin firma*
+<div class="mermaid-diagram" style="background: #1e293b; border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid #334155;">
+<div style="color: #94a3b8; font-size: 0.85em; margin-bottom: 10px; font-family: monospace;">Figura 9: JWT alg:none — Token forjado</div>
+<svg viewBox="0 0 600 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;">
+<text x="300" y="20" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">JWT alg:none — Token Forjado</text>
+<rect x="20" y="35" width="260" height="90" rx="8" fill="#1e3a5f" stroke="#3b82f6" stroke-width="2"/>
+<text x="150" y="55" text-anchor="middle" fill="#93c5fd" font-size="12" font-weight="bold">Original JWT</text>
+<text x="30" y="75" fill="#e2e8f0" font-family="monospace" font-size="10">Header: {"alg":"HS256","typ":"JWT"}</text>
+<text x="30" y="92" fill="#e2e8f0" font-family="monospace" font-size="10">Payload: {"email":"user@...","role":"customer"}</text>
+<text x="30" y="109" fill="#e2e8f0" font-family="monospace" font-size="10">Signature: HMACSHA256(...) ✓</text>
+<rect x="320" y="35" width="260" height="90" rx="8" fill="#7f1d1d" stroke="#ef4444" stroke-width="2"/>
+<text x="450" y="55" text-anchor="middle" fill="#fca5a5" font-size="12" font-weight="bold">Forged JWT (alg:none)</text>
+<text x="330" y="75" fill="#e2e8f0" font-family="monospace" font-size="10">Header: {"alg":"none","typ":"JWT"}</text>
+<text x="330" y="92" fill="#e2e8f0" font-family="monospace" font-size="10">Payload: {"email":"jwtn3d@...","role":"admin"}</text>
+<text x="330" y="109" fill="#ef4444" font-family="monospace" font-size="10">Signature: (empty) ✗</text>
+<rect x="120" y="145" width="360" height="50" rx="8" fill="#1a3a2a" stroke="#10b981" stroke-width="2"/>
+<text x="300" y="165" text-anchor="middle" fill="#6ee7b7" font-size="12" font-weight="bold">Server Accepts Forged Token</text>
+<text x="300" y="185" text-anchor="middle" fill="#e2e8f0" font-size="11">No signature verification → User impersonated as admin</text>
+<rect x="120" y="210" width="360" height="35" rx="8" fill="#7f1d1d" stroke="#ef4444"/>
+<text x="300" y="232" text-anchor="middle" fill="#fca5a5" font-size="11">⚠ CWE-347: Improper Verification of Cryptographic Signature</text>
+</svg>
+</div>
 
 ### 🛡️ Cómo mitigarla
 
@@ -1377,22 +1385,28 @@ curl http://localhost:3000/rest/basket/1 \
 6. El atacante ve productos, cantidades, precios de otro usuario
 ```
 
-```mermaid
-flowchart LR
-    A[Authenticated User] --> B[GET /rest/basket/5]
-    B --> C{Server checks ownership?}
-    C -->|NO| D[Returns basket data]
-    C -->|YES| E[403 Forbidden]
-    D --> F[Attacker sees other user's cart]
-    classDef attacker fill:#ef4444,stroke:#b91c1c,color:#fff
-    classDef server fill:#f59e0b,stroke:#b45309,color:#fff
-    classDef vuln fill:#10b981,stroke:#047857,color:#fff
-    class A,B attacker
-    class C,D server
-    class E,F vuln
-```
-
-*Figura 10: IDOR — Enumeración de carritos sin verificación de ownership*
+<div class="mermaid-diagram" style="background: #1e293b; border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid #334155;">
+<div style="color: #94a3b8; font-size: 0.85em; margin-bottom: 10px; font-family: monospace;">Figura 10: IDOR — Enumeración de carritos</div>
+<svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;">
+<text x="300" y="20" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">IDOR — Enumeración de Carritos</text>
+<rect x="20" y="35" width="160" height="50" rx="8" fill="#7f1d1d" stroke="#ef4444"/>
+<text x="100" y="55" text-anchor="middle" fill="#fca5a5" font-size="12" font-weight="bold">Attacker</text>
+<text x="100" y="72" text-anchor="middle" fill="#e2e8f0" font-family="monospace" font-size="10">GET /rest/basket/5</text>
+<polygon points="180,60 260,60 255,55 260,65" fill="#94a3b8"/>
+<rect x="260" y="35" width="160" height="50" rx="8" fill="#451a03" stroke="#f59e0b"/>
+<text x="340" y="55" text-anchor="middle" fill="#fcd34d" font-size="12" font-weight="bold">Server</text>
+<text x="340" y="72" text-anchor="middle" fill="#e2e8f0" font-size="10">Checks ownership?</text>
+<polygon points="420,60 500,60 495,55 500,65" fill="#94a3b8"/>
+<rect x="500" y="35" width="80" height="50" rx="8" fill="#7f1d1d" stroke="#ef4444"/>
+<text x="540" y="55" text-anchor="middle" fill="#fca5a5" font-size="11">Returns</text>
+<text x="540" y="72" text-anchor="middle" fill="#e2e8f0" font-size="10">basket data</text>
+<rect x="20" y="105" width="560" height="40" rx="8" fill="#7f1d1d" stroke="#ef4444"/>
+<text x="300" y="130" text-anchor="middle" fill="#fca5a5" font-size="12">⚠ NO ownership verification — IDOR vulnerability</text>
+<rect x="20" y="160" width="560" height="50" rx="8" fill="#1e293b" stroke="#334155"/>
+<text x="30" y="180" fill="#94a3b8" font-size="11">Enumeration:</text>
+<text x="30" y="198" fill="#e2e8f0" font-family="monospace" font-size="10">/rest/basket/1 → 200 OK | /rest/basket/2 → 200 OK | /rest/basket/3 → 200 OK</text>
+</svg>
+</div>
 
 **Enumeración sistemática**:
 
@@ -1629,22 +1643,27 @@ curl "http://localhost:3000/ftp/%252e%252e%252fpackage.json"
 # %25 = % → se decodifica dos veces
 ```
 
-```mermaid
-flowchart TB
-    A[Request: /ftp/eastere.gg] --> B[Server serves /ftp/ directory]
-    A2[Request: /ftp/../../../etc/passwd] --> C{Path validation?}
-    C -->|Weak| D[Traversal succeeds]
-    C -->|Strong| E[403 Forbidden]
-    D --> F[Attacker reads system files]
-    classDef req fill:#ef4444,stroke:#b91c1c,color:#fff
-    classDef check fill:#f59e0b,stroke:#b45309,color:#fff
-    classDef breach fill:#10b981,stroke:#047857,color:#fff
-    class A,A2 req
-    class C,D check
-    class E,F breach
-```
-
-*Figura 11: Directory Traversal — Escape de directorio restringido*
+<div class="mermaid-diagram" style="background: #1e293b; border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid #334155;">
+<div style="color: #94a3b8; font-size: 0.85em; margin-bottom: 10px; font-family: monospace;">Figura 11: Directory Traversal</div>
+<svg viewBox="0 0 600 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;">
+<text x="300" y="20" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">Directory Traversal — Escape de Directorio</text>
+<rect x="20" y="35" width="260" height="50" rx="8" fill="#1e3a5f" stroke="#3b82f6"/>
+<text x="150" y="55" text-anchor="middle" fill="#93c5fd" font-size="12" font-weight="bold">Legitimate Request</text>
+<text x="30" y="75" fill="#e2e8f0" font-family="monospace" font-size="10">GET /ftp/eastere.gg → 200 OK</text>
+<rect x="20" y="100" width="260" height="50" rx="8" fill="#7f1d1d" stroke="#ef4444"/>
+<text x="150" y="120" text-anchor="middle" fill="#fca5a5" font-size="12" font-weight="bold">Malicious Request</text>
+<text x="30" y="140" fill="#e2e8f0" font-family="monospace" font-size="10">GET /ftp/../../../etc/passwd</text>
+<rect x="320" y="35" width="260" height="50" rx="8" fill="#451a03" stroke="#f59e0b"/>
+<text x="450" y="55" text-anchor="middle" fill="#fcd34d" font-size="12" font-weight="bold">Path Validation</text>
+<text x="450" y="72" text-anchor="middle" fill="#e2e8f0" font-size="10">Weak check → Traversal succeeds</text>
+<rect x="320" y="100" width="260" height="50" rx="8" fill="#1a3a2a" stroke="#10b981"/>
+<text x="450" y="120" text-anchor="middle" fill="#6ee7b7" font-size="12" font-weight="bold">Strong Check (Fixed)</text>
+<text x="450" y="137" text-anchor="middle" fill="#e2e8f0" font-size="10">Resolve real path → 403 Forbidden</text>
+<rect x="20" y="170" width="560" height="55" rx="8" fill="#1e293b" stroke="#334155"/>
+<text x="30" y="190" fill="#94a3b8" font-size="11">Files accessible via traversal:</text>
+<text x="30" y="210" fill="#e2e8f0" font-family="monospace" font-size="10">/ftp/coupons_2013.md.bak | /ftp/package.json.bak | /ftp/eastere.gg</text>
+</svg>
+</div>
 
 **Script de enumeración**:
 
