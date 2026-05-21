@@ -67,9 +67,32 @@ book:
     - labs/lab-anexo-ethical-hacking.qmd
     - labs/lab-anexo-herramientas-base.qmd
     
-  # Appendices - Labs Avanzados + Curso Simplificado (Fundamentos)
+  # Appendices - Labs Avanzados + Minicursos + Curso Simplificado
   appendices:
+    # Labs de Explotación Web
     - labs/lab-anexo-juice-shop.qmd
+    - labs/lab-anexo-dvwa.qmd
+    - labs/lab-anexo-webgoat.qmd
+    # Minicursos de Herramientas
+    - minicursos/minicurso-git-github.qmd
+    - minicursos/minicurso-docker.qmd
+    - minicursos/minicurso-nvim.qmd
+    - minicursos/minicurso-tmux.qmd
+    - minicursos/minicurso-bash.qmd
+    - minicursos/minicurso-curl.qmd
+    - minicursos/minicurso-ssh.qmd
+    - minicursos/minicurso-openssl.qmd
+    - minicursos/minicurso-nmap.qmd
+    - minicursos/minicurso-burp-suite.qmd
+    - minicursos/minicurso-metasploit.qmd
+    - minicursos/minicurso-wireshark.qmd
+    - minicursos/minicurso-sqlmap.qmd
+    - minicursos/minicurso-hashcat.qmd
+    - minicursos/minicurso-hydra.qmd
+    - minicursos/minicurso-gobuster.qmd
+    - minicursos/minicurso-netcat.qmd
+    - minicursos/minicurso-tcpdump.qmd
+    # Curso Simplificado (Fundamentos)
     - content-simplified/index.qmd
     - content-simplified/modulo-01-seguridad-basica.qmd
     - content-simplified/modulo-02-redes.qmd

@@ -15,37 +15,29 @@ Este apéndice es un **laboratorio hands-on de explotación de vulnerabilidades 
 
 Juice Shop es una aplicación web moderna (Node.js + Express + SQLite + Angular) que contiene **intencionalmente** vulnerabilidades de seguridad reales. Cada vulnerabilidad es un "challenge" que el estudiante debe descubrir y explotar.
 
-```
-ARQUITECTURA DE JUICE SHOP
-===========================
-
-┌──────────────────────────────────────────────┐
-│              Frontend (Angular)               │
-│  ┌─────────┐ ┌─────────┐ ┌───────────────┐  │
-│  │  Login  │ │ Basket  │ │  Admin Panel  │  │
-│  └────┬────┘ └────┬────┘ └───────┬───────┘  │
-│       │           │              │           │
-│       └───────────┴──────┬───────┘           │
-└──────────────────────────┼───────────────────┘
-                           │ HTTP/REST
-┌──────────────────────────┼───────────────────┐
-│              Backend (Express.js)              │
-│  ┌─────────┐ ┌─────────┐ ┌───────────────┐  │
-│  │  Auth   │ │  API    │ │  File Server  │  │
-│  │ Routes  │ │ Routes  │ │   (Static)    │  │
-│  └────┬────┘ └────┬────┘ └───────┬───────┘  │
-│       │           │              │           │
-│       └───────────┴──────┬───────┘           │
-└──────────────────────────┼───────────────────┘
-                           │ SQL
-┌──────────────────────────┼───────────────────┐
-│          Database (SQLite)                     │
-│  ┌──────────────────────────────────────┐    │
-│  │  Users, Products, BasketItems,       │    │
-│  │  Orders, Challenges, Feedback, ...   │    │
-│  └──────────────────────────────────────┘    │
-└──────────────────────────────────────────────┘
-```
+<div class="compact-diagram" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:16px 20px;margin:16px 0;">
+<svg viewBox="0 0 460 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:460px;">
+<text x="230" y="14" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="bold">Arquitectura de OWASP Juice Shop</text>
+<!-- Frontend -->
+<rect x="10" y="24" width="440" height="50" rx="6" fill="#3b82f6"/><text x="230" y="40" text-anchor="middle" fill="white" font-size="10" font-weight="bold">FRONTEND — Angular</text>
+<rect x="20" y="48" width="120" height="20" rx="4" fill="#2563eb"/><text x="80" y="62" text-anchor="middle" fill="white" font-size="8">Login</text>
+<rect x="170" y="48" width="120" height="20" rx="4" fill="#2563eb"/><text x="230" y="62" text-anchor="middle" fill="white" font-size="8">Basket</text>
+<rect x="320" y="48" width="120" height="20" rx="4" fill="#2563eb"/><text x="380" y="62" text-anchor="middle" fill="white" font-size="8">Admin Panel</text>
+<!-- Arrow -->
+<line x1="230" y1="74" x2="230" y2="86" stroke="#94a3b8" stroke-width="2"/>
+<text x="240" y="84" fill="#64748b" font-size="8">HTTP/REST</text>
+<!-- Backend -->
+<rect x="10" y="90" width="440" height="50" rx="6" fill="#8b5cf6"/><text x="230" y="106" text-anchor="middle" fill="white" font-size="10" font-weight="bold">BACKEND — Express.js</text>
+<rect x="20" y="114" width="120" height="20" rx="4" fill="#7c3aed"/><text x="80" y="128" text-anchor="middle" fill="white" font-size="8">Auth Routes</text>
+<rect x="170" y="114" width="120" height="20" rx="4" fill="#7c3aed"/><text x="230" y="128" text-anchor="middle" fill="white" font-size="8">API Routes</text>
+<rect x="320" y="114" width="120" height="20" rx="4" fill="#7c3aed"/><text x="380" y="128" text-anchor="middle" fill="white" font-size="8">File Server</text>
+<!-- Arrow -->
+<line x1="230" y1="140" x2="230" y2="152" stroke="#94a3b8" stroke-width="2"/>
+<text x="240" y="150" fill="#64748b" font-size="8">SQL</text>
+<!-- Database -->
+<rect x="10" y="155" width="440" height="28" rx="6" fill="#10b981"/><text x="230" y="173" text-anchor="middle" fill="white" font-size="9" font-weight="bold">DATABASE — SQLite (Users, Products, BasketItems, Orders, Challenges)</text>
+</svg>
+</div>
 
 ### Objetivos de Aprendizaje
 
@@ -495,25 +487,26 @@ DOM-based XSS es una variante de Cross-Site Scripting donde el **payload malicio
 
 El flujo de un ataque DOM XSS:
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    FLUJO DOM XSS                                 │
-│                                                                  │
-│  1. Attacker crafts URL con payload:                             │
-│     http://site.com/search?q=<script>malicious()</script>       │
-│                                                                  │
-│  2. Browser loads page → JavaScript lee la URL:                  │
-│     const query = new URLSearchParams(window.location.search)   │
-│                        .get('q');                                │
-│                                                                  │
-│  3. JavaScript inserta en DOM SIN sanitizar:                     │
-│     document.getElementById('results').innerHTML = query;        │
-│     // ⚠️ innerHTML ejecuta scripts!                             │
-│                                                                  │
-│  4. Browser ejecuta el script malicioso                          │
-│     → Cookie stealing, session hijacking, keylogging, etc.       │
-└─────────────────────────────────────────────────────────────────┘
-```
+<div class="compact-diagram" style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:14px 18px;margin:14px 0;">
+<svg viewBox="0 0 460 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:460px;">
+<text x="230" y="14" text-anchor="middle" fill="#dc2626" font-size="11" font-weight="bold">Flujo DOM XSS — Ataque en el Cliente</text>
+<!-- Step 1 -->
+<rect x="10" y="24" width="210" height="24" rx="4" fill="#ef4444"/><text x="115" y="40" text-anchor="middle" fill="white" font-size="8" font-weight="bold">1. URL maliciosa con payload</text>
+<!-- Arrow -->
+<line x1="220" y1="36" x2="235" y2="36" stroke="#94a3b8" stroke-width="1.5"/>
+<!-- Step 2 -->
+<rect x="235" y="24" width="215" height="24" rx="4" fill="#f59e0b"/><text x="342" y="40" text-anchor="middle" fill="white" font-size="8" font-weight="bold">2. JS lee URL sin sanitizar</text>
+<!-- Arrow down -->
+<line x1="342" y1="48" x2="342" y2="60" stroke="#94a3b8" stroke-width="1.5"/>
+<!-- Step 3 -->
+<rect x="120" y="62" width="220" height="24" rx="4" fill="#8b5cf6"/><text x="230" y="78" text-anchor="middle" fill="white" font-size="8" font-weight="bold">3. innerHTML = query (SIN escape)</text>
+<!-- Arrow down -->
+<line x1="230" y1="86" x2="230" y2="98" stroke="#94a3b8" stroke-width="1.5"/>
+<!-- Step 4 -->
+<rect x="10" y="100" width="440" height="30" rx="4" fill="#1e293b"/><text x="230" y="114" text-anchor="middle" fill="#fca5a5" font-size="8" font-weight="bold">4. Browser ejecuta script → Cookie stealing, session hijacking, keylogging</text>
+<text x="230" y="128" text-anchor="middle" fill="#64748b" font-size="7">⚠️ El servidor NUNCA ve el payload — todo ocurre en el cliente</text>
+</svg>
+</div>
 
 La diferencia clave con XSS reflejado/stored: **el servidor nunca ve el payload**. Todo ocurre en el cliente.
 
@@ -775,25 +768,20 @@ Reflected XSS ocurre cuando una aplicación web **refleja** entrada maliciosa de
 
 ### 🔧 Cómo funciona
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                  FLUJO REFLECTED XSS                              │
-│                                                                  │
-│  1. Attacker crafts URL maliciosa:                               │
-│     https://site.com/search?q=<script>malicious()</script>      │
-│                                                                  │
-│  2. Víctima hace clic en el enlace (phishing, social media)     │
-│                                                                  │
-│  3. Servidor recibe la petición y CONSTRUYE la respuesta:        │
-│     res.send(`Resultados para: ${req.query.q}`)                 │
-│     // ⚠️ req.query.q contiene el script!                        │
-│                                                                  │
-│  4. Servidor envía la respuesta con el payload inyectado:        │
-│     <html>Resultados para: <script>malicious()</script></html>  │
-│                                                                  │
-│  5. Browser del usuario ejecuta el script                        │
-└─────────────────────────────────────────────────────────────────┘
-```
+<div class="compact-diagram" style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:14px 18px;margin:14px 0;">
+<svg viewBox="0 0 460 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:460px;">
+<text x="230" y="14" text-anchor="middle" fill="#dc2626" font-size="11" font-weight="bold">Flujo Reflected XSS — Payload pasa por el servidor</text>
+<rect x="10" y="24" width="130" height="24" rx="4" fill="#ef4444"/><text x="75" y="40" text-anchor="middle" fill="white" font-size="8" font-weight="bold">1. URL maliciosa</text>
+<polygon points="140,36 155,36 152,33 155,39" fill="#94a3b8"/>
+<rect x="155" y="24" width="130" height="24" rx="4" fill="#f59e0b"/><text x="220" y="40" text-anchor="middle" fill="white" font-size="8" font-weight="bold">2. Víctima hace clic</text>
+<polygon points="285,36 300,36 297,33 300,39" fill="#94a3b8"/>
+<rect x="300" y="24" width="150" height="24" rx="4" fill="#8b5cf6"/><text x="375" y="40" text-anchor="middle" fill="white" font-size="8" font-weight="bold">3. Servidor refleja payload</text>
+<line x1="375" y1="48" x2="375" y2="60" stroke="#94a3b8" stroke-width="1.5"/>
+<rect x="230" y="62" width="220" height="24" rx="4" fill="#3b82f6"/><text x="340" y="78" text-anchor="middle" fill="white" font-size="8" font-weight="bold">4. Respuesta HTML inyectada</text>
+<line x1="340" y1="86" x2="340" y2="98" stroke="#94a3b8" stroke-width="1.5"/>
+<rect x="10" y="100" width="440" height="20" rx="4" fill="#1e293b"/><text x="230" y="114" text-anchor="middle" fill="#fca5a5" font-size="8">5. Browser ejecuta script → Cookie stealing, session hijacking</text>
+</svg>
+</div>
 
 **Diferencia clave con DOM XSS**: En reflected XSS, el payload **pasa por el servidor** y se refleja en la respuesta HTML. En DOM XSS, el payload nunca sale del navegador.
 
@@ -968,27 +956,30 @@ app.use((req, res, next) => {
 JWT (JSON Web Token) Tampering es la manipulación de tokens JWT para obtener acceso no autorizado. El ataque `alg:none` explota una vulnerabilidad donde el servidor acepta tokens sin firma, permitiendo que cualquier token auto-generado sea considerado válido.
 
 **OWASP Top 10**: A02:2021 — Cryptographic Failures
-**CWE**: CWE-345 — Insufficient Verification of Data Authenticity
+**CWE**: CWE-347 — Insufficient Verification of Data Authenticity
 **MITRE ATT&CK**: T1550.001 — Use Alternate Authentication Material
 
 ### 🔧 Cómo funciona
 
 Un JWT tiene tres partes separadas por puntos:
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    ESTRUCTURA JWT                                 │
-│                                                                  │
-│  eyJhbGciOiJIUzI1NiJ9.eyJkYXRhIjoi... .SflKxwRJSMeKKF2QT4fwp... │
-│  └────────┬─────────┘ └──────┬───────┘ └─────────┬──────────┘   │
-│           │                  │                   │               │
-│     HEADER (Base64)    PAYLOAD (Base64)    SIGNATURE (HMAC)     │
-│                                                                  │
-│  Header: {"alg":"HS256","typ":"JWT"}                            │
-│  Payload: {"data":"admin@juice-sh.op","iat":1234567890}         │
-│  Signature: HMAC-SHA256(header.payload, secret_key)             │
-└─────────────────────────────────────────────────────────────────┘
-```
+<div class="compact-diagram" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px 18px;margin:14px 0;">
+<svg viewBox="0 0 460 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:460px;">
+<text x="230" y="14" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="bold">Estructura JWT — JSON Web Token</text>
+<!-- Token -->
+<rect x="10" y="24" width="140" height="30" rx="4" fill="#3b82f6"/><text x="80" y="44" text-anchor="middle" fill="white" font-size="9" font-weight="bold">HEADER</text>
+<text x="80" y="68" text-anchor="middle" fill="#64748b" font-size="7">{"alg":"HS256","typ":"JWT"}</text>
+<text x="155" y="44" text-anchor="middle" fill="#94a3b8" font-size="12">.</text>
+<rect x="160" y="24" width="140" height="30" rx="4" fill="#8b5cf6"/><text x="230" y="44" text-anchor="middle" fill="white" font-size="9" font-weight="bold">PAYLOAD</text>
+<text x="230" y="68" text-anchor="middle" fill="#64748b" font-size="7">{"data":"admin@...","iat":...}</text>
+<text x="305" y="44" text-anchor="middle" fill="#94a3b8" font-size="12">.</text>
+<rect x="310" y="24" width="140" height="30" rx="4" fill="#10b981"/><text x="380" y="44" text-anchor="middle" fill="white" font-size="9" font-weight="bold">SIGNATURE</text>
+<text x="380" y="68" text-anchor="middle" fill="#64748b" font-size="7">HMAC-SHA256(header.payload, key)</text>
+<!-- Attack note -->
+<rect x="10" y="84" width="440" height="22" rx="4" fill="#fef2f2" stroke="#ef4444" stroke-width="1"/>
+<text x="230" y="99" text-anchor="middle" fill="#dc2626" font-size="8" font-weight="bold">Ataque alg:none → Cambiar header a {"alg":"none"} + eliminar signature = token válido sin firma</text>
+</svg>
+</div>
 
 El ataque `alg:none` funciona así:
 
@@ -1260,27 +1251,18 @@ IDOR (Insecure Direct Object Reference) ocurre cuando una aplicación expone ref
 
 ### 🔧 Cómo funciona
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                      FLUJO IDOR                                   │
-│                                                                  │
-│  1. Usuario legítimo tiene basket con id=5                       │
-│     GET /rest/basket/5 → ✅ Autorizado (es su basket)            │
-│                                                                  │
-│  2. Backend verifica autenticación pero NO autorización:         │
-│     if (req.user) {                                              │
-│       const basket = await Basket.findByPk(req.params.id);       │
-│       return res.json(basket);  // ← Sin verificar ownership!    │
-│     }                                                            │
-│                                                                  │
-│  3. Atacante cambia el ID:                                       │
-│     GET /rest/basket/1 → ✅ Devuelve basket del usuario 1        │
-│     GET /rest/basket/2 → ✅ Devuelve basket del usuario 2        │
-│     GET /rest/basket/3 → ✅ Devuelve basket del usuario 3        │
-│                                                                  │
-│  4. Atacante puede ver TODOS los baskets                         │
-└─────────────────────────────────────────────────────────────────┘
-```
+<div class="compact-diagram" style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:14px 18px;margin:14px 0;">
+<svg viewBox="0 0 460 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:460px;">
+<text x="230" y="14" text-anchor="middle" fill="#dc2626" font-size="11" font-weight="bold">Flujo IDOR — Insecure Direct Object Reference</text>
+<rect x="10" y="24" width="210" height="24" rx="4" fill="#3b82f6"/><text x="115" y="40" text-anchor="middle" fill="white" font-size="8" font-weight="bold">1. GET /basket/5 → ✅ OK (propio)</text>
+<line x1="220" y1="36" x2="235" y2="36" stroke="#94a3b8" stroke-width="1.5"/>
+<rect x="235" y="24" width="215" height="24" rx="4" fill="#ef4444"/><text x="342" y="40" text-anchor="middle" fill="white" font-size="8" font-weight="bold">2. Auth OK pero NO verifica ownership</text>
+<line x1="342" y1="48" x2="342" y2="60" stroke="#94a3b8" stroke-width="1.5"/>
+<rect x="100" y="62" width="260" height="24" rx="4" fill="#f59e0b"/><text x="230" y="78" text-anchor="middle" fill="white" font-size="8" font-weight="bold">3. Attacker cambia ID → /basket/1, /basket/2...</text>
+<line x1="230" y1="86" x2="230" y2="96" stroke="#94a3b8" stroke-width="1.5"/>
+<rect x="10" y="98" width="440" height="18" rx="4" fill="#1e293b"/><text x="230" y="111" text-anchor="middle" fill="#fca5a5" font-size="8">4. Attacker ve TODOS los baskets → Data breach completo</text>
+</svg>
+</div>
 
 La vulnerabilidad no es que el ID sea predecible (eso es normal). La vulnerabilidad es que **no se verifica si el usuario tiene permiso** para acceder a ese ID específico.
 
@@ -1502,23 +1484,18 @@ Directory Traversal (Path Traversal) es una vulnerabilidad que permite a un atac
 
 ### 🔧 Cómo funciona
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                 FLUJO DIRECTORY TRAVERSAL                         │
-│                                                                  │
-│  1. Aplicación sirve archivos estáticos:                         │
-│     GET /ftp/<filename> → lee /app/ftp/<filename>               │
-│                                                                  │
-│  2. Atacante manipula la ruta:                                   │
-│     GET /ftp/../../../etc/passwd                                 │
-│                                                                  │
-│  3. Backend resuelve la ruta:                                    │
-│     /app/ftp/../../../etc/passwd                                 │
-│     = /etc/passwd  ← ¡Archivo del sistema operativo!             │
-│                                                                  │
-│  4. Si no hay validación de path → devuelve el archivo           │
-└─────────────────────────────────────────────────────────────────┘
-```
+<div class="compact-diagram" style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:14px 18px;margin:14px 0;">
+<svg viewBox="0 0 460 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:460px;">
+<text x="230" y="14" text-anchor="middle" fill="#dc2626" font-size="11" font-weight="bold">Flujo Directory Traversal — Escapar del directorio permitido</text>
+<rect x="10" y="24" width="210" height="24" rx="4" fill="#3b82f6"/><text x="115" y="40" text-anchor="middle" fill="white" font-size="8" font-weight="bold">1. GET /ftp/&lt;filename&gt;</text>
+<line x1="220" y1="36" x2="235" y2="36" stroke="#94a3b8" stroke-width="1.5"/>
+<rect x="235" y="24" width="215" height="24" rx="4" fill="#ef4444"/><text x="342" y="40" text-anchor="middle" fill="white" font-size="8" font-weight="bold">2. ../../../etc/passwd</text>
+<line x1="342" y1="48" x2="342" y2="60" stroke="#94a3b8" stroke-width="1.5"/>
+<rect x="100" y="62" width="260" height="24" rx="4" fill="#f59e0b"/><text x="230" y="78" text-anchor="middle" fill="white" font-size="8" font-weight="bold">3. /app/ftp/../../../etc/passwd = /etc/passwd</text>
+<line x1="230" y1="86" x2="230" y2="96" stroke="#94a3b8" stroke-width="1.5"/>
+<rect x="10" y="98" width="440" height="18" rx="4" fill="#1e293b"/><text x="230" y="111" text-anchor="middle" fill="#fca5a5" font-size="8">4. Sin validación de path → archivo del SO expuesto</text>
+</svg>
+</div>
 
 La secuencia `../` significa "directorio padre" en sistemas Unix. Múltiples `../` permiten subir varios niveles:
 
@@ -1778,36 +1755,25 @@ XSS Persistido (Stored XSS) a través de API ocurre cuando una aplicación **alm
 
 ### 🔧 Cómo funciona
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                  FLUJO STORED XSS VIA API                         │
-│                                                                  │
-│  FASE 1: INYECCIÓN                                               │
-│  ┌─────────────────────────────────────────────────────┐        │
-│  │  1. Attacker envía payload via API POST:             │        │
-│  │     POST /api/Feedback                               │        │
-│  │     {"comment": "<script>malicious()</script>"}     │        │
-│  │                                                      │        │
-│  │  2. Servidor GUARDA en base de datos:                │        │
-│  │     INSERT INTO Feedback (comment) VALUES            │        │
-│  │       ('<script>malicious()</script>')               │        │
-│  │     ← No sanitiza al guardar                         │        │
-│  └─────────────────────────────────────────────────────┘        │
-│                                                                  │
-│  FASE 2: EJECUCIÓN                                               │
-│  ┌─────────────────────────────────────────────────────┐        │
-│
-│  │  3. Usuario legítimo visita la página de feedback:   │        │
-│  │     GET /#/privacy-security → carga feedbacks       │        │
-│  │                                                      │        │
-│  │  4. Servidor lee de BD y envía sin sanitizar:        │        │
-│  │     SELECT comment FROM Feedback                     │        │
-│  │     → "<script>malicious()</script>"                 │        │
-│  │                                                      │        │
-│  │  5. Browser del usuario ejecuta el script            │        │
-│  └─────────────────────────────────────────────────────┘        │
-└─────────────────────────────────────────────────────────────────┘
-```
+<div class="compact-diagram" style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:14px 18px;margin:14px 0;">
+<svg viewBox="0 0 460 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:460px;">
+<text x="230" y="14" text-anchor="middle" fill="#dc2626" font-size="11" font-weight="bold">Flujo Stored XSS via API — Payload almacenado permanentemente</text>
+<!-- Phase 1 -->
+<rect x="10" y="22" width="210" height="20" rx="4" fill="#ef4444"/><text x="115" y="36" text-anchor="middle" fill="white" font-size="8" font-weight="bold">FASE 1: INYECCIÓN</text>
+<rect x="10" y="44" width="210" height="20" rx="4" fill="#3b82f6"/><text x="115" y="58" text-anchor="middle" fill="white" font-size="7">POST /api/Feedback → BD sin sanitizar</text>
+<!-- Arrow -->
+<line x1="220" y1="54" x2="235" y2="54" stroke="#94a3b8" stroke-width="1.5"/>
+<!-- Phase 2 -->
+<rect x="235" y="22" width="215" height="20" rx="4" fill="#8b5cf6"/><text x="342" y="36" text-anchor="middle" fill="white" font-size="8" font-weight="bold">FASE 2: EJECUCIÓN</text>
+<rect x="235" y="44" width="215" height="20" rx="4" fill="#10b981"/><text x="342" y="58" text-anchor="middle" fill="white" font-size="7">GET feedback → render sin encoding</text>
+<!-- Arrow down -->
+<line x1="342" y1="64" x2="342" y2="76" stroke="#94a3b8" stroke-width="1.5"/>
+<!-- Result -->
+<rect x="100" y="78" width="260" height="24" rx="4" fill="#f59e0b"/><text x="230" y="94" text-anchor="middle" fill="white" font-size="8" font-weight="bold">Browser ejecuta script automáticamente</text>
+<line x1="230" y1="102" x2="230" y2="112" stroke="#94a3b8" stroke-width="1.5"/>
+<rect x="10" y="114" width="440" height="18" rx="4" fill="#1e293b"/><text x="230" y="127" text-anchor="middle" fill="#fca5a5" font-size="8">⚠️ Cada usuario que visita la página ejecuta el script — sin necesidad de clic especial</text>
+</svg>
+</div>
 
 **Diferencia clave**: El payload se almacena permanentemente. Cada usuario que visita la página afectada ejecuta el script automáticamente, sin necesidad de hacer clic en un link especial.
 
@@ -1993,21 +1959,17 @@ curl -X POST http://localhost:3000/api/Feedback \
 
 **Verificación del impacto**:
 
-```
-┌─────────────────────────────────────────────────────┐
-│  ESCENARIO DE ATAQUE REAL                             │
-│                                                      │
-│  1. Attacker inyecta payload de cookie stealing      │
-│  2. Admin visita la página de feedback               │
-│  3. Script envía cookie del admin a attacker.com     │
-│  4. Attacker usa cookie para impersonar al admin     │
-│  5. Attacker tiene acceso TOTAL al sistema            │
-│                                                      │
-│  Tiempo total: segundos                              │
-│  Detección: difícil (no hay error visible)            │
-│  Impacto: crítico (compromiso total)                  │
-└─────────────────────────────────────────────────────┘
-```
+<div class="compact-diagram" style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:14px 18px;margin:14px 0;">
+<svg viewBox="0 0 440 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:440px;">
+<text x="220" y="14" text-anchor="middle" fill="#dc2626" font-size="11" font-weight="bold">Escenario de Ataque Real — Cookie Stealing</text>
+<rect x="10" y="24" width="420" height="20" rx="4" fill="#ef4444"/><text x="220" y="38" text-anchor="middle" fill="white" font-size="8">1. Attacker inyecta payload → 2. Admin visita feedback → 3. Cookie enviada a attacker</text>
+<line x1="220" y1="44" x2="220" y2="56" stroke="#94a3b8" stroke-width="1.5"/>
+<rect x="10" y="58" width="420" height="20" rx="4" fill="#8b5cf6"/><text x="220" y="72" text-anchor="middle" fill="white" font-size="8">4. Attacker impersona admin → 5. Acceso TOTAL al sistema</text>
+<rect x="10" y="84" width="135" height="16" rx="4" fill="#1e293b"/><text x="77" y="96" text-anchor="middle" fill="#94a3b8" font-size="7">Tiempo: segundos</text>
+<rect x="155" y="84" width="135" height="16" rx="4" fill="#1e293b"/><text x="222" y="96" text-anchor="middle" fill="#94a3b8" font-size="7">Detección: difícil</text>
+<rect x="300" y="84" width="130" height="16" rx="4" fill="#1e293b"/><text x="365" y="96" text-anchor="middle" fill="#fca5a5" font-size="7">Impacto: crítico</text>
+</svg>
+</div>
 
 ### 🛡️ Cómo mitigarla
 
@@ -2079,7 +2041,7 @@ app.use((req, res, next) => {
 | 1 | SQL Injection (Login Admin) | A03:2021 | CWE-89 | T1190 | ⭐⭐ |
 | 2 | DOM XSS | A07:2021 | CWE-79 | T1059.007 | ⭐⭐⭐ |
 | 3 | Reflected XSS | A07:2021 | CWE-79 | T1059.007 | ⭐⭐ |
-| 4 | JWT Tampering (alg:none) | A02:2021 | CWE-345 | T1550.001 | ⭐⭐⭐ |
+| 4 | JWT Tampering (alg:none) | A02:2021 | CWE-347 | T1550.001 | ⭐⭐⭐ |
 | 5 | IDOR (View Basket) | A01:2021 | CWE-639 | T1078 | ⭐⭐ |
 | 6 | Directory Traversal | A01:2021 | CWE-22 | T1083 | ⭐⭐ |
 | 7 | Stored XSS (API) | A07:2021 | CWE-79 | T1059.007 | ⭐⭐⭐ |
@@ -2157,7 +2119,7 @@ SCORE: ____ / 700 puntos
 
 - CWE-89: SQL Injection. <https://cwe.mitre.org/data/definitions/89.html>
 - CWE-79: XSS. <https://cwe.mitre.org/data/definitions/79.html>
-- CWE-345: Insufficient Verification of Data Authenticity. <https://cwe.mitre.org/data/definitions/345.html>
+- CWE-347: Insufficient Verification of Data Authenticity. <https://cwe.mitre.org/data/definitions/345.html>
 - CWE-639: Authorization Bypass Through User-Controlled Key. <https://cwe.mitre.org/data/definitions/639.html>
 - CWE-22: Path Traversal. <https://cwe.mitre.org/data/definitions/22.html>
 

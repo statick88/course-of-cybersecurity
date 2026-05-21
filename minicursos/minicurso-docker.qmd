@@ -1,0 +1,711 @@
+---
+title: "Minicurso: Docker"
+module: "minicurso-docker"
+type: "minicurso"
+description: "Tutorial completo de Docker para ciberseguridad"
+---
+
+# Minicurso: Docker
+
+## ¿Qué es Docker?
+
+Docker es una plataforma de contenedores que permite empaquetar aplicaciones con todas sus dependencias en unidades estandarizadas llamadas contenedores. A diferencia de las máquinas virtuales, los contenedores comparten el kernel del sistema operativo host, lo que los hace más ligeros y rápidos de iniciar.
+
+Un contenedor Docker es un proceso aislado que tiene su propio sistema de archivos, red y espacio de procesos. La imagen es la plantilla inmutable a partir de la cual se crean los contenedores.
+
+En ciberseguridad, Docker es fundamental para crear entornos de prueba aislados, ejecutar herramientas de pentesting sin contaminar el sistema host, analizar malware de forma segura, y desplegar aplicaciones vulnerables para entrenamiento (DVWA, Juice Shop, WebGoat).
+
+## ¿Por qué aprenderlo?
+
+- **Aislamiento**: Ejecuta herramientas peligrosas sin riesgo para tu sistema
+- **Reproducibilidad**: Entornos idénticos en cualquier máquina
+- **Rapidez**: Levantar un laboratorio vulnerable en minutos, no horas
+- **Portabilidad**: Mismo entorno en macOS, Linux y Windows
+- **Estándar**: La industria usa Docker para todo, desde CI/CD hasta producción
+
+## Instalación
+
+### macOS
+
+```bash
+# Con Homebrew (Docker Desktop)
+brew install --cask docker
+
+# O con OrbStack (alternativa ligera)
+brew install --cask orbstack
+
+# Iniciar Docker Desktop desde Applications
+# Verificar instalación
+docker --version
+# Esperado: Docker version 26.x.x
+
+docker compose version
+# Esperado: Docker Compose version v2.27.x
+```
+
+### Linux (Ubuntu/Debian)
+
+```bash
+# Instalar dependencias
+sudo apt update
+sudo apt install -y ca-certificates curl gnupg
+
+# Añadir key oficial de Docker
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+# Añadir repositorio
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+  https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Instalar
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io \
+  docker-buildx-plugin docker-compose-plugin
+
+# Añadir usuario al grupo docker (evita usar sudo)
+sudo usermod -aG docker $USER
+newgrp docker
+
+# Verificar
+docker --version
+docker compose version
+```
+
+### Windows
+
+```powershell
+# Con Winget
+winget install Docker.DockerDesktop
+
+# O descargar desde https://www.docker.com/products/docker-desktop/
+# Requiere WSL2 habilitado:
+wsl --install
+
+# Verificar en PowerShell
+docker --version
+docker compose version
+```
+
+### Verificar instalación
+
+```bash
+# Ejecutar contenedor de prueba
+docker run hello-world
+# Esperado: "Hello from Docker!" con explicación del funcionamiento
+```
+
+## Nivel Básico
+
+### Conceptos Fundamentales
+
+**Imagen**: Plantilla inmutable que contiene la aplicación y sus dependencias. Se construye a partir de un Dockerfile.
+
+**Contenedor**: Instancia ejecutable de una imagen. Puedes tener múltiples contenedores de la misma imagen.
+
+**Dockerfile**: Receta que define cómo construir una imagen.
+
+**Registry**: Repositorio de imágenes (Docker Hub es el público por defecto).
+
+**Volumen**: Persistencia de datos fuera del ciclo de vida del contenedor.
+
+**Red**: Comunicación entre contenedores y con el exterior.
+
+### Comandos Esenciales
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `docker pull` | Descargar imagen | `docker pull ubuntu:24.04` |
+| `docker images` | Listar imágenes locales | `docker images -a` |
+| `docker run` | Ejecutar contenedor | `docker run -it ubuntu bash` |
+| `docker ps` | Listar contenedores activos | `docker ps -a` (todos) |
+| `docker stop` | Detener contenedor | `docker stop <id>` |
+| `docker start` | Iniciar contenedor detenido | `docker start <id>` |
+| `docker rm` | Eliminar contenedor | `docker rm <id>` |
+| `docker rmi` | Eliminar imagen | `docker rmi <imagen>` |
+| `docker exec` | Ejecutar comando en contenedor | `docker exec -it <id> bash` |
+| `docker logs` | Ver logs del contenedor | `docker logs -f <id>` |
+| `docker build` | Construir imagen | `docker build -t myapp .` |
+| `docker inspect` | Detalles del contenedor | `docker inspect <id>` |
+
+### Ejercicio 1: Tu primer contenedor
+
+**Objetivo:** Ejecutar tu primer contenedor y entender el ciclo de vida.
+
+**Paso 1:** Descargar y ejecutar una imagen
+
+```bash
+# Descargar imagen de Ubuntu
+docker pull ubuntu:24.04
+# Esperado: capas descargándose con hashes
+
+# Ejecutar contenedor interactivo
+docker run -it --name mi-ubuntu ubuntu:24.04 bash
+
+# Dentro del contenedor (prompt cambia a root@<hash>):
+cat /etc/os-release
+# Esperado: Ubuntu 24.04 LTS
+
+whoami
+# Esperado: root
+
+exit
+# Sales del contenedor y se detiene
+```
+
+**Paso 2:** Inspeccionar contenedores
+
+```bash
+# Ver contenedores detenidos
+docker ps -a
+# Esperado: mi-ubuntu con status "Exited"
+
+# Ver logs (si hubo output)
+docker logs mi-ubuntu
+
+# Inspeccionar detalles
+docker inspect mi-ubuntu | head -30
+# Esperado: JSON con configuración del contenedor
+```
+
+**Paso 3:** Reiniciar y entrar
+
+```bash
+# Iniciar contenedor detenido
+docker start mi-ubuntu
+
+# Entrar al contenedor
+docker exec -it mi-ubuntu bash
+
+# Dentro del contenedor:
+apt update
+apt install -y nmap
+nmap --version
+
+exit
+
+# Detener y eliminar
+docker stop mi-ubuntu
+docker rm mi-ubuntu
+```
+
+::: {.callout-warning}
+## Importante
+`docker run` crea un NUEVO contenedor. `docker start` reinicia uno existente. No confundirlos.
+:::
+
+## Nivel Intermedio
+
+### Dockerfile: Construir tus propias imágenes
+
+```bash
+# Crear directorio de proyecto
+mkdir my-secure-app && cd my-secure-app
+
+# Crear Dockerfile
+cat > Dockerfile << 'EOF'
+# Imagen base
+FROM ubuntu:24.04
+
+# Metadatos
+LABEL maintainer="tu@email.com"
+LABEL description="Aplicación segura de ejemplo"
+
+# Evitar prompts interactivos
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Instalar dependencias
+RUN apt update && \
+    apt install -y --no-install-recommends \
+        curl \
+        jq \
+        ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
+# Crear usuario no-root (seguridad)
+RUN useradd -m -s /bin/bash appuser
+
+# Directorio de trabajo
+WORKDIR /home/appuser
+
+# Copiar archivos
+COPY --chown=appuser:appuser app.sh .
+RUN chmod +x app.sh
+
+# Cambiar a usuario no-root
+USER appuser
+
+# Puerto expuesto
+EXPOSE 8080
+
+# Comando por defecto
+CMD ["./app.sh"]
+EOF
+
+# Crear script de la aplicación
+cat > app.sh << 'SCRIPT'
+#!/bin/bash
+echo "Servidor seguro ejecutándose como: $(whoami)"
+echo "PID: $$"
+while true; do
+    sleep 3600
+done
+SCRIPT
+
+# Construir la imagen
+docker build -t my-secure-app:v1 .
+# Esperado: pasos del build con "Step X/Y"
+
+# Ejecutar
+docker run -d --name secure-app -p 8080:8080 my-secure-app:v1
+
+# Verificar que corre como usuario no-root
+docker exec secure-app whoami
+# Esperado: appuser (NO root)
+```
+
+::: {.callout-tip}
+## Buena Práctica
+SIEMPRE usa `USER` en tu Dockerfile para evitar ejecutar como root. Un contenedor root comprometido = host comprometido.
+:::
+
+### Docker Compose: Múltiples contenedores
+
+```bash
+# Crear docker-compose.yml
+cat > docker-compose.yml << 'EOF'
+services:
+  web:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
+      POSTGRES_DB: appdb
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+volumes:
+  db-data:
+
+networks:
+  app-network:
+    driver: bridge
+EOF
+
+# Levantar todo
+docker compose up -d
+# Esperado: db y web iniciándose
+
+# Ver estado
+docker compose ps
+# Esperado: ambos servicios "running"
+
+# Ver logs
+docker compose logs -f web
+
+# Detener todo
+docker compose down
+
+# Detener y eliminar volúmenes
+docker compose down -v
+```
+
+### Volúmenes: Persistencia de datos
+
+```bash
+# Volumen nombrado (gestionado por Docker)
+docker volume create my-data
+docker run -d -v my-data:/data --name data-container ubuntu:24.04 sleep infinity
+
+# Escribir datos
+docker exec data-container bash -c "echo 'datos importantes' > /data/file.txt"
+
+# Leer datos
+docker exec data-container cat /data/file.txt
+# Esperado: datos importantes
+
+# Montar directorio local (bind mount)
+docker run -it -v $(pwd)/data:/host-data ubuntu:24.04 bash
+
+# Dentro del contenedor:
+ls /host-data
+# Esperado: contenido de tu directorio local data/
+```
+
+### Redes Docker
+
+```bash
+# Crear red personalizada
+docker network create --driver bridge secure-net
+
+# Conectar contenedores a la red
+docker run -d --name app1 --network secure-net nginx:alpine
+docker run -d --name app2 --network secure-net nginx:alpine
+
+# Verificar conectividad entre contenedores
+docker exec app1 ping -c 2 app2
+# Esperado: 2 packets transmit, 2 received
+
+# Inspeccionar red
+docker network inspect secure-net
+
+# Eliminar red
+docker network rm secure-net
+```
+
+### Ejercicio 2: Laboratorio vulnerable con DVWA
+
+**Objetivo:** Desplegar Damn Vulnerable Web Application de forma aislada.
+
+**Paso 1:** Crear compose file
+
+```bash
+mkdir dvwa-lab && cd dvwa-lab
+
+cat > docker-compose.yml << 'EOF'
+services:
+  dvwa:
+    image: ghcr.io/digininja/dvwa:latest
+    environment:
+      - MYSQL_USER=dvwa
+      - MYSQL_PASSWORD=p@ssw0rd
+      - MYSQL_DATABASE=dvwa
+      - DB_SERVER=db
+    ports:
+      - "4280:80"
+    depends_on:
+      - db
+    networks:
+      - dvwa-net
+    restart: unless-stopped
+
+  db:
+    image: mariadb:10.11
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpass
+      - MYSQL_USER=dvwa
+      - MYSQL_PASSWORD=p@ssw0rd
+      - MYSQL_DATABASE=dvwa
+    volumes:
+      - dvwa-db:/var/lib/mysql
+    networks:
+      - dvwa-net
+    restart: unless-stopped
+
+volumes:
+  dvwa-db:
+
+networks:
+  dvwa-net:
+    driver: bridge
+EOF
+```
+
+**Paso 2:** Ejecutar el laboratorio
+
+```bash
+# Levantar DVWA
+docker compose up -d
+
+# Verificar que está corriendo
+docker compose ps
+# Esperado: dvwa y db en estado "running"
+
+# Ver logs
+docker compose logs dvwa
+# Esperado: "Apache is running"
+
+# Acceder en navegador: http://localhost:4280
+# Login por defecto: admin / password
+```
+
+**Paso 3:** Aislar el laboratorio
+
+```bash
+# El laboratorio solo es accesible desde localhost
+# NO exponerlo a internet NUNCA
+
+# Verificar que solo escucha en localhost
+ss -tlnp | grep 4280
+# Esperado: 127.0.0.1:4280
+
+# Cuando termines, detener
+docker compose down
+docker compose down -v  # Eliminar datos también
+```
+
+## Nivel Avanzado
+
+### Multi-stage Builds: Imágenes optimizadas
+
+```bash
+cat > Dockerfile << 'EOF'
+# Stage 1: Build
+FROM golang:1.22-alpine AS builder
+
+WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+RUN CGO_ENABLED=0 GOOS=linux go build -o /security-tool
+
+# Stage 2: Runtime (imagen mínima)
+FROM alpine:3.19
+
+# Solo lo necesario para runtime
+RUN apk add --no-cache ca-certificates
+
+# Copiar solo el binario compilado
+COPY --from=builder /security-tool /usr/local/bin/
+
+# Usuario no-root
+RUN adduser -D -s /bin/sh appuser
+USER appuser
+
+CMD ["security-tool"]
+EOF
+
+# La imagen final es MUCHO más pequeña
+docker build -t security-tool:optimized .
+docker images security-tool:optimized
+# Esperado: ~10MB vs ~300MB del builder
+```
+
+### Security Best Practices para contenedores
+
+```bash
+# 1. Escanear imágenes con Trivy
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+  aquasec/trivy:latest image my-secure-app:v1
+
+# 2. Ejecutar con recursos limitados
+docker run -d \
+  --memory="256m" \
+  --cpus="0.5" \
+  --pids-limit=100 \
+  --name limited-app my-secure-app:v1
+
+# 3. Sin privilegios (no-new-privileges)
+docker run -d \
+  --security-opt=no-new-privileges:true \
+  --cap-drop=ALL \
+  --cap-add=NET_BIND_SERVICE \
+  --name secure-app my-secure-app:v1
+
+# 4. Read-only filesystem
+docker run -d \
+  --read-only \
+  --tmpfs /tmp \
+  --tmpfs /var/run \
+  --name readonly-app my-secure-app:v1
+
+# 5. Sin red (completamente aislado)
+docker run -d \
+  --network=none \
+  --name isolated-app my-secure-app:v1
+```
+
+::: {.callout-warning}
+## Seguridad Crítica
+NUNCA montes `/var/run/docker.sock` en contenedores de producción. Quien controle el socket = control total del host Docker.
+:::
+
+### Secrets Management
+
+```bash
+# NO usar variables de entorno para secrets sensibles
+# MALO:
+docker run -e DB_PASSWORD=supersecret myapp
+
+# BUENO: Docker Secrets (con Docker Swarm)
+echo "supersecret" | docker secret create db_password -
+
+# BUENO: archivos montados
+mkdir -p secrets
+echo "supersecret" > secrets/db_password
+
+docker run -d \
+  --mount type=bind,source=$(pwd)/secrets,target=/run/secrets,readonly \
+  myapp
+
+# Dentro del contenedor, leer secret:
+cat /run/secrets/db_password
+```
+
+### Ejercicio 3: Contenedor hardened para análisis
+
+**Objetivo:** Crear un contenedor con máxima seguridad para análisis de malware.
+
+**Paso 1:** Dockerfile hardened
+
+```bash
+mkdir malware-sandbox && cd malware-sandbox
+
+cat > Dockerfile << 'EOF'
+FROM ubuntu:24.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Instalar herramientas de análisis
+RUN apt update && apt install -y --no-install-recommends \
+    strace \
+    ltrace \
+    file \
+    binwalk \
+    python3 \
+    python3-pip \
+    tcpdump \
+    wireshark-common \
+    && rm -rf /var/lib/apt/lists/*
+
+# Crear usuario aislado
+RUN useradd -m -s /bin/bash analyst && \
+    mkdir -p /home/analysis/samples && \
+    chown -R analyst:analyst /home/analysis
+
+WORKDIR /home/analysis
+
+# Sin red por defecto (análisis offline)
+USER analyst
+
+CMD ["/bin/bash"]
+EOF
+
+# Construir
+docker build -t malware-sandbox .
+```
+
+**Paso 2:** Ejecutar con restricciones máximas
+
+```bash
+# Ejecutar sin red, sin privilegios, filesystem solo lectura
+docker run -it --rm \
+  --network=none \
+  --security-opt=no-new-privileges:true \
+  --cap-drop=ALL \
+  --read-only \
+  --tmpfs /tmp:exec \
+  --tmpfs /home/analysis/samples:exec \
+  --memory="512m" \
+  --cpus="1" \
+  --pids-limit=50 \
+  --name analysis-session \
+  malware-sandbox
+
+# Dentro del contenedor:
+# - Copiar muestra a /home/analysis/samples/
+# - Analizar con file, strings, binwalk
+# - Monitorear con strace/ltrace
+# - NO hay red, NO hay persistencia
+```
+
+## Uso en Ciberseguridad
+
+### Escenario 1: Herramientas de pentesting portables
+
+```bash
+# Ejecutar Nmap sin instalarlo
+docker run --rm --network=host instrumentisto/nmap -sV target.com
+
+# Ejecutar SQLMap
+docker run --rm -it paoloo/sqlmap --url "http://target.com/page?id=1" --dbs
+
+# Ejecutar Nikto
+docker run --rm -it sulli/nikto -h http://target.com
+
+# Ejecutar Metasploit
+docker run --rm -it -p 4444:4444 metasploitframework/metasploit-framework
+```
+
+### Escenario 2: Entorno de forense digital
+
+```bash
+# Contenedor con herramientas forenses
+docker run -it --rm \
+  -v /path/to/evidence:/evidence:ro \
+  -v /path/to/output:/output \
+  sansforensics/dfir-workbench
+
+# Analizar evidencia sin modificarla (montada read-only)
+# Los resultados se guardan en /output
+```
+
+### Escenario 3: CTF y práctica
+
+```bash
+# Levantar múltiples retos CTF
+cat > ctf-lab.yml << 'EOF'
+services:
+  web-challenge:
+    image: nginx:alpine
+    ports: ["8001:80"]
+    volumes:
+      - ./challenges/web:/usr/share/nginx/html:ro
+    networks: [ctf-net]
+
+  crypto-challenge:
+    image: python:3.12-slim
+    ports: ["8002:5000"]
+    volumes:
+      - ./challenges/crypto:/app
+    working_dir: /app
+    command: python3 -m http.server 5000
+    networks: [ctf-net]
+
+networks:
+  ctf-net:
+EOF
+
+docker compose -f ctf-lab.yml up -d
+```
+
+## Referencia Rápida
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `docker pull` | Descargar imagen | `docker pull ubuntu:24.04` |
+| `docker run` | Ejecutar contenedor | `docker run -it --rm ubuntu bash` |
+| `docker ps` | Listar contenedores | `docker ps -a --format "table {{.Names}}\t{{.Status}}"` |
+| `docker exec` | Ejecutar en contenedor | `docker exec -it <id> bash` |
+| `docker logs` | Ver logs | `docker logs -f --tail 50 <id>` |
+| `docker build` | Construir imagen | `docker build -t name:tag .` |
+| `docker compose up` | Levantar servicios | `docker compose up -d` |
+| `docker compose down` | Detener servicios | `docker compose down -v` |
+| `docker volume ls` | Listar volúmenes | `docker volume prune` (limpiar) |
+| `docker network ls` | Listar redes | `docker network create mynet` |
+| `docker inspect` | Detalles | `docker inspect --format='{{.State.Pid}}' <id>` |
+| `docker stats` | Uso de recursos | `docker stats --no-stream` |
+| `docker cp` | Copiar archivos | `docker cp <id>:/path ./local` |
+| `docker system df` | Uso de disco | `docker system prune -a` |
+
+## Recursos Adicionales
+
+- **Documentación oficial**: https://docs.docker.com/
+- **Docker Hub**: https://hub.docker.com/
+- **Play with Docker (gratuito)**: https://labs.play-with-docker.com/
+- **Docker Security Cheat Sheet**: https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html
+- **Katacoda Docker**: https://www.katacoda.com/courses/docker
+- **Trivy (escáner de seguridad)**: https://github.com/aquasecurity/trivy
+- **DVWA Docker**: https://github.com/digininja/DVWA
+
+---
+
+*Minicurso Docker — Curso Fundamentos de Ciberseguridad — CC BY-SA 4.0*

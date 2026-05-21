@@ -1,0 +1,587 @@
+---
+title: "Minicurso: Tmux"
+module: "minicurso-tmux"
+type: "minicurso"
+description: "Tutorial completo de Tmux para ciberseguridad"
+---
+
+# Minicurso: Tmux
+
+## ¿Qué es Tmux?
+
+Tmux (Terminal Multiplexer) es una herramienta que permite crear, acceder y controlar múltiples terminales desde una sola ventana. Funciona como un "gestor de ventanas" dentro de tu terminal, permitiéndote dividir la pantalla en paneles, crear múltiples ventanas, y lo más importante: mantener sesiones activas incluso si te desconectas.
+
+A diferencia de tener múltiples ventanas de terminal abiertas, tmux organiza todo dentro de una sola ventana del emulador de terminal. Cada sesión de tmux es independiente y persistente — puedes desconectarte (detach) y volver a conectarte (attach) más tarde, con todo exactamente como lo dejaste.
+
+En ciberseguridad, tmux es esencial para mantener sesiones de pentesting activas durante horas o días, monitorear múltiples sistemas simultáneamente, ejecutar escaneos largos en segundo plano, y trabajar remotamente sin perder tu trabajo si la conexión SSH se interrumpe.
+
+## ¿Por qué aprenderlo?
+
+- **Persistencia**: Escaneos largos sobreviven a desconexiones de red
+- **Multitarea**: Monitorea nmap, logs y notas simultáneamente
+- **Remoto**: Trabaja en servidores sin miedo a perder la sesión
+- **Organización**: Paneles y ventanas para cada tarea
+- **Colaboración**: Comparte sesiones con otros analysts
+
+## Instalación
+
+### macOS
+
+```bash
+# Con Homebrew
+brew install tmux
+
+# Verificar instalación
+tmux -V
+# Esperado: tmux 3.4 o superior
+```
+
+### Linux (Ubuntu/Debian)
+
+```bash
+sudo apt update
+sudo apt install -y tmux
+
+# Verificar
+tmux -V
+# Esperado: tmux 3.3 o superior
+```
+
+### Windows
+
+```powershell
+# Tmux no es nativo en Windows
+# Usar WSL2:
+wsl --install
+# Luego dentro de WSL:
+sudo apt install -y tmux
+
+# O usar Git Bash con tmux compilado
+```
+
+### Configuración inicial
+
+```bash
+# Crear configuración
+cat > ~/.tmux.conf << 'EOF'
+# Prefix key: Ctrl+a (más cómodo que Ctrl+b)
+unbind C-b
+set-option -g prefix C-a
+bind-key C-a send-prefix
+
+# Colores y apariencia
+set -g status-bg colour235
+set -g status-fg white
+set -g status-left-length 40
+set -g status-right-length 80
+
+# Navegación de paneles con vim keys
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R
+
+# Mouse support (útil para principiantes)
+set -g mouse on
+
+# Historial grande
+set -g history-limit 50000
+
+# Tiempo antes de que pane se cierre al salir
+set -g base-index 1
+setw -g pane-base-index 1
+
+# Atajos rápidos
+bind | split-window -h -c "#{pane_current_path}"
+bind - split-window -v -c "#{pane_current_path}"
+bind c new-window -c "#{pane_current_path}"
+EOF
+
+# Recargar configuración (si tmux ya está corriendo)
+tmux source ~/.tmux.conf
+```
+
+## Nivel Básico
+
+### Conceptos Fundamentales
+
+Tmux tiene una jerarquía de tres niveles:
+
+1. **Servidor**: La instancia de tmux (uno por usuario)
+2. **Sesiones**: Espacios de trabajo independientes
+3. **Ventanas**: Como pestañas dentro de una sesión
+4. **Paneles**: Divisiones de pantalla dentro de una ventana
+
+El **prefix key** (por defecto `Ctrl+b`, configurado como `Ctrl+a` arriba) precede a todos los comandos de tmux.
+
+### Comandos de la línea de comandos
+
+| Comando | Descripción |
+|---------|-------------|
+| `tmux` | Crear nueva sesión |
+| `tmux new -s nombre` | Crear sesión con nombre |
+| `tmux ls` | Listar sesiones activas |
+| `tmux attach -t nombre` | Conectar a sesión existente |
+| `tmux attach` | Conectar a última sesión |
+| `tmux kill-session -t nombre` | Eliminar sesión |
+| `tmux kill-server` | Eliminar TODAS las sesiones |
+
+### Comandos con prefix key
+
+| Prefix + Tecla | Acción |
+|----------------|--------|
+| `c` | Nueva ventana |
+| `n` | Siguiente ventana |
+| `p` | Ventana anterior |
+| `w` | Lista de ventanas |
+| `&` | Cerrar ventana actual |
+| `"` | Split horizontal (pane abajo) |
+| `%` | Split vertical (pane derecha) |
+| `x` | Cerrar pane actual |
+| `z` | Toggle zoom del pane |
+| `d` | Detach (desconectar) |
+| `?` | Lista de todos los atajos |
+| `:` | Prompt de comando |
+
+### Ejercicio 1: Tu primera sesión de tmux
+
+**Objetivo:** Crear una sesión, dividirla en paneles, y practicar detach/attach.
+
+**Paso 1:** Crear sesión
+
+```bash
+# Crear sesión con nombre
+tmux new -s pentest
+
+# Verás un indicador verde (o del color configurado) abajo
+# con el nombre de la sesión
+```
+
+**Paso 2:** Dividir en paneles
+
+```
+# Dentro de tmux (prefix = Ctrl+a si configuraste, Ctrl+b por defecto):
+
+# Split vertical (dos paneles lado a lado)
+Prefix + %
+
+# Mover al pane derecho
+Prefix + l  (o flecha derecha)
+
+# Split horizontal (pane de abajo)
+Prefix + "
+
+# Ahora tienes 3 paneles:
+# +-------+-------+
+# |       |       |
+# |  1    |   2   |
+# |       |       |
+# +-------+-------+
+# |       3        |
+# +----------------+
+```
+
+**Paso 3:** Navegar entre paneles
+
+```
+# Mover entre paneles:
+Prefix + h  # Izquierda
+Prefix + j  # Abajo
+Prefix + k  # Arriba
+Prefix + l  # Derecha
+
+# O con el mouse si está habilitado:
+# Simplemente haz clic en el pane deseado
+```
+
+**Paso 4:** Detach y attach
+
+```
+# Desconectar de la sesión (todo sigue corriendo)
+Prefix + d
+
+# Vuelves a tu terminal normal
+# Verificar que la sesión sigue activa
+tmux ls
+# Esperado: pentest: 1 windows (created ...)
+
+# Reconectar a la sesión
+tmux attach -t pentest
+
+# Todo está exactamente como lo dejaste
+```
+
+## Nivel Intermedio
+
+### Gestión de ventanas
+
+```bash
+# Crear nueva ventana
+Prefix + c
+
+# Renombrar ventana actual
+Prefix + ,
+# Escribir nuevo nombre, Enter
+
+# Ir a ventana por número
+Prefix + 0, 1, 2, ...
+
+# Ir a ventana por nombre
+Prefix + w
+# Seleccionar de la lista
+
+# Cerrar ventana
+Prefix + &
+# Confirmar con 'y'
+```
+
+### Copy Mode (modo copia)
+
+```
+# Entrar en copy mode
+Prefix + [
+
+# Navegar con vim keys:
+# h/j/k/l - mover cursor
+# Ctrl+u/d - media página
+# / - buscar texto
+# n - siguiente coincidencia
+
+# Seleccionar texto:
+# Ctrl+Space - iniciar selección
+# Mover cursor para seleccionar
+# Enter - copiar selección
+
+# Pegar texto copiado
+Prefix + ]
+
+# Buscar en el historial
+Prefix + [
+/ patrón_de_búsqueda
+```
+
+### Send-keys: Enviar comandos entre paneles
+
+```
+# Enviar comando a otro pane sin cambiar
+Prefix + :
+# Escribir:
+send-keys -t pentest:0.1 "nmap -sV target.com" Enter
+
+# Esto ejecuta nmap en el pane 1 de la ventana 0
+# Sin necesidad de navegar hasta allí
+```
+
+### Ejercicio 2: Workspace de pentesting
+
+**Objetivo:** Crear un entorno de trabajo completo para pentesting.
+
+**Paso 1:** Crear sesión estructurada
+
+```bash
+# Crear sesión
+tmux new -s pentest-workspace -d
+
+# Crear ventanas
+tmux new-window -t pentest-workspace -n "recon"
+tmux new-window -t pentest-workspace -n "exploitation"
+tmux new-window -t pentest-workspace -n "notes"
+
+# Volver a la primera ventana
+tmux select-window -t pentest-workspace:1
+```
+
+**Paso 2:** Configurar paneles en cada ventana
+
+```bash
+# Ventana 1 (recon): 3 paneles
+tmux select-window -t pentest-workspace:1
+tmux split-window -h -t pentest-workspace:1
+tmux split-window -v -t pentest-workspace:1.0
+
+# Ventana 2 (exploitation): 2 paneles
+tmux select-window -t pentest-workspace:2
+tmux split-window -v -t pentest-workspace:2
+
+# Ventana 3 (notes): 1 pane completo
+# Ya está configurada
+```
+
+**Paso 3:** Asignar tareas a cada pane
+
+```
+# Attach a la sesión
+tmux attach -t pentest-workspace
+
+# En ventana "recon":
+# Pane 1: Ejecutar nmap
+nmap -sV -oN scan-results.txt 192.168.1.0/24
+
+# Pane 2: Monitorear resultados
+tail -f scan-results.txt
+
+# Pane 3: Notas de reconocimiento
+nvim recon-notes.md
+
+# En ventana "exploitation":
+# Pane 1: Herramienta de explotación
+# Pane 2: Listener para reverse shell
+nc -lvnp 4444
+
+# En ventana "notes":
+nvim pentest-report.md
+```
+
+## Nivel Avanzado
+
+### Scripting de tmux
+
+```bash
+#!/bin/bash
+# Script para crear workspace de pentesting automáticamente
+# Guardar como: ~/bin/pentest-tmux.sh
+
+SESSION="pentest-auto"
+TARGET="${1:-192.168.1.1}"
+
+# Matar sesión si existe
+tmux kill-session -t "$SESSION" 2>/dev/null
+
+# Crear sesión
+tmux new-session -d -s "$SESSION" -n "recon"
+
+# Pane de recon: nmap
+tmux send-keys -t "$SESSION" "echo '=== Escaneo de $TARGET ==='" Enter
+tmux send-keys -t "$SESSION" "nmap -sV -sC -oN scan.txt $TARGET" Enter
+
+# Split para monitoreo
+tmux split-window -h -t "$SESSION"
+tmux send-keys -t "$SESSION" "watch -n 5 'cat scan.txt 2>/dev/null | tail -20'" Enter
+
+# Split para notas
+tmux split-window -v -t "$SESSION:0.0"
+tmux send-keys -t "$SESSION" "nvim notes.md" Enter
+
+# Ventana de explotación
+tmux new-window -t "$SESSION" -n "exploit"
+tmux send-keys -t "$SESSION" "echo '=== Herramientas de explotación ==='" Enter
+
+# Ventana de logs
+tmux new-window -t "$SESSION" -n "logs"
+tmux send-keys -t "$SESSION" "tail -f /var/log/auth.log 2>/dev/null || echo 'Sin acceso a logs'" Enter
+
+# Volver a la primera ventana
+tmux select-window -t "$SESSION:1"
+
+echo "Workspace '$SESSION' creado para target: $TARGET"
+echo "Conectar con: tmux attach -t $SESSION"
+```
+
+```bash
+# Hacer ejecutable
+chmod +x ~/bin/pentest-tmux.sh
+
+# Ejecutar
+~/bin/pentest-tmux.sh 10.0.0.50
+
+# Conectar
+tmux attach -t pentest-auto
+```
+
+### Tmux.conf avanzado para seguridad
+
+```bash
+cat >> ~/.tmux.conf << 'EOF'
+
+# === Configuración avanzada para pentesting ===
+
+# Notificación visual cuando hay actividad en otro pane
+setw -g monitor-activity on
+set -g visual-activity on
+
+# Mantener pane abierto al salir (útil para ver resultados)
+set -g remain-on-exit on
+
+# Formato de la barra de estado
+set -g status-left "#[fg=green,bold] #{session_name} "
+set -g status-right "#[fg=yellow]#{pane_current_path} #[fg=cyan]%H:%M"
+
+# Colores por ventana
+setw -g window-status-current-style "fg=white,bg=red,bold"
+setw -g window-status-style "fg=white,bg=default"
+
+# Atajos personalizados
+# Recargar config rápidamente
+bind r source-file ~/.tmux.conf \; display "Config recargada"
+
+# Screenshot del pane actual (guardar output)
+bind S capture-pane -S - \; save-buffer ~/tmux-screenshot-$(date +%Y%m%d-%H%M%S).txt \; display "Screenshot guardado"
+
+# Enviar comando a todos los paneles
+bind A command-prompt -p "Command:" "send-keys -t %% '%1'"
+EOF
+```
+
+### Sesiones persistentes con tmux-resurrect
+
+```bash
+# Instalar TPM (Tmux Plugin Manager)
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+# Añadir a ~/.tmux.conf
+cat >> ~/.tmux.conf << 'EOF'
+# Plugins
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+
+# Resurrect configuration
+set -g @resurrect-capture-pane-contents 'on'
+set -g @continuum-restore 'on'
+set -g @continuum-save-interval '10'  # Auto-save cada 10 min
+
+# Inicializar TPM (siempre al final)
+run '~/.tmux/plugins/tpm/tpm'
+EOF
+
+# Instalar plugins
+Prefix + I  (mayúscula)
+
+# Guardar sesión manualmente
+Prefix + Ctrl+s
+
+# Restaurar sesión
+Prefix + Ctrl+r
+```
+
+### Ejercicio 3: Monitoreo de múltiples sistemas
+
+**Objetivo:** Crear un dashboard de monitoreo para varios servidores.
+
+**Paso 1:** Script de monitoreo
+
+```bash
+#!/bin/bash
+# Dashboard de monitoreo de servidores
+# Guardar como: ~/bin/security-monitor.sh
+
+SESSION="security-monitor"
+SERVERS="server1 server2 server3"
+
+tmux kill-session -t "$SESSION" 2>/dev/null
+tmux new-session -d -s "$SESSION" -n "overview"
+
+# Pane principal: resumen
+tmux send-keys -t "$SESSION" "echo '=== Security Monitor Dashboard ==='" Enter
+tmux send-keys -t "$SERVER" "echo 'Fecha: $(date)'" Enter
+
+# Crear pane por servidor
+for i in 1 2 3; do
+    tmux split-window -v -t "$SESSION"
+    tmux send-keys -t "$SESSION" "echo '--- Server $i ---'" Enter
+    tmux send-keys -t "$SESSION" "watch -n 10 'ssh server$i \"last -5; echo ---; ss -tlnp | head -10\"' 2>/dev/null || echo 'Server $i no disponible'" Enter
+done
+
+# Último pane: logs centralizados
+tmux split-window -v -t "$SESSION"
+tmux send-keys -t "$SESSION" "echo '=== Alertas ==='" Enter
+tmux send-keys -t "$SESSION" "tail -f /var/log/syslog 2>/dev/null | grep -iE 'fail|error|denied|attack' || echo 'Monitoreando...'" Enter
+
+# Layout equilibrado
+tmux select-layout -t "$SESSION" even-vertical
+
+echo "Dashboard creado: tmux attach -t $SESSION"
+```
+
+## Uso en Ciberseguridad
+
+### Escenario 1: Escaneos largos con persistencia
+
+```bash
+# Iniciar escaneo masivo que tomará horas
+tmux new -s nmap-scan
+
+# Dentro de tmux:
+nmap -sV -sC -p- -oA full-scan 192.168.1.0/24
+
+# Si necesitas irte:
+Prefix + d  # Detach
+
+# Horas después, desde cualquier lugar:
+tmux attach -t nmap-scan
+
+# El escaneo sigue corriendo y puedes ver los resultados
+```
+
+### Escenario 2: Respuesta a incidentes
+
+```bash
+# Sesión de respuesta a incidentes
+tmux new -s incident-response
+
+# Pane 1: Contención
+tmux rename-window "containment"
+tmux send-keys "sudo iptables -A INPUT -s 10.0.0.50 -j DROP" Enter
+
+# Pane 2: Forense
+tmux split-window -h
+tmux send-keys "sudo dd if=/dev/sda of=/evidence/disk.img bs=4M status=progress" Enter
+
+# Pane 3: Documentación
+tmux split-window -v
+tmux send-keys "nvim incident-timeline.md" Enter
+
+# Ventana 2: Análisis
+tmux new-window -n "analysis"
+tmux send-keys "strings /evidence/disk.img | grep -iE 'password|secret|token' > findings.txt" Enter
+```
+
+### Escenario 3: Sesión compartida con equipo
+
+```bash
+# Crear sesión compartida
+tmux new -s team-session
+
+# Otro usuario se conecta (mismo servidor):
+tmux attach -t team-session
+
+# Ambos ven y controlan la misma sesión
+# Útil para mentoring o colaboración en tiempo real
+
+# Para solo observar (sin controlar):
+tmux attach -t team-session -r
+```
+
+## Referencia Rápida
+
+| Comando | Descripción |
+|---------|-------------|
+| `tmux new -s name` | Nueva sesión con nombre |
+| `tmux ls` | Listar sesiones |
+| `tmux attach -t name` | Conectar a sesión |
+| `Prefix + c` | Nueva ventana |
+| `Prefix + n/p` | Siguiente/anterior ventana |
+| `Prefix + "` | Split horizontal |
+| `Prefix + %` | Split vertical |
+| `Prefix + h/j/k/l` | Navegar paneles |
+| `Prefix + z` | Zoom pane |
+| `Prefix + x` | Cerrar pane |
+| `Prefix + d` | Detach |
+| `Prefix + [` | Copy mode |
+| `Prefix + ]` | Pegar |
+| `Prefix + :` | Prompt comando |
+| `Prefix + ?` | Ayuda |
+| `Prefix + w` | Lista ventanas |
+
+## Recursos Adicionales
+
+- **Documentación oficial**: https://github.com/tmux/tmux/wiki
+- **Tmux Cheat Sheet**: https://tmuxcheatsheet.com/
+- **Tmux Plugin Manager**: https://github.com/tmux-plugins/tpm
+- **Tmux Resurrect**: https://github.com/tmux-plugins/tmux-resurrect
+- **Tmux Continuum**: https://github.com/tmux-plugins/tmux-continuum
+- **Tmux for Pentesters**: https://www.hackingarticles.in/tmux-for-pentesters/
+
+---
+
+*Minicurso Tmux — Curso Fundamentos de Ciberseguridad — CC BY-SA 4.0*

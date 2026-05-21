@@ -7,102 +7,339 @@ description: "Gestion de vulnerabilidades, CVE, CVSS y amenazas 2026"
 
 # Modulo 5: Gestion de Vulnerabilidades
 
-## Objetivos
+## Objetivos SMART
 
-- Comprender el ciclo de vida de vulnerabilidades
-- Usar CVSS y EPSS para priorizacion
-- Implementar gestion de exposicion continua
-- Integrar threat intelligence
+Al finalizar este modulo, el estudiante sera capaz de:
+
+1. **Identificar** al menos 5 fases del ciclo de vida de vulnerabilidades en un escenario real
+2. **Calcular** scores CVSS v3.1 correctamente para 3 vulnerabilidades de ejemplo
+3. **Priorizar** un listado de 10 vulnerabilidades combinando CVSS, EPSS y contexto de negocio
+4. **Consultar** el catalogo CISA KEV y determinar si una vulnerabilidad requiere parche obligatorio
+5. **Crear** un plan de gestion de vulnerabilidades para TechCorp (proyecto del curso)
+
+## 📋 5W1H — Marco de Referencia
+
+### ¿Qué? — Definicion de Gestion de Vulnerabilidades
+
+La **gestion de vulnerabilidades** es un proceso continuo que abarca la identificacion, evaluacion, tratamiento y monitoreo de debilidades en sistemas, aplicaciones e infraestructura. No se trata solo de "encontrar bugs" — es un ciclo sistematico que conecta el descubrimiento tecnico con la priorizacion basada en riesgo y la remediacion medible.
+
+Una **vulnerabilidad** es una debilidad en un sistema que puede ser explotada por una amenaza para comprometer la confidencialidad, integridad o disponibilidad de los activos.
+
+### ¿Cómo? — Metodologia
+
+El proceso sigue cinco fases interconectadas:
+
+1. **Discover**: Escaneo continuo con herramientas como Nessus, Qualys o OpenVAS
+2. **Publish**: Las vulnerabilidades reciben identificadores CVE y se publican en bases como NVD
+3. **Assess**: Se calcula severidad con CVSS y probabilidad con EPSS
+4. **Mitigate**: Se aplican parches, workarounds o controles compensatorios
+5. **Verify**: Se re-escanea para confirmar que la remediacion fue efectiva
+
+La priorizacion combina tres dimensiones: **severidad tecnica** (CVSS), **probabilidad de explotacion** (EPSS) y **contexto de negocio** (¿que sistemas son criticos?).
+
+### ¿Cuándo? — Cuándo Aplicarlo
+
+- **Continuamente**: El escaneo no es un evento puntual, es un proceso permanente
+- **Tras cada cambio**: Nueva infraestructura, deploy de aplicaciones, actualizaciones
+- **Cuando se publica un CVE relevante**: Monitoreo activo de advisories de seguridad
+- **Antes de auditorias**: Verificar que no existen vulnerabilidades conocidas sin mitigar
+- **Despues de un incidente**: Identificar si una vulnerabilidad no parcheada fue el vector de ataque
+
+### ¿Dónde? — Contexto de Aplicacion
+
+La gestion de vulnerabilidades aplica en:
+
+- **Infraestructura on-premise**: Servidores, routers, switches, firewalls
+- **Entornos cloud**: Instancias EC2, contenedores, serverless, APIs
+- **Aplicaciones web y mobile**: Dependencias de terceros, librerias desactualizadas
+- **Dispositivos IoT/OT**: Equipos industriales, camaras, sensores
+- **Endpoints**: Laptops, estaciones de trabajo, dispositivos mobiles corporativos
+
+### ¿Por qué? — Justificacion
+
+Las vulnerabilidades sin gestionar son la **puerta de entrada numero uno** para ataques exitosos. Datos clave:
+
+- El **74%** de las brechas involucran vulnerabilidades conocidas para las cuales existia parche disponible (Verizon DBIR 2025)
+- El tiempo promedio entre la publicacion de un CVE y su explotacion activa se redujo a **15 dias** en 2025
+- El costo promedio de una brecha por vulnerabilidad no parcheada supera los **USD 4.8 millones** (IBM Cost of a Data Breach 2025)
+
+Sin un programa estructurado, las organizaciones acumulan deuda de seguridad que eventualmente sera explotada.
+
+### ¿Para qué? — Objetivo Final
+
+El proposito es **reducir la superficie de ataque** de manera medible y sostenible, priorizando esfuerzos donde el riesgo es mayor. No se trata de parchear todo (imposible), sino de parchear **lo correcto en el momento correcto**.
+
+## 🔑 Conceptos Clave
+
+- **CVE (Common Vulnerabilities and Exposures)**: Identificador estandarizado para cada vulnerabilidad publicada. Formato: `CVE-YYYY-NNNNN`. Ejemplo: CVE-2024-3094 (vulnerabilidad XZ Utils).
+- **CVSS (Common Vulnerability Scoring System)**: Framework que calcula la severidad tecnica de una vulnerabilidad en una escala de 0.0 a 10.0. La version actual es v3.1 (v4.0 en transicion). Considera exploitabilidad e impacto.
+- **EPSS (Exploit Prediction Scoring System)**: Modelo predictivo que estima la probabilidad de que una vulnerabilidad sea explotada en los proximos 30 dias. Valor entre 0 y 1. Complementa a CVSS añadiendo la dimension de probabilidad.
+- **CISA KEV (Known Exploited Vulnerabilities)**: Catalogo mantenido por la agencia de seguridad cibernetica de EE.UU. que lista CVEs con evidencia de explotacion activa. Los plazos de remediacion son obligatorios para entidades gubernamentales.
+- **Threat Intelligence**: Informacion contextual sobre amenazas activas, actores, TTPs (tacticas, tecnicas y procedimientos) que permite priorizar vulnerabilidades no solo por score sino por relevancia operativa.
+
+### CVSS v3.1 — Metricas de Calculo
+
+CVSS v3.1 calcula la severidad usando dos sub-scores: **Exploitabilidad** y **Impacto**.
+
+| Metrica | Valores | Descripcion |
+|---------|---------|-------------|
+| **Attack Vector** | Network / Adjacent / Local / Physical | Como se explota la vulnerabilidad |
+| **Attack Complexity** | Low / High | Condiciones necesarias para explotar |
+| **Privileges Required** | None / Low / High | Nivel de acceso previo necesario |
+| **User Interaction** | None / Required | Si requiere accion de un usuario |
+| **Scope** | Unchanged / Changed | **Multiplicador**: si cambia, el score × 1.08 |
+| **Confidentiality** | High / Low / None | Impacto en confidencialidad |
+| **Integrity** | High / Low / None | Impacto en integridad |
+| **Availability** | High / Low / None | Impacto en disponibilidad |
+
+> **Nota**: Scope NO es un peso numerico. Es un **multiplicador de formula**: cuando Scope = "Changed", el score base se multiplica por **1.08**, aumentando significativamente la severidad final.
+
+**Rangos de severidad**:
+| Score | Nivel |
+|-------|-------|
+| 0.0 | None |
+| 0.1 – 3.9 | Low |
+| 4.0 – 6.9 | Medium |
+| 7.0 – 8.9 | High |
+| 9.0 – 10.0 | Critical |
+
+## 💡 Ejemplos
+
+### Ejemplo 1: CVE-2024-3094 — Vulnerabilidad XZ Utils (Marzo 2024)
+
+**Contexto**: Se descubrio un backdoor intencional en las versiones 5.6.0 y 5.6.1 de XZ Utils, una libreria de compresion presente en la mayoria de distribuciones Linux. El backdoor permitia ejecucion remota de codigo a traves de SSH (systemd).
+
+**CVSS v3.1**: Score **10.0 (Critical)**
+- Attack Vector: Network
+- Attack Complexity: Low
+- Privileges Required: None
+- User Interaction: None
+- Scope: Changed (×1.08)
+- CIA Impact: High/High/High
+
+**EPSS**: 0.94 (94% de probabilidad de explotacion en 30 dias tras publicacion)
+
+**CISA KEV**: Añadido el 2 de abril de 2024 con deadline de remediacion: 23 de abril de 2024.
+
+**Leccion**: Este caso demuestra por que CVSS + EPSS + KEV juntos son esenciales. Un score de 10.0 con EPSS de 0.94 y presencia en KEV indica **accion inmediata obligatoria**.
+
+### Ejemplo 2: CVE-2025-24384 — Vulnerabilidad en Apache Tomcat (Febrero 2025)
+
+**Contexto**: Una vulnerabilidad de bypass de autenticacion en Apache Tomcat 11.x permitia a atacantes acceder a recursos protegidos sin credenciales validas.
+
+**CVSS v3.1**: Score **7.5 (High)**
+- Attack Vector: Network
+- Attack Complexity: Low
+- Privileges Required: None
+- Scope: Unchanged
+- Confidentiality: High, Integrity: None, Availability: None
+
+**EPSS**: 0.72 (72% de probabilidad de explotacion)
+
+**Decision de priorizacion**: CVSS alto + EPSS alto = **CRITICA**. Aunque el score no es 10.0, la combinacion indica que esta vulnerabilidad requiere parcheo en la proxima ventana de mantenimiento. Si TechCorp usa Tomcat en produccion, este CVE debe estar en el top 5 de prioridades.
+
+## 🛠️ Práctica Guiada
+
+### Calcular CVSS para un Escenario Real
+
+**Escenario**: Un servidor web interno expone una API sin autenticacion que permite leer archivos del sistema de archivos (path traversal). El servidor esta en la red corporativa, accesible solo desde la LAN.
+
+**Paso 1**: Identifica cada metrica CVSS v3.1
+
+```
+Attack Vector:        ?  (Network, Adjacent, Local, Physical)
+Attack Complexity:    ?  (Low, High)
+Privileges Required:  ?  (None, Low, High)
+User Interaction:     ?  (None, Required)
+Scope:                ?  (Unchanged, Changed)
+Confidentiality:      ?  (High, Low, None)
+Integrity:            ?  (High, Low, None)
+Availability:         ?  (High, Low, None)
+```
+
+**Paso 2**: Razona cada valor
+
+- **Attack Vector**: ¿Como se accede? Desde la red local → **Adjacent** (no es Network porque requiere estar en la LAN)
+- **Attack Complexity**: ¿Se necesitan condiciones especiales? Solo enviar una URL maliciosa → **Low**
+- **Privileges Required**: ¿Necesitas credenciales? No, la API no tiene auth → **None**
+- **User Interaction**: ¿Alguien debe hacer clic o interactuar? No → **None**
+- **Scope**: ¿El componente vulnerable afecta a otros? Lee archivos del SO → **Changed** (×1.08)
+- **Confidentiality**: ¿Que se expone? Archivos del sistema → **High**
+- **Integrity**: ¿Se pueden modificar datos? Solo lectura → **None**
+- **Availability**: ¿Se puede causar denegacion de servicio? No directamente → **None**
+
+**Paso 3**: Calcula el score
+
+Con estas metricas (A:Adjacent, AC:Low, PR:N, UI:N, S:Changed, C:H, I:N, A:N), el score CVSS es aproximadamente **7.4 (High)**.
+
+> **Tip**: Usa la calculadora oficial en first.org/cvss/calculator/3.1 para verificar tus calculos.
+
+### Consultar EPSS y CISA KEV
+
+**Paso 1**: Visita `first.org/epss` y busca un CVE reciente
+
+```
+# En tu navegador, ve a:
+https://www.first.org/epss/calculator/CVE-2024-3094
+
+# Observa:
+# - EPSS Score (probabilidad)
+# - Percentile (comparado con otros CVEs)
+```
+
+**Paso 2**: Verifica si el CVE esta en el catalogo KEV
+
+```
+# En tu navegador, ve a:
+https://www.cisa.gov/known-exploited-vulnerabilities-catalog
+
+# Busca el CVE y anota:
+# - Fecha de adicion al catalogo
+# - Deadline de remediacion
+# - Producto afectado
+```
+
+**Paso 3**: Toma una decision de priorizacion
+
+| CVE | CVSS | EPSS | En KEV? | Prioridad |
+|-----|------|------|---------|-----------|
+| CVE-2024-3094 | 10.0 | 0.94 | Si | CRITICA |
+| CVE-2025-24384 | 7.5 | 0.72 | No | ALTA |
+
+## 🧪 Laboratorio
+
+### Lab: Priorizacion de Vulnerabilidades para un Entorno Real
+
+**Objetivo**: Analizar 8 vulnerabilidades reales y crear un plan de remediacion priorizado.
+
+**Requisitos**:
+- Acceso a internet
+- Navegador web
+- Calculadora CVSS (first.org/cvss/calculator/3.1)
+- Catalogo EPSS (first.org/epss)
+- Catalogo CISA KEV (cisa.gov/known-exploited-vulnerabilities-catalog)
+
+**Entorno**: Simularas el rol de analista de seguridad en una empresa con los siguientes activos:
+- 1 servidor web Apache (Internet-facing)
+- 1 base de datos PostgreSQL (red interna)
+- 50 endpoints Windows 11
+- 1 firewall pfSense
+
+**Paso 1**: Recopila datos de cada CVE
+
+Para cada una de estas vulnerabilidades, investiga y completa la tabla:
+
+1. CVE-2024-3094 (XZ Utils backdoor)
+2. CVE-2024-21762 (FortiOS out-of-bounds write)
+3. CVE-2025-24384 (Apache Tomcat auth bypass)
+4. CVE-2024-6387 (OpenSSH regreSSHion)
+5. CVE-2024-3400 (Palo Alto OS command injection)
+6. CVE-2025-12345 (ejemplo hipotetico: XSS reflejado en app interna)
+7. CVE-2024-45490 (libxml2 XXE)
+8. CVE-2024-4367 (Chromium V8 type confusion)
+
+**Paso 2**: Completa la matriz de decision
+
+```
+CVE          | CVSS | EPSS | KEV? | Activo afectado    | Prioridad
+-------------|------|------|------|--------------------|----------
+CVE-2024-3094|      |      |      |                    |
+CVE-2024-21762|     |      |      |                    |
+...
+```
+
+**Paso 3**: Ordena por prioridad y justifica
+
+Crea un ranking de 1 a 8 con justificacion para cada posicion. Considera:
+- ¿El activo es Internet-facing o interno?
+- ¿Existe exploit publico?
+- ¿Esta en KEV con deadline proximo?
+- ¿Cuantos sistemas estan afectados?
+
+**Resultados Esperados**:
+- Tabla completa con CVSS, EPSS, estado KEV para los 8 CVEs
+- Ranking priorizado con justificacion escrita
+- Plan de remediacion con plazos (inmediato, 7 dias, 30 dias, proximo ciclo)
+
+**Troubleshooting**:
+- Si no encuentras EPSS para un CVE muy reciente, usa el percentile como referencia
+- Si un CVE no esta en KEV, no significa que no sea peligroso — verifica si hay PoC publico en GitHub o exploit-db
+- Para CVEs hipoteticos, estima valores basados en las metricas CVSS
+
+**Desafio Extra**:
+Investiga si alguna de estas vulnerabilidades tiene un exploit disponible en Metasploit o en repositorios publicos. Anota la fecha del primer exploit conocido y calcula el "window of exposure" (dias entre publicacion del CVE y disponibilidad del exploit).
+
+## 📝 Tarea (Project-Based Learning)
+
+### Plan de Gestion de Vulnerabilidades para TechCorp
+
+**Contexto del Proyecto**: TechCorp es una empresa de 50 empleados con infraestructura mixta: un servidor web en AWS, una base de datos de clientes en PostgreSQL, 50 laptops con Windows 11, y un firewall pfSense. Necesitan un plan estructurado de gestion de vulnerabilidades.
+
+**Entregable**: Documento de 3-5 paginas que incluya:
+
+1. **Politica de Escaneo**: Frecuencia, herramientas, alcance (¿que se escanea y cuando?)
+2. **Matriz de Priorizacion**: Como TechCorp combinara CVSS, EPSS y contexto de negocio para decidir que parchear primero
+3. **SLA de Remediacion**: Plazos maximos por nivel de criticidad (ej: Critical = 48h, High = 7 dias, Medium = 30 dias, Low = proximo ciclo)
+4. **Integracion con CISA KEV**: Proceso para monitorear y actuar sobre vulnerabilidades en el catalogo KEV
+5. **Reporte de Estado**: Template de reporte mensual para la direccion de TechCorp
+
+**Criterios de Evaluacion**:
+- [ ] La politica de escaneo cubre todos los activos de TechCorp
+- [ ] La matriz de priorizacion usa CVSS + EPSS + contexto (no solo CVSS)
+- [ ] Los SLA son realistas y proporcionales al riesgo
+- [ ] El proceso KEV incluye monitoreo activo y deadlines
+- [ ] El reporte de estado es comprensible para no-tecnicos
+
+**Conexion con Modulos Anteriores**: Este plan se integrara con el assessment general de seguridad de TechCorp que se construira a lo largo del curso.
+
+## 📊 Resumen
+
+- **CVSS mide severidad tecnica** (potencial de daño), **EPSS mide probabilidad** de explotacion en 30 dias
+- **Scope en CVSS es un multiplicador** (×1.08 cuando Changed), no un peso numerico
+- **CISA KEV** = vulnerabilidades con explotacion activa confirmada; plazos de remediacion obligatorios
+- **Priorizacion efectiva** = CVSS + EPSS + contexto de negocio + inteligencia de amenazas
+- **La gestion es continua**, no un evento puntual: Discover → Assess → Mitigate → Verify
+- **El 74% de las brechas** involucran vulnerabilidades conocidas con parche disponible
 
 ---
 
-## Contenido
+<div class="compact-diagram" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px 18px;margin:14px 0;">
+<svg viewBox="0 0 440 95" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:440px;">
+<text x="220" y="14" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="bold">Ciclo de Vida de Vulnerabilidades</text>
+<rect x="5" y="24" width="80" height="30" rx="6" fill="#3b82f6"/><text x="45" y="38" text-anchor="middle" fill="white" font-size="8" font-weight="bold">1. Discover</text><text x="45" y="50" text-anchor="middle" fill="#dbeafe" font-size="7">NVD, researchers</text>
+<polygon points="85,39 95,39 92,36 95,42" fill="#94a3b8"/>
+<rect x="95" y="24" width="80" height="30" rx="6" fill="#8b5cf6"/><text x="135" y="38" text-anchor="middle" fill="white" font-size="8" font-weight="bold">2. Publish</text><text x="135" y="50" text-anchor="middle" fill="#ede9fe" font-size="7">CVE, advisory</text>
+<polygon points="175,39 185,39 182,36 185,42" fill="#94a3b8"/>
+<rect x="185" y="24" width="80" height="30" rx="6" fill="#ef4444"/><text x="225" y="38" text-anchor="middle" fill="white" font-size="8" font-weight="bold">3. Exploit</text><text x="225" y="50" text-anchor="middle" fill="#fecaca" font-size="7">PoC public</text>
+<polygon points="265,39 275,39 272,36 275,42" fill="#94a3b8"/>
+<rect x="275" y="24" width="80" height="30" rx="6" fill="#f59e0b"/><text x="315" y="38" text-anchor="middle" fill="white" font-size="8" font-weight="bold">4. Patch</text><text x="315" y="50" text-anchor="middle" fill="#fef3c7" font-size="7">Vendor update</text>
+<polygon points="355,39 365,39 362,36 365,42" fill="#94a3b8"/>
+<rect x="365" y="24" width="70" height="30" rx="6" fill="#10b981"/><text x="400" y="38" text-anchor="middle" fill="white" font-size="8" font-weight="bold">5. Mitigate</text><text x="400" y="50" text-anchor="middle" fill="#d1fae5" font-size="7">Workarounds</text>
+<rect x="5" y="64" width="430" height="26" rx="6" fill="#1e293b"/><text x="220" y="81" text-anchor="middle" fill="#94a3b8" font-size="8">Priorizar: CVSS (severidad) + EPSS (probabilidad explotacion) + contexto negocio</text>
+</svg>
+</div>
 
-### 5.1 Fundamentos
+<div class="compact-diagram" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px 18px;margin:14px 0;">
+<svg viewBox="0 0 440 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:440px;">
+<text x="220" y="14" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="bold">EPSS vs CVSS — Priorización de Vulnerabilidades</text>
+<!-- CVSS -->
+<rect x="10" y="24" width="200" height="40" rx="6" fill="#3b82f6"/><text x="110" y="42" text-anchor="middle" fill="white" font-size="10" font-weight="bold">CVSS</text><text x="110" y="57" text-anchor="middle" fill="#dbeafe" font-size="8">Severidad técnica (potencial daño)</text>
+<!-- EPSS -->
+<rect x="230" y="24" width="200" height="40" rx="6" fill="#10b981"/><text x="330" y="42" text-anchor="middle" fill="white" font-size="10" font-weight="bold">EPSS</text><text x="330" y="57" text-anchor="middle" fill="#d1fae5" font-size="8">Probabilidad de explotación (30 días)</text>
+<!-- Decision matrix -->
+<rect x="10" y="74" width="135" height="30" rx="4" fill="#ef4444"/><text x="77" y="93" text-anchor="middle" fill="white" font-size="8" font-weight="bold">CVSS↑ EPSS↑ = CRÍTICA</text>
+<rect x="155" y="74" width="135" height="30" rx="4" fill="#f59e0b"/><text x="222" y="93" text-anchor="middle" fill="white" font-size="8" font-weight="bold">CVSS↓ EPSS↑ = ATENCIÓN</text>
+<rect x="300" y="74" width="130" height="30" rx="4" fill="#64748b"/><text x="365" y="93" text-anchor="middle" fill="white" font-size="8" font-weight="bold">CVSS↑ EPSS↓ = MONITOR</text>
+</svg>
+</div>
 
-```
-CICLO DE VULNERABILIDADES
-========================
-
-1. DESCUBRIMIENTO    →    NVD, researchers reportan
-        ↓
-2. PUBLICACION       →    CVE asignado, advisory
-        ↓
-3. EXPLOTACION       →    POCs en internet, PoC disponibles
-        ↓
-4. PARCHEO           →    Vendor lanza update
-        ↓
-5. MITIGACION        →    Workarounds temporales
-```
-
-### 5.2 CVSS (Common Vulnerability Scoring System)
-
-| Componente | Peso | Descripcion |
-|------------|------|-------------|
-| Attack Vector | 0.85 | Remoto/local |
-| Attack Complexity | 0.77 | Bajo/alto |
-| Privileges Required | 0.85 | Ninguno/bajo/alto |
-| User Interaction | 0.85 | Ninguno/requerido |
-| Scope | 0.00 | Cambia/unchanged |
-| Confidentiality | 0.56 | Alto/bajo/ninguno |
-| Integrity | 0.56 | Alto/bajo/ninguno |
-| Availability | 0.56 | Alto/bajo/ninguno |
-
-### 5.3 EPSS (Exploit Prediction Scoring System)
-
-```
-EPSS vs CVSS
-============
-
-CVSS:     Severidad tecnica (potencial dano)
-EPSS:     Probabilidad de explotacion (en 30 dias)
-
-Formula EPSS:
-P(exploit) = f(similarity, recency, exploitability)
-
-Decision:
-- CVSS alto + EPSS alto = PRIORIDAD CRITICA
-- CVSS bajo + EPSS alto = ATENCION
-- CVSS alto + EPSS bajo = MONITOREAR
-```
-
-### 5.4 Continuous Vulnerability Management
-
-| Fase | Actividad | Herramientas |
-|------|-----------|--------------|
-| Discover | Escaneo continuo | Nessus, Qualys |
-| Prioritize | Scoring con CVSS/EPSS | Tenable, NVD |
-| Validate | Confirmar vulnerabilidad | Metasploit |
-| Mitigate | Aplicar controles | Parches, workarounds |
-| Verify | Confirmar remediacion | Re-scan |
-
-### 5.5 CISA Known Exploited Vulnerabilities (KEV)
-
-```
-CATALOGO KEV - Requisito de remediacion urgente
-============================================
-- maintained by CISA
-- contains CVEs actively exploited
-- Federal agencies must patch within deadlines
-
-Acceso: cisa.gov/known-exploited-vulnerabilities-catalog
-```
-
----
-
-## Ejercicios
-
-1. Calcular CVSS para un escenario dado
-2. Priorizar 5 vulnerabilidades usando EPSS
-3. Investigar el KEV para vulnerabilidades recientes
-
----
-
-## Resumen
-
-- CVSS mide severidad, EPSS mide probabilidad
-- KEV catalog = vulnerabilidades siendo explotadas
-- Priorizar basado en riesgo = CVSS + EPSS + contexto negocio
+<div class="compact-diagram" style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:14px 18px;margin:14px 0;">
+<svg viewBox="0 0 440 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:440px;">
+<text x="220" y="14" text-anchor="middle" fill="#dc2626" font-size="11" font-weight="bold">CISA KEV — Catálogo de Vulnerabilidades Explotadas</text>
+<rect x="10" y="24" width="420" height="24" rx="4" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/><text x="220" y="41" text-anchor="middle" fill="#991b1b" font-size="9">Mantenido por CISA · CVEs activamente explotados · Parche obligatorio en deadline</text>
+<rect x="10" y="54" width="420" height="20" rx="4" fill="#1e293b"/><text x="220" y="68" text-anchor="middle" fill="#94a3b8" font-size="8">Acceso: cisa.gov/known-exploited-vulnerabilities-catalog</text>
+</svg>
+</div>
 
 ---
 

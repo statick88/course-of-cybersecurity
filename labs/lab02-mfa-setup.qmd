@@ -35,10 +35,43 @@ En este laboratorio, vas a **configurar autenticacion multifactor** usando proto
 
 ## Paso 1: Preparar el Entorno
 
-### 1.1 Crear directorio de trabajo
+### 1.1 Verificar Docker
 
 ```{.bash filename="terminal"}
-# Crear directorio para el lab
+# Verificar que Docker esta instalado
+docker --version
+
+# Verificar que el daemon esta corriendo
+docker ps
+```
+
+### 1.2 Crear contenedor aislado para el lab
+
+```{.bash filename="terminal"}
+# Crear red aislada para el laboratorio
+docker network create mfa-lab-net
+
+# Ejecutar contenedor Ubuntu con herramientas de autenticacion
+docker run -d --name mfa-lab \
+  --network mfa-lab-net \
+  --hostname mfa-server \
+  -p 8443:443 \
+  -v ~/cybersec-lab/mfa-setup:/workspace \
+  -w /workspace \
+  ubuntu:24.04 \
+  tail -f /dev/null
+
+# Verificar que esta corriendo
+docker ps | grep mfa-lab
+
+# Entrar al contenedor
+docker exec -it mfa-lab bash
+```
+
+### 1.3 Crear directorio de trabajo
+
+```{.bash filename="terminal"}
+# Dentro del contenedor Docker
 mkdir -p ~/cybersec-lab/mfa-setup
 cd ~/cybersec-lab/mfa-setup
 

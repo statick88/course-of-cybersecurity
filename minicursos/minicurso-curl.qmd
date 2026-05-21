@@ -1,0 +1,623 @@
+---
+title: "Minicurso: Curl"
+module: "minicurso-curl"
+type: "minicurso"
+description: "Tutorial completo de Curl para ciberseguridad"
+---
+
+# Minicurso: Curl
+
+## ¿Qué es Curl?
+
+Curl (Client URL) es una herramienta de línea de comandos y biblioteca para transferir datos con URLs. Soporta más de 25 protocolos incluyendo HTTP, HTTPS, FTP, FTPS, SMTP, IMAP, LDAP, y muchos más. Es una de las herramientas más utilizadas en el mundo para interactuar con APIs, descargar archivos, y probar servicios web.
+
+El nombre viene de "Client URL" y fue creado por Daniel Stenberg en 1997. Hoy en día, libcurl (la biblioteca subyacente) es una de las bibliotecas de transferencia de datos más utilizadas del mundo, presente en billones de instalaciones.
+
+En ciberseguridad, curl es esencial para probar APIs REST, verificar configuraciones TLS, descargar y verificar archivos, automatizar interacciones con servicios web, y realizar pruebas de seguridad en aplicaciones web.
+
+## ¿Por qué aprenderlo?
+
+- **Testing de APIs**: Interactuar con cualquier API REST sin interfaz gráfica
+- **Verificación TLS**: Inspeccionar certificados y configuraciones de seguridad
+- **Automatización**: Scriptear interacciones con servicios web
+- **Debugging**: Ver headers, tiempos de respuesta, y detalles de conexión
+- **Universal**: Disponible en todos los sistemas operativos
+
+## Instalación
+
+### macOS
+
+```bash
+# Curl viene preinstalado en macOS
+curl --version
+# Esperado: curl 8.x.x con soporte para https
+
+# Si necesitas una versión más reciente:
+brew install curl
+```
+
+### Linux (Ubuntu/Debian)
+
+```bash
+# Curl generalmente viene preinstalado
+curl --version
+
+# Si no está instalado:
+sudo apt update
+sudo apt install -y curl
+
+# Verificar soporte de protocolos
+curl --version | grep "Protocols"
+# Esperado: lista incluyendo https, ftp, smtp, etc.
+```
+
+### Windows
+
+```powershell
+# Windows 10+ incluye curl
+curl --version
+
+# Si no está disponible, descargar desde:
+# https://curl.se/windows/
+```
+
+## Nivel Básico
+
+### Conceptos Fundamentales
+
+**Request/Response**: Curl envía una solicitud HTTP a un servidor y recibe una respuesta.
+
+**Métodos HTTP**: GET (obtener), POST (enviar), PUT (actualizar), DELETE (eliminar).
+
+**Headers**: Metadatos de la solicitud (Content-Type, Authorization, User-Agent).
+
+**Status Codes**: 200 (OK), 301 (Redirect), 404 (Not Found), 500 (Server Error).
+
+### Comandos Esenciales
+
+| Flag | Descripción | Ejemplo |
+|------|-------------|---------|
+| (ninguno) | GET por defecto | `curl https://example.com` |
+| `-o archivo` | Guardar output en archivo | `curl -o page.html URL` |
+| `-O` | Guardar con nombre original | `curl -O URL/file.zip` |
+| `-s` | Silent mode (sin progreso) | `curl -s URL` |
+| `-S` | Mostrar errores en silent | `curl -sS URL` |
+| `-v` | Verbose (detalles completos) | `curl -v URL` |
+| `-I` | Solo headers (HEAD request) | `curl -I URL` |
+| `-L` | Seguir redirects | `curl -L URL` |
+| `-X METHOD` | Método HTTP | `curl -X POST URL` |
+| `-d data` | Datos POST | `curl -d "key=value" URL` |
+| `-H header` | Añadir header | `curl -H "Auth: token" URL` |
+| `-u user:pass` | Autenticación básica | `curl -u user:pass URL` |
+| `-k` | Ignorar certificados SSL | `curl -k https://self-signed` |
+| `--connect-timeout` | Timeout conexión | `curl --connect-timeout 5 URL` |
+| `-m seconds` | Timeout máximo | `curl -m 30 URL` |
+
+### GET: Obtener recursos
+
+```bash
+# GET básico
+curl https://api.example.com/users
+# Esperado: JSON con lista de usuarios
+
+# GET con headers
+curl -H "Accept: application/json" \
+     -H "User-Agent: SecurityScanner/1.0" \
+     https://api.example.com/users
+
+# GET y guardar en archivo
+curl -o users.json https://api.example.com/users
+
+# GET con parámetros de query
+curl "https://api.example.com/search?q=test&page=1"
+
+# GET verbose (ver request y response completos)
+curl -v https://api.example.com/users
+# Esperado:
+# * Connected to api.example.com (93.184.216.34) port 443
+# > GET /users HTTP/2
+# > Host: api.example.com
+# > User-Agent: curl/8.4.0
+# > Accept: */*
+# < HTTP/2 200
+# < content-type: application/json
+# < content-length: 1234
+```
+
+### POST: Enviar datos
+
+```bash
+# POST con datos de formulario
+curl -X POST https://api.example.com/login \
+     -d "username=admin&password=secret"
+
+# POST con JSON
+curl -X POST https://api.example.com/users \
+     -H "Content-Type: application/json" \
+     -d '{"name": "test", "role": "analyst"}'
+
+# POST con archivo
+curl -X POST https://api.example.com/upload \
+     -F "file=@evidence.zip" \
+     -F "description=Forensic evidence"
+
+# PUT: Actualizar recurso
+curl -X PUT https://api.example.com/users/123 \
+     -H "Content-Type: application/json" \
+     -d '{"name": "updated_name"}'
+
+# DELETE: Eliminar recurso
+curl -X DELETE https://api.example.com/users/123
+```
+
+### Ejercicio 1: Probar API REST
+
+**Objetivo:** Interactuar con una API pública usando curl.
+
+**Paso 1:** Explorar la API
+
+```bash
+# Obtener información de un usuario de GitHub
+curl -s https://api.github.com/users/statick88 | jq .
+
+# Esperado: JSON con información del perfil
+# {
+#   "login": "statick88",
+#   "type": "User",
+#   "public_repos": XX,
+#   "followers": XX,
+#   ...
+# }
+```
+
+**Paso 2:** Explorar repositorios
+
+```bash
+# Listar repositorios públicos
+curl -s "https://api.github.com/users/statick88/repos?per_page=5" | \
+  jq '.[].name'
+
+# Esperado: lista de nombres de repositorios
+
+# Obtener información de un repo específico
+curl -s https://api.github.com/repos/statick88/course-of-cybersecurity | \
+  jq '{name, description, language, stargazers_count}'
+```
+
+**Paso 3:** Ver headers de seguridad
+
+```bash
+# Ver headers de respuesta
+curl -sI https://api.github.com
+
+# Esperado:
+# HTTP/2 200
+# server: github.com
+# content-type: application/json; charset=utf-8
+# x-github-request-id: ...
+# x-ratelimit-limit: 60
+# x-ratelimit-remaining: 59
+# strict-transport-security: max-age=31536000; includeSubdomains; preload
+# x-content-type-options: nosniff
+# x-frame-options: deny
+```
+
+## Nivel Intermedio
+
+### Autenticación
+
+```bash
+# Basic Auth
+curl -u username:password https://api.example.com/secure
+
+# Bearer Token
+curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
+     https://api.example.com/secure
+
+# API Key en header
+curl -H "X-API-Key: tu-api-key" \
+     https://api.example.com/secure
+
+# API Key en query parameter
+curl "https://api.example.com/data?api_key=tu-api-key"
+
+# Client Certificate
+curl --cert client.pem --key client-key.pem \
+     https://api.example.com/secure
+```
+
+### Cookies
+
+```bash
+# Guardar cookies
+curl -c cookies.txt https://example.com/login
+
+# Usar cookies guardadas
+curl -b cookies.txt https://example.com/dashboard
+
+# Login con cookies (flujo completo)
+# Paso 1: Obtener CSRF token
+csrf=$(curl -s -c cookies.txt https://example.com/login | \
+       grep -o 'name="csrf" value="[^"]*"' | \
+       cut -d'"' -f4)
+
+# Paso 2: Login con CSRF
+curl -b cookies.txt -c cookies.txt \
+     -X POST https://example.com/login \
+     -d "username=admin&password=secret&csrf=$csrf"
+
+# Paso 3: Acceder zona protegida
+curl -b cookies.txt https://example.com/admin
+```
+
+### Rate Limiting y Retries
+
+```bash
+# Reintentar automáticamente en caso de error
+curl --retry 3 --retry-delay 5 \
+     --retry-max-time 30 \
+     https://api.example.com/data
+
+# Rate limiting manual
+for i in {1..10}; do
+    curl -s "https://api.example.com/page/$i"
+    sleep 2  # Esperar 2 segundos entre requests
+done
+
+# Usar token bucket con curl
+# Instalar: brew install ratelimit-cli
+# ratelimit -r 10 -p 1m -- curl -s https://api.example.com/data
+```
+
+### Multipart Forms
+
+```bash
+# Subir múltiples archivos
+curl -X POST https://api.example.com/upload \
+     -F "file1=@document.pdf" \
+     -F "file2=@image.png" \
+     -F "metadata={\"type\":\"evidence\"};type=application/json"
+
+# Subir con campos adicionales
+curl -X POST https://api.example.com/report \
+     -F "title=Security Report" \
+     -F "author=Diego" \
+     -F "file=@report.pdf" \
+     -F "priority=high"
+```
+
+### Ejercicio 2: Descargar y verificar integridad
+
+**Objetivo:** Descargar un archivo y verificar su integridad con checksum.
+
+**Paso 1:** Descargar archivo y checksum
+
+```bash
+# Descargar archivo
+curl -sSLO https://example.com/software-v1.0.tar.gz
+
+# Descargar checksum
+curl -sSLO https://example.com/software-v1.0.tar.gz.sha256
+
+# Verificar checksum
+sha256sum -c software-v1.0.tar.gz.sha256
+# Esperado: software-v1.0.tar.gz: OK
+```
+
+**Paso 2:** Verificar firma GPG
+
+```bash
+# Descargar firma
+curl -sSLO https://example.com/software-v1.0.tar.gz.asc
+
+# Importar clave pública del desarrollador
+curl -sS https://example.com/developer.pubkey | gpg --import
+
+# Verificar firma
+gpg --verify software-v1.0.tar.gz.asc software-v1.0.tar.gz
+# Esperado: Good signature from "Developer <dev@example.com>"
+```
+
+## Nivel Avanzado
+
+### HTTP/2 y HTTP/3
+
+```bash
+# Forzar HTTP/2
+curl --http2 https://example.com
+
+# Ver protocolo usado
+curl -sI --http2 https://example.com | head -1
+# Esperado: HTTP/2 200
+
+# HTTP/3 (QUIC) - requiere curl compilado con nghttp3
+curl --http3 https://example.com
+
+# Comparar tiempos entre protocolos
+echo "HTTP/1.1:"
+curl -s -o /dev/null -w "Time: %{time_total}s\n" --http1.1 https://example.com
+
+echo "HTTP/2:"
+curl -s -o /dev/null -w "Time: %{time_total}s\n" --http2 https://example.com
+```
+
+### Manejo de Certificados
+
+```bash
+# Ver certificado del servidor
+curl -vI https://example.com 2>&1 | grep -A2 "SSL connection"
+
+# Usar CA personalizado
+curl --cacert my-ca.pem https://internal.example.com
+
+# Pinning de certificado (verificar fingerprint)
+curl --pinnedpubkey "sha256//abcdef123456..." https://example.com
+
+# Exportar certificado del servidor
+curl --connect-timeout 5 \
+     https://example.com \
+     2>/dev/null | \
+     openssl s_client -connect example.com:443 -showcerts 2>/dev/null | \
+     openssl x509 -out server.crt
+```
+
+### Proxy Support
+
+```bash
+# Proxy HTTP
+curl -x http://proxy.example.com:8080 https://target.com
+
+# Proxy SOCKS5
+curl --socks5 localhost:1080 https://target.com
+
+# Proxy con autenticación
+curl -x http://user:pass@proxy.example.com:8080 https://target.com
+
+# Proxy a través de variable de entorno
+export https_proxy=http://proxy.example.com:8080
+curl https://target.com
+unset https_proxy
+```
+
+### Timing y Performance
+
+```bash
+# Ver tiempos detallados
+curl -s -o /dev/null -w \
+  "DNS: %{time_namelookup}s\n\
+   Connect: %{time_connect}s\n\
+   TLS: %{time_appconnect}s\n\
+   TTFB: %{time_starttransfer}s\n\
+   Total: %{time_total}s\n\
+   Size: %{size_download} bytes\n\
+   Speed: %{speed_download} bytes/s\n" \
+  https://example.com
+
+# Descargar con barra de progreso
+curl -# -o file.zip https://example.com/large-file.zip
+
+# Download con speed limit
+curl --limit-rate 1M -o file.zip https://example.com/large-file.zip
+```
+
+### Scripting con Curl
+
+```bash
+#!/bin/bash
+# api-tester.sh - Probar endpoints de API
+
+set -euo pipefail
+
+BASE_URL="${1:-https://api.example.com}"
+TOKEN="${API_TOKEN:-}"
+
+# Función para hacer requests seguros
+api_request() {
+    local method="$1"
+    local endpoint="$2"
+    local data="${3:-}"
+
+    local headers=(
+        -H "Accept: application/json"
+        -H "Content-Type: application/json"
+    )
+
+    if [ -n "$TOKEN" ]; then
+        headers+=(-H "Authorization: Bearer $TOKEN")
+    fi
+
+    local args=(-s -w "\nHTTP_CODE:%{http_code}" -m 30)
+
+    if [ -n "$data" ]; then
+        curl "${args[@]}" "${headers[@]}" \
+             -X "$method" \
+             -d "$data" \
+             "${BASE_URL}${endpoint}"
+    else
+        curl "${args[@]}" "${headers[@]}" \
+             -X "$method" \
+             "${BASE_URL}${endpoint}"
+    fi
+}
+
+# Test de health
+echo "=== Health Check ==="
+api_request GET "/health"
+echo ""
+
+# Test de autenticación
+echo "=== Authentication ==="
+response=$(api_request POST "/auth/login" \
+    '{"username":"test","password":"test123"}')
+echo "$response"
+echo ""
+
+# Test de listado
+echo "=== List Resources ==="
+api_request GET "/api/v1/resources"
+echo ""
+
+echo "[+] Tests completados"
+```
+
+### Ejercicio 3: Verificar seguridad de un sitio web
+
+**Objetivo:** Analizar headers de seguridad de un sitio web.
+
+```bash
+cat > security-headers-check.sh << 'SCRIPT'
+#!/bin/bash
+# security-headers-check.sh - Verificar headers de seguridad
+
+set -euo pipefail
+
+URL="${1:?Uso: $0 <URL>}"
+
+echo "=== Security Headers Check: $URL ==="
+echo ""
+
+# Obtener headers
+headers=$(curl -sI -L -m 10 "$URL" 2>/dev/null)
+
+# Verificar cada header de seguridad
+declare -A security_headers=(
+    ["Strict-Transport-Security"]="Previene ataques de downgrade TLS"
+    ["Content-Security-Policy"]="Previene XSS y data injection"
+    ["X-Content-Type-Options"]="Previene MIME sniffing"
+    ["X-Frame-Options"]="Previene clickjacking"
+    ["X-XSS-Protection"]="Protección XSS (legacy)"
+    ["Referrer-Policy"]="Controla información de referrer"
+    ["Permissions-Policy"]="Controla acceso a APIs del navegador"
+    ["Cache-Control"]="Control de caché para datos sensibles"
+)
+
+passed=0
+failed=0
+
+for header in "${!security_headers[@]}"; do
+    if echo "$headers" | grep -qi "^${header}:"; then
+        value=$(echo "$headers" | grep -i "^${header}:" | head -1 | cut -d: -f2- | xargs)
+        echo "[PASS] $header: $value"
+        ((passed++))
+    else
+        echo "[FAIL] $header - ${security_headers[$header]}"
+        ((failed++))
+    fi
+done
+
+echo ""
+echo "=== Resumen ==="
+echo "Pasaron: $passed"
+echo "Fallaron: $failed"
+echo "Total: $((passed + failed))"
+
+if [ $failed -gt 0 ]; then
+    echo ""
+    echo "[!] El sitio tiene $failed header(s) de seguridad faltante(s)"
+fi
+SCRIPT
+
+chmod +x security-headers-check.sh
+
+# Ejecutar
+./security-headers-check.sh https://github.com
+```
+
+## Uso en Ciberseguridad
+
+### Escenario 1: Testing de APIs con autenticación
+
+```bash
+# Flujo completo de autenticación OAuth2
+# Paso 1: Obtener token
+TOKEN=$(curl -s -X POST https://auth.example.com/oauth/token \
+    -d "grant_type=password" \
+    -d "username=admin" \
+    -d "password=secret" \
+    -d "client_id=myapp" \
+    -d "client_id=mysecret" | jq -r '.access_token')
+
+# Paso 2: Usar token
+curl -s -H "Authorization: Bearer $TOKEN" \
+    https://api.example.com/admin/users
+
+# Paso 3: Refresh token
+curl -s -X POST https://auth.example.com/oauth/token \
+    -d "grant_type=refresh_token" \
+    -d "refresh_token=$REFRESH_TOKEN"
+```
+
+### Escenario 2: Verificación de certificados TLS
+
+```bash
+# Verificar cadena de certificados
+curl -vI https://example.com 2>&1 | grep -E "subject|issuer|expire"
+
+# Verificar con detalle SSL
+curl --connect-timeout 5 \
+     --write-out "SSL Version: %{ssl_version}\n" \
+     --write-out "Cipher: %{ssl_cipher}\n" \
+     -o /dev/null \
+     https://example.com
+
+# Verificar fecha de expiración del certificado
+echo | openssl s_client -connect example.com:443 -servername example.com 2>/dev/null | \
+    openssl x509 -noout -dates
+
+# Verificar si el certificado es válido
+curl -sS --fail --max-time 10 https://example.com > /dev/null 2>&1 && \
+    echo "Certificado válido" || echo "Certificado inválido"
+```
+
+### Escenario 3: Timing attacks básicos
+
+```bash
+# Medir tiempo de respuesta para diferentes inputs
+# Útil para detectar timing vulnerabilities en autenticación
+
+for user in admin root test usuario; do
+    time=$(curl -s -o /dev/null -w "%{time_total}" \
+        -X POST https://target.com/login \
+        -d "username=$user&password=wrongpassword")
+    echo "User: $user - Time: ${time}s"
+done
+
+# Si un usuario válido tarda significativamente más,
+# podría indicar que la verificación de password se ejecuta
+```
+
+## Referencia Rápida
+
+| Flag | Descripción | Ejemplo |
+|------|-------------|---------|
+| `URL` | GET request | `curl https://api.example.com` |
+| `-o file` | Guardar output | `curl -o data.json URL` |
+| `-O` | Guardar con nombre original | `curl -O URL/file.txt` |
+| `-s` | Silent mode | `curl -s URL` |
+| `-v` | Verbose | `curl -v URL` |
+| `-I` | Solo headers | `curl -I URL` |
+| `-L` | Seguir redirects | `curl -L URL` |
+| `-X METHOD` | Método HTTP | `curl -X DELETE URL` |
+| `-d data` | POST data | `curl -d "key=val" URL` |
+| `-H header` | Header personalizado | `curl -H "Auth: token" URL` |
+| `-u user:pass` | Basic auth | `curl -u admin:pass URL` |
+| `-b/-c` | Cookies | `curl -b cookies.txt URL` |
+| `-k` | Ignorar SSL | `curl -k https://self-signed` |
+| `--cacert` | CA personalizado | `curl --cacert ca.pem URL` |
+| `-m seconds` | Timeout | `curl -m 30 URL` |
+| `--retry N` | Reintentar | `curl --retry 3 URL` |
+| `-w format` | Write-out | `curl -w "%{http_code}" URL` |
+| `-x proxy` | Proxy | `curl -x http://proxy:8080 URL` |
+
+## Recursos Adicionales
+
+- **Documentación oficial**: https://curl.se/docs/
+- **Everything Curl (libro)**: https://everything.curl.dev/
+- **Curl Cookbook**: https://catonmat.net/cookbooks/curl
+- **HTTPie (alternativa)**: https://httpie.io/
+- **Curl.tricks**: https://curl.trillworks.com/
+- **OWASP API Security**: https://owasp.org/www-project-api-security/
+
+---
+
+*Minicurso Curl — Curso Fundamentos de Ciberseguridad — CC BY-SA 4.0*

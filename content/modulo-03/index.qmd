@@ -7,115 +7,337 @@ description: "Arquitectura Zero Trust segun NIST SP 800-207 e implementacion pra
 
 # Modulo 3: Arquitectura Zero Trust
 
-## Objetivos de Aprendizaje
+## 🎯 Objetivos SMART
 
 Al finalizar este modulo, podras:
 
-- Comprender los principios de Zero Trust Architecture (ZTA)
-- Implementar microsegmentacion de red
-- Configurar ZTNA (Zero Trust Network Access)
-- Disenar una arquitectura Zero Trust para tu organizacion
+1. **Explicar** los 3 tenets de NIST SP 800-207 y los 5 principios operativos de Microsoft/CISA en un escenario real
+2. **Evaluar** la madurez Zero Trust de una organizacion usando el modelo CISA de 3 niveles (Traditional → Advanced → Optimal)
+3. **Disenar** una politica de microsegmentacion para Kubernetes que limite el movimiento lateral entre tiers
+4. **Configurar** un tunel ZTNA basico con Cloudflare Zero Trust o OpenZiti
+5. **Elaborar** una propuesta de arquitectura Zero Trust para TechCorp como parte del proyecto integrador del curso
 
 ---
 
-## Contenido
+## 📋 5W1H — Marco de Referencia
 
-### 3.1 Fundamentos de Zero Trust
+### ¿Qué? — Definicion de Zero Trust
 
-#### Historia y Evolucion
+Zero Trust Architecture (ZTA) es un modelo de seguridad que **elimina la confianza implicita** basada en la ubicacion de red. Bajo Zero Trust, **ningun usuario, dispositivo o aplicacion recibe acceso automatico**, sin importar si esta dentro o fuera de la red corporativa. Cada solicitud de acceso se verifica de forma explicita, se evalua el contexto y se otorga el minimo privilegio necesario.
 
-```
-2010: "Never Trust, Always Verify" - Google BeyondCorp
-2014: "Zero Trust" - Forrester
-2020: NIST SP 800-207 (Zero Trust Architecture)
-2025: CISA Zero Trust Maturity Model v2.0
-```
+NIST SP 800-207 define **3 tenets fundamentales**:
 
-#### Los 7 Principios de Zero Trust
+| # | Tenet | Significado |
+|---|-------|-------------|
+| 1 | Todos los recursos se consideran | Datos, servicios, dispositivos — sin importar ubicacion |
+| 2 | Toda comunicacion se asegura | Independientemente de la red (interna o externa) |
+| 3 | Acceso por sesion | Grant dinamico, no implícito por pertenecer a la red |
 
-| # | Principio | Descripcion |
-|---|-----------|-------------|
-| 1 | Verify explicitly | Autenticar siempre |
-| 2 | Use least privilege | Acceso minimo necesario |
-| 3 | Assume breach | Operar como si ya estas comprometido |
-| 4 | Verify inline | Inspeccionar trafico |
-| 5 | Encrypt everything | Cifrar todas las comunicaciones |
-| 6 | Use strong cryptography | Criptografia moderna |
-| 7 | Don't trust network | Red siempre es hostil |
+La industria ha expandido estos tenets en **5 principios operativos** (Microsoft / CISA):
 
-#### Modelo Conceptual
+| # | Principio | Fuente |
+|---|-----------|--------|
+| 1 | Verify explicitly | Microsoft Zero Trust |
+| 2 | Use least privilege | NIST / Microsoft |
+| 3 | Assume breach | Microsoft / CISA |
+| 4 | Encrypt everything | Best practices |
+| 5 | Don't trust network | NIST SP 800-207 |
 
-```
-ARQUITECTURA ZERO TRUST
-=====================
+### ¿Cómo? — Como Funciona
 
-USUARIO  ----->  IDENTIDAD  ----->  RECURSOS
-   |                |                  |
-   v                v                  v
-[Factor1] -----> [Evaluacion] -----> [Politica]
-[Factor2]        [Contexto]        [Token]
-                 [Sesion]        [Acceso]
-                                 
-NUNCA HAY CONFIANZA AUTOMATICA
-CADA ACCESO SE VERIFICA Y AUTORIZA
-```
+Zero Trust funciona mediante un ciclo continuo de evaluacion y decision:
+
+1. **Identidad**: El usuario se autentica con MFA y se evalua su contexto (dispositivo, ubicacion, hora)
+2. **Evaluacion de riesgo**: El Policy Engine analiza senales en tiempo real
+3. **Decision**: Se otorga o deniega acceso basado en politicas dinamicas
+4. **Aplicacion**: El Policy Enforcement Point (PEP) ejecuta la decision
+5. **Monitorizacion continua**: El acceso se reevalua constantemente durante la sesion
+
+<div class="compact-diagram" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:16px 20px;margin:16px 0;">
+<svg viewBox="0 0 460 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:460px;">
+<text x="230" y="14" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="bold">Arquitectura Zero Trust — Modelo Conceptual</text>
+<!-- Three columns -->
+<rect x="10" y="24" width="130" height="40" rx="6" fill="#3b82f6"/><text x="75" y="40" text-anchor="middle" fill="white" font-size="9" font-weight="bold">USUARIO</text><text x="75" y="55" text-anchor="middle" fill="#dbeafe" font-size="8">Factor 1 + Factor 2</text>
+<rect x="165" y="24" width="130" height="40" rx="6" fill="#8b5cf6"/><text x="230" y="40" text-anchor="middle" fill="white" font-size="9" font-weight="bold">IDENTIDAD</text><text x="230" y="55" text-anchor="middle" fill="#ede9fe" font-size="8">Evaluacion + Contexto</text>
+<rect x="320" y="24" width="130" height="40" rx="6" fill="#10b981"/><text x="385" y="40" text-anchor="middle" fill="white" font-size="9" font-weight="bold">RECURSOS</text><text x="385" y="55" text-anchor="middle" fill="#d1fae5" font-size="8">Politica + Token</text>
+<!-- Arrows between columns -->
+<polygon points="140,44 165,44 162,41 165,47" fill="#94a3b8"/>
+<polygon points="295,44 320,44 317,41 320,47" fill="#94a3b8"/>
+<!-- Bottom row -->
+<rect x="10" y="80" width="130" height="28" rx="6" fill="#1e293b"/><text x="75" y="98" text-anchor="middle" fill="#94a3b8" font-size="8">Autenticacion</text>
+<rect x="165" y="80" width="130" height="28" rx="6" fill="#1e293b"/><text x="230" y="98" text-anchor="middle" fill="#94a3b8" font-size="8">Sesion + Riesgo</text>
+<rect x="320" y="80" width="130" height="28" rx="6" fill="#1e293b"/><text x="385" y="98" text-anchor="middle" fill="#94a3b8" font-size="8">Acceso concedido</text>
+<!-- Arrows top→bottom -->
+<line x1="75" y1="64" x2="75" y2="80" stroke="#94a3b8" stroke-width="1.5"/>
+<line x1="230" y1="64" x2="230" y2="80" stroke="#94a3b8" stroke-width="1.5"/>
+<line x1="385" y1="64" x2="385" y2="80" stroke="#94a3b8" stroke-width="1.5"/>
+<!-- Banner -->
+<rect x="10" y="118" width="440" height="28" rx="6" fill="#ef4444"/><text x="230" y="137" text-anchor="middle" fill="white" font-size="9" font-weight="bold">NUNCA hay confianza automatica — CADA acceso se verifica y autoriza</text>
+</svg>
+</div>
+
+### ¿Cuándo? — Cuando Aplicar Zero Trust
+
+Zero Trust no es un producto que se "instala", es un **modelo de madurez** que se implementa gradualmente. Los momentos clave para avanzar en Zero Trust son:
+
+- **Migracion a la nube**: Cuando los recursos ya no estan en un perimetro fisico definido
+- **Trabajo remoto/hibrido**: Cuando los empleados acceden desde cualquier ubicacion
+- **Fusiones y adquisiciones**: Cuando se integran redes heterogeneas
+- **Incidente de seguridad**: Despues de un breach que demostro que el perimetro fallo
+- **Cumplimiento regulatorio**: Cuando regulaciones exigen control de acceso granular
+
+CISA define **3 niveles de madurez** por cada uno de los 5 pilares:
+
+| Pilar | Traditional | Advanced | Optimal |
+|-------|------------|----------|---------|
+| Identity | Manual | MFA, SSO | Continuous auth |
+| Devices | Reactivo | Inventario | Dynamic posture |
+| Networks | Perimetro | Microseg | Full segmentation |
+| Apps & Workloads | Reactivo | SaaS/IaaS | Full protection |
+| Data | Reactivo | Clasificar | End-to-end encryption |
+
+> **Nota**: CISA usa 3 niveles (Traditional → Advanced → Optimal). El modelo de 4 niveles mostrado en versiones anteriores era una adaptacion interna.
+
+### ¿Dónde? — Donde se Aplica
+
+Zero Trust se aplica en **5 pilares** que cubren toda la superficie de ataque:
+
+| Pilar | Alcance | Ejemplo |
+|-------|---------|---------|
+| **Identidad** | Usuarios, servicios, APIs | MFA, SSO, Conditional Access |
+| **Dispositivos** | Endpoints, servidores, IoT | Inventory, compliance check |
+| **Redes** | LAN, WAN, cloud networks | Microsegmentacion, ZTNA |
+| **Aplicaciones** | SaaS, IaaS, on-premise | App-level policies, WAF |
+| **Datos** | Archivos, bases de datos | Encryption, DLP, classification |
+
+### ¿Por qué? — Por que Importa
+
+El modelo de seguridad tradicional basado en perimetro ("castillo y foso") **ya no funciona** porque:
+
+1. **Los datos estan en todas partes**: Nube, SaaS, endpoints remotos — no hay un "adentro" claro
+2. **El trabajo remoto es permanente**: Los empleados acceden desde cafes, hogares, aeropuertos
+3. **El movimiento lateral es facil**: Una vez dentro de la red, un atacante puede moverse libremente
+4. **Las credenciales se roban constantemente**: Phishing, credential stuffing, breaches de terceros
+5. **El costo de un breach es devastador**: IBM reporta un promedio de $4.88M USD por incidente en 2024
+
+Zero Trust reduce significativamente la superficie de ataque y limita el dano potencial cuando ocurre un breach.
+
+### ¿Para qué? — Que Objetivo Sirve
+
+El objetivo final de Zero Trust es **proteger los datos y servicios criticos** mediante:
+
+- **Reducir la superficie de ataque**: Cada recurso requiere verificacion explicita
+- **Limitar el movimiento lateral**: La microsegmentacion impide que un atacante se mueva libremente
+- **Mejorar la visibilidad**: Monitorizacion continua de cada acceso y sesion
+- **Cumplir regulaciones**: GDPR, HIPAA, PCI-DSS requieren control de acceso granular
+- **Habilitar trabajo seguro**: Acceso desde cualquier lugar sin comprometer la seguridad
 
 ---
 
-### 3.2 Componentes de Zero Trust
+## 🔑 Conceptos Clave
 
-#### Componentes Principales
-
-| Componente | Funcion | Ejemplo |
-|------------|---------|---------|
-| Policy Engine (PE) | Decide acceso | WSO2 |
-| Policy Enforcement Point (PEP) | Aplica politica | Nginx, Envoy |
-| Continuous Diagnostics & Monitoring (CDM) | Monitoriza | Splunk, Sentinel |
-| Activity & Analytics / TI | Analiza comportamiento | UEBA |
-
-#### Comparacion VPN vs ZTNA
-
-| Caracteristica | VPN Tradicional | ZTNA |
-|---------------|----------------|------|
-| Confianza | Por defecto (red interna) | Nunca confiable |
-| Acceso | Ancho de red total | Solo recursos necesarios |
-| Sesion | Persistente | Ephemeral |
-| Visibilidad | Limitada granular | Completa |
-| Lateral movement | Facil | Bloqueado |
+- **Policy Engine (PE)**: El "cerebro" de Zero Trust. Evalua senales de identidad, dispositivo, contexto y riesgo para decidir si se otorga acceso. Ejemplos: WSO2, Azure AD Conditional Access.
+- **Policy Enforcement Point (PEP)**: El "musculo" que ejecuta la decision del Policy Engine. Puede ser un proxy inverso (Nginx, Envoy), un gateway API, o un agente en el endpoint.
+- **Microsegmentacion**: Division de la red en zonas de seguridad microscopicas. Cada zona tiene politicas de acceso independientes. Se implementa a nivel de red (VLANs), host (firewalls), o aplicacion (containers, service mesh).
+- **ZTNA (Zero Trust Network Access)**: Reemplazo moderno de la VPN. En lugar de dar acceso a toda la red, ZTNA otorga acceso solo a aplicaciones especificas, verificando identidad y contexto en cada sesion.
+- **Continuous Diagnostics & Monitoring (CDM)**: Sistema que monitoriza constantemente el estado de dispositivos, usuarios y recursos. Proporciona senales en tiempo real al Policy Engine para reevaluar accesos.
 
 ---
 
-### 3.3 Implementacion de Microsegmentacion
+## 💡 Ejemplos
 
-#### Niveles de Microsegmentacion
+### Ejemplo 1: Breach por VPN Tradicional — Caso Colonial Pipeline (2021)
 
+**Contexto**: Colonial Pipeline sufrio un ataque de ransomware que paralizo el suministro de combustible en la costa este de EE.UU. El ataque comenzo con una credencial VPN comprometida de un empleado.
+
+**Que fallo**: La VPN otorgaba acceso amplio a la red corporativa. Una vez dentro, los atacantes pudieron moverse lateralmente hasta alcanzar los sistemas operacionales (OT).
+
+**Como Zero Trust lo hubiera mitigado**:
+- **Verify explicitly**: La VPN habria requerido MFA + verificacion de dispositivo administrado
+- **Least privilege**: Acceso solo a los recursos necesarios, no a toda la red
+- **Microsegmentacion**: Los sistemas IT y OT estarian en segmentos separados, bloqueando el movimiento lateral
+- **Assume breach**: Monitorizacion continua habria detectado comportamiento anomalo rapidamente
+
+### Ejemplo 2: Implementacion Gradual — Caso de una Empresa de 200 Empleados
+
+**Contexto**: "DataFlow Inc." tiene 200 empleados, servidores on-premise, y esta migrando a Microsoft 365. Quieren implementar Zero Trust sin interrumpir operaciones.
+
+**Fase 1 (Mes 1-2) — Identidad**:
+- Implementar MFA para todos los usuarios
+- Configurar SSO con Azure AD
+- Establecer Conditional Access basico (bloquear paises de riesgo)
+
+**Fase 2 (Mes 3-4) — Dispositivos**:
+- Inventario de todos los dispositivos
+- Implementar MDM (Mobile Device Management)
+- Politicas de compliance para dispositivos
+
+**Fase 3 (Mes 5-6) — Redes y Aplicaciones**:
+- Reemplazar VPN con ZTNA (Cloudflare o OpenZiti)
+- Microsegmentar la red en VLANs por departamento
+- Configurar politicas de acceso por aplicacion
+
+**Resultado**: DataFlow paso del nivel "Traditional" al nivel "Advanced" en el modelo CISA en 6 meses, sin interrupciones operativas.
+
+---
+
+## 🛠️ Practica Guiada
+
+### Practica: Configurar ZTNA con Cloudflare Zero Trust
+
+En esta practica configuraras un tunel Zero Trust para exponer una aplicacion interna de forma segura. Necesitas una cuenta gratuita de Cloudflare.
+
+**Paso 1: Instalar cloudflared**
+
+```bash
+# Instala el daemon de Cloudflare Tunnel
+# macOS
+brew install cloudflared
+
+# Linux
+curl -fsSL https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o cloudflared
+chmod +x cloudflared
+sudo mv cloudflared /usr/local/bin/
 ```
-NIVEL 1: Red
-├── Subnets (VLANs)
-/   ├── 10.0.1.0/24 (Production)
-/   ├── 10.0.2.0/24 (Development)
-/   └── 10.0.3.0/24 (DMZ)
-/
 
-NIVEL 2: Host
-├── Firewalls por host
-├── Reglas de entrada/salida
-└── Isolation entre VMs
+Verifica que la instalacion fue exitosa:
 
-NIVEL 3: Aplicacion
-├── Container segmentation
-├── Service mesh
-└── Microsegmentacion de workloads
+```bash
+cloudflared --version
 ```
 
-#### Ejemplo de Politica de Microsegmentacion (Kubernetes)
+Deberias ver algo como `cloudflared version 2026.x.x`.
+
+**Paso 2: Autenticarte con Cloudflare**
+
+```bash
+# Este comando abrira tu navegador para autenticarte
+cloudflared tunnel login
+```
+
+Se creara un certificado en `~/.cloudflared/cert.pem`. Este certificado vincula tu maquina con tu cuenta de Cloudflare.
+
+**Paso 3: Crear un tunel**
+
+```bash
+# Crea un tunel con un nombre descriptivo
+cloudflared tunnel create techcorp-webapp
+```
+
+Anota el UUID que se muestra. Lo necesitaras en el siguiente paso.
+
+**Paso 4: Configurar el tunel**
+
+Crea un archivo de configuracion:
+
+```bash
+# Crea el directorio de configuracion
+mkdir -p ~/.cloudflared
+
+# Crea el archivo config.yml
+nano ~/.cloudflared/config.yml
+```
+
+Agrega el siguiente contenido (reemplaza el UUID):
+
+```yaml
+tunnel: TU-UUID-AQUI
+credentials-file: /Users/tu-usuario/.cloudflared/TU-UUID-AQUI.json
+
+ingress:
+  - hostname: webapp.techcorp.local
+    service: http://localhost:8080
+  - service: http_status:404
+```
+
+**Paso 5: Iniciar el tunel**
+
+```bash
+# Inicia el tunel en modo prueba
+cloudflared tunnel run techcorp-webapp
+```
+
+Veras logs que muestran la conexion establecida. El tunel mantiene una conexion saliente persistente hacia Cloudflare — no necesitas abrir puertos en tu firewall.
+
+**Paso 6: Configurar politica de acceso**
+
+Desde el dashboard de Cloudflare Zero Trust (one.dash.cloudflare.com):
+
+1. Ve a **Access** → **Applications**
+2. Crea una nueva aplicacion con el hostname `webapp.techcorp.local`
+3. Configura una politica que requiera:
+   - Email corporativo (`@techcorp.com`)
+   - MFA habilitado
+   - Dispositivo administrado
+
+**Checkpoint**: Si llegaste hasta aqui, has configurado un tunel ZTNA basico. Tu aplicacion interna es accesible solo para usuarios que cumplan las politicas de acceso, sin exponer puertos al internet publico.
+
+---
+
+## 🧪 Laboratorio
+
+### Lab: Microsegmentacion en Kubernetes
+
+**Objetivo**: Implementar politicas de red en Kubernetes que limiten la comunicacion entre tiers de una aplicacion web.
+
+**Requisitos Previos**:
+- Minikube o Kind instalado
+- kubectl configurado
+- Conocimiento basico de Kubernetes
+
+**Escenario**: TechCorp tiene una aplicacion web con 3 tiers: frontend, backend, y database. Actualmente, cualquier pod puede comunicarse con cualquier otro. Tu tarea es implementar microsegmentacion.
+
+**Paso 1: Crear el namespace y los pods**
+
+```bash
+# Crea el namespace de produccion
+kubectl create namespace techcorp-prod
+
+# Verifica que se creo
+kubectl get namespaces
+```
+
+**Paso 2: Desplegar la aplicacion de 3 tiers**
+
+```bash
+# Frontend
+kubectl run frontend --image=nginx --namespace=techcorp-prod --labels="tier=frontend"
+
+# Backend
+kubectl run backend --image=nginx --namespace=techcorp-prod --labels="tier=backend"
+
+# Database
+kubectl run database --image=redis --namespace=techcorp-prod --labels="tier=database"
+```
+
+**Paso 3: Verificar comunicacion sin restricciones**
+
+```bash
+# Desde frontend, intenta conectar al backend
+kubectl exec -it frontend -n techcorp-prod -- wget -qO- --timeout=2 http://backend:8080
+
+# Desde frontend, intenta conectar a la database
+kubectl exec -it frontend -n techcorp-prod -- redis-cli -h database ping
+```
+
+Sin politicas, ambas conexiones deberian funcionar (o al menos intentarlo). Esto es un riesgo de seguridad.
+
+**Paso 4: Crear la politica de microsegmentacion**
+
+Crea un archivo llamado `network-policy.yaml`:
+
+```bash
+nano network-policy.yaml
+```
+
+Agrega el siguiente contenido:
 
 ```yaml
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: restrictive-policy
-  namespace: production
+  name: techcorp-segmentation
+  namespace: techcorp-prod
 spec:
   podSelector:
     matchLabels:
@@ -138,105 +360,108 @@ spec:
               tier: database
       ports:
         - protocol: TCP
-          port: 3306
+          port: 6379
 ```
 
----
-
-### 3.4 Implementacion ZTNA con Ejemplos
-
-#### opcion 1: OpenZiti (Open Source)
+Aplica la politica:
 
 ```bash
-# Instalacion de OpenZiti (Edge Tunneler)
-# NO ejecutar en produccion sin autorizacion
-
-# 1. Descargar cliente
-curl -sSLf https://get.openziti.io | bash
-
-# 2. Configurar identity
-ziti edge create identity service "${NOMBRE}"
-
-# 3. Crear servicio
-ziti edge create service "${ SERVICIO }"
-
-# 4. Configurar policy
-ziti edge create service-policy "${ POLICY }" \
-  --service-roles="${ SERVICIO }" \
-  --identity-roles="${ ${NOMBRE} }"
+kubectl apply -f network-policy.yaml
 ```
 
-#### Opcion 2: Cloudflare Zero Trust
+**Paso 5: Verificar la microsegmentacion**
 
 ```bash
-# Configuracion Cloudflare Zero Trust (via API)
-# NO ejecutar sin cuenta valida
+# Frontend puede conectar al backend (permitido)
+kubectl exec -it frontend -n techcorp-prod -- wget -qO- --timeout=2 http://backend:8080
 
-# 1. Configurar Tunnel
-cloudflared tunnel login
-cloudflared tunnel create ${TUNNEL_NAME}
+# Frontend NO puede conectar directamente a la database (bloqueado)
+kubectl exec -it frontend -n techcorp-prod -- redis-cli -h database ping
 
-# 2. Configurar origen
-cloudflared tunnel route ip \
-  --cidr 10.0.0.0/24 \
-  --tunnel ${TUNNEL_UUID}
-
-# 3. Politica de acceso
-curl -X PUT "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT}/access/apps/${APP_ID}/policies/${POLICY_ID}" \
-  -H "Authorization: Bearer ${TOKEN}" \
-  -H "Content-Type: application/json" \
-  --data '{"decision":"allow","include":{"groups":[{"ID":"${GROUP_ID}"]}}'
+# Backend SI puede conectar a la database (permitido)
+kubectl exec -it backend -n techcorp-prod -- redis-cli -h database ping
 ```
 
----
+**Resultados Esperados**:
+- ✅ Frontend → Backend: Conexion exitosa (puerto 8080 permitido)
+- ❌ Frontend → Database: Conexion bloqueada (no hay politica que lo permita)
+- ✅ Backend → Database: Conexion exitosa (puerto 6379 permitido)
 
-### 3.5 Evaluacion de Madurez de Zero Trust
+**Troubleshooting**:
 
-#### CISA Zero Trust Maturity Model
+| Problema | Causa | Solucion |
+|----------|-------|----------|
+| Las politicas no se aplican | CNI no soporta NetworkPolicy | Usa Calico o Cilium como CNI |
+| Todos los pods pierden conectividad | Falta politica default deny | Agrega politica Egress para DNS |
+| Error de permisos | Namespace incorrecto | Verifica `kubectl get ns` |
 
-| Pilar | Nivel 1 | Nivel 2 | Nivel 3 | Nivel 4 |
-|------|----------|---------|---------|---------|---------|
-| Identity | Manual | MFA | risk-based | continuous |
-| Device | reactive | inventory | posture | dynamic |
-| Network | perimeter | microseg | full | dynamic |
-| Data | reactive | classify | pipeline | E2E |
-| App | reactive | SaaS | IaaS | full |
+**Desafio Extra**: Crea una politica `default-deny` que bloquee TODO el trafico por defecto en el namespace, y luego agrega politicas explicitas solo para las comunicaciones necesarias.
 
----
-
-## Ejercicios de Refuerzo
-
-### Ejercicio 1: Identificar Gaps
-
-Analiza el siguiente escenario:
-
-> Una empresa tiene:
-> -VPN para acceso remoto
-> -MFA para usuarios
-> -Firewall perimetral
-> -No microsegmentacion
-
-Que gaps de Zero Trust tiene?
-
-### Ejercicio 2: Disenar Politica
-
-Disena una politica de acceso que:
-
-1. Permita acceso a emails solo desde dispositivos administrados
-2. Bloquee acceso desde redes publicas
-3. Requiere MFA para acceso a sistemas financieros
+<div class="compact-diagram" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px 18px;margin:14px 0;">
+<svg viewBox="0 0 440 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:440px;">
+<text x="220" y="14" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="bold">Niveles de Microsegmentacion</text>
+<!-- Nivel 1: Red -->
+<rect x="10" y="24" width="130" height="50" rx="6" fill="#3b82f6"/><text x="75" y="40" text-anchor="middle" fill="white" font-size="9" font-weight="bold">NIVEL 1: RED</text><text x="75" y="54" text-anchor="middle" fill="#dbeafe" font-size="7">VLANs / Subnets</text><text x="75" y="66" text-anchor="middle" fill="#dbeafe" font-size="7">10.0.1.0/24 Prod</text>
+<!-- Nivel 2: Host -->
+<rect x="155" y="24" width="130" height="50" rx="6" fill="#10b981"/><text x="220" y="40" text-anchor="middle" fill="white" font-size="9" font-weight="bold">NIVEL 2: HOST</text><text x="220" y="54" text-anchor="middle" fill="#d1fae5" font-size="7">Firewalls por host</text><text x="220" y="66" text-anchor="middle" fill="#d1fae5" font-size="7">Isolation VMs</text>
+<!-- Nivel 3: App -->
+<rect x="300" y="24" width="130" height="50" rx="6" fill="#8b5cf6"/><text x="365" y="40" text-anchor="middle" fill="white" font-size="9" font-weight="bold">NIVEL 3: APP</text><text x="365" y="54" text-anchor="middle" fill="#ede9fe" font-size="7">Containers</text><text x="365" y="66" text-anchor="middle" fill="#ede9fe" font-size="7">Service mesh</text>
+<!-- Arrows between -->
+<polygon points="140,49 155,49 152,46 155,52" fill="#94a3b8"/>
+<polygon points="285,49 300,49 297,46 300,52" fill="#94a3b8"/>
+<!-- Bottom: progression -->
+<rect x="10" y="86" width="420" height="44" rx="6" fill="#1e293b"/>
+<text x="220" y="102" text-anchor="middle" fill="#94a3b8" font-size="9" font-weight="bold">Progresion: Red → Host → Aplicacion</text>
+<text x="220" y="118" text-anchor="middle" fill="#64748b" font-size="8">Cada nivel reduce la superficie de ataque y bloquea movimiento lateral</text>
+</svg>
+</div>
 
 ---
 
-## Resumen del Modulo
+## 📝 Tarea (Project-Based Learning)
 
-### Puntos Clave
+### Propuesta de Arquitectura Zero Trust para TechCorp
 
-- Zero Trust = "Nunca confiar, siempre verificar"
-- No hay perimetro - todo es hostil
-- Microsegmentacion limita movimiento lateral
-- ZTNA es mejor que VPN tradicional
-- Implementacion es gradual
+**Contexto del Proyecto**: TechCorp es una empresa de 150 empleados con infraestructura hibrida (servidores on-premise + Microsoft 365 + AWS). Actualmente usa VPN para acceso remoto, tiene un firewall perimetral, y no tiene microsegmentacion. El CTO te ha pedido una propuesta de arquitectura Zero Trust.
+
+**Entregable**: Documento tecnico (3-5 paginas) que incluya:
+
+1. **Evaluacion de Madurez Actual**: Usa el modelo CISA de 3 niveles para evaluar cada uno de los 5 pilares de TechCorp. Justifica tu evaluacion con evidencia del escenario.
+
+2. **Arquitectura Propuesta**: Disena una arquitectura Zero Trust que incluya:
+   - Politicas de identidad (MFA, SSO, Conditional Access)
+   - Estrategia de microsegmentacion (al menos 3 segmentos con justificacion)
+   - Solucion ZTNA recomendada (compara al menos 2 opciones)
+   - Plan de monitorizacion continua
+
+3. **Roadmap de Implementacion**: Plan de 6 meses con hitos claros, priorizando quick wins primero.
+
+4. **Analisis Costo-Beneficio**: Estima costos de implementacion vs. reduccion de riesgo.
+
+**Criterios de Evaluacion**:
+
+| Criterio | Peso | Descripcion |
+|----------|------|-------------|
+| Evaluacion de madurez | 20% | Uso correcto del modelo CISA, justificacion solida |
+| Arquitectura | 30% | Alineada con NIST SP 800-207, componentes claros |
+| Microsegmentacion | 20% | Politica funcional, justificacion de segmentos |
+| Roadmap | 15% | Realista, priorizado, con hitos medibles |
+| Costo-Beneficio | 15% | Estimaciones razonables, analisis de riesgo |
+
+**Formato**: Documento en formato PDF o Markdown. Incluye diagramas SVG para la arquitectura propuesta.
+
+**Fecha de entrega**: 1 semana despues de completar el modulo.
+
+---
+
+## 📊 Resumen
+
+- Zero Trust = "Nunca confiar, siempre verificar" — no hay perimetro, todo es hostil
+- NIST SP 800-207 define 3 tenets fundamentales; la industria los expande en 5 principios operativos
+- La microsegmentacion limita el movimiento lateral a nivel de red, host y aplicacion
+- ZTNA reemplaza a la VPN tradicional con acceso granular por aplicacion
+- La implementacion es gradual: sigue el modelo CISA de 3 niveles (Traditional → Advanced → Optimal)
+- Los 5 pilares de Zero Trust son: Identidad, Dispositivos, Redes, Aplicaciones y Datos
 
 ### Siguiente: Modulo 4
 

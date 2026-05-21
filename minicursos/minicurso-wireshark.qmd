@@ -1,0 +1,856 @@
+---
+title: "Minicurso: Wireshark"
+module: "minicurso-wireshark"
+type: "minicurso"
+description: "Tutorial completo de Wireshark para análisis de tráfico de red en ciberseguridad"
+---
+
+# Minicurso: Wireshark
+
+## ¿Qué es Wireshark?
+
+Wireshark es el analizador de protocolos de red más utilizado del mundo. Desarrollado originalmente por Gerald Combs en 1998 como Ethereal, es una herramienta de código abierto que captura paquetes de red en tiempo real y los muestra en un formato legible, permitiendo inspeccionar cada byte del tráfico de red.
+
+A diferencia de tcpdump que opera en línea de comandos, Wireshark proporciona una interfaz gráfica completa con capacidad de filtrado avanzado, decodificación de cientos de protocolos, estadísticas visuales, y análisis de flujos de conversación. Utiliza la biblioteca libpcap/WinPcap para la captura de paquetes y soporta lectura/escritura en formato pcap/pcapng.
+
+En ciberseguridad, Wireshark es esencial para análisis forense de red, investigación de incidentes, detección de malware, debugging de protocolos, y validación de configuraciones de seguridad. Permite ver exactamente qué datos se transmiten por la red, incluyendo credenciales en texto plano, patrones de tráfico sospechosos, y anomalías de protocolo. Es complementario a tcpdump: Wireshark para análisis detallado con GUI, tcpdump para captura rápida en servidores headless.
+
+## ¿Por qué aprenderlo?
+
+- **Análisis visual**: Interfaz gráfica con decodificación de 3,000+ protocolos
+- **Filtros potentes**: Display filters y capture filters para aislar tráfico específico
+- **Forensics**: Analizar capturas pcap de incidentes de seguridad
+- **Follow streams**: Reconstruir conversaciones TCP/UDP completas
+- **Estándar de la industria**: Herramienta #1 en análisis de protocolos de red
+
+## Instalación
+
+### macOS
+
+```bash
+# Con Homebrew
+brew install --cask wireshark
+
+# O descargar desde https://www.wireshark.org/download.html
+# Abrir el DMG y arrastrar a Applications
+
+# Verificar
+/Applications/Wireshark.app/Contents/MacOS/Wireshark --version
+# Esperado: Wireshark 4.x.x
+
+# Instalar ChmodBPF para captura sin sudo
+# Wireshask installer lo configura automáticamente
+# Si no, ejecutar:
+sudo chmod 666 /dev/bpf*
+```
+
+### Linux (Ubuntu/Debian)
+
+```bash
+# Instalar desde repositorios
+sudo apt update
+sudo apt install -y wireshark
+
+# Permitir captura sin root (recomendado)
+sudo dpkg-reconfigure wireshark-common
+# Seleccionar "Yes" para permitir captura sin root
+sudo usermod -aG wireshark $USER
+# Cerrar sesión y volver a entrar
+
+# Verificar
+wireshark --version
+# Esperado: Wireshark 4.x.x
+
+# Verificar interfaces
+wireshark --list-interfaces
+```
+
+### Windows
+
+```powershell
+# Descargar desde https://www.wireshark.org/download.html
+# Ejecutar el installer .exe
+# Instalar Npcap (incluido) para captura de paquetes
+
+# Verificar
+# Buscar "Wireshark" en el menú de inicio
+
+# tshark (CLI de Wireshark) también se instala
+tshark --version
+```
+
+::: {.callout-warning}
+## Aviso Legal y Ético
+Wireshark captura todo el tráfico de red, incluyendo comunicaciones privadas, contraseñas, y datos personales. Capturar tráfico en redes que no te pertenecen o sin autorización es ILEGAL. La interceptación no autorizada de comunicaciones puede violar leyes federales y estatales. Solo captura tráfico en redes propias o con autorización explícita.
+:::
+
+## Nivel Básico
+
+### Conceptos Fundamentales
+
+**Packet capture**: Interceptación de paquetes directamente del driver de interfaz de red.
+
+**Capture filter**: Filtro aplicado DURANTE la captura (BPF syntax). Reduce el tráfico capturado.
+
+**Display filter**: Filtro aplicado DESPUÉS de la captura (Wireshark syntax). Filtra lo que se muestra.
+
+**Protocol hierarchy**: Vista jerárquica de todos los protocolos detectados en la captura.
+
+**Follow TCP stream**: Reconstruye la conversación completa entre cliente y servidor.
+
+**Promiscuous mode**: Captura TODO el tráfico en la red, no solo el dirigido a tu máquina.
+
+### Comandos y Funciones Esenciales
+
+| Función | Descripción | Ejemplo |
+|---------|-------------|---------|
+| **Capture > Interfaces** | Seleccionar interfaz de captura | Click en ícono de aleta de tiburón |
+| **Capture filter** | Filtrar durante captura | `host 192.168.1.100` |
+| **Display filter** | Filtrar resultados | `ip.addr == 192.168.1.100` |
+| **Follow > TCP Stream** | Ver conversación completa | Right-click > Follow > TCP Stream |
+| **Statistics > Protocol Hierarchy** | Estadísticas por protocolo | Statistics > Protocol Hierarchy |
+| **Statistics > Conversations** | Estadísticas de conversaciones | Statistics > Conversations |
+| **Statistics > Endpoints** | Estadísticas de endpoints | Statistics > Endpoints |
+| **File > Save As** | Guardar captura | Guardar como .pcapng |
+| **File > Open** | Abrir captura existente | Abrir archivo .pcap/.pcapng |
+| **View > Time Display Format** | Formato de timestamp | Relative, Absolute, Delta |
+| **Edit > Find Packet** | Buscar en paquetes | Ctrl+F |
+| **Analyze > Expert Info** | Información experta | Detecta errores y warnings |
+
+### Captura Básica
+
+```
+# Paso 1: Abrir Wireshark
+# Esperado: ventana con lista de interfaces de red
+
+# Paso 2: Seleccionar interfaz
+# Click en la interfaz activa (la que tiene tráfico)
+# o Capture > Interfaces > seleccionar > Start
+
+# Paso 3: Observar paquetes capturados
+# Columnas principales:
+#   No. = número de paquete
+#   Time = timestamp
+#   Source = IP origen
+#   Destination = IP destino
+#   Protocol = protocolo (TCP, UDP, HTTP, DNS, etc.)
+#   Length = tamaño del paquete
+#   Info = información resumida
+
+# Paso 4: Detener captura
+# Click en el botón rojo "Stop"
+```
+
+### Display Filters Básicos
+
+```
+# Filtrar por IP
+ip.addr == 192.168.1.100
+# Todos los paquetes hacia o desde esta IP
+
+ip.src == 192.168.1.100
+# Solo paquetes origen
+
+ip.dst == 192.168.1.100
+# Solo paquetes destino
+
+# Filtrar por protocolo
+tcp
+udp
+http
+dns
+icmp
+arp
+tls
+
+# Filtrar por puerto
+tcp.port == 80
+tcp.dstport == 443
+udp.port == 53
+
+# Filtrar por rango de IPs
+ip.addr == 192.168.1.0/24
+
+# Combinar filtros
+ip.addr == 192.168.1.100 and tcp.port == 80
+ip.addr == 192.168.1.100 or ip.addr == 192.168.1.200
+not arp
+
+# Filtrar por tamaño
+frame.len > 1000
+frame.len < 100
+
+# Filtrar HTTP
+http.request.method == "GET"
+http.request.method == "POST"
+http.response.code == 200
+http.response.code == 404
+http.host contains "example.com"
+```
+
+::: {.callout-tip}
+## Display Filter Cheat Sheet
+| Filtro | Significado |
+|--------|-------------|
+| `ip.addr == x.x.x.x` | Paquetes hacia/desde IP |
+| `tcp.port == N` | Paquetes por puerto TCP |
+| `http` | Solo tráfico HTTP |
+| `dns` | Solo tráfico DNS |
+| `tcp.flags.syn == 1` | Paquetes SYN |
+| `tcp.flags.reset == 1` | Paquetes RST |
+| `http.request` | Peticiones HTTP |
+| `http.response` | Responses HTTP |
+| `tls` | Tráfico TLS/SSL |
+| `frame.len > N` | Paquetes mayores a N bytes |
+:::
+
+### Follow TCP Stream
+
+```
+# Reconstruir conversación TCP completa
+
+# Paso 1: Encontrar una conexión TCP interesante
+# Usar filtro: tcp.port == 80
+
+# Paso 2: Right-click en un paquete > Follow > TCP Stream
+# Esperado: ventana con la conversación completa
+
+# Paso 3: Seleccionar formato
+# ASCII: texto legible
+# Hex Dump: hexadecimal + ASCII
+# C Arrays: formato C
+# Raw: datos sin formato
+
+# Paso 4: Analizar contenido
+# Buscar: credenciales, datos sensibles, errores
+# Identificar: request/response pairs
+
+# Paso 5: Guardar stream
+# Click "Save as" para guardar la conversación
+```
+
+### Ejercicio 1: Captura y análisis de tráfico HTTP
+
+**Objetivo:** Capturar tráfico HTTP y analizar las peticiones y respuestas.
+
+**Paso 1:** Iniciar captura
+
+```
+# 1. Abrir Wireshark
+# 2. Seleccionar interfaz de red activa
+# 3. Aplicar capture filter: port 80
+# 4. Click Start
+```
+
+**Paso 2:** Generar tráfico
+
+```bash
+# En terminal, generar tráfico HTTP
+curl http://example.com
+curl http://testphp.vulnweb.com
+curl http://httpbin.org/get
+```
+
+**Paso 3:** Analizar captura
+
+```
+# 1. Detener captura (botón rojo)
+# 2. Aplicar display filter: http
+# 3. Observar peticiones GET y responses
+# 4. Right-click en una petición > Follow > TCP Stream
+# 5. Ver la conversación completa
+# 6. Identificar:
+#    - Request line (GET / HTTP/1.1)
+#    - Headers (Host, User-Agent, etc.)
+#    - Response status (HTTP/1.1 200 OK)
+#    - Response body (HTML content)
+```
+
+## Nivel Intermedio
+
+### Capture Filters (BPF Syntax)
+
+```
+# Capture filters usan sintaxis BPF (diferente de display filters)
+# Se aplican ANTES de capturar, reduciendo el tráfico guardado
+
+# Filtrar por host
+host 192.168.1.100
+
+# Filtrar por puerto
+port 80
+port 443
+portrange 8000-9000
+
+# Filtrar por protocolo
+tcp
+udp
+icmp
+
+# Combinar filtros
+host 192.168.1.100 and port 80
+host 192.168.1.100 or host 192.168.1.200
+not port 22
+tcp port 80 and host 192.168.1.100
+
+# Filtrar por red
+net 192.168.1.0/24
+net 10.0.0.0/8
+
+# Filtrar por dirección source/destination
+src host 192.168.1.100
+dst host 192.168.1.100
+src port 80
+dst port 80
+```
+
+::: {.callout-warning}
+## Capture vs Display Filters
+| Aspecto | Capture Filter | Display Filter |
+|---------|---------------|----------------|
+| Sintaxis | BPF | Wireshark |
+| Cuándo | Durante captura | Después de captura |
+| Performance | Reduce tráfico capturado | Filtra visualmente |
+| Flexibilidad | Limitada | Muy flexible |
+| Ejemplo | `host 1.2.3.4` | `ip.addr == 1.2.3.4` |
+:::
+
+### Coloring Rules
+
+```
+# Wireshark colorea paquetes por tipo
+# Default: TCP=light blue, UDP=light green, ICMP=light yellow, errors=black on red
+
+# Personalizar reglas:
+# View > Coloring Rules
+
+# Agregar regla personalizada:
+# Name: "HTTP 500 Errors"
+# Filter: http.response.code == 500
+# Color: Red background, white text
+
+# Name: "DNS Queries"
+# Filter: dns.qry.name contains "malware"
+# Color: Orange background
+
+# Name: "Large Packets"
+# Filter: frame.len > 1500
+# Color: Purple background
+```
+
+### Statistics y Análisis
+
+```
+# Protocol Hierarchy
+# Statistics > Protocol Hierarchy
+# Muestra distribución de protocolos por porcentaje
+
+# Conversations
+# Statistics > Conversations > TCP/UDP/IP
+# Muestra quién habla con quién, cantidad de datos, duración
+
+# Endpoints
+# Statistics > Endpoints
+# Muestra todos los hosts que aparecen en la captura
+
+# IO Graphs
+# Statistics > IO Graphs
+# Gráfico de tráfico en el tiempo
+# Filtros por línea: tcp, http, dns, etc.
+
+# Packet Lengths
+# Statistics > Packet Lengths
+# Distribución de tamaños de paquetes
+
+# Service Response Times
+# Statistics > Service Response Times
+# Tiempo de respuesta por servicio (HTTP, DNS, SMB, etc.)
+```
+
+### Decryption (TLS, WPA)
+
+```
+# Decodificar tráfico TLS con session keys
+
+# Paso 1: Configurar variable de entorno SSLKEYLOGFILE
+export SSLKEYLOGFILE=/tmp/ssl-keys.log
+# (antes de abrir el navegador)
+
+# Paso 2: Navegar con el navegador (Chrome/Firefox)
+# Las claves se guardan en ssl-keys.log
+
+# Paso 3: En Wireshark
+# Edit > Preferences > Protocols > TLS
+# (Pre)Master-Secret log filename: /tmp/ssl-keys.log
+
+# Paso 4: Abrir captura
+# El tráfico TLS se decodifica automáticamente
+
+# Decodificar WPA/WPA2
+# Edit > Preferences > Protocols > IEEE 802.11
+# Decryption keys: Add
+# Key type: wpa-pwd
+# Key: password:SSID
+# o wpa-psk con el PSK calculado
+```
+
+### Expert Info
+
+```
+# Análisis automático de problemas
+# Analyze > Expert Info
+
+# Categorías:
+# Error: Problemas graves (checksum errors, malformed packets)
+# Warning: Problemas potenciales (retransmissions, zero window)
+# Note: Información notable (connection setup, teardown)
+# Chat: Información de bajo nivel (ACKs, keep-alives)
+
+# Filtrar por tipo
+# Click en cada categoría para ver detalles
+# Right-click en un entry > Jump to packet
+```
+
+### Ejercicio 2: Análisis de tráfico DNS
+
+**Objetivo:** Capturar y analizar consultas DNS para identificar patrones.
+
+**Paso 1:** Capturar tráfico DNS
+
+```
+# 1. Capture filter: udp port 53
+# 2. Start capture
+# 3. Generar consultas DNS:
+nslookup example.com
+nslookup google.com
+dig testphp.vulnweb.com
+host github.com
+# 4. Stop capture
+```
+
+**Paso 2:** Analizar con display filters
+
+```
+# Filtrar DNS
+dns
+
+# Ver queries específicas
+dns.qry.name contains "example"
+
+# Ver responses con errores
+dns.flags.rcode != 0
+
+# Ver tipos de consulta
+dns.qry.type == 1    # A record
+dns.qry.type == 28   # AAAA record
+dns.qry.type == 15   # MX record
+dns.qry.type == 16   # TXT record
+```
+
+**Paso 3:** Estadísticas DNS
+
+```
+# Statistics > Endpoints > IPv4
+# Ver qué hosts hacen más consultas DNS
+
+# Statistics > Conversations > UDP
+# Ver conversaciones DNS más activas
+
+# Statistics > Protocol Hierarchy
+# Ver porcentaje de tráfico DNS
+```
+
+## Nivel Avanzado
+
+### Custom Display Filters
+
+```
+# Filtros avanzados para análisis de seguridad
+
+# Detectar SYN scans
+tcp.flags.syn == 1 and tcp.flags.ack == 0
+
+# Detectar conexiones rechazadas
+tcp.flags.reset == 1
+
+# Detectar retransmisiones (posible problema de red)
+tcp.analysis.retransmission
+
+# Detectar paquetes duplicados
+tcp.analysis.duplicate_ack
+
+# Detectar zero window (posible DoS)
+tcp.window_size == 0
+
+# Detectar credenciales HTTP en texto plano
+http.request.method == "POST" and http.content_type contains "application/x-www-form-urlencoded"
+
+# Detectar SQLi en HTTP
+http.request.uri contains "select" or http.request.uri contains "union"
+
+# Detectar XSS en HTTP
+http.request.uri contains "<script>"
+
+# Detectar DNS tunneling (queries largas)
+dns.qry.name.len > 50
+
+# Detectar tráfico a puertos sospechosos
+tcp.port == 4444 or tcp.port == 5555 or tcp.port == 1337 or tcp.port == 31337
+```
+
+### Tshark (CLI de Wireshark)
+
+```bash
+# Tshark es la versión CLI de Wireshark
+
+# Capturar tráfico
+sudo tshark -i eth0 -c 10
+
+# Capturar con filtro
+sudo tshark -i eth0 -f "port 80" -c 10
+
+# Leer archivo pcap
+tshark -r capture.pcap
+
+# Leer con display filter
+tshark -r capture.pcap -Y "http.request"
+
+# Extraer campos específicos
+tshark -r capture.pcap -Y "http.request" -T fields -e http.host -e http.request.uri
+
+# Estadísticas
+tshark -r capture.pcap -q -z io,stat,1
+tshark -r capture.pcap -q -z conv,tcp
+tshark -r capture.pcap -q -z endpoints,ip
+
+# Convertir formato
+tshark -r capture.pcap -w output.pcapng
+
+# Extraer archivos HTTP
+tshark -r capture.pcap --export-objects http,/tmp/extracted/
+
+# Extraer objetos SMB
+tshark -r capture.pcap --export-objects smb,/tmp/extracted/
+```
+
+### Lua Scripting
+
+```lua
+-- Wireshark soporta scripts Lua para custom dissectors y análisis
+
+-- Ejemplo: custom dissector para protocolo simple
+-- Guardar como: ~/.local/lib/wireshark/plugins/my-protocol.lua
+
+local p_myproto = Proto("myproto", "My Custom Protocol")
+
+local f_type = ProtoField.uint8("myproto.type", "Type", base.DEC)
+local f_data = ProtoField.string("myproto.data", "Data")
+
+p_myproto.fields = {f_type, f_data}
+
+function p_myproto.dissector(buffer, pinfo, tree)
+    pinfo.cols.protocol = "MYPROTO"
+    local subtree = tree:add(p_myproto, buffer(), "My Protocol Data")
+    subtree:add(f_type, buffer(0, 1))
+    subtree:add(f_data, buffer(1))
+end
+
+-- Register dissector for port 9999
+local tcp_table = DissectorTable.get("tcp.port")
+tcp_table:add(9999, p_myproto)
+```
+
+### Análisis de Conversaciones
+
+```
+# Statistics > Conversations > ver quién habla con quién
+
+# TCP Conversations
+# Muestra: dirección A ↔ dirección B, paquetes, bytes, duración
+# Útil para identificar:
+# - Conexiones más activas
+# - Transferencias de datos grandes
+# - Conexiones de larga duración (posible C2)
+
+# UDP Conversations
+# Similar a TCP pero para UDP
+# Útil para DNS, DHCP, streaming
+
+# IP Conversations
+# Resumen por IP independientemente del protocolo
+# Útil para ver top talkers
+
+# Ethernet Conversations
+# Por dirección MAC
+# Útil para detectar ARP spoofing
+
+# Ordenar por:
+# - Packets: más conversaciones activas
+# - Bytes: más datos transferidos
+# - Duration: conexiones más largas
+```
+
+### IO Graphs - Visualización Temporal
+
+```
+# Statistics > IO Graphs > gráfico de tráfico en el tiempo
+
+# Configurar ejes:
+# X axis: tiempo (segundos, minutos)
+# Y axis: packets, bytes, bits
+
+# Agregar líneas con filtros:
+# Line 1: tcp (todo tráfico TCP)
+# Line 2: http (solo HTTP)
+# Line 3: dns (solo DNS)
+# Line 4: tcp.flags.syn == 1 (solo SYN packets)
+
+# Útil para:
+# - Detectar picos de tráfico (posible ataque)
+# - Ver patrones temporales (beaconing de malware)
+# - Identificar momentos de actividad sospechosa
+# - Correlacionar eventos con tráfico de red
+
+# Intervalo: ajustar según duración de la captura
+# - Captura corta: 0.001s (1ms)
+# - Captura media: 1s
+# - Captura larga: 60s (1 minuto)
+```
+
+### Export Objects - Extraer Archivos
+
+```
+# File > Export Objects > extraer archivos del tráfico capturado
+
+# HTTP Objects
+# File > Export Objects > HTTP
+# Muestra todos los archivos descargados via HTTP
+# Seleccionar y guardar archivos interesantes
+
+# SMB Objects
+# File > Export Objects > SMB
+# Archivos transferidos via SMB/CIFS
+
+# DICOM Objects
+# File > Export Objects > DICOM
+# Imágenes médicas transferidas
+
+# TFTP Objects
+# File > Export Objects > TFTP
+# Archivos transferidos via TFTP
+
+# Alternativa con tshark:
+tshark -r capture.pcap --export-objects http,/tmp/http-files/
+tshark -r capture.pcap --export-objects smb,/tmp/smb-files/
+```
+
+### Ejercicio 3: Network forensics con Wireshark
+
+**Objetivo:** Analizar una captura de red para identificar actividad sospechosa.
+
+**Paso 1:** Abrir captura forense
+
+```
+# 1. File > Open > seleccionar archivo pcap
+# 2. Statistics > Protocol Hierarchy > ver distribución de protocolos
+# 3. Statistics > Conversations > identificar hosts más activos
+```
+
+**Paso 2:** Buscar anomalías
+
+```
+# Buscar conexiones a puertos inusuales
+tcp.port == 4444 or tcp.port == 5555 or tcp.port == 1337
+
+# Buscar tráfico DNS sospechoso
+dns.qry.name.len > 50
+
+# Buscar HTTP con credenciales
+http.authorization
+
+# Buscar archivos ejecutables en HTTP
+http.content_type contains "application/octet-stream"
+
+# Buscar conexiones largas (posible C2)
+# Statistics > Conversations > ordenar por Duration
+```
+
+**Paso 3:** Extraer evidencia
+
+```
+# Follow TCP Stream en conexiones sospechosas
+# File > Export Objects > HTTP > descargar archivos
+# File > Export Specified Packets > guardar paquetes relevantes
+
+# Generar reporte:
+# Statistics > Summary > copiar resumen
+# Statistics > Protocol Hierarchy > copiar tabla
+# Statistics > Conversations > copiar top conversaciones
+```
+
+## Uso en Ciberseguridad
+
+### Escenario 1: Malware traffic analysis
+
+```
+# Analizar tráfico de malware conocido
+
+# 1. Abrir captura de malware
+# 2. Filtrar por protocolo de C2:
+http.host contains "malware-domain"
+dns.qry.name contains "malware"
+
+# 3. Follow TCP Stream en conexiones C2
+# 4. Extraer payloads y analizar
+# 5. Identificar patrones de comunicación:
+#    - Intervalo de beaconing
+#    - Tamaño de datos exfiltrados
+#    - Dominios de C2
+
+# 6. Buscar indicadores de compromiso (IOCs):
+#    - IPs de C2
+#    - Dominios maliciosos
+#    - User agents sospechosos
+#    - Patrones de DNS tunneling
+```
+
+### Escenario 2: Data exfiltration detection
+
+```
+# Detectar exfiltración de datos
+
+# 1. Buscar transferencias grandes
+frame.len > 10000
+
+# 2. Buscar DNS tunneling
+dns.qry.name.len > 30
+dns.txt contains "base64"
+
+# 3. Buscar HTTP POST con datos
+http.request.method == "POST" and frame.len > 5000
+
+# 4. Buscar conexiones a servicios cloud
+http.host contains "dropbox" or http.host contains "drive.google"
+
+# 5. Analizar patrones temporales
+# Statistics > IO Graphs > ver picos de tráfico
+```
+
+### Escenario 3: Protocol anomaly detection
+
+```
+# Detectar anomalías de protocolo
+
+# 1. Analyze > Expert Info > revisar errores y warnings
+
+# 2. Buscar paquetes malformed
+frame.protocols contains "malformed"
+
+# 3. Buscar retransmisiones excesivas
+tcp.analysis.retransmission
+
+# 4. Buscar TCP out-of-order
+tcp.analysis.out_of_order
+
+# 5. Buscar checksum errors
+tcp.checksum.status == "Bad"
+udp.checksum.status == "Bad"
+
+# 6. Analizar handshakes incompletos
+tcp.flags.syn == 1 and tcp.flags.ack == 0
+# Muchos SYN sin ACK = posible SYN scan
+```
+
+## Referencia Rápida
+
+| Función | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `ip.addr == x` | Filtrar por IP | `ip.addr == 192.168.1.100` |
+| `tcp.port == N` | Filtrar por puerto | `tcp.port == 80` |
+| `http` | Solo HTTP | `http.request` |
+| `dns` | Solo DNS | `dns.qry.name` |
+| `tls` | Solo TLS | `tls.handshake` |
+| `frame.len > N` | Por tamaño | `frame.len > 1000` |
+| `Follow TCP Stream` | Ver conversación | Right-click > Follow |
+| `Expert Info` | Análisis automático | Analyze > Expert Info |
+| `IO Graphs` | Gráfico temporal | Statistics > IO Graphs |
+| `Conversations` | Estadísticas | Statistics > Conversations |
+| `tshark -r` | Leer pcap CLI | `tshark -r capture.pcap` |
+| `tshark -Y` | Display filter CLI | `tshark -r cap.pcap -Y "http"` |
+| `tshark -T fields` | Extraer campos | `tshark -r cap.pcap -T fields -e ip.src` |
+| `--export-objects` | Extraer archivos | `tshark -r cap.pcap --export-objects http,/tmp/` |
+
+## Recursos Adicionales
+
+- **Documentación oficial**: https://www.wireshark.org/docs/
+- **Display filter reference**: https://www.wireshark.org/docs/dfref/
+- **Sample captures**: https://wiki.wireshark.org/SampleCaptures
+- **Malware traffic analysis**: https://www.malware-traffic-analysis.net/
+- **Practice**: https://tryhackme.com/ (labs de packet analysis)
+- **Wireshark University**: https://www.wireshark.org/training/
+
+## Apéndice: Display Filters para Seguridad
+
+### Detección de Scans
+```
+# SYN scan
+tcp.flags.syn == 1 and tcp.flags.ack == 0
+
+# XMAS scan (FIN+PSH+URG)
+tcp.flags.fin == 1 and tcp.flags.push == 1 and tcp.flags.urg == 1
+
+# NULL scan (no flags)
+tcp.flags == 0x000
+
+# FIN scan
+tcp.flags.fin == 1 and tcp.flags.ack == 0
+```
+
+### Detección de Ataques
+```
+# ARP spoofing (múltiples MAC para misma IP)
+arp.duplicate-address-detected
+
+# DHCP starvation
+bootp.option.dhcp == 1 and frame.len < 300
+
+# DNS amplification
+dns.flags.response == 1 and frame.len > 512
+
+# ICMP flood
+icmp and frame.len < 100
+```
+
+### Detección de Exfiltración
+```
+# DNS tunneling (queries largas)
+dns.qry.name.len > 50
+
+# HTTP POST grandes
+http.request.method == "POST" and frame.len > 10000
+
+# ICMP con payload
+icmp and frame.len > 100
+
+# Conexiones a puertos sospechosos
+tcp.port == 4444 or tcp.port == 5555 or tcp.port == 1337
+```
+
+### Análisis de Protocolo
+```
+# HTTP requests con credenciales
+http.authorization
+
+# TLS handshake sin SNI
+tls.handshake.extensions_server_name == ""
+
+# HTTP cleartext passwords
+http.request.method == "POST" and http.file_data contains "password"
+
+# SMB version 1 (inseguro)
+smb.cmd == 0x72 and smb.flags.response == 0
+```
+
+---
+
+*Minicurso Wireshark — Curso Fundamentos de Ciberseguridad — CC BY-SA 4.0*

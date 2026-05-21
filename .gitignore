@@ -1,2 +1,12 @@
 /.quarto/
 **/*.quarto_ipynb
+
+# Generated output
+/_site/
+/_freeze/
+
+# Temp files
+*.png
+.atl/
+.playwright-mcp/
+

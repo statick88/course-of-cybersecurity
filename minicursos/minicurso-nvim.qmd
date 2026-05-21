@@ -1,0 +1,641 @@
+---
+title: "Minicurso: Neovim (nvim)"
+module: "minicurso-nvim"
+type: "minicurso"
+description: "Tutorial completo de Neovim para ciberseguridad"
+---
+
+# Minicurso: Neovim (nvim)
+
+## ¿Qué es Neovim?
+
+Neovim es un editor de texto modal basado en Vim, modernizado y extendido con características como soporte nativo para LSP (Language Server Protocol), Treesitter para parsing de código, y una arquitectura de plugins basada en Lua. Es un fork de Vim que mantiene la compatibilidad pero añade extensibilidad moderna.
+
+La filosofía modal de Neovim significa que cada tecla tiene diferentes funciones según el "modo" en que te encuentres. Esto permite una edición extremadamente rápida una vez que dominas los modos y sus combinaciones.
+
+En ciberseguridad, Neovim es invaluable para editar archivos de configuración en servidores remotos (donde no hay GUI), analizar logs grandes eficientemente, escribir scripts de seguridad, y trabajar con archivos binarios en modo hexadecimal.
+
+## ¿Por qué aprenderlo?
+
+- **Siempre disponible**: Viene preinstalado en casi todos los servidores Linux
+- **Edición remota**: SSH + nvim = edición en cualquier servidor del mundo
+- **Velocidad**: Una vez dominado, edits 3-5x más rápido que editores GUI
+- **Bajo consumo**: Funciona en terminales con recursos mínimos
+- **Extensible**: LSP, Treesitter, y plugins Lua lo convierten en un IDE completo
+
+## Instalación
+
+### macOS
+
+```bash
+# Con Homebrew
+brew install neovim
+
+# Verificar instalación
+nvim --version
+# Esperado: NVIM v0.10.x o superior
+```
+
+### Linux (Ubuntu/Debian)
+
+```bash
+# Versión del repositorio (puede ser antigua)
+sudo apt install -y neovim
+
+# O instalar la versión más reciente con pipx
+sudo apt install -y pipx
+pipx install neovim
+
+# Verificar
+nvim --version
+# Esperado: NVIM v0.10.x o superior
+```
+
+### Windows
+
+```powershell
+# Con Scoop
+scoop install neovim
+
+# O descargar desde https://github.com/neovim/neovim/releases
+
+# Verificar
+nvim --version
+```
+
+### Configuración inicial
+
+```bash
+# Crear directorio de configuración
+mkdir -p ~/.config/nvim
+
+# Crear init.lua básico
+cat > ~/.config/nvim/init.lua << 'EOF'
+-- Configuración básica de Neovim
+vim.g.mapleader = " "  -- Leader key = espacio
+
+-- Números de línea
+vim.opt.number = true
+vim.opt.relativenumber = true
+
+-- Indentación
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
+
+-- Búsqueda
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+vim.opt.hlsearch = true
+
+-- Colores
+vim.opt.termguicolors = true
+vim.cmd("colorscheme habamax")
+
+-- Atajos útiles
+vim.keymap.set("n", "<leader>w", "<cmd>w<CR>", {desc = "Guardar"})
+vim.keymap.set("n", "<leader>q", "<cmd>q<CR>", {desc = "Salir"})
+EOF
+```
+
+## Nivel Básico
+
+### Modos de Neovim
+
+Neovim tiene varios modos. Los más importantes son:
+
+| Modo | Cómo entrar | Para qué | Cómo salir |
+|------|-------------|----------|------------|
+| **Normal** | `Esc` o `Ctrl-[` | Navegar, comandos | - |
+| **Insert** | `i` | Escribir texto | `Esc` |
+| **Visual** | `v` | Seleccionar texto | `Esc` |
+| **Visual Line** | `V` | Seleccionar líneas | `Esc` |
+| **Command** | `:` | Comandos Ex | `Esc` o Enter |
+
+::: {.callout-warning}
+## Regla Fundamental
+Siempre empieza en modo Normal. Si te sientes perdido, presiona `Esc` dos veces. Esto te devuelve al modo Normal desde cualquier estado.
+:::
+
+### Navegación en modo Normal
+
+| Tecla | Acción | Equivalente |
+|-------|--------|-------------|
+| `h` | Izquierda | `←` |
+| `j` | Abajo | `↓` |
+| `k` | Arriba | `↑` |
+| `l` | Derecha | `→` |
+| `w` | Siguiente palabra | - |
+| `b` | Palabra anterior | - |
+| `0` | Inicio de línea | `Home` |
+| `$` | Fin de línea | `End` |
+| `gg` | Inicio del archivo | `Ctrl+Home` |
+| `G` | Fin del archivo | `Ctrl+End` |
+| `Ctrl+d` | Media página abajo | `PageDown` |
+| `Ctrl+u` | Media página arriba | `PageUp` |
+| `:15` | Ir a línea 15 | - |
+
+### Comandos Esenciales
+
+| Comando | Modo | Descripción |
+|---------|------|-------------|
+| `i` | Normal | Entrar en modo Insert (antes del cursor) |
+| `a` | Normal | Entrar en modo Insert (después del cursor) |
+| `o` | Normal | Nueva línea abajo, entrar en Insert |
+| `O` | Normal | Nueva línea arriba, entrar en Insert |
+| `Esc` | Insert | Volver a modo Normal |
+| `:w` | Command | Guardar archivo |
+| `:q` | Command | Salir |
+| `:wq` | Command | Guardar y salir |
+| `:q!` | Command | Salir sin guardar |
+| `x` | Normal | Borrar carácter bajo cursor |
+| `dd` | Normal | Borrar línea completa |
+| `yy` | Normal | Copiar línea (yank) |
+| `p` | Normal | Pegar después del cursor |
+| `P` | Normal | Pegar antes del cursor |
+| `u` | Normal | Deshacer |
+| `Ctrl+r` | Normal | Rehacer |
+| `.` | Normal | Repetir último cambio |
+
+### Ejercicio 1: Primeros pasos con Neovim
+
+**Objetivo:** Familiarizarte con los modos y navegación básica.
+
+**Paso 1:** Abrir Neovim y crear un archivo
+
+```bash
+# Abrir nvim con un archivo nuevo
+nvim security-notes.txt
+```
+
+**Paso 2:** Escribir contenido (modo Insert)
+
+```
+# Dentro de nvim:
+# 1. Presiona 'i' para entrar en modo Insert
+# 2. Escribe el siguiente texto:
+
+Notas de Seguridad - Día 1
+==========================
+
+1. Siempre usar autenticación de dos factores
+2. No reutilizar passwords entre servicios
+3. Actualizar sistemas regularmente
+4. Hacer backups de datos importantes
+5. Usar contraseñas únicas y fuertes
+
+# 3. Presiona 'Esc' para volver a modo Normal
+```
+
+**Paso 3:** Navegar y editar
+
+```
+# En modo Normal:
+# 1. 'gg' - Ir al inicio del archivo
+# 2. 'G' - Ir al final
+# 3. 'j' y 'k' - Moverse arriba/abajo
+# 4. 'w' - Saltar entre palabras
+# 5. '$' - Ir al final de la línea
+# 6. '0' - Ir al inicio de la línea
+
+# Editar:
+# 1. Posicionarte en la línea 3
+# 2. Presionar 'dd' para borrar la línea
+# 3. Presionar 'u' para deshacer
+# 4. Posicionarte al final del archivo
+# 5. Presionar 'o' para nueva línea abajo
+# 6. Escribe: "6. Monitorear logs del sistema"
+# 7. Presiona 'Esc'
+```
+
+**Paso 4:** Guardar y salir
+
+```
+# En modo Normal:
+# 1. ':w' y Enter - Guardar
+# 2. ':q' y Enter - Salir
+
+# O en un solo paso:
+# ':wq' y Enter - Guardar y salir
+```
+
+## Nivel Intermedio
+
+### Búsqueda y reemplazo
+
+```
+# Buscar texto (modo Normal)
+/patente        # Buscar hacia adelante
+?patente        # Buscar hacia atrás
+n               # Siguiente coincidencia
+N               # Coincidencia anterior
+
+# Buscar y reemplazar
+:s/viejo/nuevo/         # Primera ocurrencia en línea
+:s/viejo/nuevo/g        # Todas en línea actual
+:%s/viejo/nuevo/g       # Todas en el archivo
+:%s/viejo/nuevo/gc      # Todas con confirmación
+```
+
+### Buffers, Windows y Tabs
+
+```
+# Buffers (archivos en memoria)
+:ls                 # Listar buffers
+:b <número>         # Ir a buffer por número
+:bnext / :bn        # Siguiente buffer
+:bprev / :bp        # Buffer anterior
+:bd                 # Cerrar buffer actual
+
+# Windows (divisiones de pantalla)
+:sp                 # Split horizontal
+:vsp                # Split vertical
+Ctrl+w + w          # Navegar entre windows
+Ctrl+w + h/j/k/l    # Navegar con dirección
+Ctrl+w + =          # Igualar tamaños
+:q                  # Cerrar window actual
+
+# Tabs (grupos de windows)
+:tabnew             # Nuevo tab
+:tabnext / :tabn    # Siguiente tab
+:tabprev / :tabp    # Tab anterior
+:tabclose           # Cerrar tab
+gt                  # Siguiente tab (normal mode)
+gT                  # Tab anterior (normal mode)
+```
+
+### Registros y Macros
+
+```
+# Registros (portapapeles múltiples)
+"ayy                # Copiar línea al registro 'a'
+"ap                 # Pegar desde registro 'a'
+:registers          # Ver todos los registros
+"                   # Ver registro usado
+"+y                 # Copiar al portapapeles del sistema
+"+p                 # Pegar desde portapapeles
+
+# Macros (grabar secuencias de comandos)
+qa                  # Iniciar grabación en registro 'a'
+# ... hacer acciones ...
+q                   # Detener grabación
+@a                  # Ejecutar macro 'a'
+5@a                 # Ejecutar macro 5 veces
+```
+
+### Ejercicio 2: Analizar logs de seguridad
+
+**Objetivo:** Usar búsqueda y navegación para analizar un archivo de logs.
+
+**Paso 1:** Crear archivo de log de ejemplo
+
+```bash
+cat > auth.log << 'EOF'
+May 15 08:23:01 server sshd[1234]: Accepted password for admin from 192.168.1.100 port 22
+May 15 08:25:12 server sshd[1235]: Failed password for root from 10.0.0.50 port 22
+May 15 08:25:15 server sshd[1236]: Failed password for root from 10.0.0.50 port 22
+May 15 08:25:18 server sshd[1237]: Failed password for root from 10.0.0.50 port 22
+May 15 08:25:21 server sshd[1238]: Failed password for root from 10.0.0.50 port 22
+May 15 08:25:24 server sshd[1239]: Failed password for root from 10.0.0.50 port 22
+May 15 08:30:00 server sshd[1240]: Accepted publickey for deploy from 192.168.1.200 port 22
+May 15 09:00:00 server sudo: admin : TTY=pts/0 ; COMMAND=/bin/systemctl restart nginx
+May 15 09:15:33 server sshd[1241]: Failed password for invalid user test from 203.0.113.50 port 22
+May 15 09:15:36 server sshd[1242]: Failed password for invalid user admin from 203.0.113.50 port 22
+May 15 09:15:39 server sshd[1243]: Failed password for invalid user guest from 203.0.113.50 port 22
+May 15 10:00:00 server sshd[1244]: Accepted password for admin from 192.168.1.100 port 22
+EOF
+```
+
+**Paso 2:** Abrir y analizar
+
+```bash
+nvim auth.log
+```
+
+```
+# Dentro de nvim:
+
+# 1. Contar intentos fallidos
+/Failed password
+# Presionar 'n' para saltar entre coincidencias
+# Contar manualmente cuántos hay
+
+# 2. Buscar IPs sospechosas
+/203.0.113.50
+# Ver todas las actividades de esta IP
+
+# 3. Buscar solo accesos exitosos
+/Accepted
+# Ver quién accedió correctamente
+
+# 4. Extraer IPs únicas con visual block:
+#    - Ir al inicio del archivo: gg
+#    - Buscar primera IP: /192
+#    - Entrar en visual block: Ctrl+v
+#    - Seleccionar columna de IPs: jjjjjjj (bajar)
+#    - Copiar: y
+
+# 5. Reemplazar "Failed" por "ALERTA: Failed"
+:%s/Failed/ALERTA: Failed/gc
+# Confirmar cada reemplazo con 'y'
+
+# 6. Guardar resultado
+:w auth-analyzed.log
+```
+
+## Nivel Avanzado
+
+### Plugins con Lazy.nvim
+
+```bash
+# Instalar Lazy.nvim (gestor de plugins)
+git clone https://github.com/folke/lazy.nvim.git \
+  ~/.local/share/nvim/lazy/lazy.nvim
+
+# Crear configuración de plugins
+cat >> ~/.config/nvim/init.lua << 'EOF'
+
+-- Bootstrap Lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  vim.fn.system({
+    "git", "clone", "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+-- Configurar plugins
+require("lazy").setup({
+  -- Autocompletado
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = { "hrsh7th/cmp-nvim-lsp" },
+    config = function()
+      local cmp = require("cmp")
+      cmp.setup({
+        sources = { { name = "nvim_lsp" } },
+        mapping = cmp.mapping.preset.insert({
+          ["<CR>"] = cmp.mapping.confirm({ select = true }),
+        }),
+      })
+    end,
+  },
+  -- Treesitter (syntax highlighting)
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    config = function()
+      require("nvim-treesitter.configs").setup({
+        ensure_installed = { "bash", "python", "lua", "json", "yaml" },
+        highlight = { enable = true },
+      })
+    end,
+  },
+  -- Telescope (fuzzy finder)
+  {
+    "nvim-telescope/telescope.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require("telescope").setup()
+      vim.keymap.set("n", "<leader>ff",
+        require("telescope.builtin").find_files,
+        {desc = "Buscar archivos"})
+      vim.keymap.set("n", "<leader>fg",
+        require("telescope.builtin").live_grep,
+        {desc = "Buscar texto"})
+    end,
+  },
+  -- LSP
+  {
+    "neovim/nvim-lspconfig",
+    config = function()
+      local lspconfig = require("lspconfig")
+      lspconfig.bashls.setup({})
+      lspconfig.pyright.setup({})
+      lspconfig.lua_ls.setup({})
+    end,
+  },
+})
+EOF
+```
+
+### LSP (Language Server Protocol)
+
+```bash
+# Instalar language servers
+# Bash
+npm install -g bash-language-server
+
+# Python
+pip install python-lsp-server
+
+# Lua
+# Ya incluido con lua-language-server
+
+# Verificar LSP funcionando en nvim:
+# :LspInfo
+# Esperado: lista de servers activos
+```
+
+### Custom Keymaps para seguridad
+
+```lua
+-- Añadir a init.lua
+
+-- Atajos para análisis de seguridad
+vim.keymap.set("n", "<leader>sc", function()
+  -- Contar líneas
+  vim.cmd("echo line('$') . ' lines'")
+end, {desc = "Contar líneas"})
+
+vim.keymap.set("n", "<leader>sf", function()
+  -- Buscar patrones de seguridad comunes
+  require("telescope.builtin").live_grep({
+    search = "password|secret|token|api_key|private",
+  })
+end, {desc = "Buscar secrets"})
+
+-- Hex mode para análisis binario
+vim.keymap.set("n", "<leader>hx", function()
+  vim.cmd("%!xxd")
+end, {desc = "Convertir a hex"})
+
+vim.keymap.set("n", "<leader>un", function()
+  vim.cmd("%!xxd -r")
+end, {desc = "Convertir de hex"})
+```
+
+### Autocmds para archivos de seguridad
+
+```lua
+-- Añadir a init.lua
+
+-- Resaltar líneas con posibles secrets
+vim.api.nvim_create_autocmd("BufRead", {
+  pattern = {"*.env", "*.yml", "*.yaml", "*.conf", "*.cfg"},
+  callback = function()
+    -- Buscar patrones de secrets
+    vim.cmd([[
+      match WarningMsg /\(password\|secret\|token\|api_key\|private_key\)\s*[=:]\s*\S\+/
+    ]])
+  end,
+})
+
+-- Auto-guardar al cambiar de buffer
+vim.api.nvim_create_autocmd("FocusLost", {
+  callback = function()
+    vim.cmd("silent! wall")
+  end,
+})
+```
+
+### Ejercicio 3: Macro para análisis de logs
+
+**Objetivo:** Crear una macro que extraiga IPs de un log.
+
+**Paso 1:** Preparar archivo
+
+```bash
+cat > firewall.log << 'EOF'
+2026-05-15 08:00:01 DROP IN=eth0 SRC=10.0.0.50 DST=192.168.1.1 PROTO=TCP DPT=22
+2026-05-15 08:00:02 ACCEPT IN=eth0 SRC=192.168.1.100 DST=192.168.1.1 PROTO=TCP DPT=443
+2026-05-15 08:00:03 DROP IN=eth0 SRC=203.0.113.50 DST=192.168.1.1 PROTO=TCP DPT=3389
+2026-05-15 08:00:04 DROP IN=eth0 SRC=10.0.0.50 DST=192.168.1.1 PROTO=TCP DPT=22
+2026-05-15 08:00:05 ACCEPT IN=eth0 SRC=192.168.1.100 DST=192.168.1.1 PROTO=TCP DPT=80
+2026-05-15 08:00:06 DROP IN=eth0 SRC=198.51.100.25 DST=192.168.1.1 PROTO=TCP DPT=445
+EOF
+```
+
+**Paso 2:** Crear y ejecutar macro
+
+```bash
+nvim firewall.log
+```
+
+```
+# Dentro de nvim:
+
+# Crear macro para extraer SRC IP:
+# 1. Ir al inicio: gg
+# 2. Iniciar grabación: qq
+# 3. Buscar "SRC=": /SRC=
+# 4. Mover después de "SRC=": f=l
+# 5. Copiar hasta espacio: yw
+# 6. Ir al final: G
+# 7. Nueva línea: o
+# 8. Pegar: p
+# 9. Ir al inicio del archivo: gg
+# 10. Bajar una línea: j
+# 11. Detener grabación: q
+
+# Ejecutar macro en cada línea:
+# 5@q  (ejecutar 5 veces)
+
+# Resultado: lista de IPs extraídas al final del archivo
+```
+
+## Uso en Ciberseguridad
+
+### Escenario 1: Edición segura de archivos de configuración
+
+```bash
+# Editar sshd_config en servidor remoto
+ssh admin@server "sudo nvim /etc/ssh/sshd_config"
+
+# O con sudo local
+sudo nvim /etc/ssh/sshd_config
+
+# Verificar sintaxis antes de guardar
+# En modo Command:
+:!sshd -t
+# Si hay errores, NO guardar. Corregir primero.
+```
+
+### Escenario 2: Análisis de logs en servidores
+
+```bash
+# Abrir log grande con nvim
+nvim /var/log/auth.log
+
+# Buscar intentos de brute force
+/Failed password
+
+# Contar ocurrencias de una IP
+:%s/10\.0\.0\.50//gn
+# Esperado: "X matches on Y lines"
+
+# Extraer todas las IPs únicas:
+# 1. Copiar todo: ggVGy
+# 2. Abrir nuevo buffer: :new
+# 3. Pegar: p
+# 4. Eliminar todo excepto IPs:
+#    :%s/.*SRC=\(\S\+\).*/\1/
+# 5. Ordenar y eliminar duplicados:
+#    :sort u
+```
+
+### Escenario 3: Modo hexadecimal para análisis binario
+
+```bash
+# Abrir archivo binario en modo hex
+nvim malware_sample.bin
+
+# Convertir a hex:
+:%!xxd
+
+# Buscar patrones en hex:
+/MZ          # PE header (Windows executable)
+/7f454c46    # ELF header (Linux executable)
+/PK          # ZIP/JAR file
+
+# Buscar strings embebidos:
+:%!strings
+
+# Buscar URLs o IPs:
+/IP: \d\+\.\d\+\.\d\+\.\d\+
+/http[s]*:\/\/[a-zA-Z0-9./_-]*
+
+# Revertir a binario:
+:%!xxd -r
+```
+
+## Referencia Rápida
+
+| Comando | Modo | Descripción |
+|---------|------|-------------|
+| `i` | Normal | Insertar antes del cursor |
+| `a` | Normal | Insertar después del cursor |
+| `Esc` | Insert | Volver a Normal |
+| `:w` | Command | Guardar |
+| `:q` | Command | Salir |
+| `:wq` | Command | Guardar y salir |
+| `dd` | Normal | Borrar línea |
+| `yy` | Normal | Copiar línea |
+| `p` | Normal | Pegar |
+| `u` | Normal | Deshacer |
+| `Ctrl+r` | Normal | Rehacer |
+| `/texto` | Normal | Buscar |
+| `n` | Normal | Siguiente búsqueda |
+| `:%s/a/b/g` | Command | Reemplazar todo |
+| `gg` | Normal | Ir al inicio |
+| `G` | Normal | Ir al final |
+| `:set number` | Command | Mostrar números |
+| `:ls` | Command | Listar buffers |
+| `qa...q` | Normal | Grabar macro |
+| `@a` | Normal | Ejecutar macro |
+
+## Recursos Adicionales
+
+- **Documentación oficial**: https://neovim.io/doc/
+- **Neovim desde cero**: https://github.com/nanotee/nvim-lua-guide
+- **Lazy.nvim**: https://github.com/folke/lazy.nvim
+- **LSP config**: https://github.com/neovim/nvim-lspconfig
+- **Vim Adventures (juego)**: https://vim-adventures.com/
+- **Open Vim (tutorial)**: https://www.openvim.com/
+- **Neovim para pentesters**: https://github.com/topics/neovim-security
+
+---
+
+*Minicurso Neovim — Curso Fundamentos de Ciberseguridad — CC BY-SA 4.0*

