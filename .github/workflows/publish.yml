@@ -21,13 +21,11 @@ jobs:
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
-      - name: Render HTML only
-        run: quarto render --to html
-
-      - name: Publish to GitHub Pages
+      - name: Render and Publish
         uses: quarto-dev/quarto-actions/publish@v2
         with:
           target: gh-pages
-          render: false
+          render: true
+          args: --to html
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
