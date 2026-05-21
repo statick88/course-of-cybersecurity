@@ -5,7 +5,6 @@ type: "anexo"
 description: "Laboratorio práctico de 7 vulnerabilidades web con OWASP WebGoat — SQLi, XSS, Deserialization, SSRF, JWT, Path Traversal, XXE"
 ---
 
-# Apéndice: OWASP WebGoat — Laboratorio de Explotación Web
 
 ## Introducción
 

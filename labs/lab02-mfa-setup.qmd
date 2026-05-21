@@ -5,7 +5,6 @@ type: "lab"
 description: "Practica de configuracion de autenticacion multifactor con FIDO2 y Passkeys"
 ---
 
-# Lab 2: Configuracion MFA Phishing-Resistant
 
 ## Objetivo del Laboratorio
 

@@ -5,7 +5,6 @@ type: "content"
 description: "Aprende qué son las vulnerabilidades y cómo entender su gravedad"
 ---
 
-# Módulo 4: Seguridad Básica - Vulnerabilidades
 
 ## 🎯 Objetivos de Aprendizaje
 

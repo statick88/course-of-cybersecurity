@@ -5,7 +5,6 @@ type: "anexo"
 description: "Laboratorio práctico de 7 vulnerabilidades web con DVWA — SQLi, XSS, Command Injection, File Upload, Brute Force, CSRF"
 ---
 
-# Apéndice: DVWA — Laboratorio de Explotación Web
 
 ## Introducción
 

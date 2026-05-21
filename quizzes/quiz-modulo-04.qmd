@@ -5,7 +5,6 @@ type: "quiz"
 description: "Evaluacion del modulo 4: IA en ciberseguridad"
 ---
 
-# Quiz 4: Inteligencia Artificial en Seguridad
 
 ## Instrucciones
 

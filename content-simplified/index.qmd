@@ -7,9 +7,7 @@ license: "CC BY-SA 4.0"
 author: "Diego Saavedra"
 ---
 
-# Fundamentos de Ciberseguridad
-
-## Versión Simplificada
+## Version Simplificada
 
 Este curso está diseñado especialmente para **personas sin conocimientos técnicos previos**. Cada tema se explica con analogías simples del día a día.
 

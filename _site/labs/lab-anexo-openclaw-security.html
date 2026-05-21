@@ -594,62 +594,59 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#lab-anexo-seguridad-avanzada-de-agentes-ia-y-vulnerability-assessment" id="toc-lab-anexo-seguridad-avanzada-de-agentes-ia-y-vulnerability-assessment" class="nav-link active" data-scroll-target="#lab-anexo-seguridad-avanzada-de-agentes-ia-y-vulnerability-assessment"><span class="header-section-number">10</span> Lab Anexo: Seguridad Avanzada de Agentes IA y Vulnerability Assessment</a>
+  <li><a href="#objetivo-del-laboratorio" id="toc-objetivo-del-laboratorio" class="nav-link active" data-scroll-target="#objetivo-del-laboratorio"><span class="header-section-number">9.1</span> Objetivo del Laboratorio</a></li>
+  <li><a href="#requisitos-previos" id="toc-requisitos-previos" class="nav-link" data-scroll-target="#requisitos-previos"><span class="header-section-number">9.2</span> Requisitos Previos</a></li>
+  <li><a href="#duracion" id="toc-duracion" class="nav-link" data-scroll-target="#duracion"><span class="header-section-number">9.3</span> Duracion</a></li>
+  <li><a href="#paso-1-preparacion-del-entorno-de-pruebas" id="toc-paso-1-preparacion-del-entorno-de-pruebas" class="nav-link" data-scroll-target="#paso-1-preparacion-del-entorno-de-pruebas"><span class="header-section-number">9.4</span> Paso 1: Preparacion del Entorno de Pruebas</a>
   <ul class="collapse">
-  <li><a href="#objetivo-del-laboratorio" id="toc-objetivo-del-laboratorio" class="nav-link" data-scroll-target="#objetivo-del-laboratorio"><span class="header-section-number">10.1</span> Objetivo del Laboratorio</a></li>
-  <li><a href="#requisitos-previos" id="toc-requisitos-previos" class="nav-link" data-scroll-target="#requisitos-previos"><span class="header-section-number">10.2</span> Requisitos Previos</a></li>
-  <li><a href="#duracion" id="toc-duracion" class="nav-link" data-scroll-target="#duracion"><span class="header-section-number">10.3</span> Duracion</a></li>
-  <li><a href="#paso-1-preparacion-del-entorno-de-pruebas" id="toc-paso-1-preparacion-del-entorno-de-pruebas" class="nav-link" data-scroll-target="#paso-1-preparacion-del-entorno-de-pruebas"><span class="header-section-number">10.4</span> Paso 1: Preparacion del Entorno de Pruebas</a>
-  <ul class="collapse">
-  <li><a href="#arquitectura-de-red-para-testing" id="toc-arquitectura-de-red-para-testing" class="nav-link" data-scroll-target="#arquitectura-de-red-para-testing"><span class="header-section-number">10.4.1</span> 1.1 Arquitectura de Red para Testing</a></li>
-  <li><a href="#herramientas-dered-y-seguridad" id="toc-herramientas-dered-y-seguridad" class="nav-link" data-scroll-target="#herramientas-dered-y-seguridad"><span class="header-section-number">10.4.2</span> 1.2 Herramientas deRed y Seguridad</a></li>
+  <li><a href="#arquitectura-de-red-para-testing" id="toc-arquitectura-de-red-para-testing" class="nav-link" data-scroll-target="#arquitectura-de-red-para-testing"><span class="header-section-number">9.4.1</span> 1.1 Arquitectura de Red para Testing</a></li>
+  <li><a href="#herramientas-dered-y-seguridad" id="toc-herramientas-dered-y-seguridad" class="nav-link" data-scroll-target="#herramientas-dered-y-seguridad"><span class="header-section-number">9.4.2</span> 1.2 Herramientas deRed y Seguridad</a></li>
   </ul></li>
-  <li><a href="#paso-2-analisis-profundo-de-vulnerabilidades-openclaw" id="toc-paso-2-analisis-profundo-de-vulnerabilidades-openclaw" class="nav-link" data-scroll-target="#paso-2-analisis-profundo-de-vulnerabilidades-openclaw"><span class="header-section-number">10.5</span> Paso 2: Analisis Profundo de Vulnerabilidades OpenClaw</a>
+  <li><a href="#paso-2-analisis-profundo-de-vulnerabilidades-openclaw" id="toc-paso-2-analisis-profundo-de-vulnerabilidades-openclaw" class="nav-link" data-scroll-target="#paso-2-analisis-profundo-de-vulnerabilidades-openclaw"><span class="header-section-number">9.5</span> Paso 2: Analisis Profundo de Vulnerabilidades OpenClaw</a>
   <ul class="collapse">
-  <li><a href="#anatomia-de-cve-2026-41371-escalacion-de-privilegios" id="toc-anatomia-de-cve-2026-41371-escalacion-de-privilegios" class="nav-link" data-scroll-target="#anatomia-de-cve-2026-41371-escalacion-de-privilegios"><span class="header-section-number">10.5.1</span> 2.1 Anatomia de CVE-2026-41371 (Escalacion de Privilegios)</a></li>
-  <li><a href="#cve-2026-42434-sandbox-escape" id="toc-cve-2026-42434-sandbox-escape" class="nav-link" data-scroll-target="#cve-2026-42434-sandbox-escape"><span class="header-section-number">10.5.2</span> 2.2 CVE-2026-42434 (Sandbox Escape)</a></li>
-  <li><a href="#cve-2026-25253-websocket-origin-bypass" id="toc-cve-2026-25253-websocket-origin-bypass" class="nav-link" data-scroll-target="#cve-2026-25253-websocket-origin-bypass"><span class="header-section-number">10.5.3</span> 2.3 CVE-2026-25253 (WebSocket Origin Bypass)</a></li>
+  <li><a href="#anatomia-de-cve-2026-41371-escalacion-de-privilegios" id="toc-anatomia-de-cve-2026-41371-escalacion-de-privilegios" class="nav-link" data-scroll-target="#anatomia-de-cve-2026-41371-escalacion-de-privilegios"><span class="header-section-number">9.5.1</span> 2.1 Anatomia de CVE-2026-41371 (Escalacion de Privilegios)</a></li>
+  <li><a href="#cve-2026-42434-sandbox-escape" id="toc-cve-2026-42434-sandbox-escape" class="nav-link" data-scroll-target="#cve-2026-42434-sandbox-escape"><span class="header-section-number">9.5.2</span> 2.2 CVE-2026-42434 (Sandbox Escape)</a></li>
+  <li><a href="#cve-2026-25253-websocket-origin-bypass" id="toc-cve-2026-25253-websocket-origin-bypass" class="nav-link" data-scroll-target="#cve-2026-25253-websocket-origin-bypass"><span class="header-section-number">9.5.3</span> 2.3 CVE-2026-25253 (WebSocket Origin Bypass)</a></li>
   </ul></li>
-  <li><a href="#paso-3-defence-in-depth-para-agentes-ia" id="toc-paso-3-defence-in-depth-para-agentes-ia" class="nav-link" data-scroll-target="#paso-3-defence-in-depth-para-agentes-ia"><span class="header-section-number">10.6</span> Paso 3: Defence-in-Depth para Agentes IA</a>
+  <li><a href="#paso-3-defence-in-depth-para-agentes-ia" id="toc-paso-3-defence-in-depth-para-agentes-ia" class="nav-link" data-scroll-target="#paso-3-defence-in-depth-para-agentes-ia"><span class="header-section-number">9.6</span> Paso 3: Defence-in-Depth para Agentes IA</a>
   <ul class="collapse">
-  <li><a href="#arquitectura-de-seguridad" id="toc-arquitectura-de-seguridad" class="nav-link" data-scroll-target="#arquitectura-de-seguridad"><span class="header-section-number">10.6.1</span> 3.1 Arquitectura de Seguridad</a></li>
-  <li><a href="#configuracion-de-contenedor-seguro" id="toc-configuracion-de-contenedor-seguro" class="nav-link" data-scroll-target="#configuracion-de-contenedor-seguro"><span class="header-section-number">10.6.2</span> 3.2 Configuracion de Contenedor Seguro</a></li>
-  <li><a href="#escaneo-manual-de-vulnerabilidades" id="toc-escaneo-manual-de-vulnerabilidades" class="nav-link" data-scroll-target="#escaneo-manual-de-vulnerabilidades"><span class="header-section-number">10.6.3</span> 3.3 Escaneo Manual de Vulnerabilidades</a></li>
+  <li><a href="#arquitectura-de-seguridad" id="toc-arquitectura-de-seguridad" class="nav-link" data-scroll-target="#arquitectura-de-seguridad"><span class="header-section-number">9.6.1</span> 3.1 Arquitectura de Seguridad</a></li>
+  <li><a href="#configuracion-de-contenedor-seguro" id="toc-configuracion-de-contenedor-seguro" class="nav-link" data-scroll-target="#configuracion-de-contenedor-seguro"><span class="header-section-number">9.6.2</span> 3.2 Configuracion de Contenedor Seguro</a></li>
+  <li><a href="#escaneo-manual-de-vulnerabilidades" id="toc-escaneo-manual-de-vulnerabilidades" class="nav-link" data-scroll-target="#escaneo-manual-de-vulnerabilidades"><span class="header-section-number">9.6.3</span> 3.3 Escaneo Manual de Vulnerabilidades</a></li>
   </ul></li>
-  <li><a href="#paso-4-configuracion-de-vulnerability-scanner-openvas" id="toc-paso-4-configuracion-de-vulnerability-scanner-openvas" class="nav-link" data-scroll-target="#paso-4-configuracion-de-vulnerability-scanner-openvas"><span class="header-section-number">10.7</span> Paso 4: Configuracion de Vulnerability Scanner (OpenVAS)</a>
+  <li><a href="#paso-4-configuracion-de-vulnerability-scanner-openvas" id="toc-paso-4-configuracion-de-vulnerability-scanner-openvas" class="nav-link" data-scroll-target="#paso-4-configuracion-de-vulnerability-scanner-openvas"><span class="header-section-number">9.7</span> Paso 4: Configuracion de Vulnerability Scanner (OpenVAS)</a>
   <ul class="collapse">
-  <li><a href="#instalacion-paso-a-paso" id="toc-instalacion-paso-a-paso" class="nav-link" data-scroll-target="#instalacion-paso-a-paso"><span class="header-section-number">10.7.1</span> 4.1 Instalacion Paso a Paso</a></li>
-  <li><a href="#configuracion-de-policy-de-escaneo" id="toc-configuracion-de-policy-de-escaneo" class="nav-link" data-scroll-target="#configuracion-de-policy-de-escaneo"><span class="header-section-number">10.7.2</span> 4.2 Configuracion de Policy de Escaneo</a></li>
+  <li><a href="#instalacion-paso-a-paso" id="toc-instalacion-paso-a-paso" class="nav-link" data-scroll-target="#instalacion-paso-a-paso"><span class="header-section-number">9.7.1</span> 4.1 Instalacion Paso a Paso</a></li>
+  <li><a href="#configuracion-de-policy-de-escaneo" id="toc-configuracion-de-policy-de-escaneo" class="nav-link" data-scroll-target="#configuracion-de-policy-de-escaneo"><span class="header-section-number">9.7.2</span> 4.2 Configuracion de Policy de Escaneo</a></li>
   </ul></li>
-  <li><a href="#paso-5-siem-para-monitoreo-de-agentes-ia" id="toc-paso-5-siem-para-monitoreo-de-agentes-ia" class="nav-link" data-scroll-target="#paso-5-siem-para-monitoreo-de-agentes-ia"><span class="header-section-number">10.8</span> Paso 5: SIEM para Monitoreo de Agentes IA</a>
+  <li><a href="#paso-5-siem-para-monitoreo-de-agentes-ia" id="toc-paso-5-siem-para-monitoreo-de-agentes-ia" class="nav-link" data-scroll-target="#paso-5-siem-para-monitoreo-de-agentes-ia"><span class="header-section-number">9.8</span> Paso 5: SIEM para Monitoreo de Agentes IA</a>
   <ul class="collapse">
-  <li><a href="#instalacion-de-wazuh" id="toc-instalacion-de-wazuh" class="nav-link" data-scroll-target="#instalacion-de-wazuh"><span class="header-section-number">10.8.1</span> 5.1 Instalacion de Wazuh</a></li>
-  <li><a href="#dashboard-de-monitoreo-manual" id="toc-dashboard-de-monitoreo-manual" class="nav-link" data-scroll-target="#dashboard-de-monitoreo-manual"><span class="header-section-number">10.8.2</span> 5.2 Dashboard de Monitoreo Manual</a></li>
+  <li><a href="#instalacion-de-wazuh" id="toc-instalacion-de-wazuh" class="nav-link" data-scroll-target="#instalacion-de-wazuh"><span class="header-section-number">9.8.1</span> 5.1 Instalacion de Wazuh</a></li>
+  <li><a href="#dashboard-de-monitoreo-manual" id="toc-dashboard-de-monitoreo-manual" class="nav-link" data-scroll-target="#dashboard-de-monitoreo-manual"><span class="header-section-number">9.8.2</span> 5.2 Dashboard de Monitoreo Manual</a></li>
   </ul></li>
-  <li><a href="#paso-6-threat-hunting-para-agentes-ia" id="toc-paso-6-threat-hunting-para-agentes-ia" class="nav-link" data-scroll-target="#paso-6-threat-hunting-para-agentes-ia"><span class="header-section-number">10.9</span> Paso 6: Threat Hunting para Agentes IA</a>
+  <li><a href="#paso-6-threat-hunting-para-agentes-ia" id="toc-paso-6-threat-hunting-para-agentes-ia" class="nav-link" data-scroll-target="#paso-6-threat-hunting-para-agentes-ia"><span class="header-section-number">9.9</span> Paso 6: Threat Hunting para Agentes IA</a>
   <ul class="collapse">
-  <li><a href="#hypothesis-based-hunting-manual" id="toc-hypothesis-based-hunting-manual" class="nav-link" data-scroll-target="#hypothesis-based-hunting-manual"><span class="header-section-number">10.9.1</span> 6.1 Hypothesis-Based Hunting Manual</a></li>
-  <li><a href="#configuracion-de-policy" id="toc-configuracion-de-policy" class="nav-link" data-scroll-target="#configuracion-de-policy"><span class="header-section-number">10.9.2</span> 4.2 Configuracion de Policy</a></li>
+  <li><a href="#hypothesis-based-hunting-manual" id="toc-hypothesis-based-hunting-manual" class="nav-link" data-scroll-target="#hypothesis-based-hunting-manual"><span class="header-section-number">9.9.1</span> 6.1 Hypothesis-Based Hunting Manual</a></li>
+  <li><a href="#configuracion-de-policy" id="toc-configuracion-de-policy" class="nav-link" data-scroll-target="#configuracion-de-policy"><span class="header-section-number">9.9.2</span> 4.2 Configuracion de Policy</a></li>
   </ul></li>
-  <li><a href="#paso-5-siem-para-monitoreo-de-agentes-ia-1" id="toc-paso-5-siem-para-monitoreo-de-agentes-ia-1" class="nav-link" data-scroll-target="#paso-5-siem-para-monitoreo-de-agentes-ia-1"><span class="header-section-number">10.10</span> Paso 5: SIEM para Monitoreo de Agentes IA</a>
+  <li><a href="#paso-5-siem-para-monitoreo-de-agentes-ia-1" id="toc-paso-5-siem-para-monitoreo-de-agentes-ia-1" class="nav-link" data-scroll-target="#paso-5-siem-para-monitoreo-de-agentes-ia-1"><span class="header-section-number">9.10</span> Paso 5: SIEM para Monitoreo de Agentes IA</a>
   <ul class="collapse">
-  <li><a href="#wazuh-installation" id="toc-wazuh-installation" class="nav-link" data-scroll-target="#wazuh-installation"><span class="header-section-number">10.10.1</span> 5.1 Wazuh Installation</a></li>
-  <li><a href="#dashboard-de-monitoreo" id="toc-dashboard-de-monitoreo" class="nav-link" data-scroll-target="#dashboard-de-monitoreo"><span class="header-section-number">10.10.2</span> 5.2 Dashboard de Monitoreo</a></li>
+  <li><a href="#wazuh-installation" id="toc-wazuh-installation" class="nav-link" data-scroll-target="#wazuh-installation"><span class="header-section-number">9.10.1</span> 5.1 Wazuh Installation</a></li>
+  <li><a href="#dashboard-de-monitoreo" id="toc-dashboard-de-monitoreo" class="nav-link" data-scroll-target="#dashboard-de-monitoreo"><span class="header-section-number">9.10.2</span> 5.2 Dashboard de Monitoreo</a></li>
   </ul></li>
-  <li><a href="#paso-6-threat-hunting-para-agentes-ia-1" id="toc-paso-6-threat-hunting-para-agentes-ia-1" class="nav-link" data-scroll-target="#paso-6-threat-hunting-para-agentes-ia-1"><span class="header-section-number">10.11</span> Paso 6: Threat Hunting para Agentes IA</a>
+  <li><a href="#paso-6-threat-hunting-para-agentes-ia-1" id="toc-paso-6-threat-hunting-para-agentes-ia-1" class="nav-link" data-scroll-target="#paso-6-threat-hunting-para-agentes-ia-1"><span class="header-section-number">9.11</span> Paso 6: Threat Hunting para Agentes IA</a>
   <ul class="collapse">
-  <li><a href="#hypothesis-based-hunting" id="toc-hypothesis-based-hunting" class="nav-link" data-scroll-target="#hypothesis-based-hunting"><span class="header-section-number">10.11.1</span> 6.1 Hypothesis-Based Hunting</a></li>
+  <li><a href="#hypothesis-based-hunting" id="toc-hypothesis-based-hunting" class="nav-link" data-scroll-target="#hypothesis-based-hunting"><span class="header-section-number">9.11.1</span> 6.1 Hypothesis-Based Hunting</a></li>
   </ul></li>
-  <li><a href="#ejercicio-final-vulnerability-assessment-completo" id="toc-ejercicio-final-vulnerability-assessment-completo" class="nav-link" data-scroll-target="#ejercicio-final-vulnerability-assessment-completo"><span class="header-section-number">10.12</span> Ejercicio Final: Vulnerability Assessment Completo</a>
+  <li><a href="#ejercicio-final-vulnerability-assessment-completo" id="toc-ejercicio-final-vulnerability-assessment-completo" class="nav-link" data-scroll-target="#ejercicio-final-vulnerability-assessment-completo"><span class="header-section-number">9.12</span> Ejercicio Final: Vulnerability Assessment Completo</a>
   <ul class="collapse">
-  <li><a href="#entregables" id="toc-entregables" class="nav-link" data-scroll-target="#entregables"><span class="header-section-number">10.12.1</span> Entregables</a></li>
-  <li><a href="#criterios-de-evaluacion-nivel-medio-alto" id="toc-criterios-de-evaluacion-nivel-medio-alto" class="nav-link" data-scroll-target="#criterios-de-evaluacion-nivel-medio-alto"><span class="header-section-number">10.12.2</span> Criterios de Evaluacion (Nivel Medio-Alto)</a></li>
+  <li><a href="#entregables" id="toc-entregables" class="nav-link" data-scroll-target="#entregables"><span class="header-section-number">9.12.1</span> Entregables</a></li>
+  <li><a href="#criterios-de-evaluacion-nivel-medio-alto" id="toc-criterios-de-evaluacion-nivel-medio-alto" class="nav-link" data-scroll-target="#criterios-de-evaluacion-nivel-medio-alto"><span class="header-section-number">9.12.2</span> Criterios de Evaluacion (Nivel Medio-Alto)</a></li>
   </ul></li>
-  <li><a href="#recursos-adicionales" id="toc-recursos-adicionales" class="nav-link" data-scroll-target="#recursos-adicionales"><span class="header-section-number">10.13</span> Recursos Adicionales</a>
+  <li><a href="#recursos-adicionales" id="toc-recursos-adicionales" class="nav-link" data-scroll-target="#recursos-adicionales"><span class="header-section-number">9.13</span> Recursos Adicionales</a>
   <ul class="collapse">
-  <li><a href="#documentacion-oficial" id="toc-documentacion-oficial" class="nav-link" data-scroll-target="#documentacion-oficial"><span class="header-section-number">10.13.1</span> Documentacion Oficial</a></li>
-  <li><a href="#framesworks" id="toc-framesworks" class="nav-link" data-scroll-target="#framesworks"><span class="header-section-number">10.13.2</span> Framesworks</a></li>
-  </ul></li>
+  <li><a href="#documentacion-oficial" id="toc-documentacion-oficial" class="nav-link" data-scroll-target="#documentacion-oficial"><span class="header-section-number">9.13.1</span> Documentacion Oficial</a></li>
+  <li><a href="#framesworks" id="toc-framesworks" class="nav-link" data-scroll-target="#framesworks"><span class="header-section-number">9.13.2</span> Framesworks</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/statick88/course-of-cybersecurity/edit/main/labs/lab-anexo-openclaw-security.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/statick88/course-of-cybersecurity/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -677,10 +674,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="lab-anexo-seguridad-avanzada-de-agentes-ia-y-vulnerability-assessment" class="level1" data-number="10">
-<h1 data-number="10"><span class="header-section-number">10</span> Lab Anexo: Seguridad Avanzada de Agentes IA y Vulnerability Assessment</h1>
-<section id="objetivo-del-laboratorio" class="level2" data-number="10.1">
-<h2 data-number="10.1" class="anchored" data-anchor-id="objetivo-del-laboratorio"><span class="header-section-number">10.1</span> Objetivo del Laboratorio</h2>
+<section id="objetivo-del-laboratorio" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="objetivo-del-laboratorio"><span class="header-section-number">9.1</span> Objetivo del Laboratorio</h2>
 <p>En este laboratorio avanzado, vas a <strong>analizar y mitigar vulnerabilidades</strong> en agentes IA y sistemas de vulnerability scanning. Este ejercicio te permitira:</p>
 <ul>
 <li>Analizar CVE de agentes IA en profundidad</li>
@@ -708,8 +703,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="requisitos-previos" class="level2" data-number="10.2">
-<h2 data-number="10.2" class="anchored" data-anchor-id="requisitos-previos"><span class="header-section-number">10.2</span> Requisitos Previos</h2>
+<section id="requisitos-previos" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="requisitos-previos"><span class="header-section-number">9.2</span> Requisitos Previos</h2>
 <ul>
 <li>Conocimiento basico de redes (TCP/IP, puertos)</li>
 <li>Experiencia con linea de comandos Linux</li>
@@ -717,8 +712,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Fundamentos de criptografia (TLS, API keys)</li>
 </ul>
 </section>
-<section id="duracion" class="level2" data-number="10.3">
-<h2 data-number="10.3" class="anchored" data-anchor-id="duracion"><span class="header-section-number">10.3</span> Duracion</h2>
+<section id="duracion" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="duracion"><span class="header-section-number">9.3</span> Duracion</h2>
 <ul>
 <li>Tiempo estimado: 3 horas</li>
 <li>Tipo: Individual</li>
@@ -726,10 +721,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <hr>
 </section>
-<section id="paso-1-preparacion-del-entorno-de-pruebas" class="level2" data-number="10.4">
-<h2 data-number="10.4" class="anchored" data-anchor-id="paso-1-preparacion-del-entorno-de-pruebas"><span class="header-section-number">10.4</span> Paso 1: Preparacion del Entorno de Pruebas</h2>
-<section id="arquitectura-de-red-para-testing" class="level3" data-number="10.4.1">
-<h3 data-number="10.4.1" class="anchored" data-anchor-id="arquitectura-de-red-para-testing"><span class="header-section-number">10.4.1</span> 1.1 Arquitectura de Red para Testing</h3>
+<section id="paso-1-preparacion-del-entorno-de-pruebas" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="paso-1-preparacion-del-entorno-de-pruebas"><span class="header-section-number">9.4</span> Paso 1: Preparacion del Entorno de Pruebas</h2>
+<section id="arquitectura-de-red-para-testing" class="level3" data-number="9.4.1">
+<h3 data-number="9.4.1" class="anchored" data-anchor-id="arquitectura-de-red-para-testing"><span class="header-section-number">9.4.1</span> 1.1 Arquitectura de Red para Testing</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># setup_test_environment.sh - Configuracion completa</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -762,8 +757,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Entorno configurado exitosamente"</span></span>
 <span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-la</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="herramientas-dered-y-seguridad" class="level3" data-number="10.4.2">
-<h3 data-number="10.4.2" class="anchored" data-anchor-id="herramientas-dered-y-seguridad"><span class="header-section-number">10.4.2</span> 1.2 Herramientas deRed y Seguridad</h3>
+<section id="herramientas-dered-y-seguridad" class="level3" data-number="9.4.2">
+<h3 data-number="9.4.2" class="anchored" data-anchor-id="herramientas-dered-y-seguridad"><span class="header-section-number">9.4.2</span> 1.2 Herramientas deRed y Seguridad</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Instalar herramientas necesarias</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># install_tools.sh</span></span>
@@ -803,10 +798,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <hr>
 </section>
 </section>
-<section id="paso-2-analisis-profundo-de-vulnerabilidades-openclaw" class="level2" data-number="10.5">
-<h2 data-number="10.5" class="anchored" data-anchor-id="paso-2-analisis-profundo-de-vulnerabilidades-openclaw"><span class="header-section-number">10.5</span> Paso 2: Analisis Profundo de Vulnerabilidades OpenClaw</h2>
-<section id="anatomia-de-cve-2026-41371-escalacion-de-privilegios" class="level3" data-number="10.5.1">
-<h3 data-number="10.5.1" class="anchored" data-anchor-id="anatomia-de-cve-2026-41371-escalacion-de-privilegios"><span class="header-section-number">10.5.1</span> 2.1 Anatomia de CVE-2026-41371 (Escalacion de Privilegios)</h3>
+<section id="paso-2-analisis-profundo-de-vulnerabilidades-openclaw" class="level2" data-number="9.5">
+<h2 data-number="9.5" class="anchored" data-anchor-id="paso-2-analisis-profundo-de-vulnerabilidades-openclaw"><span class="header-section-number">9.5</span> Paso 2: Analisis Profundo de Vulnerabilidades OpenClaw</h2>
+<section id="anatomia-de-cve-2026-41371-escalacion-de-privilegios" class="level3" data-number="9.5.1">
+<h3 data-number="9.5.1" class="anchored" data-anchor-id="anatomia-de-cve-2026-41371-escalacion-de-privilegios"><span class="header-section-number">9.5.1</span> 2.1 Anatomia de CVE-2026-41371 (Escalacion de Privilegios)</h3>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -866,8 +861,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Esperado</strong>: Si recibes una respuesta con el usuario del sistema, la vulnerabilidad esta confirmada.</p>
 </section>
-<section id="cve-2026-42434-sandbox-escape" class="level3" data-number="10.5.2">
-<h3 data-number="10.5.2" class="anchored" data-anchor-id="cve-2026-42434-sandbox-escape"><span class="header-section-number">10.5.2</span> 2.2 CVE-2026-42434 (Sandbox Escape)</h3>
+<section id="cve-2026-42434-sandbox-escape" class="level3" data-number="9.5.2">
+<h3 data-number="9.5.2" class="anchored" data-anchor-id="cve-2026-42434-sandbox-escape"><span class="header-section-number">9.5.2</span> 2.2 CVE-2026-42434 (Sandbox Escape)</h3>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -907,8 +902,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>No correr como root</li>
 </ul>
 </section>
-<section id="cve-2026-25253-websocket-origin-bypass" class="level3" data-number="10.5.3">
-<h3 data-number="10.5.3" class="anchored" data-anchor-id="cve-2026-25253-websocket-origin-bypass"><span class="header-section-number">10.5.3</span> 2.3 CVE-2026-25253 (WebSocket Origin Bypass)</h3>
+<section id="cve-2026-25253-websocket-origin-bypass" class="level3" data-number="9.5.3">
+<h3 data-number="9.5.3" class="anchored" data-anchor-id="cve-2026-25253-websocket-origin-bypass"><span class="header-section-number">9.5.3</span> 2.3 CVE-2026-25253 (WebSocket Origin Bypass)</h3>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -950,10 +945,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <hr>
 </section>
 </section>
-<section id="paso-3-defence-in-depth-para-agentes-ia" class="level2" data-number="10.6">
-<h2 data-number="10.6" class="anchored" data-anchor-id="paso-3-defence-in-depth-para-agentes-ia"><span class="header-section-number">10.6</span> Paso 3: Defence-in-Depth para Agentes IA</h2>
-<section id="arquitectura-de-seguridad" class="level3" data-number="10.6.1">
-<h3 data-number="10.6.1" class="anchored" data-anchor-id="arquitectura-de-seguridad"><span class="header-section-number">10.6.1</span> 3.1 Arquitectura de Seguridad</h3>
+<section id="paso-3-defence-in-depth-para-agentes-ia" class="level2" data-number="9.6">
+<h2 data-number="9.6" class="anchored" data-anchor-id="paso-3-defence-in-depth-para-agentes-ia"><span class="header-section-number">9.6</span> Paso 3: Defence-in-Depth para Agentes IA</h2>
+<section id="arquitectura-de-seguridad" class="level3" data-number="9.6.1">
+<h3 data-number="9.6.1" class="anchored" data-anchor-id="arquitectura-de-seguridad"><span class="header-section-number">9.6.1</span> 3.1 Arquitectura de Seguridad</h3>
 <p><strong>Capas de Defense-in-Depth</strong></p>
 <table class="caption-top table">
 <colgroup>
@@ -997,8 +992,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </section>
-<section id="configuracion-de-contenedor-seguro" class="level3" data-number="10.6.2">
-<h3 data-number="10.6.2" class="anchored" data-anchor-id="configuracion-de-contenedor-seguro"><span class="header-section-number">10.6.2</span> 3.2 Configuracion de Contenedor Seguro</h3>
+<section id="configuracion-de-contenedor-seguro" class="level3" data-number="9.6.2">
+<h3 data-number="9.6.2" class="anchored" data-anchor-id="configuracion-de-contenedor-seguro"><span class="header-section-number">9.6.2</span> 3.2 Configuracion de Contenedor Seguro</h3>
 <p><strong>Paso 1</strong>: Crea un Dockerfile con hardening basico</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/cybersec-labs/openclaw-secure</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/cybersec-labs/openclaw-secure</span>
@@ -1025,8 +1020,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Paso 3</strong>: Construye la imagen segura</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> openclaw:secure .</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="escaneo-manual-de-vulnerabilidades" class="level3" data-number="10.6.3">
-<h3 data-number="10.6.3" class="anchored" data-anchor-id="escaneo-manual-de-vulnerabilidades"><span class="header-section-number">10.6.3</span> 3.3 Escaneo Manual de Vulnerabilidades</h3>
+<section id="escaneo-manual-de-vulnerabilidades" class="level3" data-number="9.6.3">
+<h3 data-number="9.6.3" class="anchored" data-anchor-id="escaneo-manual-de-vulnerabilidades"><span class="header-section-number">9.6.3</span> 3.3 Escaneo Manual de Vulnerabilidades</h3>
 <p><strong>Paso 1</strong>: Escanea puertos comunes manualmente</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Escanea puertos comunes de OpenClaw</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nmap</span> <span class="at">-p</span> 8080,8443,9390,9391 localhost</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1047,10 +1042,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <hr>
 </section>
 </section>
-<section id="paso-4-configuracion-de-vulnerability-scanner-openvas" class="level2" data-number="10.7">
-<h2 data-number="10.7" class="anchored" data-anchor-id="paso-4-configuracion-de-vulnerability-scanner-openvas"><span class="header-section-number">10.7</span> Paso 4: Configuracion de Vulnerability Scanner (OpenVAS)</h2>
-<section id="instalacion-paso-a-paso" class="level3" data-number="10.7.1">
-<h3 data-number="10.7.1" class="anchored" data-anchor-id="instalacion-paso-a-paso"><span class="header-section-number">10.7.1</span> 4.1 Instalacion Paso a Paso</h3>
+<section id="paso-4-configuracion-de-vulnerability-scanner-openvas" class="level2" data-number="9.7">
+<h2 data-number="9.7" class="anchored" data-anchor-id="paso-4-configuracion-de-vulnerability-scanner-openvas"><span class="header-section-number">9.7</span> Paso 4: Configuracion de Vulnerability Scanner (OpenVAS)</h2>
+<section id="instalacion-paso-a-paso" class="level3" data-number="9.7.1">
+<h3 data-number="9.7.1" class="anchored" data-anchor-id="instalacion-paso-a-paso"><span class="header-section-number">9.7.1</span> 4.1 Instalacion Paso a Paso</h3>
 <p><strong>Paso 1</strong>: Pull la imagen de OpenVAS</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> pull atomicorp/openvas:latest</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Paso 2</strong>: Crea una red dedicada</p>
@@ -1080,8 +1075,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>IMPORTANTE</strong>: Cambia la password despues del primer login.</p>
 </blockquote>
 </section>
-<section id="configuracion-de-policy-de-escaneo" class="level3" data-number="10.7.2">
-<h3 data-number="10.7.2" class="anchored" data-anchor-id="configuracion-de-policy-de-escaneo"><span class="header-section-number">10.7.2</span> 4.2 Configuracion de Policy de Escaneo</h3>
+<section id="configuracion-de-policy-de-escaneo" class="level3" data-number="9.7.2">
+<h3 data-number="9.7.2" class="anchored" data-anchor-id="configuracion-de-policy-de-escaneo"><span class="header-section-number">9.7.2</span> 4.2 Configuracion de Policy de Escaneo</h3>
 <p><strong>Paso 1</strong>: Configura un escaneo semanal via CLI</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">omp</span> <span class="at">-h</span> localhost <span class="at">-u</span> admin <span class="at">-w</span> ChangeMe123! <span class="dt">\</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">--xml</span><span class="op">=</span><span class="st">'&lt;create_task&gt;&lt;name&gt;Weekly Scan&lt;/name&gt;&lt;target&gt;192.168.1.0/24&lt;/target&gt;&lt;/create_task&gt;'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1119,10 +1114,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <hr>
 </section>
 </section>
-<section id="paso-5-siem-para-monitoreo-de-agentes-ia" class="level2" data-number="10.8">
-<h2 data-number="10.8" class="anchored" data-anchor-id="paso-5-siem-para-monitoreo-de-agentes-ia"><span class="header-section-number">10.8</span> Paso 5: SIEM para Monitoreo de Agentes IA</h2>
-<section id="instalacion-de-wazuh" class="level3" data-number="10.8.1">
-<h3 data-number="10.8.1" class="anchored" data-anchor-id="instalacion-de-wazuh"><span class="header-section-number">10.8.1</span> 5.1 Instalacion de Wazuh</h3>
+<section id="paso-5-siem-para-monitoreo-de-agentes-ia" class="level2" data-number="9.8">
+<h2 data-number="9.8" class="anchored" data-anchor-id="paso-5-siem-para-monitoreo-de-agentes-ia"><span class="header-section-number">9.8</span> Paso 5: SIEM para Monitoreo de Agentes IA</h2>
+<section id="instalacion-de-wazuh" class="level3" data-number="9.8.1">
+<h3 data-number="9.8.1" class="anchored" data-anchor-id="instalacion-de-wazuh"><span class="header-section-number">9.8.1</span> 5.1 Instalacion de Wazuh</h3>
 <p><strong>Paso 1</strong>: Pull las imagenes de Wazuh</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> pull wazuh/wazuh-indexer</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> pull wazuh/wazuh-dashboard</span>
@@ -1130,8 +1125,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Paso 2</strong>: Inicia los servicios (configuracion completa en docs oficiales de Wazuh)</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Wazuh listo en: https://localhost</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="dashboard-de-monitoreo-manual" class="level3" data-number="10.8.2">
-<h3 data-number="10.8.2" class="anchored" data-anchor-id="dashboard-de-monitoreo-manual"><span class="header-section-number">10.8.2</span> 5.2 Dashboard de Monitoreo Manual</h3>
+<section id="dashboard-de-monitoreo-manual" class="level3" data-number="9.8.2">
+<h3 data-number="9.8.2" class="anchored" data-anchor-id="dashboard-de-monitoreo-manual"><span class="header-section-number">9.8.2</span> 5.2 Dashboard de Monitoreo Manual</h3>
 <p><strong>Paso 1</strong>: Crea un script de dashboard basico</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nano</span> agent_dashboard.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Paso 2</strong>: Agrega el siguiente contenido</p>
@@ -1166,10 +1161,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <hr>
 </section>
 </section>
-<section id="paso-6-threat-hunting-para-agentes-ia" class="level2" data-number="10.9">
-<h2 data-number="10.9" class="anchored" data-anchor-id="paso-6-threat-hunting-para-agentes-ia"><span class="header-section-number">10.9</span> Paso 6: Threat Hunting para Agentes IA</h2>
-<section id="hypothesis-based-hunting-manual" class="level3" data-number="10.9.1">
-<h3 data-number="10.9.1" class="anchored" data-anchor-id="hypothesis-based-hunting-manual"><span class="header-section-number">10.9.1</span> 6.1 Hypothesis-Based Hunting Manual</h3>
+<section id="paso-6-threat-hunting-para-agentes-ia" class="level2" data-number="9.9">
+<h2 data-number="9.9" class="anchored" data-anchor-id="paso-6-threat-hunting-para-agentes-ia"><span class="header-section-number">9.9</span> Paso 6: Threat Hunting para Agentes IA</h2>
+<section id="hypothesis-based-hunting-manual" class="level3" data-number="9.9.1">
+<h3 data-number="9.9.1" class="anchored" data-anchor-id="hypothesis-based-hunting-manual"><span class="header-section-number">9.9.1</span> 6.1 Hypothesis-Based Hunting Manual</h3>
 <p><strong>Paso 1</strong>: Selecciona una hipotesis de investigacion</p>
 <table class="caption-top table">
 <colgroup>
@@ -1216,8 +1211,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Paso 3</strong>: Documenta hallazgos en el reporte de hunting</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nano</span> threat_hunting_report.md</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="configuracion-de-policy" class="level3" data-number="10.9.2">
-<h3 data-number="10.9.2" class="anchored" data-anchor-id="configuracion-de-policy"><span class="header-section-number">10.9.2</span> 4.2 Configuracion de Policy</h3>
+<section id="configuracion-de-policy" class="level3" data-number="9.9.2">
+<h3 data-number="9.9.2" class="anchored" data-anchor-id="configuracion-de-policy"><span class="header-section-number">9.9.2</span> 4.2 Configuracion de Policy</h3>
 <p><strong>Configuracion de Escaneo OpenVAS</strong></p>
 <table class="caption-top table">
 <thead>
@@ -1259,10 +1254,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <hr>
 </section>
 </section>
-<section id="paso-5-siem-para-monitoreo-de-agentes-ia-1" class="level2" data-number="10.10">
-<h2 data-number="10.10" class="anchored" data-anchor-id="paso-5-siem-para-monitoreo-de-agentes-ia-1"><span class="header-section-number">10.10</span> Paso 5: SIEM para Monitoreo de Agentes IA</h2>
-<section id="wazuh-installation" class="level3" data-number="10.10.1">
-<h3 data-number="10.10.1" class="anchored" data-anchor-id="wazuh-installation"><span class="header-section-number">10.10.1</span> 5.1 Wazuh Installation</h3>
+<section id="paso-5-siem-para-monitoreo-de-agentes-ia-1" class="level2" data-number="9.10">
+<h2 data-number="9.10" class="anchored" data-anchor-id="paso-5-siem-para-monitoreo-de-agentes-ia-1"><span class="header-section-number">9.10</span> Paso 5: SIEM para Monitoreo de Agentes IA</h2>
+<section id="wazuh-installation" class="level3" data-number="9.10.1">
+<h3 data-number="9.10.1" class="anchored" data-anchor-id="wazuh-installation"><span class="header-section-number">9.10.1</span> 5.1 Wazuh Installation</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pull Wazuh Docker</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> pull wazuh/wazuh-indexer</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> pull wazuh/wazuh-dashboard</span>
@@ -1271,27 +1266,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Iniciar servicios (configuracion completa en docs oficiales de Wazuh)</span></span>
 <span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Wazuh listo en: https://localhost"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="dashboard-de-monitoreo" class="level3" data-number="10.10.2">
-<h3 data-number="10.10.2" class="anchored" data-anchor-id="dashboard-de-monitoreo"><span class="header-section-number">10.10.2</span> 5.2 Dashboard de Monitoreo</h3>
+<section id="dashboard-de-monitoreo" class="level3" data-number="9.10.2">
+<h3 data-number="9.10.2" class="anchored" data-anchor-id="dashboard-de-monitoreo"><span class="header-section-number">9.10.2</span> 5.2 Dashboard de Monitoreo</h3>
 <p>El dashboard de monitoreo esta disponible en <code>scripts/openclaw/siem_dashboard.py</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> scripts/openclaw/siem_dashboard.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <hr>
 </section>
 </section>
-<section id="paso-6-threat-hunting-para-agentes-ia-1" class="level2" data-number="10.11">
-<h2 data-number="10.11" class="anchored" data-anchor-id="paso-6-threat-hunting-para-agentes-ia-1"><span class="header-section-number">10.11</span> Paso 6: Threat Hunting para Agentes IA</h2>
-<section id="hypothesis-based-hunting" class="level3" data-number="10.11.1">
-<h3 data-number="10.11.1" class="anchored" data-anchor-id="hypothesis-based-hunting"><span class="header-section-number">10.11.1</span> 6.1 Hypothesis-Based Hunting</h3>
+<section id="paso-6-threat-hunting-para-agentes-ia-1" class="level2" data-number="9.11">
+<h2 data-number="9.11" class="anchored" data-anchor-id="paso-6-threat-hunting-para-agentes-ia-1"><span class="header-section-number">9.11</span> Paso 6: Threat Hunting para Agentes IA</h2>
+<section id="hypothesis-based-hunting" class="level3" data-number="9.11.1">
+<h3 data-number="9.11.1" class="anchored" data-anchor-id="hypothesis-based-hunting"><span class="header-section-number">9.11.1</span> 6.1 Hypothesis-Based Hunting</h3>
 <p>El script de threat hunting esta disponible en <code>scripts/openclaw/threat_hunting.sh</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> +x scripts/openclaw/threat_hunting.sh</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./scripts/openclaw/threat_hunting.sh</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <hr>
 </section>
 </section>
-<section id="ejercicio-final-vulnerability-assessment-completo" class="level2" data-number="10.12">
-<h2 data-number="10.12" class="anchored" data-anchor-id="ejercicio-final-vulnerability-assessment-completo"><span class="header-section-number">10.12</span> Ejercicio Final: Vulnerability Assessment Completo</h2>
-<section id="entregables" class="level3" data-number="10.12.1">
-<h3 data-number="10.12.1" class="anchored" data-anchor-id="entregables"><span class="header-section-number">10.12.1</span> Entregables</h3>
+<section id="ejercicio-final-vulnerability-assessment-completo" class="level2" data-number="9.12">
+<h2 data-number="9.12" class="anchored" data-anchor-id="ejercicio-final-vulnerability-assessment-completo"><span class="header-section-number">9.12</span> Ejercicio Final: Vulnerability Assessment Completo</h2>
+<section id="entregables" class="level3" data-number="9.12.1">
+<h3 data-number="9.12.1" class="anchored" data-anchor-id="entregables"><span class="header-section-number">9.12.1</span> Entregables</h3>
 <ol type="1">
 <li>Reporte tecnico de vulnerabilidades (PDF)</li>
 <li>PoC de deteccion para cada CVE</li>
@@ -1300,8 +1295,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Playbook de respuesta a incidentes</li>
 </ol>
 </section>
-<section id="criterios-de-evaluacion-nivel-medio-alto" class="level3" data-number="10.12.2">
-<h3 data-number="10.12.2" class="anchored" data-anchor-id="criterios-de-evaluacion-nivel-medio-alto"><span class="header-section-number">10.12.2</span> Criterios de Evaluacion (Nivel Medio-Alto)</h3>
+<section id="criterios-de-evaluacion-nivel-medio-alto" class="level3" data-number="9.12.2">
+<h3 data-number="9.12.2" class="anchored" data-anchor-id="criterios-de-evaluacion-nivel-medio-alto"><span class="header-section-number">9.12.2</span> Criterios de Evaluacion (Nivel Medio-Alto)</h3>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -1335,10 +1330,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <hr>
 </section>
 </section>
-<section id="recursos-adicionales" class="level2" data-number="10.13">
-<h2 data-number="10.13" class="anchored" data-anchor-id="recursos-adicionales"><span class="header-section-number">10.13</span> Recursos Adicionales</h2>
-<section id="documentacion-oficial" class="level3" data-number="10.13.1">
-<h3 data-number="10.13.1" class="anchored" data-anchor-id="documentacion-oficial"><span class="header-section-number">10.13.1</span> Documentacion Oficial</h3>
+<section id="recursos-adicionales" class="level2" data-number="9.13">
+<h2 data-number="9.13" class="anchored" data-anchor-id="recursos-adicionales"><span class="header-section-number">9.13</span> Recursos Adicionales</h2>
+<section id="documentacion-oficial" class="level3" data-number="9.13.1">
+<h3 data-number="9.13.1" class="anchored" data-anchor-id="documentacion-oficial"><span class="header-section-number">9.13.1</span> Documentacion Oficial</h3>
 <ul>
 <li>OpenClaw GitHub: https://github.com/openclaw/openclaw</li>
 <li>OWASP ASI: https://genai.owasp.org</li>
@@ -1346,8 +1341,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Wazuh: https://wazuh.com</li>
 </ul>
 </section>
-<section id="framesworks" class="level3" data-number="10.13.2">
-<h3 data-number="10.13.2" class="anchored" data-anchor-id="framesworks"><span class="header-section-number">10.13.2</span> Framesworks</h3>
+<section id="framesworks" class="level3" data-number="9.13.2">
+<h3 data-number="9.13.2" class="anchored" data-anchor-id="framesworks"><span class="header-section-number">9.13.2</span> Framesworks</h3>
 <ul>
 <li>MITRE ATT&amp;CK for AI</li>
 <li>NIST AI RMF</li>
@@ -1357,7 +1352,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><em>Lab Anexo: Seguridad Avanzada Agentes IA</em> <em>Duration: 3 horas</em> <em>Level: Intermediate-Advanced</em> <em>License: CC BY-SA 4.0</em></p>
 
 
-</section>
 </section>
 </section>
 

@@ -5,7 +5,6 @@ type: "instructor"
 description: "Guía detallada para instructores del módulo 1"
 ---
 
-# Guía del Instructor: Módulo 1 - Fundamentos NIST CSF 2.0
 
 ## 📋 Overview del Módulo
 

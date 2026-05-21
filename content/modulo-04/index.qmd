@@ -5,7 +5,6 @@ type: "content"
 description: "IA como vector de ataque y defensa en ciberseguridad 2026"
 ---
 
-# Modulo 4: Inteligencia Artificial en Seguridad
 
 ## 🎯 Objetivos SMART
 

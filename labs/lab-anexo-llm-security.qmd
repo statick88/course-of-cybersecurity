@@ -5,7 +5,6 @@ type: "lab"
 description: "Practica avanzada con LLMs locales para pentesting, vulnerability analysis, threat hunting y RAG"
 ---
 
-# Lab Anexo: Local LLMs for Cybersecurity with Ollama & LM Studio
 
 ## Objetivo del Laboratorio
 
@@ -209,54 +208,6 @@ ollama list
 | Analisis general | llama3.1:8b + mistral:7b | ~9GB |
 | Code review | qwen2.5-coder:7b + deepseek-coder:6.7b | ~9GB |
 | Ensemble | Múltiples modelos simultaneos | ~12GB |
- descargar_modelo "xploiter/the-xploiter"
- descargar_modelo "xploiter/pentester"
- descargar_modelo "f0rc3ps/nu11secur1tyAI"
- descargar_modelo "ALIENTELLIGENCE/cybersecuritythreatanalysisv2"
-
-# Modelos para coding/analysis
-echo ""
-echo "[2] Modelos de analisis..."
- descargar_modelo "llama3.1:8b-instruct-q4_K_M"
- descargar_modelo "mistral:7b-instruct"
- descargar_modelo "qwen2.5:7b-instruct-q4_K_M"
- descargar_modelo "phi4:14b-chat-q4_K_M"
-
-# Listar todos
-echo ""
-echo "=== Modelos Instalados ==="
-ollama list
-```
-
-### 2.2 Comparativa y Seleccion
-
-**Matriz de Capacidades**
-
-| Modelo | Tamano | VRAM Req. | Pentest | Code Review | Threat Hunting | Malware Analysis | Costo |
-|--------|--------|-----------|---------|-------------|----------------|------------------|-------|
-| The-Xploiter | 9.2GB | 10GB | +++ | ++ | ++ | + | Alto |
-| Pentester | 7B | 8GB | +++ | +++ | + | + | Medio |
-| nu11secur1tyAI | 3.3GB | 4GB | ++ | ++ | +++ | ++ | Bajo |
-| CyberThreat | 8GB | 9GB | + | ++ | +++ | +++ | Alto |
-| Llama 3.1 8B | 4.9GB | 6GB | ++ | +++ | ++ | + | Bajo |
-| Mistral 7B | 4.1GB | 5GB | + | ++ | + | + | Bajo |
-
-**Seleccion por Objetivo**
-
-| Objetivo | Primario | Backup | Rapidez |
-|----------|----------|--------|---------|
-| **Pentesting Activo** | The-Xploiter | Pentester | Mistral |
-| **Code Review** | Llama 3.1 8B | Qwen 2.5 | Mistral |
-| **Threat Hunting** | nu11secur1tyAI | CyberThreat | Llama 3.1 |
-| **Malware Analysis** | The-Xploiter | Qwen 2.5 | — |
-
-**Configuracion por Hardware**
-
-| VRAM Disponible | Modelo Primario | Alternativa |
-|-----------------|-----------------|-------------|
-| 4GB | nu11secur1tyAI | Mistral 7B |
-| 8GB | The-Xploiter | Pentester |
-| 16GB+ | Multiple modelos | Ensemble |
 
 ---
 

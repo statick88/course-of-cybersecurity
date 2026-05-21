@@ -5,7 +5,6 @@ type: "minicurso"
 description: "Tutorial completo de Bash para ciberseguridad"
 ---
 
-# Minicurso: Bash Scripting
 
 ## ¿Qué es Bash?
 

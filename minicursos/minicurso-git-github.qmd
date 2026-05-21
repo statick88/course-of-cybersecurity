@@ -5,7 +5,6 @@ type: "minicurso"
 description: "Tutorial completo de Git y GitHub para ciberseguridad"
 ---
 
-# Minicurso: Git y GitHub
 
 ## ¿Qué es Git?
 

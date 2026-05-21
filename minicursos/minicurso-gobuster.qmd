@@ -5,7 +5,6 @@ type: "minicurso"
 description: "Tutorial completo de Gobuster para descubrimiento de recursos web en ciberseguridad"
 ---
 
-# Minicurso: Gobuster
 
 ## ¿Qué es Gobuster?
 

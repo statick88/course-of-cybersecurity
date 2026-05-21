@@ -5,7 +5,6 @@ type: "content"
 description: "Aprende qué hacer cuando ocurre un incidente de seguridad"
 ---
 
-# Módulo 5: Respuesta a Incidentes
 
 ## 🎯 Objetivos de Aprendizaje
 

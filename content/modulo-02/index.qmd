@@ -5,7 +5,6 @@ type: "content"
 description: "Gestión de identidad y acceso con enfoque en MFA phishing-resistant"
 ---
 
-# Módulo 2: Gestión de Identidad y Acceso (IAM)
 
 ## 🎯 Objetivos SMART
 

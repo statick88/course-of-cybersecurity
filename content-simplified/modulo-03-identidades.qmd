@@ -5,7 +5,6 @@ type: "content"
 description: "Aprende sobre autenticación y cómo proteger tus contraseñas"
 ---
 
-# Módulo 3: Gestión de Identidades y Contraseñas
 
 ## 🎯 Objetivos de Aprendizaje
 

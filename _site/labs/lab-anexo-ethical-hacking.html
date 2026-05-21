@@ -594,49 +594,46 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#lab-anexo-ethical-hacking-environment---kali-linux-vm-mcp" id="toc-lab-anexo-ethical-hacking-environment---kali-linux-vm-mcp" class="nav-link active" data-scroll-target="#lab-anexo-ethical-hacking-environment---kali-linux-vm-mcp"><span class="header-section-number">12</span> Lab Anexo: Ethical Hacking Environment - Kali Linux VM + MCP</a>
+  <li><a href="#objetivo-del-laboratorio" id="toc-objetivo-del-laboratorio" class="nav-link active" data-scroll-target="#objetivo-del-laboratorio"><span class="header-section-number">11.1</span> Objetivo del Laboratorio</a></li>
+  <li><a href="#requisitos" id="toc-requisitos" class="nav-link" data-scroll-target="#requisitos"><span class="header-section-number">11.2</span> Requisitos</a></li>
+  <li><a href="#duracion" id="toc-duracion" class="nav-link" data-scroll-target="#duracion"><span class="header-section-number">11.3</span> Duracion</a></li>
+  <li><a href="#paso-1-preparacion-del-entorno-virtual" id="toc-paso-1-preparacion-del-entorno-virtual" class="nav-link" data-scroll-target="#paso-1-preparacion-del-entorno-virtual"><span class="header-section-number">11.4</span> Paso 1: Preparacion del Entorno Virtual</a>
   <ul class="collapse">
-  <li><a href="#objetivo-del-laboratorio" id="toc-objetivo-del-laboratorio" class="nav-link" data-scroll-target="#objetivo-del-laboratorio"><span class="header-section-number">12.1</span> Objetivo del Laboratorio</a></li>
-  <li><a href="#requisitos" id="toc-requisitos" class="nav-link" data-scroll-target="#requisitos"><span class="header-section-number">12.2</span> Requisitos</a></li>
-  <li><a href="#duracion" id="toc-duracion" class="nav-link" data-scroll-target="#duracion"><span class="header-section-number">12.3</span> Duracion</a></li>
-  <li><a href="#paso-1-preparacion-del-entorno-virtual" id="toc-paso-1-preparacion-del-entorno-virtual" class="nav-link" data-scroll-target="#paso-1-preparacion-del-entorno-virtual"><span class="header-section-number">12.4</span> Paso 1: Preparacion del Entorno Virtual</a>
+  <li><a href="#requisitos-de-virtualizacion" id="toc-requisitos-de-virtualizacion" class="nav-link" data-scroll-target="#requisitos-de-virtualizacion"><span class="header-section-number">11.4.1</span> 1.1 Requisitos de Virtualizacion</a></li>
+  <li><a href="#instalacion-de-virtualbox-con-extension-pack" id="toc-instalacion-de-virtualbox-con-extension-pack" class="nav-link" data-scroll-target="#instalacion-de-virtualbox-con-extension-pack"><span class="header-section-number">11.4.2</span> 1.2 Instalacion de VirtualBox con Extension Pack</a></li>
+  </ul></li>
+  <li><a href="#paso-2-kali-linux-vm-setup" id="toc-paso-2-kali-linux-vm-setup" class="nav-link" data-scroll-target="#paso-2-kali-linux-vm-setup"><span class="header-section-number">11.5</span> Paso 2: Kali Linux VM Setup</a>
   <ul class="collapse">
-  <li><a href="#requisitos-de-virtualizacion" id="toc-requisitos-de-virtualizacion" class="nav-link" data-scroll-target="#requisitos-de-virtualizacion"><span class="header-section-number">12.4.1</span> 1.1 Requisitos de Virtualizacion</a></li>
-  <li><a href="#instalacion-de-virtualbox-con-extension-pack" id="toc-instalacion-de-virtualbox-con-extension-pack" class="nav-link" data-scroll-target="#instalacion-de-virtualbox-con-extension-pack"><span class="header-section-number">12.4.2</span> 1.2 Instalacion de VirtualBox con Extension Pack</a></li>
+  <li><a href="#descargar-e-instalar-kali-linux" id="toc-descargar-e-instalar-kali-linux" class="nav-link" data-scroll-target="#descargar-e-instalar-kali-linux"><span class="header-section-number">11.5.1</span> 2.1 Descargar e Instalar Kali Linux</a></li>
+  <li><a href="#configuracion-post-instalacion" id="toc-configuracion-post-instalacion" class="nav-link" data-scroll-target="#configuracion-post-instalacion"><span class="header-section-number">11.5.2</span> 2.2 Configuracion Post-Instalacion</a></li>
   </ul></li>
-  <li><a href="#paso-2-kali-linux-vm-setup" id="toc-paso-2-kali-linux-vm-setup" class="nav-link" data-scroll-target="#paso-2-kali-linux-vm-setup"><span class="header-section-number">12.5</span> Paso 2: Kali Linux VM Setup</a>
+  <li><a href="#paso-3-modelos-especializados-para-ethical-hacking" id="toc-paso-3-modelos-especializados-para-ethical-hacking" class="nav-link" data-scroll-target="#paso-3-modelos-especializados-para-ethical-hacking"><span class="header-section-number">11.6</span> Paso 3: Modelos Especializados para Ethical Hacking</a>
   <ul class="collapse">
-  <li><a href="#descargar-e-instalar-kali-linux" id="toc-descargar-e-instalar-kali-linux" class="nav-link" data-scroll-target="#descargar-e-instalar-kali-linux"><span class="header-section-number">12.5.1</span> 2.1 Descargar e Instalar Kali Linux</a></li>
-  <li><a href="#configuracion-post-instalacion" id="toc-configuracion-post-instalacion" class="nav-link" data-scroll-target="#configuracion-post-instalacion"><span class="header-section-number">12.5.2</span> 2.2 Configuracion Post-Instalacion</a></li>
+  <li><a href="#modelos-recomendados" id="toc-modelos-recomendados" class="nav-link" data-scroll-target="#modelos-recomendados"><span class="header-section-number">11.6.1</span> 3.1 Modelos Recomendados</a></li>
+  <li><a href="#modelos-considerados-eticos" id="toc-modelos-considerados-eticos" class="nav-link" data-scroll-target="#modelos-considerados-eticos"><span class="header-section-number">11.6.2</span> 3.2 Modelos Considerados (Eticos)</a></li>
   </ul></li>
-  <li><a href="#paso-3-modelos-especializados-para-ethical-hacking" id="toc-paso-3-modelos-especializados-para-ethical-hacking" class="nav-link" data-scroll-target="#paso-3-modelos-especializados-para-ethical-hacking"><span class="header-section-number">12.6</span> Paso 3: Modelos Especializados para Ethical Hacking</a>
+  <li><a href="#paso-4-mcp-metasploit-mcp-configuration" id="toc-paso-4-mcp-metasploit-mcp-configuration" class="nav-link" data-scroll-target="#paso-4-mcp-metasploit-mcp-configuration"><span class="header-section-number">11.7</span> Paso 4: MCP (Metasploit MCP) Configuration</a>
   <ul class="collapse">
-  <li><a href="#modelos-recomendados" id="toc-modelos-recomendados" class="nav-link" data-scroll-target="#modelos-recomendados"><span class="header-section-number">12.6.1</span> 3.1 Modelos Recomendados</a></li>
-  <li><a href="#modelos-considerados-eticos" id="toc-modelos-considerados-eticos" class="nav-link" data-scroll-target="#modelos-considerados-eticos"><span class="header-section-number">12.6.2</span> 3.2 Modelos Considerados (Eticos)</a></li>
+  <li><a href="#configurar-metasploit-rpc" id="toc-configurar-metasploit-rpc" class="nav-link" data-scroll-target="#configurar-metasploit-rpc"><span class="header-section-number">11.7.1</span> 4.1 Configurar Metasploit RPC</a></li>
+  <li><a href="#integracion-con-herramientas" id="toc-integracion-con-herramientas" class="nav-link" data-scroll-target="#integracion-con-herramientas"><span class="header-section-number">11.7.2</span> 4.2 Integracion con Herramientas</a></li>
   </ul></li>
-  <li><a href="#paso-4-mcp-metasploit-mcp-configuration" id="toc-paso-4-mcp-metasploit-mcp-configuration" class="nav-link" data-scroll-target="#paso-4-mcp-metasploit-mcp-configuration"><span class="header-section-number">12.7</span> Paso 4: MCP (Metasploit MCP) Configuration</a>
+  <li><a href="#paso-5-workflow-de-ethical-hacking" id="toc-paso-5-workflow-de-ethical-hacking" class="nav-link" data-scroll-target="#paso-5-workflow-de-ethical-hacking"><span class="header-section-number">11.8</span> Paso 5: Workflow de Ethical Hacking</a>
   <ul class="collapse">
-  <li><a href="#configurar-metasploit-rpc" id="toc-configurar-metasploit-rpc" class="nav-link" data-scroll-target="#configurar-metasploit-rpc"><span class="header-section-number">12.7.1</span> 4.1 Configurar Metasploit RPC</a></li>
-  <li><a href="#integracion-con-herramientas" id="toc-integracion-con-herramientas" class="nav-link" data-scroll-target="#integracion-con-herramientas"><span class="header-section-number">12.7.2</span> 4.2 Integracion con Herramientas</a></li>
+  <li><a href="#anotated-methodology" id="toc-anotated-methodology" class="nav-link" data-scroll-target="#anotated-methodology"><span class="header-section-number">11.8.1</span> 5.1 Anotated Methodology</a></li>
   </ul></li>
-  <li><a href="#paso-5-workflow-de-ethical-hacking" id="toc-paso-5-workflow-de-ethical-hacking" class="nav-link" data-scroll-target="#paso-5-workflow-de-ethical-hacking"><span class="header-section-number">12.8</span> Paso 5: Workflow de Ethical Hacking</a>
+  <li><a href="#paso-6-vm-configuration-para-pruebasseguras" id="toc-paso-6-vm-configuration-para-pruebasseguras" class="nav-link" data-scroll-target="#paso-6-vm-configuration-para-pruebasseguras"><span class="header-section-number">11.9</span> Paso 6: VM Configuration para PruebasSeguras</a>
   <ul class="collapse">
-  <li><a href="#anotated-methodology" id="toc-anotated-methodology" class="nav-link" data-scroll-target="#anotated-methodology"><span class="header-section-number">12.8.1</span> 5.1 Anotated Methodology</a></li>
+  <li><a href="#vulnerable-vms-para-practice" id="toc-vulnerable-vms-para-practice" class="nav-link" data-scroll-target="#vulnerable-vms-para-practice"><span class="header-section-number">11.9.1</span> 6.1 Vulnerable VMs para Practice</a></li>
+  <li><a href="#network-segmentation" id="toc-network-segmentation" class="nav-link" data-scroll-target="#network-segmentation"><span class="header-section-number">11.9.2</span> 6.2 Network Segmentation</a></li>
   </ul></li>
-  <li><a href="#paso-6-vm-configuration-para-pruebasseguras" id="toc-paso-6-vm-configuration-para-pruebasseguras" class="nav-link" data-scroll-target="#paso-6-vm-configuration-para-pruebasseguras"><span class="header-section-number">12.9</span> Paso 6: VM Configuration para PruebasSeguras</a>
+  <li><a href="#ejercicio-final-laboratorio-completo-de-ethical-hacking" id="toc-ejercicio-final-laboratorio-completo-de-ethical-hacking" class="nav-link" data-scroll-target="#ejercicio-final-laboratorio-completo-de-ethical-hacking"><span class="header-section-number">11.10</span> Ejercicio Final: Laboratorio Completo de Ethical Hacking</a>
   <ul class="collapse">
-  <li><a href="#vulnerable-vms-para-practice" id="toc-vulnerable-vms-para-practice" class="nav-link" data-scroll-target="#vulnerable-vms-para-practice"><span class="header-section-number">12.9.1</span> 6.1 Vulnerable VMs para Practice</a></li>
-  <li><a href="#network-segmentation" id="toc-network-segmentation" class="nav-link" data-scroll-target="#network-segmentation"><span class="header-section-number">12.9.2</span> 6.2 Network Segmentation</a></li>
+  <li><a href="#objetivo" id="toc-objetivo" class="nav-link" data-scroll-target="#objetivo"><span class="header-section-number">11.10.1</span> Objetivo</a></li>
+  <li><a href="#criterios-de-evaluacion" id="toc-criterios-de-evaluacion" class="nav-link" data-scroll-target="#criterios-de-evaluacion"><span class="header-section-number">11.10.2</span> Criterios de Evaluacion</a></li>
+  <li><a href="#entregable" id="toc-entregable" class="nav-link" data-scroll-target="#entregable"><span class="header-section-number">11.10.3</span> Entregable</a></li>
   </ul></li>
-  <li><a href="#ejercicio-final-laboratorio-completo-de-ethical-hacking" id="toc-ejercicio-final-laboratorio-completo-de-ethical-hacking" class="nav-link" data-scroll-target="#ejercicio-final-laboratorio-completo-de-ethical-hacking"><span class="header-section-number">12.10</span> Ejercicio Final: Laboratorio Completo de Ethical Hacking</a>
-  <ul class="collapse">
-  <li><a href="#objetivo" id="toc-objetivo" class="nav-link" data-scroll-target="#objetivo"><span class="header-section-number">12.10.1</span> Objetivo</a></li>
-  <li><a href="#criterios-de-evaluacion" id="toc-criterios-de-evaluacion" class="nav-link" data-scroll-target="#criterios-de-evaluacion"><span class="header-section-number">12.10.2</span> Criterios de Evaluacion</a></li>
-  <li><a href="#entregable" id="toc-entregable" class="nav-link" data-scroll-target="#entregable"><span class="header-section-number">12.10.3</span> Entregable</a></li>
-  </ul></li>
-  <li><a href="#comandos-tile" id="toc-comandos-tile" class="nav-link" data-scroll-target="#comandos-tile"><span class="header-section-number">12.11</span> Comandos tile</a></li>
-  <li><a href="#recursos" id="toc-recursos" class="nav-link" data-scroll-target="#recursos"><span class="header-section-number">12.12</span> Recursos</a></li>
-  </ul></li>
+  <li><a href="#comandos-tile" id="toc-comandos-tile" class="nav-link" data-scroll-target="#comandos-tile"><span class="header-section-number">11.11</span> Comandos tile</a></li>
+  <li><a href="#recursos" id="toc-recursos" class="nav-link" data-scroll-target="#recursos"><span class="header-section-number">11.12</span> Recursos</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/statick88/course-of-cybersecurity/edit/main/labs/lab-anexo-ethical-hacking.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/statick88/course-of-cybersecurity/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -663,10 +660,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="lab-anexo-ethical-hacking-environment---kali-linux-vm-mcp" class="level1" data-number="12">
-<h1 data-number="12"><span class="header-section-number">12</span> Lab Anexo: Ethical Hacking Environment - Kali Linux VM + MCP</h1>
-<section id="objetivo-del-laboratorio" class="level2" data-number="12.1">
-<h2 data-number="12.1" class="anchored" data-anchor-id="objetivo-del-laboratorio"><span class="header-section-number">12.1</span> Objetivo del Laboratorio</h2>
+<section id="objetivo-del-laboratorio" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="objetivo-del-laboratorio"><span class="header-section-number">11.1</span> Objetivo del Laboratorio</h2>
 <p>En este laboratorio vas a <strong>configurar un entorno profesional de ethical hacking</strong> con Kali Linux, modelos especializados para analisis de seguridad y configuracion MCP. Este ejercicio te permitira:</p>
 <ul>
 <li>Configurar Kali Linux en VM para pentesting seguro</li>
@@ -696,8 +691,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="requisitos" class="level2" data-number="12.2">
-<h2 data-number="12.2" class="anchored" data-anchor-id="requisitos"><span class="header-section-number">12.2</span> Requisitos</h2>
+<section id="requisitos" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="requisitos"><span class="header-section-number">11.2</span> Requisitos</h2>
 <ul>
 <li>VirtualBox o VMware (licencia gratuita)</li>
 <li>8GB RAM minimum (16GB recomendado)</li>
@@ -705,8 +700,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>CPU con virtualizacion (VT-x/AMD-V)</li>
 </ul>
 </section>
-<section id="duracion" class="level2" data-number="12.3">
-<h2 data-number="12.3" class="anchored" data-anchor-id="duracion"><span class="header-section-number">12.3</span> Duracion</h2>
+<section id="duracion" class="level2" data-number="11.3">
+<h2 data-number="11.3" class="anchored" data-anchor-id="duracion"><span class="header-section-number">11.3</span> Duracion</h2>
 <ul>
 <li>Tiempo estimado: 6 horas</li>
 <li>Tipo: Individual</li>
@@ -714,10 +709,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <hr>
 </section>
-<section id="paso-1-preparacion-del-entorno-virtual" class="level2" data-number="12.4">
-<h2 data-number="12.4" class="anchored" data-anchor-id="paso-1-preparacion-del-entorno-virtual"><span class="header-section-number">12.4</span> Paso 1: Preparacion del Entorno Virtual</h2>
-<section id="requisitos-de-virtualizacion" class="level3" data-number="12.4.1">
-<h3 data-number="12.4.1" class="anchored" data-anchor-id="requisitos-de-virtualizacion"><span class="header-section-number">12.4.1</span> 1.1 Requisitos de Virtualizacion</h3>
+<section id="paso-1-preparacion-del-entorno-virtual" class="level2" data-number="11.4">
+<h2 data-number="11.4" class="anchored" data-anchor-id="paso-1-preparacion-del-entorno-virtual"><span class="header-section-number">11.4</span> Paso 1: Preparacion del Entorno Virtual</h2>
+<section id="requisitos-de-virtualizacion" class="level3" data-number="11.4.1">
+<h3 data-number="11.4.1" class="anchored" data-anchor-id="requisitos-de-virtualizacion"><span class="header-section-number">11.4.1</span> 1.1 Requisitos de Virtualizacion</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 1_check_virtualization.sh</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -773,8 +768,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="st">"VMware no instalado"</span></span>
 <span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="instalacion-de-virtualbox-con-extension-pack" class="level3" data-number="12.4.2">
-<h3 data-number="12.4.2" class="anchored" data-anchor-id="instalacion-de-virtualbox-con-extension-pack"><span class="header-section-number">12.4.2</span> 1.2 Instalacion de VirtualBox con Extension Pack</h3>
+<section id="instalacion-de-virtualbox-con-extension-pack" class="level3" data-number="11.4.2">
+<h3 data-number="11.4.2" class="anchored" data-anchor-id="instalacion-de-virtualbox-con-extension-pack"><span class="header-section-number">11.4.2</span> 1.2 Instalacion de VirtualBox con Extension Pack</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 2_install_virtualbox.sh</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -800,10 +795,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <hr>
 </section>
 </section>
-<section id="paso-2-kali-linux-vm-setup" class="level2" data-number="12.5">
-<h2 data-number="12.5" class="anchored" data-anchor-id="paso-2-kali-linux-vm-setup"><span class="header-section-number">12.5</span> Paso 2: Kali Linux VM Setup</h2>
-<section id="descargar-e-instalar-kali-linux" class="level3" data-number="12.5.1">
-<h3 data-number="12.5.1" class="anchored" data-anchor-id="descargar-e-instalar-kali-linux"><span class="header-section-number">12.5.1</span> 2.1 Descargar e Instalar Kali Linux</h3>
+<section id="paso-2-kali-linux-vm-setup" class="level2" data-number="11.5">
+<h2 data-number="11.5" class="anchored" data-anchor-id="paso-2-kali-linux-vm-setup"><span class="header-section-number">11.5</span> Paso 2: Kali Linux VM Setup</h2>
+<section id="descargar-e-instalar-kali-linux" class="level3" data-number="11.5.1">
+<h3 data-number="11.5.1" class="anchored" data-anchor-id="descargar-e-instalar-kali-linux"><span class="header-section-number">11.5.1</span> 2.1 Descargar e Instalar Kali Linux</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 3_install_kali_vm.sh</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -855,8 +850,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"CPUs: </span><span class="va">$CPUS</span><span class="st">"</span></span>
 <span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"SSH: localhost:2222"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="configuracion-post-instalacion" class="level3" data-number="12.5.2">
-<h3 data-number="12.5.2" class="anchored" data-anchor-id="configuracion-post-instalacion"><span class="header-section-number">12.5.2</span> 2.2 Configuracion Post-Instalacion</h3>
+<section id="configuracion-post-instalacion" class="level3" data-number="11.5.2">
+<h3 data-number="11.5.2" class="anchored" data-anchor-id="configuracion-post-instalacion"><span class="header-section-number">11.5.2</span> 2.2 Configuracion Post-Instalacion</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 4_kali_setup.sh</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -922,10 +917,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <hr>
 </section>
 </section>
-<section id="paso-3-modelos-especializados-para-ethical-hacking" class="level2" data-number="12.6">
-<h2 data-number="12.6" class="anchored" data-anchor-id="paso-3-modelos-especializados-para-ethical-hacking"><span class="header-section-number">12.6</span> Paso 3: Modelos Especializados para Ethical Hacking</h2>
-<section id="modelos-recomendados" class="level3" data-number="12.6.1">
-<h3 data-number="12.6.1" class="anchored" data-anchor-id="modelos-recomendados"><span class="header-section-number">12.6.1</span> 3.1 Modelos Recomendados</h3>
+<section id="paso-3-modelos-especializados-para-ethical-hacking" class="level2" data-number="11.6">
+<h2 data-number="11.6" class="anchored" data-anchor-id="paso-3-modelos-especializados-para-ethical-hacking"><span class="header-section-number">11.6</span> Paso 3: Modelos Especializados para Ethical Hacking</h2>
+<section id="modelos-recomendados" class="level3" data-number="11.6.1">
+<h3 data-number="11.6.1" class="anchored" data-anchor-id="modelos-recomendados"><span class="header-section-number">11.6.1</span> 3.1 Modelos Recomendados</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 5_security_models.sh</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -972,8 +967,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"=== Modelos instalados ==="</span></span>
 <span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a><span class="ex">ollama</span> list</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="modelos-considerados-eticos" class="level3" data-number="12.6.2">
-<h3 data-number="12.6.2" class="anchored" data-anchor-id="modelos-considerados-eticos"><span class="header-section-number">12.6.2</span> 3.2 Modelos Considerados (Eticos)</h3>
+<section id="modelos-considerados-eticos" class="level3" data-number="11.6.2">
+<h3 data-number="11.6.2" class="anchored" data-anchor-id="modelos-considerados-eticos"><span class="header-section-number">11.6.2</span> 3.2 Modelos Considerados (Eticos)</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> <span class="op">&gt;</span> authorized_models.md <span class="op">&lt;&lt; 'EOF'</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="st"># Modelos Considerados para Ethical Hacking</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1017,10 +1012,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <hr>
 </section>
 </section>
-<section id="paso-4-mcp-metasploit-mcp-configuration" class="level2" data-number="12.7">
-<h2 data-number="12.7" class="anchored" data-anchor-id="paso-4-mcp-metasploit-mcp-configuration"><span class="header-section-number">12.7</span> Paso 4: MCP (Metasploit MCP) Configuration</h2>
-<section id="configurar-metasploit-rpc" class="level3" data-number="12.7.1">
-<h3 data-number="12.7.1" class="anchored" data-anchor-id="configurar-metasploit-rpc"><span class="header-section-number">12.7.1</span> 4.1 Configurar Metasploit RPC</h3>
+<section id="paso-4-mcp-metasploit-mcp-configuration" class="level2" data-number="11.7">
+<h2 data-number="11.7" class="anchored" data-anchor-id="paso-4-mcp-metasploit-mcp-configuration"><span class="header-section-number">11.7</span> Paso 4: MCP (Metasploit MCP) Configuration</h2>
+<section id="configurar-metasploit-rpc" class="level3" data-number="11.7.1">
+<h3 data-number="11.7.1" class="anchored" data-anchor-id="configurar-metasploit-rpc"><span class="header-section-number">11.7.1</span> 4.1 Configurar Metasploit RPC</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 6_metasploit_rpc.sh</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1123,8 +1118,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-100"><a href="#cb7-100" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"  msf &gt; load ~/.msf/mcp_connect"</span></span>
 <span id="cb7-101"><a href="#cb7-101" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"  msf &gt; connect 127.0.0.1 55552 msf password"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="integracion-con-herramientas" class="level3" data-number="12.7.2">
-<h3 data-number="12.7.2" class="anchored" data-anchor-id="integracion-con-herramientas"><span class="header-section-number">12.7.2</span> 4.2 Integracion con Herramientas</h3>
+<section id="integracion-con-herramientas" class="level3" data-number="11.7.2">
+<h3 data-number="11.7.2" class="anchored" data-anchor-id="integracion-con-herramientas"><span class="header-section-number">11.7.2</span> 4.2 Integracion con Herramientas</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env python3</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">"""</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">MCP Client para Integracion con Kali Tools</span></span>
@@ -1223,10 +1218,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <hr>
 </section>
 </section>
-<section id="paso-5-workflow-de-ethical-hacking" class="level2" data-number="12.8">
-<h2 data-number="12.8" class="anchored" data-anchor-id="paso-5-workflow-de-ethical-hacking"><span class="header-section-number">12.8</span> Paso 5: Workflow de Ethical Hacking</h2>
-<section id="anotated-methodology" class="level3" data-number="12.8.1">
-<h3 data-number="12.8.1" class="anchored" data-anchor-id="anotated-methodology"><span class="header-section-number">12.8.1</span> 5.1 Anotated Methodology</h3>
+<section id="paso-5-workflow-de-ethical-hacking" class="level2" data-number="11.8">
+<h2 data-number="11.8" class="anchored" data-anchor-id="paso-5-workflow-de-ethical-hacking"><span class="header-section-number">11.8</span> Paso 5: Workflow de Ethical Hacking</h2>
+<section id="anotated-methodology" class="level3" data-number="11.8.1">
+<h3 data-number="11.8.1" class="anchored" data-anchor-id="anotated-methodology"><span class="header-section-number">11.8.1</span> 5.1 Anotated Methodology</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 7_ethical_workflow.sh</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1371,10 +1366,10 @@ print(plan)</code></pre>
 <hr>
 </section>
 </section>
-<section id="paso-6-vm-configuration-para-pruebasseguras" class="level2" data-number="12.9">
-<h2 data-number="12.9" class="anchored" data-anchor-id="paso-6-vm-configuration-para-pruebasseguras"><span class="header-section-number">12.9</span> Paso 6: VM Configuration para PruebasSeguras</h2>
-<section id="vulnerable-vms-para-practice" class="level3" data-number="12.9.1">
-<h3 data-number="12.9.1" class="anchored" data-anchor-id="vulnerable-vms-para-practice"><span class="header-section-number">12.9.1</span> 6.1 Vulnerable VMs para Practice</h3>
+<section id="paso-6-vm-configuration-para-pruebasseguras" class="level2" data-number="11.9">
+<h2 data-number="11.9" class="anchored" data-anchor-id="paso-6-vm-configuration-para-pruebasseguras"><span class="header-section-number">11.9</span> Paso 6: VM Configuration para PruebasSeguras</h2>
+<section id="vulnerable-vms-para-practice" class="level3" data-number="11.9.1">
+<h3 data-number="11.9.1" class="anchored" data-anchor-id="vulnerable-vms-para-practice"><span class="header-section-number">11.9.1</span> 6.1 Vulnerable VMs para Practice</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 8_practice_vms.sh</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1411,8 +1406,8 @@ print(plan)</code></pre>
 <span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"=== VMs configuradas ==="</span></span>
 <span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-la</span> ~/VMs/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="network-segmentation" class="level3" data-number="12.9.2">
-<h3 data-number="12.9.2" class="anchored" data-anchor-id="network-segmentation"><span class="header-section-number">12.9.2</span> 6.2 Network Segmentation</h3>
+<section id="network-segmentation" class="level3" data-number="11.9.2">
+<h3 data-number="11.9.2" class="anchored" data-anchor-id="network-segmentation"><span class="header-section-number">11.9.2</span> 6.2 Network Segmentation</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 9_network_setup.sh</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1439,10 +1434,10 @@ print(plan)</code></pre>
 <hr>
 </section>
 </section>
-<section id="ejercicio-final-laboratorio-completo-de-ethical-hacking" class="level2" data-number="12.10">
-<h2 data-number="12.10" class="anchored" data-anchor-id="ejercicio-final-laboratorio-completo-de-ethical-hacking"><span class="header-section-number">12.10</span> Ejercicio Final: Laboratorio Completo de Ethical Hacking</h2>
-<section id="objetivo" class="level3" data-number="12.10.1">
-<h3 data-number="12.10.1" class="anchored" data-anchor-id="objetivo"><span class="header-section-number">12.10.1</span> Objetivo</h3>
+<section id="ejercicio-final-laboratorio-completo-de-ethical-hacking" class="level2" data-number="11.10">
+<h2 data-number="11.10" class="anchored" data-anchor-id="ejercicio-final-laboratorio-completo-de-ethical-hacking"><span class="header-section-number">11.10</span> Ejercicio Final: Laboratorio Completo de Ethical Hacking</h2>
+<section id="objetivo" class="level3" data-number="11.10.1">
+<h3 data-number="11.10.1" class="anchored" data-anchor-id="objetivo"><span class="header-section-number">11.10.1</span> Objetivo</h3>
 <p>Configurar un laboratorio funcional para pr cticas de ethical hacking:</p>
 <ol type="1">
 <li>Kali Linux VM funcionando</li>
@@ -1452,8 +1447,8 @@ print(plan)</code></pre>
 <li>Entorno aislado</li>
 </ol>
 </section>
-<section id="criterios-de-evaluacion" class="level3" data-number="12.10.2">
-<h3 data-number="12.10.2" class="anchored" data-anchor-id="criterios-de-evaluacion"><span class="header-section-number">12.10.2</span> Criterios de Evaluacion</h3>
+<section id="criterios-de-evaluacion" class="level3" data-number="11.10.2">
+<h3 data-number="11.10.2" class="anchored" data-anchor-id="criterios-de-evaluacion"><span class="header-section-number">11.10.2</span> Criterios de Evaluacion</h3>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -1489,8 +1484,8 @@ print(plan)</code></pre>
 </tbody>
 </table>
 </section>
-<section id="entregable" class="level3" data-number="12.10.3">
-<h3 data-number="12.10.3" class="anchored" data-anchor-id="entregable"><span class="header-section-number">12.10.3</span> Entregable</h3>
+<section id="entregable" class="level3" data-number="11.10.3">
+<h3 data-number="11.10.3" class="anchored" data-anchor-id="entregable"><span class="header-section-number">11.10.3</span> Entregable</h3>
 <ul>
 <li>Laboratorio funcional de ethical hacking</li>
 <li>Documento RUNBOOK con procedimientos</li>
@@ -1499,8 +1494,8 @@ print(plan)</code></pre>
 <hr>
 </section>
 </section>
-<section id="comandos-tile" class="level2" data-number="12.11">
-<h2 data-number="12.11" class="anchored" data-anchor-id="comandos-tile"><span class="header-section-number">12.11</span> Comandos tile</h2>
+<section id="comandos-tile" class="level2" data-number="11.11">
+<h2 data-number="11.11" class="anchored" data-anchor-id="comandos-tile"><span class="header-section-number">11.11</span> Comandos tile</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Conectar a Kali</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> <span class="at">-p</span> 2222 kali@localhost</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1517,8 +1512,8 @@ print(plan)</code></pre>
 <span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> mcp_client.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <hr>
 </section>
-<section id="recursos" class="level2" data-number="12.12">
-<h2 data-number="12.12" class="anchored" data-anchor-id="recursos"><span class="header-section-number">12.12</span> Recursos</h2>
+<section id="recursos" class="level2" data-number="11.12">
+<h2 data-number="11.12" class="anchored" data-anchor-id="recursos"><span class="header-section-number">11.12</span> Recursos</h2>
 <ul>
 <li>Kali Linux: https://www.kali.org</li>
 <li>Metasploitable: https://github.com/rapid7/metasploitable3</li>
@@ -1530,7 +1525,6 @@ print(plan)</code></pre>
 <p><em>Lab Anexo: Ethical Hacking Environment</em> <em>Duration: 6 horas</em> <em>Level: Advanced</em> <em>License: CC BY-SA 4.0</em> <em>ADVERTENCIA: Solo para uso educativo y ctico</em></p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

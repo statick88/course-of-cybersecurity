@@ -5,7 +5,6 @@ type: "content"
 description: "IR lifecycle, NIST SP 800-61 Rev. 3 y simulaciones"
 ---
 
-# Modulo 7: Respuesta a Incidentes
 
 ## Objetivos SMART
 

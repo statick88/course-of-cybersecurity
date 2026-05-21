@@ -5,7 +5,6 @@ type: "lab"
 description: "Practica de deteccion y mitigacion de ataques de prompt injection"
 ---
 
-# Lab 4: Deteccion de Prompt Injection
 
 ## Objetivo del Laboratorio
 

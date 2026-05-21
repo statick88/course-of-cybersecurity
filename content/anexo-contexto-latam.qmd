@@ -5,7 +5,6 @@ type: "annexo"
 description: "Contexto regulatorio y de ciberseguridad para Ecuador y Latinoamerica"
 ---
 
-# Anexo: Contexto Ecuador y LATAM
 
 ## Situacion de Ciberseguridad en Ecuador
 

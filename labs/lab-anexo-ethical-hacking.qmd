@@ -5,7 +5,6 @@ type: "lab"
 description: "Practica avanzada de ethical hacking con Kali Linux, modelos especializados y MCP config"
 ---
 
-# Lab Anexo: Ethical Hacking Environment - Kali Linux VM + MCP
 
 ## Objetivo del Laboratorio
 

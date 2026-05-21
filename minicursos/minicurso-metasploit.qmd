@@ -5,7 +5,6 @@ type: "minicurso"
 description: "Tutorial completo de Metasploit Framework para explotación en ciberseguridad"
 ---
 
-# Minicurso: Metasploit Framework
 
 ## ¿Qué es Metasploit Framework?
 

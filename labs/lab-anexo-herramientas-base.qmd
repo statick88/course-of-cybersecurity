@@ -5,7 +5,6 @@ type: "lab"
 description: "Herramientas profesionales de pentesting: hydra, john, medusa, hashcat, crunch, cewl, dirb, gobuster, amass, nikto, wpscan, theHarvester, recon-ng, aircrack-ng y mas"
 ---
 
-# Lab Anexo: Herramientas Avanzadas de Hacking
 
 ## Objetivo del Laboratorio
 
@@ -44,7 +43,7 @@ En este laboratorio vas a dominar las herramientas profesionales de pentesting y
 
 ---
 
-# Workflow 1: Ataques de Password
+## Workflow 1: Ataques de Password
 
 ## Objetivo
 
@@ -150,7 +149,7 @@ Eres un pentester autorizado. Tu cliente te ha dado permiso para probar la robus
 
 ---
 
-# Workflow 2: Enumeracion de Directorios
+## Workflow 2: Enumeracion de Directorios
 
 ## Objetivo
 
@@ -211,7 +210,7 @@ Estas auditando una aplicacion web. Necesitas descubrir rutas escondidas que pue
 
 ---
 
-# Workflow 3: Enumeracion de Subdominios
+## Workflow 3: Enumeracion de Subdominios
 
 ## Objetivo
 
@@ -282,7 +281,7 @@ Dominar herramientas para descubrir subdominios
 
 ---
 
-# Workflow 4: Escaneo de Vulnerabilidades Web
+## Workflow 4: Escaneo de Vulnerabilidades Web
 
 ## Objetivo
 
@@ -353,7 +352,7 @@ Dominar nikto, wpscan, skipfish y w3af para auditing web
 
 ---
 
-# Workflow 5: OSINT
+## Workflow 5: OSINT
 
 ## Objetivo
 
@@ -424,7 +423,7 @@ Dominar herramientas de recopilacion de informacion
 
 ---
 
-# Workflow 6: Ataques Wireless
+## Workflow 6: Ataques Wireless
 
 ## Objetivo
 
@@ -534,7 +533,7 @@ Estas en un laboratorio controlado con redes wireless de prueba. Has obtenido au
 
 ---
 
-# Laboratorio Docker: Vulnerable Labs
+## Laboratorio Docker: Vulnerable Labs
 
 ## Objetivo
 
@@ -613,7 +612,7 @@ echo "  PentesterLab: http://localhost:8886"
 
 ---
 
-# Comandos de Herramientas Adicionales
+## Comandos de Herramientas Adicionales
 
 ##WHOIS y DNS
 
@@ -664,7 +663,7 @@ cat referencia_whois_dns.md
 
 ---
 
-# Scripts de Automatizacion
+## Scripts de Automatizacion
 
 ## Script Integrado de Pentesting
 
@@ -735,7 +734,7 @@ echo "Script creado: ./pt_automatizado.sh <target>"
 
 ---
 
-# Quick Reference Card
+## Quick Reference Card
 
 | Categoria | Herramienta | Comando Basico |
 |-----------|-----------|-------------|
@@ -763,7 +762,7 @@ echo "Script creado: ./pt_automatizado.sh <target>"
 
 ---
 
-# Ejercicio Final
+## Ejercicio Final
 
 ## Objetivo
 
@@ -782,7 +781,7 @@ Dominar todas las herramientas de este laboratorio en un escenario integrado
 
 ---
 
-# Recursos
+## Recursos
 
 - Kali Linux Tools: https://www.kali.org/tools/
 - THC Hydra: https://github.com/vanhauser-thc/hydra

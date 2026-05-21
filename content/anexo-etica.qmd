@@ -5,7 +5,6 @@ type: "anexo"
 description: "Marco etico y legal para profesionales de ciberseguridad"
 ---
 
-# Anexo: Uso Etico en Ciberseguridad
 
 ## Importancia de la Etica en Ciberseguridad
 

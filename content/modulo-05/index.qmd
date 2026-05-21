@@ -5,7 +5,6 @@ type: "content"
 description: "Gestion de vulnerabilidades, CVE, CVSS y amenazas 2026"
 ---
 
-# Modulo 5: Gestion de Vulnerabilidades
 
 ## Objetivos SMART
 

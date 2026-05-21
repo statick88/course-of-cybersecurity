@@ -5,7 +5,6 @@ type: "minicurso"
 description: "Tutorial completo de SSH para ciberseguridad"
 ---
 
-# Minicurso: SSH
 
 ## ¿Qué es SSH?
 

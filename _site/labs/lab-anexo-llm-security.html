@@ -594,49 +594,46 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#lab-anexo-local-llms-for-cybersecurity-with-ollama-lm-studio" id="toc-lab-anexo-local-llms-for-cybersecurity-with-ollama-lm-studio" class="nav-link active" data-scroll-target="#lab-anexo-local-llms-for-cybersecurity-with-ollama-lm-studio"><span class="header-section-number">11</span> Lab Anexo: Local LLMs for Cybersecurity with Ollama &amp; LM Studio</a>
+  <li><a href="#objetivo-del-laboratorio" id="toc-objetivo-del-laboratorio" class="nav-link active" data-scroll-target="#objetivo-del-laboratorio"><span class="header-section-number">10.1</span> Objetivo del Laboratorio</a></li>
+  <li><a href="#requisitos-previos" id="toc-requisitos-previos" class="nav-link" data-scroll-target="#requisitos-previos"><span class="header-section-number">10.2</span> Requisitos Previos</a></li>
+  <li><a href="#duracion" id="toc-duracion" class="nav-link" data-scroll-target="#duracion"><span class="header-section-number">10.3</span> Duracion</a></li>
+  <li><a href="#paso-1-preparacion-del-entorno" id="toc-paso-1-preparacion-del-entorno" class="nav-link" data-scroll-target="#paso-1-preparacion-del-entorno"><span class="header-section-number">10.4</span> Paso 1: Preparacion del Entorno</a>
   <ul class="collapse">
-  <li><a href="#objetivo-del-laboratorio" id="toc-objetivo-del-laboratorio" class="nav-link" data-scroll-target="#objetivo-del-laboratorio"><span class="header-section-number">11.1</span> Objetivo del Laboratorio</a></li>
-  <li><a href="#requisitos-previos" id="toc-requisitos-previos" class="nav-link" data-scroll-target="#requisitos-previos"><span class="header-section-number">11.2</span> Requisitos Previos</a></li>
-  <li><a href="#duracion" id="toc-duracion" class="nav-link" data-scroll-target="#duracion"><span class="header-section-number">11.3</span> Duracion</a></li>
-  <li><a href="#paso-1-preparacion-del-entorno" id="toc-paso-1-preparacion-del-entorno" class="nav-link" data-scroll-target="#paso-1-preparacion-del-entorno"><span class="header-section-number">11.4</span> Paso 1: Preparacion del Entorno</a>
+  <li><a href="#verifica-los-requisitos-de-tu-sistema" id="toc-verifica-los-requisitos-de-tu-sistema" class="nav-link" data-scroll-target="#verifica-los-requisitos-de-tu-sistema"><span class="header-section-number">10.4.1</span> 1.1 Verifica los Requisitos de tu Sistema</a></li>
+  <li><a href="#instala-ollama" id="toc-instala-ollama" class="nav-link" data-scroll-target="#instala-ollama"><span class="header-section-number">10.4.2</span> 1.2 Instala Ollama</a></li>
+  <li><a href="#instala-lm-studio-opcional" id="toc-instala-lm-studio-opcional" class="nav-link" data-scroll-target="#instala-lm-studio-opcional"><span class="header-section-number">10.4.3</span> 1.3 Instala LM Studio (Opcional)</a></li>
+  </ul></li>
+  <li><a href="#paso-2-modelos-especializados-para-security" id="toc-paso-2-modelos-especializados-para-security" class="nav-link" data-scroll-target="#paso-2-modelos-especializados-para-security"><span class="header-section-number">10.5</span> Paso 2: Modelos Especializados para Security</a>
   <ul class="collapse">
-  <li><a href="#verifica-los-requisitos-de-tu-sistema" id="toc-verifica-los-requisitos-de-tu-sistema" class="nav-link" data-scroll-target="#verifica-los-requisitos-de-tu-sistema"><span class="header-section-number">11.4.1</span> 1.1 Verifica los Requisitos de tu Sistema</a></li>
-  <li><a href="#instala-ollama" id="toc-instala-ollama" class="nav-link" data-scroll-target="#instala-ollama"><span class="header-section-number">11.4.2</span> 1.2 Instala Ollama</a></li>
-  <li><a href="#instala-lm-studio-opcional" id="toc-instala-lm-studio-opcional" class="nav-link" data-scroll-target="#instala-lm-studio-opcional"><span class="header-section-number">11.4.3</span> 1.3 Instala LM Studio (Opcional)</a></li>
+  <li><a href="#descarga-los-modelos" id="toc-descarga-los-modelos" class="nav-link" data-scroll-target="#descarga-los-modelos"><span class="header-section-number">10.5.1</span> 2.1 Descarga los Modelos</a></li>
+  <li><a href="#selecciona-el-modelo-segun-tu-hardware" id="toc-selecciona-el-modelo-segun-tu-hardware" class="nav-link" data-scroll-target="#selecciona-el-modelo-segun-tu-hardware"><span class="header-section-number">10.5.2</span> 2.2 Selecciona el Modelo segun tu Hardware</a></li>
   </ul></li>
-  <li><a href="#paso-2-modelos-especializados-para-security" id="toc-paso-2-modelos-especializados-para-security" class="nav-link" data-scroll-target="#paso-2-modelos-especializados-para-security"><span class="header-section-number">11.5</span> Paso 2: Modelos Especializados para Security</a>
+  <li><a href="#paso-3-integracion-con-tools-de-security" id="toc-paso-3-integracion-con-tools-de-security" class="nav-link" data-scroll-target="#paso-3-integracion-con-tools-de-security"><span class="header-section-number">10.6</span> Paso 3: Integracion con Tools de Security</a>
   <ul class="collapse">
-  <li><a href="#descarga-los-modelos" id="toc-descarga-los-modelos" class="nav-link" data-scroll-target="#descarga-los-modelos"><span class="header-section-number">11.5.1</span> 2.1 Descarga los Modelos</a></li>
-  <li><a href="#selecciona-el-modelo-segun-tu-hardware" id="toc-selecciona-el-modelo-segun-tu-hardware" class="nav-link" data-scroll-target="#selecciona-el-modelo-segun-tu-hardware"><span class="header-section-number">11.5.2</span> 2.2 Selecciona el Modelo segun tu Hardware</a></li>
+  <li><a href="#burp-suite-extension-con-ollama" id="toc-burp-suite-extension-con-ollama" class="nav-link" data-scroll-target="#burp-suite-extension-con-ollama"><span class="header-section-number">10.6.1</span> 3.1 Burp Suite Extension con Ollama</a></li>
+  <li><a href="#modulo-de-metasploit-con-ai" id="toc-modulo-de-metasploit-con-ai" class="nav-link" data-scroll-target="#modulo-de-metasploit-con-ai"><span class="header-section-number">10.6.2</span> 3.2 Modulo de Metasploit con AI</a></li>
+  <li><a href="#analisis-de-resultados-de-nuclei-con-ai" id="toc-analisis-de-resultados-de-nuclei-con-ai" class="nav-link" data-scroll-target="#analisis-de-resultados-de-nuclei-con-ai"><span class="header-section-number">10.6.3</span> 3.3 Analisis de Resultados de Nuclei con AI</a></li>
   </ul></li>
-  </ul></li>
-  <li><a href="#modelos-para-codinganalysis" id="toc-modelos-para-codinganalysis" class="nav-link" data-scroll-target="#modelos-para-codinganalysis"><span class="header-section-number">12</span> Modelos para coding/analysis</a></li>
-  <li><a href="#listar-todos" id="toc-listar-todos" class="nav-link" data-scroll-target="#listar-todos"><span class="header-section-number">13</span> Listar todos</a>
+  <li><a href="#paso-4-threat-hunting-automation" id="toc-paso-4-threat-hunting-automation" class="nav-link" data-scroll-target="#paso-4-threat-hunting-automation"><span class="header-section-number">10.7</span> Paso 4: Threat Hunting Automation</a>
   <ul class="collapse">
-  <li><a href="#modulo-de-metasploit-con-ai" id="toc-modulo-de-metasploit-con-ai" class="nav-link" data-scroll-target="#modulo-de-metasploit-con-ai"><span class="header-section-number">13.0.1</span> 3.2 Modulo de Metasploit con AI</a></li>
-  <li><a href="#analisis-de-resultados-de-nuclei-con-ai" id="toc-analisis-de-resultados-de-nuclei-con-ai" class="nav-link" data-scroll-target="#analisis-de-resultados-de-nuclei-con-ai"><span class="header-section-number">13.0.2</span> 3.3 Analisis de Resultados de Nuclei con AI</a></li>
-  <li><a href="#paso-4-threat-hunting-automation" id="toc-paso-4-threat-hunting-automation" class="nav-link" data-scroll-target="#paso-4-threat-hunting-automation"><span class="header-section-number">13.1</span> Paso 4: Threat Hunting Automation</a>
+  <li><a href="#deteccion-de-anomalias-con-ai" id="toc-deteccion-de-anomalias-con-ai" class="nav-link" data-scroll-target="#deteccion-de-anomalias-con-ai"><span class="header-section-number">10.7.1</span> 4.1 Deteccion de Anomalias con AI</a></li>
+  <li><a href="#analisis-de-iocs-indicators-of-compromise" id="toc-analisis-de-iocs-indicators-of-compromise" class="nav-link" data-scroll-target="#analisis-de-iocs-indicators-of-compromise"><span class="header-section-number">10.7.2</span> 4.2 Analisis de IoCs (Indicators of Compromise)</a></li>
+  <li><a href="#analisis-estatico-de-archivos-sospechosos" id="toc-analisis-estatico-de-archivos-sospechosos" class="nav-link" data-scroll-target="#analisis-estatico-de-archivos-sospechosos"><span class="header-section-number">10.7.3</span> 4.3 Analisis Estatico de Archivos Sospechosos</a></li>
+  </ul></li>
+  <li><a href="#paso-5-rag-para-security" id="toc-paso-5-rag-para-security" class="nav-link" data-scroll-target="#paso-5-rag-para-security"><span class="header-section-number">10.8</span> Paso 5: RAG para Security</a>
   <ul class="collapse">
-  <li><a href="#deteccion-de-anomalias-con-ai" id="toc-deteccion-de-anomalias-con-ai" class="nav-link" data-scroll-target="#deteccion-de-anomalias-con-ai"><span class="header-section-number">13.1.1</span> 4.1 Deteccion de Anomalias con AI</a></li>
-  <li><a href="#analisis-de-iocs-indicators-of-compromise" id="toc-analisis-de-iocs-indicators-of-compromise" class="nav-link" data-scroll-target="#analisis-de-iocs-indicators-of-compromise"><span class="header-section-number">13.1.2</span> 4.2 Analisis de IoCs (Indicators of Compromise)</a></li>
-  <li><a href="#analisis-estatico-de-archivos-sospechosos" id="toc-analisis-estatico-de-archivos-sospechosos" class="nav-link" data-scroll-target="#analisis-estatico-de-archivos-sospechosos"><span class="header-section-number">13.1.3</span> 4.3 Analisis Estatico de Archivos Sospechosos</a></li>
+  <li><a href="#construye-tu-knowledge-base" id="toc-construye-tu-knowledge-base" class="nav-link" data-scroll-target="#construye-tu-knowledge-base"><span class="header-section-number">10.8.1</span> 5.1 Construye tu Knowledge Base</a></li>
+  <li><a href="#sistema-de-consulta-con-rag" id="toc-sistema-de-consulta-con-rag" class="nav-link" data-scroll-target="#sistema-de-consulta-con-rag"><span class="header-section-number">10.8.2</span> 5.2 Sistema de Consulta con RAG</a></li>
+  <li><a href="#casos-de-uso-practicos" id="toc-casos-de-uso-practicos" class="nav-link" data-scroll-target="#casos-de-uso-practicos"><span class="header-section-number">10.8.3</span> 5.3 Casos de Uso Practicos</a></li>
   </ul></li>
-  <li><a href="#paso-5-rag-para-security" id="toc-paso-5-rag-para-security" class="nav-link" data-scroll-target="#paso-5-rag-para-security"><span class="header-section-number">13.2</span> Paso 5: RAG para Security</a>
+  <li><a href="#ejercicio-final-centro-de-comando-de-security-ai" id="toc-ejercicio-final-centro-de-comando-de-security-ai" class="nav-link" data-scroll-target="#ejercicio-final-centro-de-comando-de-security-ai"><span class="header-section-number">10.9</span> Ejercicio Final: Centro de Comando de Security AI</a>
   <ul class="collapse">
-  <li><a href="#construye-tu-knowledge-base" id="toc-construye-tu-knowledge-base" class="nav-link" data-scroll-target="#construye-tu-knowledge-base"><span class="header-section-number">13.2.1</span> 5.1 Construye tu Knowledge Base</a></li>
-  <li><a href="#sistema-de-consulta-con-rag" id="toc-sistema-de-consulta-con-rag" class="nav-link" data-scroll-target="#sistema-de-consulta-con-rag"><span class="header-section-number">13.2.2</span> 5.2 Sistema de Consulta con RAG</a></li>
-  <li><a href="#casos-de-uso-practicos" id="toc-casos-de-uso-practicos" class="nav-link" data-scroll-target="#casos-de-uso-practicos"><span class="header-section-number">13.2.3</span> 5.3 Casos de Uso Practicos</a></li>
+  <li><a href="#objetivo" id="toc-objetivo" class="nav-link" data-scroll-target="#objetivo"><span class="header-section-number">10.9.1</span> Objetivo</a></li>
+  <li><a href="#pasos-del-ejercicio" id="toc-pasos-del-ejercicio" class="nav-link" data-scroll-target="#pasos-del-ejercicio"><span class="header-section-number">10.9.2</span> Pasos del Ejercicio</a></li>
+  <li><a href="#criterios-de-evaluacion" id="toc-criterios-de-evaluacion" class="nav-link" data-scroll-target="#criterios-de-evaluacion"><span class="header-section-number">10.9.3</span> Criterios de Evaluacion</a></li>
+  <li><a href="#entregable" id="toc-entregable" class="nav-link" data-scroll-target="#entregable"><span class="header-section-number">10.9.4</span> Entregable</a></li>
   </ul></li>
-  <li><a href="#ejercicio-final-centro-de-comando-de-security-ai" id="toc-ejercicio-final-centro-de-comando-de-security-ai" class="nav-link" data-scroll-target="#ejercicio-final-centro-de-comando-de-security-ai"><span class="header-section-number">13.3</span> Ejercicio Final: Centro de Comando de Security AI</a>
-  <ul class="collapse">
-  <li><a href="#objetivo" id="toc-objetivo" class="nav-link" data-scroll-target="#objetivo"><span class="header-section-number">13.3.1</span> Objetivo</a></li>
-  <li><a href="#pasos-del-ejercicio" id="toc-pasos-del-ejercicio" class="nav-link" data-scroll-target="#pasos-del-ejercicio"><span class="header-section-number">13.3.2</span> Pasos del Ejercicio</a></li>
-  <li><a href="#criterios-de-evaluacion" id="toc-criterios-de-evaluacion" class="nav-link" data-scroll-target="#criterios-de-evaluacion"><span class="header-section-number">13.3.3</span> Criterios de Evaluacion</a></li>
-  <li><a href="#entregable" id="toc-entregable" class="nav-link" data-scroll-target="#entregable"><span class="header-section-number">13.3.4</span> Entregable</a></li>
-  </ul></li>
-  <li><a href="#recursos" id="toc-recursos" class="nav-link" data-scroll-target="#recursos"><span class="header-section-number">13.4</span> Recursos</a></li>
-  </ul></li>
+  <li><a href="#recursos" id="toc-recursos" class="nav-link" data-scroll-target="#recursos"><span class="header-section-number">10.10</span> Recursos</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/statick88/course-of-cybersecurity/edit/main/labs/lab-anexo-llm-security.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/statick88/course-of-cybersecurity/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -663,10 +660,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="lab-anexo-local-llms-for-cybersecurity-with-ollama-lm-studio" class="level1" data-number="11">
-<h1 data-number="11"><span class="header-section-number">11</span> Lab Anexo: Local LLMs for Cybersecurity with Ollama &amp; LM Studio</h1>
-<section id="objetivo-del-laboratorio" class="level2" data-number="11.1">
-<h2 data-number="11.1" class="anchored" data-anchor-id="objetivo-del-laboratorio"><span class="header-section-number">11.1</span> Objetivo del Laboratorio</h2>
+<section id="objetivo-del-laboratorio" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="objetivo-del-laboratorio"><span class="header-section-number">10.1</span> Objetivo del Laboratorio</h2>
 <p>En este laboratorio avanzado, vas a <strong>implementar y utilizar LLMs locales</strong> para tareas de ciberseguridad de nivel medio-alto. Este ejercicio te permitira:</p>
 <ul>
 <li>Configurar Ollama y LM Studio con soporte GPU</li>
@@ -697,8 +692,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="requisitos-previos" class="level2" data-number="11.2">
-<h2 data-number="11.2" class="anchored" data-anchor-id="requisitos-previos"><span class="header-section-number">11.2</span> Requisitos Previos</h2>
+<section id="requisitos-previos" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="requisitos-previos"><span class="header-section-number">10.2</span> Requisitos Previos</h2>
 <ul>
 <li>Experiencia con pentesting (OWASP, PTES)</li>
 <li>Conocimiento de APIs REST</li>
@@ -706,8 +701,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Experiencia con Linux CLI</li>
 </ul>
 </section>
-<section id="duracion" class="level2" data-number="11.3">
-<h2 data-number="11.3" class="anchored" data-anchor-id="duracion"><span class="header-section-number">11.3</span> Duracion</h2>
+<section id="duracion" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="duracion"><span class="header-section-number">10.3</span> Duracion</h2>
 <ul>
 <li>Tiempo estimado: 5 horas</li>
 <li>Tipo: Individual</li>
@@ -715,10 +710,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <hr>
 </section>
-<section id="paso-1-preparacion-del-entorno" class="level2" data-number="11.4">
-<h2 data-number="11.4" class="anchored" data-anchor-id="paso-1-preparacion-del-entorno"><span class="header-section-number">11.4</span> Paso 1: Preparacion del Entorno</h2>
-<section id="verifica-los-requisitos-de-tu-sistema" class="level3" data-number="11.4.1">
-<h3 data-number="11.4.1" class="anchored" data-anchor-id="verifica-los-requisitos-de-tu-sistema"><span class="header-section-number">11.4.1</span> 1.1 Verifica los Requisitos de tu Sistema</h3>
+<section id="paso-1-preparacion-del-entorno" class="level2" data-number="10.4">
+<h2 data-number="10.4" class="anchored" data-anchor-id="paso-1-preparacion-del-entorno"><span class="header-section-number">10.4</span> Paso 1: Preparacion del Entorno</h2>
+<section id="verifica-los-requisitos-de-tu-sistema" class="level3" data-number="10.4.1">
+<h3 data-number="10.4.1" class="anchored" data-anchor-id="verifica-los-requisitos-de-tu-sistema"><span class="header-section-number">10.4.1</span> 1.1 Verifica los Requisitos de tu Sistema</h3>
 <p><strong>Paso 1</strong>: Verifica la RAM disponible</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Linux</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">free</span> <span class="at">-h</span></span>
@@ -750,8 +745,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># macOS</span></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ex">sysctl</span> <span class="at">-n</span> machdep.cpu.brand_string</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="instala-ollama" class="level3" data-number="11.4.2">
-<h3 data-number="11.4.2" class="anchored" data-anchor-id="instala-ollama"><span class="header-section-number">11.4.2</span> 1.2 Instala Ollama</h3>
+<section id="instala-ollama" class="level3" data-number="10.4.2">
+<h3 data-number="10.4.2" class="anchored" data-anchor-id="instala-ollama"><span class="header-section-number">10.4.2</span> 1.2 Instala Ollama</h3>
 <p><strong>Paso 1</strong>: Instala Ollama en tu sistema</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Linux/macOS</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://ollama.com/install.sh <span class="kw">|</span> <span class="fu">sh</span></span>
@@ -770,8 +765,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> http://localhost:11434/api/tags</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Esperado</strong>: JSON con lista de modelos instalados (vacia al inicio).</p>
 </section>
-<section id="instala-lm-studio-opcional" class="level3" data-number="11.4.3">
-<h3 data-number="11.4.3" class="anchored" data-anchor-id="instala-lm-studio-opcional"><span class="header-section-number">11.4.3</span> 1.3 Instala LM Studio (Opcional)</h3>
+<section id="instala-lm-studio-opcional" class="level3" data-number="10.4.3">
+<h3 data-number="10.4.3" class="anchored" data-anchor-id="instala-lm-studio-opcional"><span class="header-section-number">10.4.3</span> 1.3 Instala LM Studio (Opcional)</h3>
 <p><strong>Paso 1</strong>: Descarga LM Studio segun tu plataforma</p>
 <table class="caption-top table">
 <thead>
@@ -809,10 +804,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <hr>
 </section>
 </section>
-<section id="paso-2-modelos-especializados-para-security" class="level2" data-number="11.5">
-<h2 data-number="11.5" class="anchored" data-anchor-id="paso-2-modelos-especializados-para-security"><span class="header-section-number">11.5</span> Paso 2: Modelos Especializados para Security</h2>
-<section id="descarga-los-modelos" class="level3" data-number="11.5.1">
-<h3 data-number="11.5.1" class="anchored" data-anchor-id="descarga-los-modelos"><span class="header-section-number">11.5.1</span> 2.1 Descarga los Modelos</h3>
+<section id="paso-2-modelos-especializados-para-security" class="level2" data-number="10.5">
+<h2 data-number="10.5" class="anchored" data-anchor-id="paso-2-modelos-especializados-para-security"><span class="header-section-number">10.5</span> Paso 2: Modelos Especializados para Security</h2>
+<section id="descarga-los-modelos" class="level3" data-number="10.5.1">
+<h3 data-number="10.5.1" class="anchored" data-anchor-id="descarga-los-modelos"><span class="header-section-number">10.5.1</span> 2.1 Descarga los Modelos</h3>
 <p><strong>Paso 1</strong>: Descarga modelos de seguridad con Ollama</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo general de seguridad (7B)</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ollama</span> pull llama3.1:8b</span>
@@ -826,8 +821,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ollama</span> list</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Esperado</strong>: Lista de modelos con tamanos y fechas de descarga.</p>
 </section>
-<section id="selecciona-el-modelo-segun-tu-hardware" class="level3" data-number="11.5.2">
-<h3 data-number="11.5.2" class="anchored" data-anchor-id="selecciona-el-modelo-segun-tu-hardware"><span class="header-section-number">11.5.2</span> 2.2 Selecciona el Modelo segun tu Hardware</h3>
+<section id="selecciona-el-modelo-segun-tu-hardware" class="level3" data-number="10.5.2">
+<h3 data-number="10.5.2" class="anchored" data-anchor-id="selecciona-el-modelo-segun-tu-hardware"><span class="header-section-number">10.5.2</span> 2.2 Selecciona el Modelo segun tu Hardware</h3>
 <p><strong>Si tienes 4GB VRAM o menos</strong>:</p>
 <table class="caption-top table">
 <thead>
@@ -904,126 +899,83 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<p>descargar_modelo “xploiter/the-xploiter” descargar_modelo “xploiter/pentester” descargar_modelo “f0rc3ps/nu11secur1tyAI” descargar_modelo “ALIENTELLIGENCE/cybersecuritythreatanalysisv2”</p>
+<hr>
 </section>
 </section>
-</section>
-<section id="modelos-para-codinganalysis" class="level1" data-number="12">
-<h1 data-number="12"><span class="header-section-number">12</span> Modelos para coding/analysis</h1>
-<p>echo “” echo “[2] Modelos de analisis…” descargar_modelo “llama3.1:8b-instruct-q4_K_M” descargar_modelo “mistral:7b-instruct” descargar_modelo “qwen2.5:7b-instruct-q4_K_M” descargar_modelo “phi4:14b-chat-q4_K_M”</p>
-</section>
-<section id="listar-todos" class="level1" data-number="13">
-<h1 data-number="13"><span class="header-section-number">13</span> Listar todos</h1>
-<p>echo “” echo “=== Modelos Instalados ===” ollama list</p>
-<pre><code>
-### 2.2 Comparativa y Seleccion
-
-**Matriz de Capacidades**
-
-| Modelo | Tamano | VRAM Req. | Pentest | Code Review | Threat Hunting | Malware Analysis | Costo |
-|--------|--------|-----------|---------|-------------|----------------|------------------|-------|
-| The-Xploiter | 9.2GB | 10GB | +++ | ++ | ++ | + | Alto |
-| Pentester | 7B | 8GB | +++ | +++ | + | + | Medio |
-| nu11secur1tyAI | 3.3GB | 4GB | ++ | ++ | +++ | ++ | Bajo |
-| CyberThreat | 8GB | 9GB | + | ++ | +++ | +++ | Alto |
-| Llama 3.1 8B | 4.9GB | 6GB | ++ | +++ | ++ | + | Bajo |
-| Mistral 7B | 4.1GB | 5GB | + | ++ | + | + | Bajo |
-
-**Seleccion por Objetivo**
-
-| Objetivo | Primario | Backup | Rapidez |
-|----------|----------|--------|---------|
-| **Pentesting Activo** | The-Xploiter | Pentester | Mistral |
-| **Code Review** | Llama 3.1 8B | Qwen 2.5 | Mistral |
-| **Threat Hunting** | nu11secur1tyAI | CyberThreat | Llama 3.1 |
-| **Malware Analysis** | The-Xploiter | Qwen 2.5 | — |
-
-**Configuracion por Hardware**
-
-| VRAM Disponible | Modelo Primario | Alternativa |
-|-----------------|-----------------|-------------|
-| 4GB | nu11secur1tyAI | Mistral 7B |
-| 8GB | The-Xploiter | Pentester |
-| 16GB+ | Multiple modelos | Ensemble |
-
----
-
-## Paso 3: Integracion con Tools de Security
-
-### 3.1 Burp Suite Extension con Ollama
-
-**Paso 1**: Crea el archivo de la extension
-
-```bash
-# Crea el directorio de extensiones
-mkdir -p ~/burp-extensions
-cd ~/burp-extensions
-
-# Crea el archivo de la extension
-cat &gt; ollama_security_burp.py &lt;&lt; 'EOF'
-from burp import IBurpExtender, IHttpListener
-import requests
-import json
-import threading
-import time
-
-class OllamaSecurityAI(IBurpExtender, IHttpListener):
-    def registerExtenderCallbacks(self, callbacks):
-        self._callbacks = callbacks
-        self._helpers = callbacks.getHelpers()
-        callbacks.registerHttpListener(self)
-        callbacks.setExtensionName("Ollama AI Security Suite")
-        self.ollama_url = "http://localhost:11434"
-        self.model = "llama3.1:8b"
-        self.analysis_queue = []
-        self._callbacks.print("Ollama AI Security Suite v1.0")
-        t = threading.Thread(target=self.analysis_worker, daemon=True)
-        t.start()
-
-    def processHttpMessage(self, toolFlag, messageIsRequest, messageInfo):
-        if not messageIsRequest:
-            return
-        if toolFlag not in [1, 2, 4, 8]:
-            return
-        request = messageInfo.getRequest()
-        url = str(self._helpers.analyzeRequest(messageInfo).getUrl())
-        self.analysis_queue.append({
-            "url": url,
-            "request": request,
-            "message": messageInfo
-        })
-
-    def analysis_worker(self):
-        while True:
-            if self.analysis_queue:
-                item = self.analysis_queue.pop(0)
-                try:
-                    analysis = self.analyze_request(
-                        item["url"],
-                        bytes(item["request"])
-                    )
-                    self._callbacks.print(f"\n[AI] {item['url']}")
-                    self._callbacks.print(analysis)
-                except Exception as e:
-                    self._callbacks.print(f"[Error] {e}")
-            else:
-                time.sleep(1)
-
-    def analyze_request(self, url, request_bytes):
-        request_str = request_bytes.decode("utf-8", errors="ignore")
-        prompt = f"""Analiza esta peticion HTTP para vulnerabilidades:
-URL: {url}
-Request: {request_str[:2000]}
-Proporciona: 1. Vulnerabilidades potenciales 2. Severidad 3. Vector de explotacion 4. Remediation"""
-        response = requests.post(
-            f"{self.ollama_url}/api/chat",
-            json={"model": self.model, "messages": [{"role": "user", "content": prompt}], "stream": False},
-            timeout=30
-        )
-        if response.status_code == 200:
-            return response.json()["message"]["content"]
-        return f"Error: {response.status_code}"
-EOF</code></pre>
+<section id="paso-3-integracion-con-tools-de-security" class="level2" data-number="10.6">
+<h2 data-number="10.6" class="anchored" data-anchor-id="paso-3-integracion-con-tools-de-security"><span class="header-section-number">10.6</span> Paso 3: Integracion con Tools de Security</h2>
+<section id="burp-suite-extension-con-ollama" class="level3" data-number="10.6.1">
+<h3 data-number="10.6.1" class="anchored" data-anchor-id="burp-suite-extension-con-ollama"><span class="header-section-number">10.6.1</span> 3.1 Burp Suite Extension con Ollama</h3>
+<p><strong>Paso 1</strong>: Crea el archivo de la extension</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Crea el directorio de extensiones</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/burp-extensions</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/burp-extensions</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Crea el archivo de la extension</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> <span class="op">&gt;</span> ollama_security_burp.py <span class="op">&lt;&lt; 'EOF'</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="st">from burp import IBurpExtender, IHttpListener</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="st">import requests</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="st">import json</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="st">import threading</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="st">import time</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="st">class OllamaSecurityAI(IBurpExtender, IHttpListener):</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="st">    def registerExtenderCallbacks(self, callbacks):</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="st">        self._callbacks = callbacks</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="st">        self._helpers = callbacks.getHelpers()</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="st">        callbacks.registerHttpListener(self)</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="st">        callbacks.setExtensionName("Ollama AI Security Suite")</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="st">        self.ollama_url = "http://localhost:11434"</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="st">        self.model = "llama3.1:8b"</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="st">        self.analysis_queue = []</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="st">        self._callbacks.print("Ollama AI Security Suite v1.0")</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="st">        t = threading.Thread(target=self.analysis_worker, daemon=True)</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="st">        t.start()</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a><span class="st">    def processHttpMessage(self, toolFlag, messageIsRequest, messageInfo):</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a><span class="st">        if not messageIsRequest:</span></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a><span class="st">            return</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a><span class="st">        if toolFlag not in [1, 2, 4, 8]:</span></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a><span class="st">            return</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a><span class="st">        request = messageInfo.getRequest()</span></span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a><span class="st">        url = str(self._helpers.analyzeRequest(messageInfo).getUrl())</span></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a><span class="st">        self.analysis_queue.append({</span></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a><span class="st">            "url": url,</span></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a><span class="st">            "request": request,</span></span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a><span class="st">            "message": messageInfo</span></span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a><span class="st">        })</span></span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a><span class="st">    def analysis_worker(self):</span></span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a><span class="st">        while True:</span></span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a><span class="st">            if self.analysis_queue:</span></span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a><span class="st">                item = self.analysis_queue.pop(0)</span></span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a><span class="st">                try:</span></span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a><span class="st">                    analysis = self.analyze_request(</span></span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a><span class="st">                        item["url"],</span></span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a><span class="st">                        bytes(item["request"])</span></span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a><span class="st">                    )</span></span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a><span class="st">                    self._callbacks.print(f"\n[AI] {item['url']}")</span></span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a><span class="st">                    self._callbacks.print(analysis)</span></span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a><span class="st">                except Exception as e:</span></span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a><span class="st">                    self._callbacks.print(f"[Error] {e}")</span></span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a><span class="st">            else:</span></span>
+<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a><span class="st">                time.sleep(1)</span></span>
+<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a><span class="st">    def analyze_request(self, url, request_bytes):</span></span>
+<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a><span class="st">        request_str = request_bytes.decode("utf-8", errors="ignore")</span></span>
+<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a><span class="st">        prompt = f"""Analiza esta peticion HTTP para vulnerabilidades:</span></span>
+<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a><span class="st">URL: {url}</span></span>
+<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a><span class="st">Request: {request_str[:2000]}</span></span>
+<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a><span class="st">Proporciona: 1. Vulnerabilidades potenciales 2. Severidad 3. Vector de explotacion 4. Remediation"""</span></span>
+<span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a><span class="st">        response = requests.post(</span></span>
+<span id="cb12-62"><a href="#cb12-62" aria-hidden="true" tabindex="-1"></a><span class="st">            f"{self.ollama_url}/api/chat",</span></span>
+<span id="cb12-63"><a href="#cb12-63" aria-hidden="true" tabindex="-1"></a><span class="st">            json={"model": self.model, "messages": [{"role": "user", "content": prompt}], "stream": False},</span></span>
+<span id="cb12-64"><a href="#cb12-64" aria-hidden="true" tabindex="-1"></a><span class="st">            timeout=30</span></span>
+<span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a><span class="st">        )</span></span>
+<span id="cb12-66"><a href="#cb12-66" aria-hidden="true" tabindex="-1"></a><span class="st">        if response.status_code == 200:</span></span>
+<span id="cb12-67"><a href="#cb12-67" aria-hidden="true" tabindex="-1"></a><span class="st">            return response.json()["message"]["content"]</span></span>
+<span id="cb12-68"><a href="#cb12-68" aria-hidden="true" tabindex="-1"></a><span class="st">        return f"Error: {response.status_code}"</span></span>
+<span id="cb12-69"><a href="#cb12-69" aria-hidden="true" tabindex="-1"></a><span class="op">EOF</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Paso 2</strong>: Carga la extension en Burp Suite</p>
 <ol type="1">
 <li>Abre Burp Suite</li>
@@ -1044,8 +996,9 @@ EOF</code></pre>
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="st">  "stream": false</span></span>
 <span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Esperado</strong>: Respuesta JSON del modelo confirmando que esta listo.</p>
-<section id="modulo-de-metasploit-con-ai" class="level3" data-number="13.0.1">
-<h3 data-number="13.0.1" class="anchored" data-anchor-id="modulo-de-metasploit-con-ai"><span class="header-section-number">13.0.1</span> 3.2 Modulo de Metasploit con AI</h3>
+</section>
+<section id="modulo-de-metasploit-con-ai" class="level3" data-number="10.6.2">
+<h3 data-number="10.6.2" class="anchored" data-anchor-id="modulo-de-metasploit-con-ai"><span class="header-section-number">10.6.2</span> 3.2 Modulo de Metasploit con AI</h3>
 <p><strong>Paso 1</strong>: Crea el modulo auxiliar de Metasploit</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Crea el directorio de modulos personalizados</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/.msf4/modules/auxiliary/ai</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1119,8 +1072,8 @@ EOF</code></pre>
 <span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="ex">run</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Esperado</strong>: El modulo envia la consulta a Ollama y muestra el analisis de vulnerabilidades.</p>
 </section>
-<section id="analisis-de-resultados-de-nuclei-con-ai" class="level3" data-number="13.0.2">
-<h3 data-number="13.0.2" class="anchored" data-anchor-id="analisis-de-resultados-de-nuclei-con-ai"><span class="header-section-number">13.0.2</span> 3.3 Analisis de Resultados de Nuclei con AI</h3>
+<section id="analisis-de-resultados-de-nuclei-con-ai" class="level3" data-number="10.6.3">
+<h3 data-number="10.6.3" class="anchored" data-anchor-id="analisis-de-resultados-de-nuclei-con-ai"><span class="header-section-number">10.6.3</span> 3.3 Analisis de Resultados de Nuclei con AI</h3>
 <p><strong>Paso 1</strong>: Ejecuta un escaneo basico con Nuclei</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Escanea un objetivo y guarda los resultados en JSON</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="ex">nuclei</span> <span class="at">-u</span> http://testphp.vulnweb.com <span class="at">-json</span> <span class="at">-o</span> nuclei_results.json</span>
@@ -1179,10 +1132,11 @@ EOF</code></pre>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> nuclei_ai_analyzer.py nuclei_results.json</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Esperado</strong>: Analisis priorizado de vulnerabilidades con recomendaciones de remediation.</p>
 </section>
-<section id="paso-4-threat-hunting-automation" class="level2" data-number="13.1">
-<h2 data-number="13.1" class="anchored" data-anchor-id="paso-4-threat-hunting-automation"><span class="header-section-number">13.1</span> Paso 4: Threat Hunting Automation</h2>
-<section id="deteccion-de-anomalias-con-ai" class="level3" data-number="13.1.1">
-<h3 data-number="13.1.1" class="anchored" data-anchor-id="deteccion-de-anomalias-con-ai"><span class="header-section-number">13.1.1</span> 4.1 Deteccion de Anomalias con AI</h3>
+</section>
+<section id="paso-4-threat-hunting-automation" class="level2" data-number="10.7">
+<h2 data-number="10.7" class="anchored" data-anchor-id="paso-4-threat-hunting-automation"><span class="header-section-number">10.7</span> Paso 4: Threat Hunting Automation</h2>
+<section id="deteccion-de-anomalias-con-ai" class="level3" data-number="10.7.1">
+<h3 data-number="10.7.1" class="anchored" data-anchor-id="deteccion-de-anomalias-con-ai"><span class="header-section-number">10.7.1</span> 4.1 Deteccion de Anomalias con AI</h3>
 <p><strong>Paso 1</strong>: Prepara logs de ejemplo para analisis</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Crea un directorio de logs de ejemplo</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/threat-hunting-logs</span>
@@ -1290,8 +1244,8 @@ EOF</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> threat_hunter.py ~/threat-hunting-logs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Esperado</strong>: Analisis de anomalias con IPs sospechosas, patrones de ataque identificados y recomendaciones.</p>
 </section>
-<section id="analisis-de-iocs-indicators-of-compromise" class="level3" data-number="13.1.2">
-<h3 data-number="13.1.2" class="anchored" data-anchor-id="analisis-de-iocs-indicators-of-compromise"><span class="header-section-number">13.1.2</span> 4.2 Analisis de IoCs (Indicators of Compromise)</h3>
+<section id="analisis-de-iocs-indicators-of-compromise" class="level3" data-number="10.7.2">
+<h3 data-number="10.7.2" class="anchored" data-anchor-id="analisis-de-iocs-indicators-of-compromise"><span class="header-section-number">10.7.2</span> 4.2 Analisis de IoCs (Indicators of Compromise)</h3>
 <p><strong>Paso 1</strong>: Prepara una lista de IoCs para investigar</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> <span class="op">&gt;</span> iocs.json <span class="op">&lt;&lt; 'EOF'</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="st">{</span></span>
@@ -1339,8 +1293,8 @@ EOF</code></pre>
 <span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> ioc_hunter.py iocs.json</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="analisis-estatico-de-archivos-sospechosos" class="level3" data-number="13.1.3">
-<h3 data-number="13.1.3" class="anchored" data-anchor-id="analisis-estatico-de-archivos-sospechosos"><span class="header-section-number">13.1.3</span> 4.3 Analisis Estatico de Archivos Sospechosos</h3>
+<section id="analisis-estatico-de-archivos-sospechosos" class="level3" data-number="10.7.3">
+<h3 data-number="10.7.3" class="anchored" data-anchor-id="analisis-estatico-de-archivos-sospechosos"><span class="header-section-number">10.7.3</span> 4.3 Analisis Estatico de Archivos Sospechosos</h3>
 <p><strong>Paso 1</strong>: Analiza un archivo sospechoso con herramientas basicas</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcula hashes del archivo</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">md5sum</span> suspicious_file</span>
@@ -1412,10 +1366,10 @@ EOF</code></pre>
 </div>
 </section>
 </section>
-<section id="paso-5-rag-para-security" class="level2" data-number="13.2">
-<h2 data-number="13.2" class="anchored" data-anchor-id="paso-5-rag-para-security"><span class="header-section-number">13.2</span> Paso 5: RAG para Security</h2>
-<section id="construye-tu-knowledge-base" class="level3" data-number="13.2.1">
-<h3 data-number="13.2.1" class="anchored" data-anchor-id="construye-tu-knowledge-base"><span class="header-section-number">13.2.1</span> 5.1 Construye tu Knowledge Base</h3>
+<section id="paso-5-rag-para-security" class="level2" data-number="10.8">
+<h2 data-number="10.8" class="anchored" data-anchor-id="paso-5-rag-para-security"><span class="header-section-number">10.8</span> Paso 5: RAG para Security</h2>
+<section id="construye-tu-knowledge-base" class="level3" data-number="10.8.1">
+<h3 data-number="10.8.1" class="anchored" data-anchor-id="construye-tu-knowledge-base"><span class="header-section-number">10.8.1</span> 5.1 Construye tu Knowledge Base</h3>
 <p><strong>Paso 1</strong>: Crea la estructura de la base de conocimiento</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Crea la estructura de directorios</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/security-kb/<span class="dt">{owasp</span><span class="op">,</span><span class="dt">mitre</span><span class="op">,</span><span class="dt">cve</span><span class="op">,</span><span class="dt">tools}</span></span>
@@ -1477,8 +1431,8 @@ EOF</code></pre>
 <span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Verifica el contenido de cada directorio</span></span>
 <span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-la</span> ~/security-kb/<span class="pp">*</span>/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="sistema-de-consulta-con-rag" class="level3" data-number="13.2.2">
-<h3 data-number="13.2.2" class="anchored" data-anchor-id="sistema-de-consulta-con-rag"><span class="header-section-number">13.2.2</span> 5.2 Sistema de Consulta con RAG</h3>
+<section id="sistema-de-consulta-con-rag" class="level3" data-number="10.8.2">
+<h3 data-number="10.8.2" class="anchored" data-anchor-id="sistema-de-consulta-con-rag"><span class="header-section-number">10.8.2</span> 5.2 Sistema de Consulta con RAG</h3>
 <p><strong>Paso 1</strong>: Crea el script de consulta RAG</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> <span class="op">&gt;</span> security_rag.py <span class="op">&lt;&lt; 'EOF'</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="st">import requests</span></span>
@@ -1575,8 +1529,8 @@ EOF</code></pre>
 <span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Esperado</strong>: Respuesta basada en la documentacion de OWASP Top 10 que descargaste, con referencias a las fuentes utilizadas.</p>
 </section>
-<section id="casos-de-uso-practicos" class="level3" data-number="13.2.3">
-<h3 data-number="13.2.3" class="anchored" data-anchor-id="casos-de-uso-practicos"><span class="header-section-number">13.2.3</span> 5.3 Casos de Uso Practicos</h3>
+<section id="casos-de-uso-practicos" class="level3" data-number="10.8.3">
+<h3 data-number="10.8.3" class="anchored" data-anchor-id="casos-de-uso-practicos"><span class="header-section-number">10.8.3</span> 5.3 Casos de Uso Practicos</h3>
 <p><strong>Caso 1</strong>: Consulta sobre vulnerabilidades especificas</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo de consulta</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-c</span> <span class="st">"</span></span>
@@ -1613,14 +1567,14 @@ EOF</code></pre>
 <hr>
 </section>
 </section>
-<section id="ejercicio-final-centro-de-comando-de-security-ai" class="level2" data-number="13.3">
-<h2 data-number="13.3" class="anchored" data-anchor-id="ejercicio-final-centro-de-comando-de-security-ai"><span class="header-section-number">13.3</span> Ejercicio Final: Centro de Comando de Security AI</h2>
-<section id="objetivo" class="level3" data-number="13.3.1">
-<h3 data-number="13.3.1" class="anchored" data-anchor-id="objetivo"><span class="header-section-number">13.3.1</span> Objetivo</h3>
+<section id="ejercicio-final-centro-de-comando-de-security-ai" class="level2" data-number="10.9">
+<h2 data-number="10.9" class="anchored" data-anchor-id="ejercicio-final-centro-de-comando-de-security-ai"><span class="header-section-number">10.9</span> Ejercicio Final: Centro de Comando de Security AI</h2>
+<section id="objetivo" class="level3" data-number="10.9.1">
+<h3 data-number="10.9.1" class="anchored" data-anchor-id="objetivo"><span class="header-section-number">10.9.1</span> Objetivo</h3>
 <p>Integrar todo lo aprendido en un flujo de trabajo completo de AI Security Operations.</p>
 </section>
-<section id="pasos-del-ejercicio" class="level3" data-number="13.3.2">
-<h3 data-number="13.3.2" class="anchored" data-anchor-id="pasos-del-ejercicio"><span class="header-section-number">13.3.2</span> Pasos del Ejercicio</h3>
+<section id="pasos-del-ejercicio" class="level3" data-number="10.9.2">
+<h3 data-number="10.9.2" class="anchored" data-anchor-id="pasos-del-ejercicio"><span class="header-section-number">10.9.2</span> Pasos del Ejercicio</h3>
 <p><strong>Paso 1</strong>: Configura tu entorno de LLMs locales</p>
 <ul class="task-list">
 <li><label><input type="checkbox">Ollama instalado y corriendo (<code>ollama list</code> muestra modelos)</label></li>
@@ -1646,8 +1600,8 @@ EOF</code></pre>
 <li><label><input type="checkbox">Sistema RAG funcionando con consultas interactivas</label></li>
 </ul>
 </section>
-<section id="criterios-de-evaluacion" class="level3" data-number="13.3.3">
-<h3 data-number="13.3.3" class="anchored" data-anchor-id="criterios-de-evaluacion"><span class="header-section-number">13.3.3</span> Criterios de Evaluacion</h3>
+<section id="criterios-de-evaluacion" class="level3" data-number="10.9.3">
+<h3 data-number="10.9.3" class="anchored" data-anchor-id="criterios-de-evaluacion"><span class="header-section-number">10.9.3</span> Criterios de Evaluacion</h3>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -1687,8 +1641,8 @@ EOF</code></pre>
 </tbody>
 </table>
 </section>
-<section id="entregable" class="level3" data-number="13.3.4">
-<h3 data-number="13.3.4" class="anchored" data-anchor-id="entregable"><span class="header-section-number">13.3.4</span> Entregable</h3>
+<section id="entregable" class="level3" data-number="10.9.4">
+<h3 data-number="10.9.4" class="anchored" data-anchor-id="entregable"><span class="header-section-number">10.9.4</span> Entregable</h3>
 <ol type="1">
 <li><strong>Screenshot</strong> de cada paso completado</li>
 <li><strong>Notas</strong> de analisis con hallazgos principales</li>
@@ -1697,8 +1651,8 @@ EOF</code></pre>
 <hr>
 </section>
 </section>
-<section id="recursos" class="level2" data-number="13.4">
-<h2 data-number="13.4" class="anchored" data-anchor-id="recursos"><span class="header-section-number">13.4</span> Recursos</h2>
+<section id="recursos" class="level2" data-number="10.10">
+<h2 data-number="10.10" class="anchored" data-anchor-id="recursos"><span class="header-section-number">10.10</span> Recursos</h2>
 <ul>
 <li>Ollama Docs: https://docs.ollama.com</li>
 <li>LM Studio: https://lmstudio.ai</li>
@@ -1710,7 +1664,6 @@ EOF</code></pre>
 <p><em>Lab Anexo: Local LLMs for Cybersecurity (Advanced)</em> <em>Duration: 5 horas</em> <em>Level: Intermediate-Advanced</em> <em>License: CC BY-SA 4.0</em></p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

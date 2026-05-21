@@ -5,7 +5,6 @@ type: "anexo"
 description: "Laboratorio práctico de 7 vulnerabilidades web con OWASP Juice Shop — SQLi, XSS, JWT, IDOR, Directory Traversal"
 ---
 
-# Apéndice: OWASP Juice Shop — Laboratorio de Explotación Web
 
 ## Introducción
 

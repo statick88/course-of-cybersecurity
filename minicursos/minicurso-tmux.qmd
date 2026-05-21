@@ -5,7 +5,6 @@ type: "minicurso"
 description: "Tutorial completo de Tmux para ciberseguridad"
 ---
 
-# Minicurso: Tmux
 
 ## ¿Qué es Tmux?
 

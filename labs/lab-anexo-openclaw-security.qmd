@@ -5,7 +5,6 @@ type: "lab"
 description: "Practica avanzada de seguridad para agentes IA, vulnerability assessment y threat hunting"
 ---
 
-# Lab Anexo: Seguridad Avanzada de Agentes IA y Vulnerability Assessment
 
 ## Objetivo del Laboratorio
 

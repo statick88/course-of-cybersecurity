@@ -5,7 +5,6 @@ type: "minicurso"
 description: "Tutorial completo de Curl para ciberseguridad"
 ---
 
-# Minicurso: Curl
 
 ## ¿Qué es Curl?
 

@@ -7,7 +7,6 @@ license: "CC BY-SA 4.0"
 author: "Diego Saavedra"
 ---
 
-# Fundamentos de Ciberseguridad
 
 > **Curso profesional de ciberseguridad con enfoque practico basado en NIST CSF 2.0 y tendencias 2026**
 

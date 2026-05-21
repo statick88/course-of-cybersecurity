@@ -5,7 +5,6 @@ type: "minicurso"
 description: "Tutorial completo de Tcpdump para análisis de tráfico de red en ciberseguridad"
 ---
 
-# Minicurso: Tcpdump
 
 ## ¿Qué es Tcpdump?
 

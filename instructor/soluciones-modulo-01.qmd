@@ -5,7 +5,6 @@ type: "instructor"
 description: "Soluciones detalladas para el Lab 1"
 ---
 
-# Soluciones: Lab 1 - Mapeo de Controles NIST CSF
 
 ## ✅ Verificaciones Previas
 

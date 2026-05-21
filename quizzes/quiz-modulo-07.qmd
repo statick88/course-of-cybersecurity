@@ -5,7 +5,6 @@ type: "quiz"
 description: "Evaluacion del modulo 7: Respuesta a incidentes"
 ---
 
-# Quiz 7: Respuesta a Incidentes
 
 ## Instrucciones
 

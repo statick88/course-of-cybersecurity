@@ -594,107 +594,86 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#lab-anexo-herramientas-avanzadas-de-hacking" id="toc-lab-anexo-herramientas-avanzadas-de-hacking" class="nav-link active" data-scroll-target="#lab-anexo-herramientas-avanzadas-de-hacking"><span class="header-section-number">13</span> Lab Anexo: Herramientas Avanzadas de Hacking</a>
+  <li><a href="#objetivo-del-laboratorio" id="toc-objetivo-del-laboratorio" class="nav-link active" data-scroll-target="#objetivo-del-laboratorio"><span class="header-section-number">12.1</span> Objetivo del Laboratorio</a></li>
+  <li><a href="#requisitos" id="toc-requisitos" class="nav-link" data-scroll-target="#requisitos"><span class="header-section-number">12.2</span> Requisitos</a></li>
+  <li><a href="#duracion" id="toc-duracion" class="nav-link" data-scroll-target="#duracion"><span class="header-section-number">12.3</span> Duracion</a></li>
+  <li><a href="#workflow-1-ataques-de-password" id="toc-workflow-1-ataques-de-password" class="nav-link" data-scroll-target="#workflow-1-ataques-de-password"><span class="header-section-number">12.4</span> Workflow 1: Ataques de Password</a></li>
+  <li><a href="#objetivo" id="toc-objetivo" class="nav-link" data-scroll-target="#objetivo"><span class="header-section-number">12.5</span> Objetivo</a></li>
+  <li><a href="#escenario" id="toc-escenario" class="nav-link" data-scroll-target="#escenario"><span class="header-section-number">12.6</span> Escenario</a></li>
+  <li><a href="#pasos" id="toc-pasos" class="nav-link" data-scroll-target="#pasos"><span class="header-section-number">12.7</span> Pasos</a>
   <ul class="collapse">
-  <li><a href="#objetivo-del-laboratorio" id="toc-objetivo-del-laboratorio" class="nav-link" data-scroll-target="#objetivo-del-laboratorio"><span class="header-section-number">13.1</span> Objetivo del Laboratorio</a></li>
-  <li><a href="#requisitos" id="toc-requisitos" class="nav-link" data-scroll-target="#requisitos"><span class="header-section-number">13.2</span> Requisitos</a></li>
-  <li><a href="#duracion" id="toc-duracion" class="nav-link" data-scroll-target="#duracion"><span class="header-section-number">13.3</span> Duracion</a></li>
+  <li><a href="#paso-1-hydra---brute-force-de-servicios" id="toc-paso-1-hydra---brute-force-de-servicios" class="nav-link" data-scroll-target="#paso-1-hydra---brute-force-de-servicios"><span class="header-section-number">12.7.1</span> Paso 1: Hydra - Brute Force de Servicios</a></li>
+  <li><a href="#paso-2-john-the-ripper---crack-de-hashes" id="toc-paso-2-john-the-ripper---crack-de-hashes" class="nav-link" data-scroll-target="#paso-2-john-the-ripper---crack-de-hashes"><span class="header-section-number">12.7.2</span> Paso 2: John the Ripper - Crack de Hashes</a></li>
+  <li><a href="#paso-3-medusa---brute-force-paralelo" id="toc-paso-3-medusa---brute-force-paralelo" class="nav-link" data-scroll-target="#paso-3-medusa---brute-force-paralelo"><span class="header-section-number">12.7.3</span> Paso 3: Medusa - Brute Force Paralelo</a></li>
+  <li><a href="#paso-4-hashcat---gpu-acceleration" id="toc-paso-4-hashcat---gpu-acceleration" class="nav-link" data-scroll-target="#paso-4-hashcat---gpu-acceleration"><span class="header-section-number">12.7.4</span> Paso 4: Hashcat - GPU Acceleration</a></li>
+  <li><a href="#paso-5-crunch---generador-de-wordlists" id="toc-paso-5-crunch---generador-de-wordlists" class="nav-link" data-scroll-target="#paso-5-crunch---generador-de-wordlists"><span class="header-section-number">12.7.5</span> Paso 5: Crunch - Generador de Wordlists</a></li>
+  <li><a href="#paso-6-cewl---wordlist-desde-web" id="toc-paso-6-cewl---wordlist-desde-web" class="nav-link" data-scroll-target="#paso-6-cewl---wordlist-desde-web"><span class="header-section-number">12.7.6</span> Paso 6: CEWL - Wordlist desde Web</a></li>
   </ul></li>
-  <li><a href="#workflow-1-ataques-de-password" id="toc-workflow-1-ataques-de-password" class="nav-link" data-scroll-target="#workflow-1-ataques-de-password"><span class="header-section-number">14</span> Workflow 1: Ataques de Password</a>
+  <li><a href="#verificacion" id="toc-verificacion" class="nav-link" data-scroll-target="#verificacion"><span class="header-section-number">12.8</span> Verificacion</a></li>
+  <li><a href="#workflow-2-enumeracion-de-directorios" id="toc-workflow-2-enumeracion-de-directorios" class="nav-link" data-scroll-target="#workflow-2-enumeracion-de-directorios"><span class="header-section-number">12.9</span> Workflow 2: Enumeracion de Directorios</a></li>
+  <li><a href="#objetivo-1" id="toc-objetivo-1" class="nav-link" data-scroll-target="#objetivo-1"><span class="header-section-number">12.10</span> Objetivo</a></li>
+  <li><a href="#escenario-1" id="toc-escenario-1" class="nav-link" data-scroll-target="#escenario-1"><span class="header-section-number">12.11</span> Escenario</a></li>
+  <li><a href="#pasos-1" id="toc-pasos-1" class="nav-link" data-scroll-target="#pasos-1"><span class="header-section-number">12.12</span> Pasos</a>
   <ul class="collapse">
-  <li><a href="#objetivo" id="toc-objetivo" class="nav-link" data-scroll-target="#objetivo"><span class="header-section-number">14.1</span> Objetivo</a></li>
-  <li><a href="#escenario" id="toc-escenario" class="nav-link" data-scroll-target="#escenario"><span class="header-section-number">14.2</span> Escenario</a></li>
-  <li><a href="#pasos" id="toc-pasos" class="nav-link" data-scroll-target="#pasos"><span class="header-section-number">14.3</span> Pasos</a>
+  <li><a href="#paso-1-dirb---enumeracion-basica" id="toc-paso-1-dirb---enumeracion-basica" class="nav-link" data-scroll-target="#paso-1-dirb---enumeracion-basica"><span class="header-section-number">12.12.1</span> Paso 1: DIRB - Enumeracion basica</a></li>
+  <li><a href="#paso-2-gobuster---enumeracion-rapida" id="toc-paso-2-gobuster---enumeracion-rapida" class="nav-link" data-scroll-target="#paso-2-gobuster---enumeracion-rapida"><span class="header-section-number">12.12.2</span> Paso 2: GOBUSTER - Enumeracion rapida</a></li>
+  <li><a href="#paso-3-wfuzz---fuzzing-avanzado" id="toc-paso-3-wfuzz---fuzzing-avanzado" class="nav-link" data-scroll-target="#paso-3-wfuzz---fuzzing-avanzado"><span class="header-section-number">12.12.3</span> Paso 3: WFuzz - Fuzzing avanzado</a></li>
+  </ul></li>
+  <li><a href="#verificacion-1" id="toc-verificacion-1" class="nav-link" data-scroll-target="#verificacion-1"><span class="header-section-number">12.13</span> Verificacion</a></li>
+  <li><a href="#workflow-3-enumeracion-de-subdominios" id="toc-workflow-3-enumeracion-de-subdominios" class="nav-link" data-scroll-target="#workflow-3-enumeracion-de-subdominios"><span class="header-section-number">12.14</span> Workflow 3: Enumeracion de Subdominios</a></li>
+  <li><a href="#objetivo-2" id="toc-objetivo-2" class="nav-link" data-scroll-target="#objetivo-2"><span class="header-section-number">12.15</span> Objetivo</a></li>
+  <li><a href="#pasos-2" id="toc-pasos-2" class="nav-link" data-scroll-target="#pasos-2"><span class="header-section-number">12.16</span> Pasos</a>
   <ul class="collapse">
-  <li><a href="#paso-1-hydra---brute-force-de-servicios" id="toc-paso-1-hydra---brute-force-de-servicios" class="nav-link" data-scroll-target="#paso-1-hydra---brute-force-de-servicios"><span class="header-section-number">14.3.1</span> Paso 1: Hydra - Brute Force de Servicios</a></li>
-  <li><a href="#paso-2-john-the-ripper---crack-de-hashes" id="toc-paso-2-john-the-ripper---crack-de-hashes" class="nav-link" data-scroll-target="#paso-2-john-the-ripper---crack-de-hashes"><span class="header-section-number">14.3.2</span> Paso 2: John the Ripper - Crack de Hashes</a></li>
-  <li><a href="#paso-3-medusa---brute-force-paralelo" id="toc-paso-3-medusa---brute-force-paralelo" class="nav-link" data-scroll-target="#paso-3-medusa---brute-force-paralelo"><span class="header-section-number">14.3.3</span> Paso 3: Medusa - Brute Force Paralelo</a></li>
-  <li><a href="#paso-4-hashcat---gpu-acceleration" id="toc-paso-4-hashcat---gpu-acceleration" class="nav-link" data-scroll-target="#paso-4-hashcat---gpu-acceleration"><span class="header-section-number">14.3.4</span> Paso 4: Hashcat - GPU Acceleration</a></li>
-  <li><a href="#paso-5-crunch---generador-de-wordlists" id="toc-paso-5-crunch---generador-de-wordlists" class="nav-link" data-scroll-target="#paso-5-crunch---generador-de-wordlists"><span class="header-section-number">14.3.5</span> Paso 5: Crunch - Generador de Wordlists</a></li>
-  <li><a href="#paso-6-cewl---wordlist-desde-web" id="toc-paso-6-cewl---wordlist-desde-web" class="nav-link" data-scroll-target="#paso-6-cewl---wordlist-desde-web"><span class="header-section-number">14.3.6</span> Paso 6: CEWL - Wordlist desde Web</a></li>
+  <li><a href="#paso-1-amass---enumeracion-profunda" id="toc-paso-1-amass---enumeracion-profunda" class="nav-link" data-scroll-target="#paso-1-amass---enumeracion-profunda"><span class="header-section-number">12.16.1</span> Paso 1: AMASS - Enumeracion profunda</a></li>
+  <li><a href="#paso-2-sublist3r---enumeracion-rapida" id="toc-paso-2-sublist3r---enumeracion-rapida" class="nav-link" data-scroll-target="#paso-2-sublist3r---enumeracion-rapida"><span class="header-section-number">12.16.2</span> Paso 2: Sublist3r - Enumeracion rapida</a></li>
+  <li><a href="#paso-3-dnsmap---enumeracion-dns" id="toc-paso-3-dnsmap---enumeracion-dns" class="nav-link" data-scroll-target="#paso-3-dnsmap---enumeracion-dns"><span class="header-section-number">12.16.3</span> Paso 3: DNSMAP - Enumeracion DNS</a></li>
+  <li><a href="#paso-4-fierce---reconocimiento-dns" id="toc-paso-4-fierce---reconocimiento-dns" class="nav-link" data-scroll-target="#paso-4-fierce---reconocimiento-dns"><span class="header-section-number">12.16.4</span> Paso 4: FIERCE - Reconocimiento DNS</a></li>
   </ul></li>
-  <li><a href="#verificacion" id="toc-verificacion" class="nav-link" data-scroll-target="#verificacion"><span class="header-section-number">14.4</span> Verificacion</a></li>
-  </ul></li>
-  <li><a href="#workflow-2-enumeracion-de-directorios" id="toc-workflow-2-enumeracion-de-directorios" class="nav-link" data-scroll-target="#workflow-2-enumeracion-de-directorios"><span class="header-section-number">15</span> Workflow 2: Enumeracion de Directorios</a>
+  <li><a href="#verificacion-2" id="toc-verificacion-2" class="nav-link" data-scroll-target="#verificacion-2"><span class="header-section-number">12.17</span> Verificacion</a></li>
+  <li><a href="#workflow-4-escaneo-de-vulnerabilidades-web" id="toc-workflow-4-escaneo-de-vulnerabilidades-web" class="nav-link" data-scroll-target="#workflow-4-escaneo-de-vulnerabilidades-web"><span class="header-section-number">12.18</span> Workflow 4: Escaneo de Vulnerabilidades Web</a></li>
+  <li><a href="#objetivo-3" id="toc-objetivo-3" class="nav-link" data-scroll-target="#objetivo-3"><span class="header-section-number">12.19</span> Objetivo</a></li>
+  <li><a href="#pasos-3" id="toc-pasos-3" class="nav-link" data-scroll-target="#pasos-3"><span class="header-section-number">12.20</span> Pasos</a>
   <ul class="collapse">
-  <li><a href="#objetivo-1" id="toc-objetivo-1" class="nav-link" data-scroll-target="#objetivo-1"><span class="header-section-number">15.1</span> Objetivo</a></li>
-  <li><a href="#escenario-1" id="toc-escenario-1" class="nav-link" data-scroll-target="#escenario-1"><span class="header-section-number">15.2</span> Escenario</a></li>
-  <li><a href="#pasos-1" id="toc-pasos-1" class="nav-link" data-scroll-target="#pasos-1"><span class="header-section-number">15.3</span> Pasos</a>
+  <li><a href="#paso-1-nikto---escaneo-basico" id="toc-paso-1-nikto---escaneo-basico" class="nav-link" data-scroll-target="#paso-1-nikto---escaneo-basico"><span class="header-section-number">12.20.1</span> Paso 1: NIKTO - Escaneo basico</a></li>
+  <li><a href="#paso-2-wpscan---wordpress" id="toc-paso-2-wpscan---wordpress" class="nav-link" data-scroll-target="#paso-2-wpscan---wordpress"><span class="header-section-number">12.20.2</span> Paso 2: WPSCAN - WordPress</a></li>
+  <li><a href="#paso-3-skipfish---crawling-seguro" id="toc-paso-3-skipfish---crawling-seguro" class="nav-link" data-scroll-target="#paso-3-skipfish---crawling-seguro"><span class="header-section-number">12.20.3</span> Paso 3: SKIPFISH - Crawling seguro</a></li>
+  <li><a href="#paso-4-w3af---framework-completo" id="toc-paso-4-w3af---framework-completo" class="nav-link" data-scroll-target="#paso-4-w3af---framework-completo"><span class="header-section-number">12.20.4</span> Paso 4: W3AF - Framework completo</a></li>
+  </ul></li>
+  <li><a href="#verificacion-3" id="toc-verificacion-3" class="nav-link" data-scroll-target="#verificacion-3"><span class="header-section-number">12.21</span> Verificacion</a></li>
+  <li><a href="#workflow-5-osint" id="toc-workflow-5-osint" class="nav-link" data-scroll-target="#workflow-5-osint"><span class="header-section-number">12.22</span> Workflow 5: OSINT</a></li>
+  <li><a href="#objetivo-4" id="toc-objetivo-4" class="nav-link" data-scroll-target="#objetivo-4"><span class="header-section-number">12.23</span> Objetivo</a></li>
+  <li><a href="#pasos-4" id="toc-pasos-4" class="nav-link" data-scroll-target="#pasos-4"><span class="header-section-number">12.24</span> Pasos</a>
   <ul class="collapse">
-  <li><a href="#paso-1-dirb---enumeracion-basica" id="toc-paso-1-dirb---enumeracion-basica" class="nav-link" data-scroll-target="#paso-1-dirb---enumeracion-basica"><span class="header-section-number">15.3.1</span> Paso 1: DIRB - Enumeracion basica</a></li>
-  <li><a href="#paso-2-gobuster---enumeracion-rapida" id="toc-paso-2-gobuster---enumeracion-rapida" class="nav-link" data-scroll-target="#paso-2-gobuster---enumeracion-rapida"><span class="header-section-number">15.3.2</span> Paso 2: GOBUSTER - Enumeracion rapida</a></li>
-  <li><a href="#paso-3-wfuzz---fuzzing-avanzado" id="toc-paso-3-wfuzz---fuzzing-avanzado" class="nav-link" data-scroll-target="#paso-3-wfuzz---fuzzing-avanzado"><span class="header-section-number">15.3.3</span> Paso 3: WFuzz - Fuzzing avanzado</a></li>
+  <li><a href="#paso-1-theharvester---emails-y-mas" id="toc-paso-1-theharvester---emails-y-mas" class="nav-link" data-scroll-target="#paso-1-theharvester---emails-y-mas"><span class="header-section-number">12.24.1</span> Paso 1: theHarvester - Emails y mas</a></li>
+  <li><a href="#paso-2-recon-ng---framework" id="toc-paso-2-recon-ng---framework" class="nav-link" data-scroll-target="#paso-2-recon-ng---framework"><span class="header-section-number">12.24.2</span> Paso 2: RECON-NG - Framework</a></li>
+  <li><a href="#paso-3-spfo---spf-analysis" id="toc-paso-3-spfo---spf-analysis" class="nav-link" data-scroll-target="#paso-3-spfo---spf-analysis"><span class="header-section-number">12.24.3</span> Paso 3: SPFO - SPF Analysis</a></li>
+  <li><a href="#paso-4-social-searcher---redes-sociales" id="toc-paso-4-social-searcher---redes-sociales" class="nav-link" data-scroll-target="#paso-4-social-searcher---redes-sociales"><span class="header-section-number">12.24.4</span> Paso 4: SOCIAL-SEARCHER - Redes sociales</a></li>
   </ul></li>
-  <li><a href="#verificacion-1" id="toc-verificacion-1" class="nav-link" data-scroll-target="#verificacion-1"><span class="header-section-number">15.4</span> Verificacion</a></li>
-  </ul></li>
-  <li><a href="#workflow-3-enumeracion-de-subdominios" id="toc-workflow-3-enumeracion-de-subdominios" class="nav-link" data-scroll-target="#workflow-3-enumeracion-de-subdominios"><span class="header-section-number">16</span> Workflow 3: Enumeracion de Subdominios</a>
+  <li><a href="#verificacion-4" id="toc-verificacion-4" class="nav-link" data-scroll-target="#verificacion-4"><span class="header-section-number">12.25</span> Verificacion</a></li>
+  <li><a href="#workflow-6-ataques-wireless" id="toc-workflow-6-ataques-wireless" class="nav-link" data-scroll-target="#workflow-6-ataques-wireless"><span class="header-section-number">12.26</span> Workflow 6: Ataques Wireless</a></li>
+  <li><a href="#objetivo-5" id="toc-objetivo-5" class="nav-link" data-scroll-target="#objetivo-5"><span class="header-section-number">12.27</span> Objetivo</a></li>
+  <li><a href="#escenario-2" id="toc-escenario-2" class="nav-link" data-scroll-target="#escenario-2"><span class="header-section-number">12.28</span> Escenario</a></li>
+  <li><a href="#pasos-5" id="toc-pasos-5" class="nav-link" data-scroll-target="#pasos-5"><span class="header-section-number">12.29</span> Pasos</a>
   <ul class="collapse">
-  <li><a href="#objetivo-2" id="toc-objetivo-2" class="nav-link" data-scroll-target="#objetivo-2"><span class="header-section-number">16.1</span> Objetivo</a></li>
-  <li><a href="#pasos-2" id="toc-pasos-2" class="nav-link" data-scroll-target="#pasos-2"><span class="header-section-number">16.2</span> Pasos</a>
-  <ul class="collapse">
-  <li><a href="#paso-1-amass---enumeracion-profunda" id="toc-paso-1-amass---enumeracion-profunda" class="nav-link" data-scroll-target="#paso-1-amass---enumeracion-profunda"><span class="header-section-number">16.2.1</span> Paso 1: AMASS - Enumeracion profunda</a></li>
-  <li><a href="#paso-2-sublist3r---enumeracion-rapida" id="toc-paso-2-sublist3r---enumeracion-rapida" class="nav-link" data-scroll-target="#paso-2-sublist3r---enumeracion-rapida"><span class="header-section-number">16.2.2</span> Paso 2: Sublist3r - Enumeracion rapida</a></li>
-  <li><a href="#paso-3-dnsmap---enumeracion-dns" id="toc-paso-3-dnsmap---enumeracion-dns" class="nav-link" data-scroll-target="#paso-3-dnsmap---enumeracion-dns"><span class="header-section-number">16.2.3</span> Paso 3: DNSMAP - Enumeracion DNS</a></li>
-  <li><a href="#paso-4-fierce---reconocimiento-dns" id="toc-paso-4-fierce---reconocimiento-dns" class="nav-link" data-scroll-target="#paso-4-fierce---reconocimiento-dns"><span class="header-section-number">16.2.4</span> Paso 4: FIERCE - Reconocimiento DNS</a></li>
+  <li><a href="#paso-1-aircrack-ng---fundamentos" id="toc-paso-1-aircrack-ng---fundamentos" class="nav-link" data-scroll-target="#paso-1-aircrack-ng---fundamentos"><span class="header-section-number">12.29.1</span> Paso 1: AIRCRACK-NG - Fundamentos</a></li>
+  <li><a href="#paso-2-airodump-ng---captura" id="toc-paso-2-airodump-ng---captura" class="nav-link" data-scroll-target="#paso-2-airodump-ng---captura"><span class="header-section-number">12.29.2</span> Paso 2: AIRODUMP-NG - Captura</a></li>
+  <li><a href="#paso-3-aireplay-ng---deauthentication" id="toc-paso-3-aireplay-ng---deauthentication" class="nav-link" data-scroll-target="#paso-3-aireplay-ng---deauthentication"><span class="header-section-number">12.29.3</span> Paso 3: AIREPLAY-NG - Deauthentication</a></li>
+  <li><a href="#paso-4-aircrack-ng---crack" id="toc-paso-4-aircrack-ng---crack" class="nav-link" data-scroll-target="#paso-4-aircrack-ng---crack"><span class="header-section-number">12.29.4</span> Paso 4: AIRCRACK-NG - Crack</a></li>
+  <li><a href="#paso-5-reaver---wps" id="toc-paso-5-reaver---wps" class="nav-link" data-scroll-target="#paso-5-reaver---wps"><span class="header-section-number">12.29.5</span> Paso 5: REAVER - WPS</a></li>
+  <li><a href="#paso-6-wifite---automatizacion" id="toc-paso-6-wifite---automatizacion" class="nav-link" data-scroll-target="#paso-6-wifite---automatizacion"><span class="header-section-number">12.29.6</span> Paso 6: WIFITE - Automatizacion</a></li>
   </ul></li>
-  <li><a href="#verificacion-2" id="toc-verificacion-2" class="nav-link" data-scroll-target="#verificacion-2"><span class="header-section-number">16.3</span> Verificacion</a></li>
-  </ul></li>
-  <li><a href="#workflow-4-escaneo-de-vulnerabilidades-web" id="toc-workflow-4-escaneo-de-vulnerabilidades-web" class="nav-link" data-scroll-target="#workflow-4-escaneo-de-vulnerabilidades-web"><span class="header-section-number">17</span> Workflow 4: Escaneo de Vulnerabilidades Web</a>
-  <ul class="collapse">
-  <li><a href="#objetivo-3" id="toc-objetivo-3" class="nav-link" data-scroll-target="#objetivo-3"><span class="header-section-number">17.1</span> Objetivo</a></li>
-  <li><a href="#pasos-3" id="toc-pasos-3" class="nav-link" data-scroll-target="#pasos-3"><span class="header-section-number">17.2</span> Pasos</a>
-  <ul class="collapse">
-  <li><a href="#paso-1-nikto---escaneo-basico" id="toc-paso-1-nikto---escaneo-basico" class="nav-link" data-scroll-target="#paso-1-nikto---escaneo-basico"><span class="header-section-number">17.2.1</span> Paso 1: NIKTO - Escaneo basico</a></li>
-  <li><a href="#paso-2-wpscan---wordpress" id="toc-paso-2-wpscan---wordpress" class="nav-link" data-scroll-target="#paso-2-wpscan---wordpress"><span class="header-section-number">17.2.2</span> Paso 2: WPSCAN - WordPress</a></li>
-  <li><a href="#paso-3-skipfish---crawling-seguro" id="toc-paso-3-skipfish---crawling-seguro" class="nav-link" data-scroll-target="#paso-3-skipfish---crawling-seguro"><span class="header-section-number">17.2.3</span> Paso 3: SKIPFISH - Crawling seguro</a></li>
-  <li><a href="#paso-4-w3af---framework-completo" id="toc-paso-4-w3af---framework-completo" class="nav-link" data-scroll-target="#paso-4-w3af---framework-completo"><span class="header-section-number">17.2.4</span> Paso 4: W3AF - Framework completo</a></li>
-  </ul></li>
-  <li><a href="#verificacion-3" id="toc-verificacion-3" class="nav-link" data-scroll-target="#verificacion-3"><span class="header-section-number">17.3</span> Verificacion</a></li>
-  </ul></li>
-  <li><a href="#workflow-5-osint" id="toc-workflow-5-osint" class="nav-link" data-scroll-target="#workflow-5-osint"><span class="header-section-number">18</span> Workflow 5: OSINT</a>
-  <ul class="collapse">
-  <li><a href="#objetivo-4" id="toc-objetivo-4" class="nav-link" data-scroll-target="#objetivo-4"><span class="header-section-number">18.1</span> Objetivo</a></li>
-  <li><a href="#pasos-4" id="toc-pasos-4" class="nav-link" data-scroll-target="#pasos-4"><span class="header-section-number">18.2</span> Pasos</a>
-  <ul class="collapse">
-  <li><a href="#paso-1-theharvester---emails-y-mas" id="toc-paso-1-theharvester---emails-y-mas" class="nav-link" data-scroll-target="#paso-1-theharvester---emails-y-mas"><span class="header-section-number">18.2.1</span> Paso 1: theHarvester - Emails y mas</a></li>
-  <li><a href="#paso-2-recon-ng---framework" id="toc-paso-2-recon-ng---framework" class="nav-link" data-scroll-target="#paso-2-recon-ng---framework"><span class="header-section-number">18.2.2</span> Paso 2: RECON-NG - Framework</a></li>
-  <li><a href="#paso-3-spfo---spf-analysis" id="toc-paso-3-spfo---spf-analysis" class="nav-link" data-scroll-target="#paso-3-spfo---spf-analysis"><span class="header-section-number">18.2.3</span> Paso 3: SPFO - SPF Analysis</a></li>
-  <li><a href="#paso-4-social-searcher---redes-sociales" id="toc-paso-4-social-searcher---redes-sociales" class="nav-link" data-scroll-target="#paso-4-social-searcher---redes-sociales"><span class="header-section-number">18.2.4</span> Paso 4: SOCIAL-SEARCHER - Redes sociales</a></li>
-  </ul></li>
-  <li><a href="#verificacion-4" id="toc-verificacion-4" class="nav-link" data-scroll-target="#verificacion-4"><span class="header-section-number">18.3</span> Verificacion</a></li>
-  </ul></li>
-  <li><a href="#workflow-6-ataques-wireless" id="toc-workflow-6-ataques-wireless" class="nav-link" data-scroll-target="#workflow-6-ataques-wireless"><span class="header-section-number">19</span> Workflow 6: Ataques Wireless</a>
-  <ul class="collapse">
-  <li><a href="#objetivo-5" id="toc-objetivo-5" class="nav-link" data-scroll-target="#objetivo-5"><span class="header-section-number">19.1</span> Objetivo</a></li>
-  <li><a href="#escenario-2" id="toc-escenario-2" class="nav-link" data-scroll-target="#escenario-2"><span class="header-section-number">19.2</span> Escenario</a></li>
-  <li><a href="#pasos-5" id="toc-pasos-5" class="nav-link" data-scroll-target="#pasos-5"><span class="header-section-number">19.3</span> Pasos</a>
-  <ul class="collapse">
-  <li><a href="#paso-1-aircrack-ng---fundamentos" id="toc-paso-1-aircrack-ng---fundamentos" class="nav-link" data-scroll-target="#paso-1-aircrack-ng---fundamentos"><span class="header-section-number">19.3.1</span> Paso 1: AIRCRACK-NG - Fundamentos</a></li>
-  <li><a href="#paso-2-airodump-ng---captura" id="toc-paso-2-airodump-ng---captura" class="nav-link" data-scroll-target="#paso-2-airodump-ng---captura"><span class="header-section-number">19.3.2</span> Paso 2: AIRODUMP-NG - Captura</a></li>
-  <li><a href="#paso-3-aireplay-ng---deauthentication" id="toc-paso-3-aireplay-ng---deauthentication" class="nav-link" data-scroll-target="#paso-3-aireplay-ng---deauthentication"><span class="header-section-number">19.3.3</span> Paso 3: AIREPLAY-NG - Deauthentication</a></li>
-  <li><a href="#paso-4-aircrack-ng---crack" id="toc-paso-4-aircrack-ng---crack" class="nav-link" data-scroll-target="#paso-4-aircrack-ng---crack"><span class="header-section-number">19.3.4</span> Paso 4: AIRCRACK-NG - Crack</a></li>
-  <li><a href="#paso-5-reaver---wps" id="toc-paso-5-reaver---wps" class="nav-link" data-scroll-target="#paso-5-reaver---wps"><span class="header-section-number">19.3.5</span> Paso 5: REAVER - WPS</a></li>
-  <li><a href="#paso-6-wifite---automatizacion" id="toc-paso-6-wifite---automatizacion" class="nav-link" data-scroll-target="#paso-6-wifite---automatizacion"><span class="header-section-number">19.3.6</span> Paso 6: WIFITE - Automatizacion</a></li>
-  </ul></li>
-  <li><a href="#verificacion-5" id="toc-verificacion-5" class="nav-link" data-scroll-target="#verificacion-5"><span class="header-section-number">19.4</span> Verificacion</a></li>
-  </ul></li>
-  <li><a href="#laboratorio-docker-vulnerable-labs" id="toc-laboratorio-docker-vulnerable-labs" class="nav-link" data-scroll-target="#laboratorio-docker-vulnerable-labs"><span class="header-section-number">20</span> Laboratorio Docker: Vulnerable Labs</a>
-  <ul class="collapse">
-  <li><a href="#objetivo-6" id="toc-objetivo-6" class="nav-link" data-scroll-target="#objetivo-6"><span class="header-section-number">20.1</span> Objetivo</a></li>
-  <li><a href="#docker-compose" id="toc-docker-compose" class="nav-link" data-scroll-target="#docker-compose"><span class="header-section-number">20.2</span> Docker Compose</a></li>
-  </ul></li>
-  <li><a href="#comandos-de-herramientas-adicionales" id="toc-comandos-de-herramientas-adicionales" class="nav-link" data-scroll-target="#comandos-de-herramientas-adicionales"><span class="header-section-number">21</span> Comandos de Herramientas Adicionales</a></li>
-  <li><a href="#scripts-de-automatizacion" id="toc-scripts-de-automatizacion" class="nav-link" data-scroll-target="#scripts-de-automatizacion"><span class="header-section-number">22</span> Scripts de Automatizacion</a>
-  <ul class="collapse">
-  <li><a href="#script-integrado-de-pentesting" id="toc-script-integrado-de-pentesting" class="nav-link" data-scroll-target="#script-integrado-de-pentesting"><span class="header-section-number">22.1</span> Script Integrado de Pentesting</a></li>
-  </ul></li>
-  <li><a href="#quick-reference-card" id="toc-quick-reference-card" class="nav-link" data-scroll-target="#quick-reference-card"><span class="header-section-number">23</span> Quick Reference Card</a></li>
-  <li><a href="#ejercicio-final" id="toc-ejercicio-final" class="nav-link" data-scroll-target="#ejercicio-final"><span class="header-section-number">24</span> Ejercicio Final</a>
-  <ul class="collapse">
-  <li><a href="#objetivo-7" id="toc-objetivo-7" class="nav-link" data-scroll-target="#objetivo-7"><span class="header-section-number">24.1</span> Objetivo</a></li>
-  <li><a href="#criterios-de-evaluacion" id="toc-criterios-de-evaluacion" class="nav-link" data-scroll-target="#criterios-de-evaluacion"><span class="header-section-number">24.2</span> Criterios de Evaluacion</a></li>
-  </ul></li>
-  <li><a href="#recursos" id="toc-recursos" class="nav-link" data-scroll-target="#recursos"><span class="header-section-number">25</span> Recursos</a></li>
+  <li><a href="#verificacion-5" id="toc-verificacion-5" class="nav-link" data-scroll-target="#verificacion-5"><span class="header-section-number">12.30</span> Verificacion</a></li>
+  <li><a href="#laboratorio-docker-vulnerable-labs" id="toc-laboratorio-docker-vulnerable-labs" class="nav-link" data-scroll-target="#laboratorio-docker-vulnerable-labs"><span class="header-section-number">12.31</span> Laboratorio Docker: Vulnerable Labs</a></li>
+  <li><a href="#objetivo-6" id="toc-objetivo-6" class="nav-link" data-scroll-target="#objetivo-6"><span class="header-section-number">12.32</span> Objetivo</a></li>
+  <li><a href="#docker-compose" id="toc-docker-compose" class="nav-link" data-scroll-target="#docker-compose"><span class="header-section-number">12.33</span> Docker Compose</a></li>
+  <li><a href="#comandos-de-herramientas-adicionales" id="toc-comandos-de-herramientas-adicionales" class="nav-link" data-scroll-target="#comandos-de-herramientas-adicionales"><span class="header-section-number">12.34</span> Comandos de Herramientas Adicionales</a></li>
+  <li><a href="#scripts-de-automatizacion" id="toc-scripts-de-automatizacion" class="nav-link" data-scroll-target="#scripts-de-automatizacion"><span class="header-section-number">12.35</span> Scripts de Automatizacion</a></li>
+  <li><a href="#script-integrado-de-pentesting" id="toc-script-integrado-de-pentesting" class="nav-link" data-scroll-target="#script-integrado-de-pentesting"><span class="header-section-number">12.36</span> Script Integrado de Pentesting</a></li>
+  <li><a href="#quick-reference-card" id="toc-quick-reference-card" class="nav-link" data-scroll-target="#quick-reference-card"><span class="header-section-number">12.37</span> Quick Reference Card</a></li>
+  <li><a href="#ejercicio-final" id="toc-ejercicio-final" class="nav-link" data-scroll-target="#ejercicio-final"><span class="header-section-number">12.38</span> Ejercicio Final</a></li>
+  <li><a href="#objetivo-7" id="toc-objetivo-7" class="nav-link" data-scroll-target="#objetivo-7"><span class="header-section-number">12.39</span> Objetivo</a></li>
+  <li><a href="#criterios-de-evaluacion" id="toc-criterios-de-evaluacion" class="nav-link" data-scroll-target="#criterios-de-evaluacion"><span class="header-section-number">12.40</span> Criterios de Evaluacion</a></li>
+  <li><a href="#recursos" id="toc-recursos" class="nav-link" data-scroll-target="#recursos"><span class="header-section-number">12.41</span> Recursos</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/statick88/course-of-cybersecurity/edit/main/labs/lab-anexo-herramientas-base.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/statick88/course-of-cybersecurity/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -721,10 +700,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="lab-anexo-herramientas-avanzadas-de-hacking" class="level1" data-number="13">
-<h1 data-number="13"><span class="header-section-number">13</span> Lab Anexo: Herramientas Avanzadas de Hacking</h1>
-<section id="objetivo-del-laboratorio" class="level2" data-number="13.1">
-<h2 data-number="13.1" class="anchored" data-anchor-id="objetivo-del-laboratorio"><span class="header-section-number">13.1</span> Objetivo del Laboratorio</h2>
+<section id="objetivo-del-laboratorio" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="objetivo-del-laboratorio"><span class="header-section-number">12.1</span> Objetivo del Laboratorio</h2>
 <p>En este laboratorio vas a dominar las herramientas profesionales de pentesting y hacking etico:</p>
 <ul>
 <li>Ejecutar ataques de password con hydra, john, medusa, hashcat, crunch, cewl</li>
@@ -755,8 +732,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="requisitos" class="level2" data-number="13.2">
-<h2 data-number="13.2" class="anchored" data-anchor-id="requisitos"><span class="header-section-number">13.2</span> Requisitos</h2>
+<section id="requisitos" class="level2" data-number="12.2">
+<h2 data-number="12.2" class="anchored" data-anchor-id="requisitos"><span class="header-section-number">12.2</span> Requisitos</h2>
 <ul>
 <li>Conocimiento de Linux CLI</li>
 <li>Familiaridad con redes TCP/IP</li>
@@ -764,8 +741,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Importante: DEBES teclear todos los comandos manualmente</li>
 </ul>
 </section>
-<section id="duracion" class="level2" data-number="13.3">
-<h2 data-number="13.3" class="anchored" data-anchor-id="duracion"><span class="header-section-number">13.3</span> Duracion</h2>
+<section id="duracion" class="level2" data-number="12.3">
+<h2 data-number="12.3" class="anchored" data-anchor-id="duracion"><span class="header-section-number">12.3</span> Duracion</h2>
 <ul>
 <li>Tiempo estimado: 12 horas</li>
 <li>Tipo: Individual</li>
@@ -773,29 +750,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <hr>
 </section>
+<section id="workflow-1-ataques-de-password" class="level2" data-number="12.4">
+<h2 data-number="12.4" class="anchored" data-anchor-id="workflow-1-ataques-de-password"><span class="header-section-number">12.4</span> Workflow 1: Ataques de Password</h2>
 </section>
-<section id="workflow-1-ataques-de-password" class="level1" data-number="14">
-<h1 data-number="14"><span class="header-section-number">14</span> Workflow 1: Ataques de Password</h1>
-<section id="objetivo" class="level2" data-number="14.1">
-<h2 data-number="14.1" class="anchored" data-anchor-id="objetivo"><span class="header-section-number">14.1</span> Objetivo</h2>
+<section id="objetivo" class="level2" data-number="12.5">
+<h2 data-number="12.5" class="anchored" data-anchor-id="objetivo"><span class="header-section-number">12.5</span> Objetivo</h2>
 <p>Dominar las herramientas de cracking de passwords: hydra, john the ripper, medusa, hashcat, crunch y cewl</p>
 </section>
-<section id="escenario" class="level2" data-number="14.2">
-<h2 data-number="14.2" class="anchored" data-anchor-id="escenario"><span class="header-section-number">14.2</span> Escenario</h2>
+<section id="escenario" class="level2" data-number="12.6">
+<h2 data-number="12.6" class="anchored" data-anchor-id="escenario"><span class="header-section-number">12.6</span> Escenario</h2>
 <p>Eres un pentester autorizado. Tu cliente te ha dado permiso para probar la robustez de sus passwords en el laboratorio vulnerable.</p>
 </section>
-<section id="pasos" class="level2" data-number="14.3">
-<h2 data-number="14.3" class="anchored" data-anchor-id="pasos"><span class="header-section-number">14.3</span> Pasos</h2>
-<section id="paso-1-hydra---brute-force-de-servicios" class="level3" data-number="14.3.1">
-<h3 data-number="14.3.1" class="anchored" data-anchor-id="paso-1-hydra---brute-force-de-servicios"><span class="header-section-number">14.3.1</span> Paso 1: Hydra - Brute Force de Servicios</h3>
+<section id="pasos" class="level2" data-number="12.7">
+<h2 data-number="12.7" class="anchored" data-anchor-id="pasos"><span class="header-section-number">12.7</span> Pasos</h2>
+<section id="paso-1-hydra---brute-force-de-servicios" class="level3" data-number="12.7.1">
+<h3 data-number="12.7.1" class="anchored" data-anchor-id="paso-1-hydra---brute-force-de-servicios"><span class="header-section-number">12.7.1</span> Paso 1: Hydra - Brute Force de Servicios</h3>
 <p><strong>Objetivo:</strong> Realizar ataques de fuerza bruta contra servicios remotos</p>
 <p><strong>Tu tarea:</strong> Instalar hydra y ejecutar un ataque de fuerza bruta basico contra SSH</p>
 <p><strong>Pista:</strong> Hydra es parte de la suite THC. El flag “-l” es para login simple, “-L” para archivo de logins</p>
 <p><strong>Comando parcial para completar:</strong> <code>hydra -l admin -P /usr/share/wordlists/rockyou.txt</code></p>
 <p><strong>Resultado esperado:</strong> Si el password es debil, hydra lo crackeara y mostrara el password</p>
 </section>
-<section id="paso-2-john-the-ripper---crack-de-hashes" class="level3" data-number="14.3.2">
-<h3 data-number="14.3.2" class="anchored" data-anchor-id="paso-2-john-the-ripper---crack-de-hashes"><span class="header-section-number">14.3.2</span> Paso 2: John the Ripper - Crack de Hashes</h3>
+<section id="paso-2-john-the-ripper---crack-de-hashes" class="level3" data-number="12.7.2">
+<h3 data-number="12.7.2" class="anchored" data-anchor-id="paso-2-john-the-ripper---crack-de-hashes"><span class="header-section-number">12.7.2</span> Paso 2: John the Ripper - Crack de Hashes</h3>
 <p><strong>Objetivo:</strong> Crackear hashes de passwords almacenados</p>
 <p><strong>Tu tarea:</strong> Usar john para crackear un hash MD5 conocido</p>
 <p><strong>Pista:</strong> John puede detectar el tipo de hash automaticamente. Primero crea un archivo con el hash</p>
@@ -803,32 +780,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Siguiente paso:</strong> Ejecutar john contra el archivo <code>john</code></p>
 <p><strong>Resultado esperado:</strong> John mostrara el password crackeado</p>
 </section>
-<section id="paso-3-medusa---brute-force-paralelo" class="level3" data-number="14.3.3">
-<h3 data-number="14.3.3" class="anchored" data-anchor-id="paso-3-medusa---brute-force-paralelo"><span class="header-section-number">14.3.3</span> Paso 3: Medusa - Brute Force Paralelo</h3>
+<section id="paso-3-medusa---brute-force-paralelo" class="level3" data-number="12.7.3">
+<h3 data-number="12.7.3" class="anchored" data-anchor-id="paso-3-medusa---brute-force-paralelo"><span class="header-section-number">12.7.3</span> Paso 3: Medusa - Brute Force Paralelo</h3>
 <p><strong>Objetivo:</strong> Ejecutar ataques de fuerza bruta usando Medusa</p>
 <p><strong>Tu tarea:</strong> Comparar hydra y medusa contra el mesmo objetivo</p>
 <p><strong>Pista:</strong> Medusa usa “-h” para host y “-u” para usuario</p>
 <p><strong>Comando parcial:</strong> <code>medusa -h 127.0.0.1 -u admin -P</code></p>
 <p><strong>Resultado esperado:</strong> Similar a hydra pero con diferente motor</p>
 </section>
-<section id="paso-4-hashcat---gpu-acceleration" class="level3" data-number="14.3.4">
-<h3 data-number="14.3.4" class="anchored" data-anchor-id="paso-4-hashcat---gpu-acceleration"><span class="header-section-number">14.3.4</span> Paso 4: Hashcat - GPU Acceleration</h3>
+<section id="paso-4-hashcat---gpu-acceleration" class="level3" data-number="12.7.4">
+<h3 data-number="12.7.4" class="anchored" data-anchor-id="paso-4-hashcat---gpu-acceleration"><span class="header-section-number">12.7.4</span> Paso 4: Hashcat - GPU Acceleration</h3>
 <p><strong>Objetivo:</strong> Usar hashcat para cracking rapido con GPU</p>
 <p><strong>Tu tarea:</strong> Verificar que hashcat detecta el modo de hash correcto</p>
 <p><strong>Pista:</strong> El flag “-m” especifica el modo de hash, “-a” el modo de ataque</p>
 <p><strong>Comando parcial:</strong> <code>hashcat -m 0 -a 0</code></p>
 <p><strong>Resultado esperado:</strong> Lista de modos disponibles</p>
 </section>
-<section id="paso-5-crunch---generador-de-wordlists" class="level3" data-number="14.3.5">
-<h3 data-number="14.3.5" class="anchored" data-anchor-id="paso-5-crunch---generador-de-wordlists"><span class="header-section-number">14.3.5</span> Paso 5: Crunch - Generador de Wordlists</h3>
+<section id="paso-5-crunch---generador-de-wordlists" class="level3" data-number="12.7.5">
+<h3 data-number="12.7.5" class="anchored" data-anchor-id="paso-5-crunch---generador-de-wordlists"><span class="header-section-number">12.7.5</span> Paso 5: Crunch - Generador de Wordlists</h3>
 <p><strong>Objetivo:</strong> Generar wordlists personalizadas</p>
 <p><strong>Tu tarea:</strong> Crear una wordlist minima para practicar</p>
 <p><strong>Pista:</strong> Formato: minimo maximo caracteres</p>
 <p><strong>Comando parcial:</strong> <code>crunch 4 6</code></p>
 <p><strong>Resultado esperado:</strong> Generara todas las combinaciones de 4-6 caracteres</p>
 </section>
-<section id="paso-6-cewl---wordlist-desde-web" class="level3" data-number="14.3.6">
-<h3 data-number="14.3.6" class="anchored" data-anchor-id="paso-6-cewl---wordlist-desde-web"><span class="header-section-number">14.3.6</span> Paso 6: CEWL - Wordlist desde Web</h3>
+<section id="paso-6-cewl---wordlist-desde-web" class="level3" data-number="12.7.6">
+<h3 data-number="12.7.6" class="anchored" data-anchor-id="paso-6-cewl---wordlist-desde-web"><span class="header-section-number">12.7.6</span> Paso 6: CEWL - Wordlist desde Web</h3>
 <p><strong>Objetivo:</strong> Extraer palabras de un sitio web para wordlist</p>
 <p><strong>Tu tarea:</strong> Usar cewl para crear una wordlist desde una URL</p>
 <p><strong>Pista:</strong> CEWL tiene flag “-d” para profundidad</p>
@@ -836,8 +813,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Resultado esperado:</strong> Archivo con palabras del sitio</p>
 </section>
 </section>
-<section id="verificacion" class="level2" data-number="14.4">
-<h2 data-number="14.4" class="anchored" data-anchor-id="verificacion"><span class="header-section-number">14.4</span> Verificacion</h2>
+<section id="verificacion" class="level2" data-number="12.8">
+<h2 data-number="12.8" class="anchored" data-anchor-id="verificacion"><span class="header-section-number">12.8</span> Verificacion</h2>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -888,37 +865,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <hr>
 </section>
+<section id="workflow-2-enumeracion-de-directorios" class="level2" data-number="12.9">
+<h2 data-number="12.9" class="anchored" data-anchor-id="workflow-2-enumeracion-de-directorios"><span class="header-section-number">12.9</span> Workflow 2: Enumeracion de Directorios</h2>
 </section>
-<section id="workflow-2-enumeracion-de-directorios" class="level1" data-number="15">
-<h1 data-number="15"><span class="header-section-number">15</span> Workflow 2: Enumeracion de Directorios</h1>
-<section id="objetivo-1" class="level2" data-number="15.1">
-<h2 data-number="15.1" class="anchored" data-anchor-id="objetivo-1"><span class="header-section-number">15.1</span> Objetivo</h2>
+<section id="objetivo-1" class="level2" data-number="12.10">
+<h2 data-number="12.10" class="anchored" data-anchor-id="objetivo-1"><span class="header-section-number">12.10</span> Objetivo</h2>
 <p>Dominar dirb y gobuster para descubrir directorios y archivos ocultos</p>
 </section>
-<section id="escenario-1" class="level2" data-number="15.2">
-<h2 data-number="15.2" class="anchored" data-anchor-id="escenario-1"><span class="header-section-number">15.2</span> Escenario</h2>
+<section id="escenario-1" class="level2" data-number="12.11">
+<h2 data-number="12.11" class="anchored" data-anchor-id="escenario-1"><span class="header-section-number">12.11</span> Escenario</h2>
 <p>Estas auditando una aplicacion web. Necesitas descubrir rutas escondidas que puedan revelar vulnerabilidades.</p>
 </section>
-<section id="pasos-1" class="level2" data-number="15.3">
-<h2 data-number="15.3" class="anchored" data-anchor-id="pasos-1"><span class="header-section-number">15.3</span> Pasos</h2>
-<section id="paso-1-dirb---enumeracion-basica" class="level3" data-number="15.3.1">
-<h3 data-number="15.3.1" class="anchored" data-anchor-id="paso-1-dirb---enumeracion-basica"><span class="header-section-number">15.3.1</span> Paso 1: DIRB - Enumeracion basica</h3>
+<section id="pasos-1" class="level2" data-number="12.12">
+<h2 data-number="12.12" class="anchored" data-anchor-id="pasos-1"><span class="header-section-number">12.12</span> Pasos</h2>
+<section id="paso-1-dirb---enumeracion-basica" class="level3" data-number="12.12.1">
+<h3 data-number="12.12.1" class="anchored" data-anchor-id="paso-1-dirb---enumeracion-basica"><span class="header-section-number">12.12.1</span> Paso 1: DIRB - Enumeracion basica</h3>
 <p><strong>Objetivo:</strong> Descubrir directorios ocultos en un servidor web</p>
 <p><strong>Tu tarea:</strong> Usar dirb contra el servidor vulnerable</p>
 <p><strong>Pista:</strong> dirb necesita una URL base y opcionalmente una wordlist</p>
 <p><strong>Comando parcial:</strong> <code>dirb http://localhost:8888</code></p>
 <p><strong>Resultado esperado:</strong> Lista de directorios y archivos encontrados</p>
 </section>
-<section id="paso-2-gobuster---enumeracion-rapida" class="level3" data-number="15.3.2">
-<h3 data-number="15.3.2" class="anchored" data-anchor-id="paso-2-gobuster---enumeracion-rapida"><span class="header-section-number">15.3.2</span> Paso 2: GOBUSTER - Enumeracion rapida</h3>
+<section id="paso-2-gobuster---enumeracion-rapida" class="level3" data-number="12.12.2">
+<h3 data-number="12.12.2" class="anchored" data-anchor-id="paso-2-gobuster---enumeracion-rapida"><span class="header-section-number">12.12.2</span> Paso 2: GOBUSTER - Enumeracion rapida</h3>
 <p><strong>Objetivo:</strong> Usar gobuster para descubrimiento de directorios</p>
 <p><strong>Tu tarea:</strong> Ejecutar gobuster en modo dir contra el mismo objetivo</p>
 <p><strong>Pista:</strong> Gobuster requiere el flag “dir” para modo enumeracion</p>
 <p><strong>Comando parcial:</strong> <code>gobuster dir -u</code></p>
 <p><strong>Resultado esperado:</strong> Resultados en formato diferente a dirb</p>
 </section>
-<section id="paso-3-wfuzz---fuzzing-avanzado" class="level3" data-number="15.3.3">
-<h3 data-number="15.3.3" class="anchored" data-anchor-id="paso-3-wfuzz---fuzzing-avanzado"><span class="header-section-number">15.3.3</span> Paso 3: WFuzz - Fuzzing avanzado</h3>
+<section id="paso-3-wfuzz---fuzzing-avanzado" class="level3" data-number="12.12.3">
+<h3 data-number="12.12.3" class="anchored" data-anchor-id="paso-3-wfuzz---fuzzing-avanzado"><span class="header-section-number">12.12.3</span> Paso 3: WFuzz - Fuzzing avanzado</h3>
 <p><strong>Objetivo:</strong> Usar wfuzz para fuzzing personalizado</p>
 <p><strong>Tu tarea:</strong> Probar wfuzz con parametros personalizados</p>
 <p><strong>Pista:</strong> El flag “-z” define el tamano del payload</p>
@@ -926,8 +903,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Resultado esperado:</strong> Resultados con indicadores visuales</p>
 </section>
 </section>
-<section id="verificacion-1" class="level2" data-number="15.4">
-<h2 data-number="15.4" class="anchored" data-anchor-id="verificacion-1"><span class="header-section-number">15.4</span> Verificacion</h2>
+<section id="verificacion-1" class="level2" data-number="12.13">
+<h2 data-number="12.13" class="anchored" data-anchor-id="verificacion-1"><span class="header-section-number">12.13</span> Verificacion</h2>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -960,41 +937,41 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <hr>
 </section>
+<section id="workflow-3-enumeracion-de-subdominios" class="level2" data-number="12.14">
+<h2 data-number="12.14" class="anchored" data-anchor-id="workflow-3-enumeracion-de-subdominios"><span class="header-section-number">12.14</span> Workflow 3: Enumeracion de Subdominios</h2>
 </section>
-<section id="workflow-3-enumeracion-de-subdominios" class="level1" data-number="16">
-<h1 data-number="16"><span class="header-section-number">16</span> Workflow 3: Enumeracion de Subdominios</h1>
-<section id="objetivo-2" class="level2" data-number="16.1">
-<h2 data-number="16.1" class="anchored" data-anchor-id="objetivo-2"><span class="header-section-number">16.1</span> Objetivo</h2>
+<section id="objetivo-2" class="level2" data-number="12.15">
+<h2 data-number="12.15" class="anchored" data-anchor-id="objetivo-2"><span class="header-section-number">12.15</span> Objetivo</h2>
 <p>Dominar herramientas para descubrir subdominios</p>
 </section>
-<section id="pasos-2" class="level2" data-number="16.2">
-<h2 data-number="16.2" class="anchored" data-anchor-id="pasos-2"><span class="header-section-number">16.2</span> Pasos</h2>
-<section id="paso-1-amass---enumeracion-profunda" class="level3" data-number="16.2.1">
-<h3 data-number="16.2.1" class="anchored" data-anchor-id="paso-1-amass---enumeracion-profunda"><span class="header-section-number">16.2.1</span> Paso 1: AMASS - Enumeracion profunda</h3>
+<section id="pasos-2" class="level2" data-number="12.16">
+<h2 data-number="12.16" class="anchored" data-anchor-id="pasos-2"><span class="header-section-number">12.16</span> Pasos</h2>
+<section id="paso-1-amass---enumeracion-profunda" class="level3" data-number="12.16.1">
+<h3 data-number="12.16.1" class="anchored" data-anchor-id="paso-1-amass---enumeracion-profunda"><span class="header-section-number">12.16.1</span> Paso 1: AMASS - Enumeracion profunda</h3>
 <p><strong>Objetivo:</strong> Usar amass para descubrir subdominios</p>
 <p><strong>Tu tarea:</strong> Ejecutar amass en modo enumeracion</p>
 <p><strong>Pista:</strong> Amass tiene submódulos para diferentes tecnicas</p>
 <p><strong>Comando parcial:</strong> <code>amass enum -d</code></p>
 <p><strong>Resultado esperado:</strong> Lista de subdominios descubiertos</p>
 </section>
-<section id="paso-2-sublist3r---enumeracion-rapida" class="level3" data-number="16.2.2">
-<h3 data-number="16.2.2" class="anchored" data-anchor-id="paso-2-sublist3r---enumeracion-rapida"><span class="header-section-number">16.2.2</span> Paso 2: Sublist3r - Enumeracion rapida</h3>
+<section id="paso-2-sublist3r---enumeracion-rapida" class="level3" data-number="12.16.2">
+<h3 data-number="12.16.2" class="anchored" data-anchor-id="paso-2-sublist3r---enumeracion-rapida"><span class="header-section-number">12.16.2</span> Paso 2: Sublist3r - Enumeracion rapida</h3>
 <p><strong>Objetivo:</strong> Usar sublist3r para descubrimiento rapido</p>
 <p><strong>Tu tarea:</strong> Ejecutar sublist3r contra un dominio</p>
 <p><strong>Pista:</strong> El flag “-d” especifica el dominio</p>
 <p><strong>Comando parcial:</strong> <code>python3 sublist3r.py -d</code></p>
 <p><strong>Resultado esperado:</strong> Subdominios encontrados</p>
 </section>
-<section id="paso-3-dnsmap---enumeracion-dns" class="level3" data-number="16.2.3">
-<h3 data-number="16.2.3" class="anchored" data-anchor-id="paso-3-dnsmap---enumeracion-dns"><span class="header-section-number">16.2.3</span> Paso 3: DNSMAP - Enumeracion DNS</h3>
+<section id="paso-3-dnsmap---enumeracion-dns" class="level3" data-number="12.16.3">
+<h3 data-number="12.16.3" class="anchored" data-anchor-id="paso-3-dnsmap---enumeracion-dns"><span class="header-section-number">12.16.3</span> Paso 3: DNSMAP - Enumeracion DNS</h3>
 <p><strong>Objetivo:</strong> Usar dnsmap para mapeo DNS</p>
 <p><strong>Tu tarea:</strong> Ejecutar dnsmap contra un dominio</p>
 <p><strong>Pista:</strong> dnsmap puede usar wordlists</p>
 <p><strong>Comando parcial:</strong> <code>dnsmap</code></p>
 <p><strong>Resultado esperado:</strong> Servidores DNS y registros encontrados</p>
 </section>
-<section id="paso-4-fierce---reconocimiento-dns" class="level3" data-number="16.2.4">
-<h3 data-number="16.2.4" class="anchored" data-anchor-id="paso-4-fierce---reconocimiento-dns"><span class="header-section-number">16.2.4</span> Paso 4: FIERCE - Reconocimiento DNS</h3>
+<section id="paso-4-fierce---reconocimiento-dns" class="level3" data-number="12.16.4">
+<h3 data-number="12.16.4" class="anchored" data-anchor-id="paso-4-fierce---reconocimiento-dns"><span class="header-section-number">12.16.4</span> Paso 4: FIERCE - Reconocimiento DNS</h3>
 <p><strong>Objetivo:</strong> Usar fierce para descubrimiento de subdominios</p>
 <p><strong>Tu tarea:</strong> Ejecutar fierce contra un objetivo</p>
 <p><strong>Pista:</strong> Fierce es mas simple que amass</p>
@@ -1002,8 +979,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Resultado esperado:</strong> Subdominios y rangos de IP</p>
 </section>
 </section>
-<section id="verificacion-2" class="level2" data-number="16.3">
-<h2 data-number="16.3" class="anchored" data-anchor-id="verificacion-2"><span class="header-section-number">16.3</span> Verificacion</h2>
+<section id="verificacion-2" class="level2" data-number="12.17">
+<h2 data-number="12.17" class="anchored" data-anchor-id="verificacion-2"><span class="header-section-number">12.17</span> Verificacion</h2>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -1042,41 +1019,41 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <hr>
 </section>
+<section id="workflow-4-escaneo-de-vulnerabilidades-web" class="level2" data-number="12.18">
+<h2 data-number="12.18" class="anchored" data-anchor-id="workflow-4-escaneo-de-vulnerabilidades-web"><span class="header-section-number">12.18</span> Workflow 4: Escaneo de Vulnerabilidades Web</h2>
 </section>
-<section id="workflow-4-escaneo-de-vulnerabilidades-web" class="level1" data-number="17">
-<h1 data-number="17"><span class="header-section-number">17</span> Workflow 4: Escaneo de Vulnerabilidades Web</h1>
-<section id="objetivo-3" class="level2" data-number="17.1">
-<h2 data-number="17.1" class="anchored" data-anchor-id="objetivo-3"><span class="header-section-number">17.1</span> Objetivo</h2>
+<section id="objetivo-3" class="level2" data-number="12.19">
+<h2 data-number="12.19" class="anchored" data-anchor-id="objetivo-3"><span class="header-section-number">12.19</span> Objetivo</h2>
 <p>Dominar nikto, wpscan, skipfish y w3af para auditing web</p>
 </section>
-<section id="pasos-3" class="level2" data-number="17.2">
-<h2 data-number="17.2" class="anchored" data-anchor-id="pasos-3"><span class="header-section-number">17.2</span> Pasos</h2>
-<section id="paso-1-nikto---escaneo-basico" class="level3" data-number="17.2.1">
-<h3 data-number="17.2.1" class="anchored" data-anchor-id="paso-1-nikto---escaneo-basico"><span class="header-section-number">17.2.1</span> Paso 1: NIKTO - Escaneo basico</h3>
+<section id="pasos-3" class="level2" data-number="12.20">
+<h2 data-number="12.20" class="anchored" data-anchor-id="pasos-3"><span class="header-section-number">12.20</span> Pasos</h2>
+<section id="paso-1-nikto---escaneo-basico" class="level3" data-number="12.20.1">
+<h3 data-number="12.20.1" class="anchored" data-anchor-id="paso-1-nikto---escaneo-basico"><span class="header-section-number">12.20.1</span> Paso 1: NIKTO - Escaneo basico</h3>
 <p><strong>Objetivo:</strong> Ejecutar nikto contra un servidor web</p>
 <p><strong>Tu tarea:</strong> Ejecutar un escaneo basico con nikto</p>
 <p><strong>Pista:</strong> El flag “-h” especifica el host</p>
 <p><strong>Comando parcial:</strong> <code>nikto -h http://localhost:8888</code></p>
 <p><strong>Resultado esperado:</strong> Lista de vulnerabilidades potenciales</p>
 </section>
-<section id="paso-2-wpscan---wordpress" class="level3" data-number="17.2.2">
-<h3 data-number="17.2.2" class="anchored" data-anchor-id="paso-2-wpscan---wordpress"><span class="header-section-number">17.2.2</span> Paso 2: WPSCAN - WordPress</h3>
+<section id="paso-2-wpscan---wordpress" class="level3" data-number="12.20.2">
+<h3 data-number="12.20.2" class="anchored" data-anchor-id="paso-2-wpscan---wordpress"><span class="header-section-number">12.20.2</span> Paso 2: WPSCAN - WordPress</h3>
 <p><strong>Objetivo:</strong> Escanear sitios WordPress</p>
 <p><strong>Tu tarea:</strong> Ejecutar wpscan contra un sitio WordPress</p>
 <p><strong>Pista:</strong> WPScan tiene flags especiales para enumeracion</p>
 <p><strong>Comando parcial:</strong> <code>wpscan --url</code></p>
 <p><strong>Resultado esperado:</strong> Plugins, temas y usuarios vulnerables</p>
 </section>
-<section id="paso-3-skipfish---crawling-seguro" class="level3" data-number="17.2.3">
-<h3 data-number="17.2.3" class="anchored" data-anchor-id="paso-3-skipfish---crawling-seguro"><span class="header-section-number">17.2.3</span> Paso 3: SKIPFISH - Crawling seguro</h3>
+<section id="paso-3-skipfish---crawling-seguro" class="level3" data-number="12.20.3">
+<h3 data-number="12.20.3" class="anchored" data-anchor-id="paso-3-skipfish---crawling-seguro"><span class="header-section-number">12.20.3</span> Paso 3: SKIPFISH - Crawling seguro</h3>
 <p><strong>Objetivo:</strong> Usar skipfish para crawling automatizado</p>
 <p><strong>Tu tarea:</strong> Preparar skipfish para un escaneo</p>
 <p><strong>Pista:</strong> Skipfish necesita un diccionario</p>
 <p><strong>Comando parcial:</strong> <code>skipfish -o</code></p>
 <p><strong>Resultado esperado:</strong> Reporte HTML con hallazgos</p>
 </section>
-<section id="paso-4-w3af---framework-completo" class="level3" data-number="17.2.4">
-<h3 data-number="17.2.4" class="anchored" data-anchor-id="paso-4-w3af---framework-completo"><span class="header-section-number">17.2.4</span> Paso 4: W3AF - Framework completo</h3>
+<section id="paso-4-w3af---framework-completo" class="level3" data-number="12.20.4">
+<h3 data-number="12.20.4" class="anchored" data-anchor-id="paso-4-w3af---framework-completo"><span class="header-section-number">12.20.4</span> Paso 4: W3AF - Framework completo</h3>
 <p><strong>Objetivo:</strong> Usar w3af para auditing completo</p>
 <p><strong>Tu tarea:</strong> Iniciar w3af en modo consola</p>
 <p><strong>Pista:</strong> w3af tiene interfaz grafica y CLI</p>
@@ -1084,8 +1061,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Resultado esperado:</strong> Consola interactiva</p>
 </section>
 </section>
-<section id="verificacion-3" class="level2" data-number="17.3">
-<h2 data-number="17.3" class="anchored" data-anchor-id="verificacion-3"><span class="header-section-number">17.3</span> Verificacion</h2>
+<section id="verificacion-3" class="level2" data-number="12.21">
+<h2 data-number="12.21" class="anchored" data-anchor-id="verificacion-3"><span class="header-section-number">12.21</span> Verificacion</h2>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -1124,41 +1101,41 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <hr>
 </section>
+<section id="workflow-5-osint" class="level2" data-number="12.22">
+<h2 data-number="12.22" class="anchored" data-anchor-id="workflow-5-osint"><span class="header-section-number">12.22</span> Workflow 5: OSINT</h2>
 </section>
-<section id="workflow-5-osint" class="level1" data-number="18">
-<h1 data-number="18"><span class="header-section-number">18</span> Workflow 5: OSINT</h1>
-<section id="objetivo-4" class="level2" data-number="18.1">
-<h2 data-number="18.1" class="anchored" data-anchor-id="objetivo-4"><span class="header-section-number">18.1</span> Objetivo</h2>
+<section id="objetivo-4" class="level2" data-number="12.23">
+<h2 data-number="12.23" class="anchored" data-anchor-id="objetivo-4"><span class="header-section-number">12.23</span> Objetivo</h2>
 <p>Dominar herramientas de recopilacion de informacion</p>
 </section>
-<section id="pasos-4" class="level2" data-number="18.2">
-<h2 data-number="18.2" class="anchored" data-anchor-id="pasos-4"><span class="header-section-number">18.2</span> Pasos</h2>
-<section id="paso-1-theharvester---emails-y-mas" class="level3" data-number="18.2.1">
-<h3 data-number="18.2.1" class="anchored" data-anchor-id="paso-1-theharvester---emails-y-mas"><span class="header-section-number">18.2.1</span> Paso 1: theHarvester - Emails y mas</h3>
+<section id="pasos-4" class="level2" data-number="12.24">
+<h2 data-number="12.24" class="anchored" data-anchor-id="pasos-4"><span class="header-section-number">12.24</span> Pasos</h2>
+<section id="paso-1-theharvester---emails-y-mas" class="level3" data-number="12.24.1">
+<h3 data-number="12.24.1" class="anchored" data-anchor-id="paso-1-theharvester---emails-y-mas"><span class="header-section-number">12.24.1</span> Paso 1: theHarvester - Emails y mas</h3>
 <p><strong>Objetivo:</strong> Recopilar emails y subdominios</p>
 <p><strong>Tu tarea:</strong> Ejecutar theHarvester contra un dominio</p>
 <p><strong>Pista:</strong> El flag “-b” especifica la fuente</p>
 <p><strong>Comando parcial:</strong> <code>theHarvester -d example.com -b</code></p>
 <p><strong>Resultado esperado:</strong> Emails, subdominios y mas</p>
 </section>
-<section id="paso-2-recon-ng---framework" class="level3" data-number="18.2.2">
-<h3 data-number="18.2.2" class="anchored" data-anchor-id="paso-2-recon-ng---framework"><span class="header-section-number">18.2.2</span> Paso 2: RECON-NG - Framework</h3>
+<section id="paso-2-recon-ng---framework" class="level3" data-number="12.24.2">
+<h3 data-number="12.24.2" class="anchored" data-anchor-id="paso-2-recon-ng---framework"><span class="header-section-number">12.24.2</span> Paso 2: RECON-NG - Framework</h3>
 <p><strong>Objetivo:</strong> Usar recon-ng para OSINT avanzado</p>
 <p><strong>Tu tarea:</strong> Iniciar recon-ng y mostrar workspaces</p>
 <p><strong>Pista:</strong> Recon-ng es un modulo CLI como msfconsole</p>
 <p><strong>Comando parcial:</strong> <code>recon-ng</code></p>
 <p><strong>Resultado esperada:</strong> Consola interactiva</p>
 </section>
-<section id="paso-3-spfo---spf-analysis" class="level3" data-number="18.2.3">
-<h3 data-number="18.2.3" class="anchored" data-anchor-id="paso-3-spfo---spf-analysis"><span class="header-section-number">18.2.3</span> Paso 3: SPFO - SPF Analysis</h3>
+<section id="paso-3-spfo---spf-analysis" class="level3" data-number="12.24.3">
+<h3 data-number="12.24.3" class="anchored" data-anchor-id="paso-3-spfo---spf-analysis"><span class="header-section-number">12.24.3</span> Paso 3: SPFO - SPF Analysis</h3>
 <p><strong>Objetivo:</strong> Analizar registros SPF</p>
 <p><strong>Tu tarea:</strong> Usar/spfgo para analizar SPF</p>
 <p><strong>Pista:</strong> spfgo analiza la configuracion de email</p>
 <p><strong>Comando parcial:</strong> <code>spfgo</code></p>
 <p><strong>Resultado esperado:</strong> Analisis de registros SPF</p>
 </section>
-<section id="paso-4-social-searcher---redes-sociales" class="level3" data-number="18.2.4">
-<h3 data-number="18.2.4" class="anchored" data-anchor-id="paso-4-social-searcher---redes-sociales"><span class="header-section-number">18.2.4</span> Paso 4: SOCIAL-SEARCHER - Redes sociales</h3>
+<section id="paso-4-social-searcher---redes-sociales" class="level3" data-number="12.24.4">
+<h3 data-number="12.24.4" class="anchored" data-anchor-id="paso-4-social-searcher---redes-sociales"><span class="header-section-number">12.24.4</span> Paso 4: SOCIAL-SEARCHER - Redes sociales</h3>
 <p><strong>Objetivo:</strong> Buscar en redes sociales</p>
 <p><strong>Tu tarea:</strong> Usar social-searcher para busqueda</p>
 <p><strong>Pista:</strong> social-searcher busca en multiple plataformas</p>
@@ -1166,8 +1143,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Resultado esperado:</strong> Resultados de redes sociales</p>
 </section>
 </section>
-<section id="verificacion-4" class="level2" data-number="18.3">
-<h2 data-number="18.3" class="anchored" data-anchor-id="verificacion-4"><span class="header-section-number">18.3</span> Verificacion</h2>
+<section id="verificacion-4" class="level2" data-number="12.25">
+<h2 data-number="12.25" class="anchored" data-anchor-id="verificacion-4"><span class="header-section-number">12.25</span> Verificacion</h2>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -1206,15 +1183,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <hr>
 </section>
+<section id="workflow-6-ataques-wireless" class="level2" data-number="12.26">
+<h2 data-number="12.26" class="anchored" data-anchor-id="workflow-6-ataques-wireless"><span class="header-section-number">12.26</span> Workflow 6: Ataques Wireless</h2>
 </section>
-<section id="workflow-6-ataques-wireless" class="level1" data-number="19">
-<h1 data-number="19"><span class="header-section-number">19</span> Workflow 6: Ataques Wireless</h1>
-<section id="objetivo-5" class="level2" data-number="19.1">
-<h2 data-number="19.1" class="anchored" data-anchor-id="objetivo-5"><span class="header-section-number">19.1</span> Objetivo</h2>
+<section id="objetivo-5" class="level2" data-number="12.27">
+<h2 data-number="12.27" class="anchored" data-anchor-id="objetivo-5"><span class="header-section-number">12.27</span> Objetivo</h2>
 <p>Dominar herramientas para auditoria de redes wireless</p>
 </section>
-<section id="escenario-2" class="level2" data-number="19.2">
-<h2 data-number="19.2" class="anchored" data-anchor-id="escenario-2"><span class="header-section-number">19.2</span> Escenario</h2>
+<section id="escenario-2" class="level2" data-number="12.28">
+<h2 data-number="12.28" class="anchored" data-anchor-id="escenario-2"><span class="header-section-number">12.28</span> Escenario</h2>
 <p>Estas en un laboratorio controlado con redes wireless de prueba. Has obtenido autorización específica para auditar estas redes.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1234,50 +1211,50 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="pasos-5" class="level2" data-number="19.3">
-<h2 data-number="19.3" class="anchored" data-anchor-id="pasos-5"><span class="header-section-number">19.3</span> Pasos</h2>
-<section id="paso-1-aircrack-ng---fundamentos" class="level3" data-number="19.3.1">
-<h3 data-number="19.3.1" class="anchored" data-anchor-id="paso-1-aircrack-ng---fundamentos"><span class="header-section-number">19.3.1</span> Paso 1: AIRCRACK-NG - Fundamentos</h3>
+<section id="pasos-5" class="level2" data-number="12.29">
+<h2 data-number="12.29" class="anchored" data-anchor-id="pasos-5"><span class="header-section-number">12.29</span> Pasos</h2>
+<section id="paso-1-aircrack-ng---fundamentos" class="level3" data-number="12.29.1">
+<h3 data-number="12.29.1" class="anchored" data-anchor-id="paso-1-aircrack-ng---fundamentos"><span class="header-section-number">12.29.1</span> Paso 1: AIRCRACK-NG - Fundamentos</h3>
 <p><strong>Objetivo:</strong> Poner la tarjeta en modo monitor</p>
 <p><strong>Tu tarea:</strong> Poner tu interfaz wireless en modo monitor</p>
 <p><strong>Pista:</strong> airmon-ng es la herramienta principal</p>
 <p><strong>Comando parcial:</strong> <code>airmon-ng start</code></p>
 <p><strong>Resultado esperado:</strong> Interfaz en modo monitor (ej: wlan0mon)</p>
 </section>
-<section id="paso-2-airodump-ng---captura" class="level3" data-number="19.3.2">
-<h3 data-number="19.3.2" class="anchored" data-anchor-id="paso-2-airodump-ng---captura"><span class="header-section-number">19.3.2</span> Paso 2: AIRODUMP-NG - Captura</h3>
+<section id="paso-2-airodump-ng---captura" class="level3" data-number="12.29.2">
+<h3 data-number="12.29.2" class="anchored" data-anchor-id="paso-2-airodump-ng---captura"><span class="header-section-number">12.29.2</span> Paso 2: AIRODUMP-NG - Captura</h3>
 <p><strong>Objetivo:</strong> Capturar trafico wireless</p>
 <p><strong>Tu tarea:</strong> Usar airodump-ng para ver redes</p>
 <p><strong>Pista:</strong> El flag “–channel” filtra un canal especifico</p>
 <p><strong>Comando parcial:</strong> <code>airodump-ng wlan0mon</code></p>
 <p><strong>Resultado esperado:</strong> Lista de redes y clientes</p>
 </section>
-<section id="paso-3-aireplay-ng---deauthentication" class="level3" data-number="19.3.3">
-<h3 data-number="19.3.3" class="anchored" data-anchor-id="paso-3-aireplay-ng---deauthentication"><span class="header-section-number">19.3.3</span> Paso 3: AIREPLAY-NG - Deauthentication</h3>
+<section id="paso-3-aireplay-ng---deauthentication" class="level3" data-number="12.29.3">
+<h3 data-number="12.29.3" class="anchored" data-anchor-id="paso-3-aireplay-ng---deauthentication"><span class="header-section-number">12.29.3</span> Paso 3: AIREPLAY-NG - Deauthentication</h3>
 <p><strong>Objetivo:</strong> Capturar handshakes</p>
 <p><strong>Tu tarea:</strong> Enviar paquetes deauth para capturar handshake</p>
 <p><strong>Pista:</strong> Necesitas la MAC del AP y del cliente</p>
 <p><strong>Comando parcial:</strong> <code>aireplay-ng --deauth</code></p>
 <p><strong>Resultado esperado:</strong> Captura del handshake</p>
 </section>
-<section id="paso-4-aircrack-ng---crack" class="level3" data-number="19.3.4">
-<h3 data-number="19.3.4" class="anchored" data-anchor-id="paso-4-aircrack-ng---crack"><span class="header-section-number">19.3.4</span> Paso 4: AIRCRACK-NG - Crack</h3>
+<section id="paso-4-aircrack-ng---crack" class="level3" data-number="12.29.4">
+<h3 data-number="12.29.4" class="anchored" data-anchor-id="paso-4-aircrack-ng---crack"><span class="header-section-number">12.29.4</span> Paso 4: AIRCRACK-NG - Crack</h3>
 <p><strong>Objetivo:</strong> Crackear el password</p>
 <p><strong>Tu tarea:</strong> Usar aircrack-ng contra el handshake</p>
 <p><strong>Pista:</strong> Se necesita una wordlist</p>
 <p><strong>Comando parcial:</strong> <code>aircrack-ng -w</code></p>
 <p><strong>Resultado esperado:</strong> Password crackeado</p>
 </section>
-<section id="paso-5-reaver---wps" class="level3" data-number="19.3.5">
-<h3 data-number="19.3.5" class="anchored" data-anchor-id="paso-5-reaver---wps"><span class="header-section-number">19.3.5</span> Paso 5: REAVER - WPS</h3>
+<section id="paso-5-reaver---wps" class="level3" data-number="12.29.5">
+<h3 data-number="12.29.5" class="anchored" data-anchor-id="paso-5-reaver---wps"><span class="header-section-number">12.29.5</span> Paso 5: REAVER - WPS</h3>
 <p><strong>Objetivo:</strong> Atacar WPS</p>
 <p><strong>Tu tarea:</strong> Usar reaver contra un AP con WPS</p>
 <p><strong>Pista:</strong> WPS es mas vulnerable que WPA</p>
 <p><strong>Comando parcial:</strong> <code>reaver -i</code></p>
 <p><strong>Resultado esperado:</strong> PIN WPS y password</p>
 </section>
-<section id="paso-6-wifite---automatizacion" class="level3" data-number="19.3.6">
-<h3 data-number="19.3.6" class="anchored" data-anchor-id="paso-6-wifite---automatizacion"><span class="header-section-number">19.3.6</span> Paso 6: WIFITE - Automatizacion</h3>
+<section id="paso-6-wifite---automatizacion" class="level3" data-number="12.29.6">
+<h3 data-number="12.29.6" class="anchored" data-anchor-id="paso-6-wifite---automatizacion"><span class="header-section-number">12.29.6</span> Paso 6: WIFITE - Automatizacion</h3>
 <p><strong>Objetivo:</strong> Usar wifite para automatizacion</p>
 <p><strong>Tu tarea:</strong> Ejecutar wifite y observar su flujo</p>
 <p><strong>Pista:</strong> wifite automatiza todo el proceso</p>
@@ -1285,8 +1262,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Resultado esperado:</strong> Interfaz interactiva</p>
 </section>
 </section>
-<section id="verificacion-5" class="level2" data-number="19.4">
-<h2 data-number="19.4" class="anchored" data-anchor-id="verificacion-5"><span class="header-section-number">19.4</span> Verificacion</h2>
+<section id="verificacion-5" class="level2" data-number="12.30">
+<h2 data-number="12.30" class="anchored" data-anchor-id="verificacion-5"><span class="header-section-number">12.30</span> Verificacion</h2>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -1331,15 +1308,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <hr>
 </section>
+<section id="laboratorio-docker-vulnerable-labs" class="level2" data-number="12.31">
+<h2 data-number="12.31" class="anchored" data-anchor-id="laboratorio-docker-vulnerable-labs"><span class="header-section-number">12.31</span> Laboratorio Docker: Vulnerable Labs</h2>
 </section>
-<section id="laboratorio-docker-vulnerable-labs" class="level1" data-number="20">
-<h1 data-number="20"><span class="header-section-number">20</span> Laboratorio Docker: Vulnerable Labs</h1>
-<section id="objetivo-6" class="level2" data-number="20.1">
-<h2 data-number="20.1" class="anchored" data-anchor-id="objetivo-6"><span class="header-section-number">20.1</span> Objetivo</h2>
+<section id="objetivo-6" class="level2" data-number="12.32">
+<h2 data-number="12.32" class="anchored" data-anchor-id="objetivo-6"><span class="header-section-number">12.32</span> Objetivo</h2>
 <p>Crear un laboratorio vulnerables profesionales para practicar</p>
 </section>
-<section id="docker-compose" class="level2" data-number="20.2">
-<h2 data-number="20.2" class="anchored" data-anchor-id="docker-compose"><span class="header-section-number">20.2</span> Docker Compose</h2>
+<section id="docker-compose" class="level2" data-number="12.33">
+<h2 data-number="12.33" class="anchored" data-anchor-id="docker-compose"><span class="header-section-number">12.33</span> Docker Compose</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># docker_security_lab.sh</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1408,9 +1385,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"  PentesterLab: http://localhost:8886"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <hr>
 </section>
-</section>
-<section id="comandos-de-herramientas-adicionales" class="level1" data-number="21">
-<h1 data-number="21"><span class="header-section-number">21</span> Comandos de Herramientas Adicionales</h1>
+<section id="comandos-de-herramientas-adicionales" class="level2" data-number="12.34">
+<h2 data-number="12.34" class="anchored" data-anchor-id="comandos-de-herramientas-adicionales"><span class="header-section-number">12.34</span> Comandos de Herramientas Adicionales</h2>
 <p>##WHOIS y DNS</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># whois_dns_tools.sh</span></span>
@@ -1456,10 +1432,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> referencia_whois_dns.md</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <hr>
 </section>
-<section id="scripts-de-automatizacion" class="level1" data-number="22">
-<h1 data-number="22"><span class="header-section-number">22</span> Scripts de Automatizacion</h1>
-<section id="script-integrado-de-pentesting" class="level2" data-number="22.1">
-<h2 data-number="22.1" class="anchored" data-anchor-id="script-integrado-de-pentesting"><span class="header-section-number">22.1</span> Script Integrado de Pentesting</h2>
+<section id="scripts-de-automatizacion" class="level2" data-number="12.35">
+<h2 data-number="12.35" class="anchored" data-anchor-id="scripts-de-automatizacion"><span class="header-section-number">12.35</span> Scripts de Automatizacion</h2>
+</section>
+<section id="script-integrado-de-pentesting" class="level2" data-number="12.36">
+<h2 data-number="12.36" class="anchored" data-anchor-id="script-integrado-de-pentesting"><span class="header-section-number">12.36</span> Script Integrado de Pentesting</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># auto_pt_tools.sh</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1524,9 +1501,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Script creado: ./pt_automatizado.sh &lt;target&gt;"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <hr>
 </section>
-</section>
-<section id="quick-reference-card" class="level1" data-number="23">
-<h1 data-number="23"><span class="header-section-number">23</span> Quick Reference Card</h1>
+<section id="quick-reference-card" class="level2" data-number="12.37">
+<h2 data-number="12.37" class="anchored" data-anchor-id="quick-reference-card"><span class="header-section-number">12.37</span> Quick Reference Card</h2>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 31%">
@@ -1650,14 +1626,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <hr>
 </section>
-<section id="ejercicio-final" class="level1" data-number="24">
-<h1 data-number="24"><span class="header-section-number">24</span> Ejercicio Final</h1>
-<section id="objetivo-7" class="level2" data-number="24.1">
-<h2 data-number="24.1" class="anchored" data-anchor-id="objetivo-7"><span class="header-section-number">24.1</span> Objetivo</h2>
+<section id="ejercicio-final" class="level2" data-number="12.38">
+<h2 data-number="12.38" class="anchored" data-anchor-id="ejercicio-final"><span class="header-section-number">12.38</span> Ejercicio Final</h2>
+</section>
+<section id="objetivo-7" class="level2" data-number="12.39">
+<h2 data-number="12.39" class="anchored" data-anchor-id="objetivo-7"><span class="header-section-number">12.39</span> Objetivo</h2>
 <p>Dominar todas las herramientas de este laboratorio en un escenario integrado</p>
 </section>
-<section id="criterios-de-evaluacion" class="level2" data-number="24.2">
-<h2 data-number="24.2" class="anchored" data-anchor-id="criterios-de-evaluacion"><span class="header-section-number">24.2</span> Criterios de Evaluacion</h2>
+<section id="criterios-de-evaluacion" class="level2" data-number="12.40">
+<h2 data-number="12.40" class="anchored" data-anchor-id="criterios-de-evaluacion"><span class="header-section-number">12.40</span> Criterios de Evaluacion</h2>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -1694,9 +1671,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <hr>
 </section>
-</section>
-<section id="recursos" class="level1" data-number="25">
-<h1 data-number="25"><span class="header-section-number">25</span> Recursos</h1>
+<section id="recursos" class="level2" data-number="12.41">
+<h2 data-number="12.41" class="anchored" data-anchor-id="recursos"><span class="header-section-number">12.41</span> Recursos</h2>
 <ul>
 <li>Kali Linux Tools: https://www.kali.org/tools/</li>
 <li>THC Hydra: https://github.com/vanhauser-thc/hydra</li>

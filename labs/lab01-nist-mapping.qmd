@@ -5,7 +5,6 @@ type: "lab"
 description: "Practica de mapeo de controles de seguridad al framework NIST CSF 2.0"
 ---
 
-# Lab 1: Mapeo de Controles NIST CSF 2.0
 
 ## Objetivo del Laboratorio
 

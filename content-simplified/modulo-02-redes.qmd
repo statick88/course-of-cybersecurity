@@ -5,7 +5,6 @@ type: "content"
 description: "Aprende la diferencia entre VPN y ZTNA de forma sencilla"
 ---
 
-# Módulo 2: Seguridad en Redes
 
 ## 🎯 Objetivos de Aprendizaje
 

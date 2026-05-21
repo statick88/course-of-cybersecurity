@@ -5,7 +5,6 @@ type: "guia"
 description: "Ejemplos de trabajos bien y mal hechos para cada lab"
 ---
 
-# Ejemplos de Entregables - Labs 1 y 2
 
 ## Lab 1: Mapeo de Controles NIST CSF
 

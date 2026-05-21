@@ -5,7 +5,6 @@ type: "quiz"
 description: "Evaluacion del modulo 2: Gestion de Identidad y Acceso con MFA phishing-resistant"
 ---
 
-# Quiz 2: Gestion de Identidad y Acceso (IAM)
 
 ## Instrucciones
 

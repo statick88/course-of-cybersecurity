@@ -5,7 +5,6 @@ type: "minicurso"
 description: "Tutorial completo de SQLMap para testing de inyección SQL en ciberseguridad"
 ---
 
-# Minicurso: SQLMap
 
 ## ¿Qué es SQLMap?
 

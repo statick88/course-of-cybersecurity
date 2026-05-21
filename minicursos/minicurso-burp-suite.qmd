@@ -5,7 +5,6 @@ type: "minicurso"
 description: "Tutorial completo de Burp Suite para testing de aplicaciones web"
 ---
 
-# Minicurso: Burp Suite
 
 ## ¿Qué es Burp Suite?
 

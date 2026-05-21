@@ -5,7 +5,6 @@ type: "lab"
 description: "Practica de implementacion de microsegmentacion y VPN basada en Zero Trust"
 ---
 
-# Lab 3: Implementacion Zero Trust con WireGuard
 
 ## Objetivo del Laboratorio
 

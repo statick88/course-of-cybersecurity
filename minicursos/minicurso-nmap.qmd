@@ -5,7 +5,6 @@ type: "minicurso"
 description: "Tutorial completo de Nmap para ciberseguridad"
 ---
 
-# Minicurso: Nmap
 
 ## ¿Qué es Nmap?
 
