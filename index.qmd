@@ -57,13 +57,25 @@ A diferencia de cursos teoricos, este curso se centra en la **practica activa**:
 
 ### Flujo de Aprendizaje
 
-```{mermaid}
-graph LR
-    A[Lee el material] --> B[Ejecuta el lab]
-    B --> C[Responde el quiz]
-    C --> D[Comprende]
-    D --> A
-```
+<div class="mermaid-diagram" style="background: #1e293b; border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid #334155;">
+<div style="color: #94a3b8; font-size: 0.85em; margin-bottom: 10px; font-family: monospace;">Flujo de Aprendizaje Basado en Retos</div>
+<svg viewBox="0 0 500 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:500px;">
+<rect x="10" y="30" width="90" height="40" rx="8" fill="#3b82f6"/><text x="55" y="55" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Lee el</text><text x="55" y="70" text-anchor="middle" fill="white" font-size="12" font-weight="bold">material</text>
+<polygon points="100,50 130,50 125,45 130,55" fill="#94a3b8"/>
+<rect x="130" y="30" width="90" height="40" rx="8" fill="#10b981"/><text x="175" y="55" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Ejecuta</text><text x="175" y="70" text-anchor="middle" fill="white" font-size="12" font-weight="bold">el lab</text>
+<polygon points="220,50 250,50 245,45 250,55" fill="#94a3b8"/>
+<rect x="250" y="30" width="90" height="40" rx="8" fill="#f59e0b"/><text x="295" y="55" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Responde</text><text x="295" y="70" text-anchor="middle" fill="white" font-size="12" font-weight="bold">el quiz</text>
+<polygon points="340,50 370,50 365,45 370,55" fill="#94a3b8"/>
+<rect x="370" y="30" width="90" height="40" rx="8" fill="#8b5cf6"/><text x="415" y="55" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Com-</text><text x="415" y="70" text-anchor="middle" fill="white" font-size="12" font-weight="bold">prende</text>
+<path d="M 415,30 C 415,5 250,5 100,5 C 50,5 20,15 15,25" fill="none" stroke="#64748b" stroke-width="2" stroke-dasharray="4,2"/>
+<polygon points="15,30 20,20 10,22" fill="#64748b"/>
+<text x="250" y="15" text-anchor="middle" fill="#94a3b8" font-size="10">ciclo continuo</text>
+</svg>
+</div>
+
+### Flujo de Aprendizaje
+
+El aprendizaje basado en retos sigue un **ciclo iterativo**: leer → practicar → evaluar → comprender → repetir. Cada iteración consolida el conocimiento a un nivel más profundo.
 
 ---
 
