@@ -66,10 +66,10 @@ book:
     - labs/lab-anexo-llm-security.qmd
     - labs/lab-anexo-ethical-hacking.qmd
     - labs/lab-anexo-herramientas-base.qmd
-    - labs/lab-anexo-juice-shop.qmd
     
-  # Appendices - Curso Simplificado (Fundamentos)
+  # Appendices - Labs Avanzados + Curso Simplificado (Fundamentos)
   appendices:
+    - labs/lab-anexo-juice-shop.qmd
     - content-simplified/index.qmd
     - content-simplified/modulo-01-seguridad-basica.qmd
     - content-simplified/modulo-02-redes.qmd
