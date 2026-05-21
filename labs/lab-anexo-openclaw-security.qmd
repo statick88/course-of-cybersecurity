@@ -147,11 +147,33 @@ El metodo `chat.send()` en OpenClaw permite ejecucion de comandos sin validacion
 
 **Prueba de concepto**
 
-El script de deteccion esta disponible en `scripts/openclaw/cve_41371.py`:
+**Paso 1**: Verifica la version de OpenClaw
 
 ```bash
-python3 scripts/openclaw/cve_41371.py ws://localhost:8080/ws
+# Conecta al endpoint WebSocket y solicita la version
+curl -s http://localhost:8080/api/version | python3 -m json.tool
 ```
+
+**Esperado**: Si la version es `< 2.4.1`, el sistema es vulnerable.
+
+**Paso 2**: Prueba manual de escalacion de privilegios
+
+```bash
+# Instala websocket-client si no lo tienes
+pip3 install websocket-client
+
+# Crea un script de prueba manual
+python3 -c "
+import websocket, json
+ws = websocket.create_connection('ws://localhost:8080/ws')
+payload = {'type': 'chat.send', 'content': '!exec whoami', 'channel': 'general'}
+ws.send(json.dumps(payload))
+print(ws.recv())
+ws.close()
+"
+```
+
+**Esperado**: Si recibes una respuesta con el usuario del sistema, la vulnerabilidad esta confirmada.
 
 ### 2.2 CVE-2026-42434 (Sandbox Escape)
 
@@ -213,31 +235,236 @@ python3 scripts/openclaw/cve_41371.py ws://localhost:8080/ws
 
 ### 3.2 Configuracion de Contenedor Seguro
 
-El Dockerfile hardening esta disponible en `scripts/openclaw/Dockerfile.secure`:
+**Paso 1**: Crea un Dockerfile con hardening basico
 
 ```bash
-cat scripts/openclaw/Dockerfile.secure
+mkdir -p ~/cybersec-labs/openclaw-secure
+cd ~/cybersec-labs/openclaw-secure
+nano Dockerfile
 ```
 
-### 3.3 Script de Deteccion de Vulnerabilidades
+**Paso 2**: Agrega las siguientes directivas de seguridad
 
-El scanner completo esta disponible en `scripts/openclaw/vuln_scanner.py`:
+```dockerfile
+FROM ubuntu:22.04
+
+# 1. Usuario no-root
+RUN adduser --disabled-password --gecos "" openclaw
+
+# 2. Limitar recursos
+RUN echo 'openclaw hard nproc 512' >> /etc/security/limits.conf
+
+# 3. Directorios con permisos correctos
+RUN mkdir /app && chown openclaw:openclaw /app
+
+# 4. Healthcheck
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8080/health || exit 1
+
+# 5. No correr como root
+USER openclaw
+WORKDIR /app
+```
+
+**Paso 3**: Construye la imagen segura
 
 ```bash
-python3 scripts/openclaw/vuln_scanner.py 192.168.1.100
+docker build -t openclaw:secure .
+```
+
+### 3.3 Escaneo Manual de Vulnerabilidades
+
+**Paso 1**: Escanea puertos comunes manualmente
+
+```bash
+# Escanea puertos comunes de OpenClaw
+nmap -p 8080,8443,9390,9391 localhost
+```
+
+**Paso 2**: Verifica configuraciones inseguras
+
+```bash
+# Verifica si el proceso corre como root
+ps aux | grep openclaw
+
+# Verifica variables de entorno expuestas
+env | grep -i api_key
+
+# Verifica si CORS esta habilitado
+curl -I http://localhost:8080 | grep -i access-control
+```
+
+**Paso 3**: Verifica WebSocket sin TLS
+
+```bash
+# Intenta conexion WebSocket sin TLS
+curl -i -N -H "Connection: Upgrade" -H "Upgrade: websocket" \
+  -H "Sec-WebSocket-Version: 13" -H "Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==" \
+  http://localhost:8080/ws
 ```
 
 ---
 
 ## Paso 4: Configuracion de Vulnerability Scanner (OpenVAS)
 
-### 4.1 Instalacion Completa
+### 4.1 Instalacion Paso a Paso
 
-El script de instalacion esta disponible en `scripts/openclaw/install_openvas.sh`:
+**Paso 1**: Pull la imagen de OpenVAS
 
 ```bash
-chmod +x scripts/openclaw/install_openvas.sh
-./scripts/openclaw/install_openvas.sh
+docker pull atomicorp/openvas:latest
+```
+
+**Paso 2**: Crea una red dedicada
+
+```bash
+docker network create openvas_net
+```
+
+**Paso 3**: Inicia el contenedor
+
+```bash
+docker run -d \
+    --name openvas \
+    --network openvas_net \
+    -p 9390:9390 \
+    -p 9391:9391 \
+    -e OV_PASSWORD=ChangeMe123! \
+    -e OV_SCAN_NET="0.0.0.0/0" \
+    atomicorp/openvas:latest
+```
+
+**Paso 4**: Espera la inicializacion
+
+```bash
+# OpenVAS tarda ~60 segundos en inicializar
+sleep 60
+
+# Verifica los logs
+docker logs openvas | tail -20
+```
+
+**Paso 5**: Accede a la interfaz web
+
+- URL: `https://localhost:9390`
+- Usuario: `admin`
+- Password: `ChangeMe123!`
+
+> **IMPORTANTE**: Cambia la password despues del primer login.
+
+### 4.2 Configuracion de Policy de Escaneo
+
+**Paso 1**: Configura un escaneo semanal via CLI
+
+```bash
+omp -h localhost -u admin -w ChangeMe123! \
+    --xml='<create_task><name>Weekly Scan</name><target>192.168.1.0/24</target></create_task>'
+```
+
+**Paso 2**: Verifica la configuracion
+
+| Parametro | Valor |
+|-----------|-------|
+| **Profile** | Full and Fast |
+| **Timeout** | 5 minutes |
+| **Parallel checks** | 4 |
+| **Scan semanal** | Domingos 2:00 AM |
+| **Alertas** | Email + Syslog (SIEM) |
+
+---
+
+## Paso 5: SIEM para Monitoreo de Agentes IA
+
+### 5.1 Instalacion de Wazuh
+
+**Paso 1**: Pull las imagenes de Wazuh
+
+```bash
+docker pull wazuh/wazuh-indexer
+docker pull wazuh/wazuh-dashboard
+docker pull wazuh/wazuh-manager
+```
+
+**Paso 2**: Inicia los servicios (configuracion completa en docs oficiales de Wazuh)
+
+```bash
+# Wazuh listo en: https://localhost
+```
+
+### 5.2 Dashboard de Monitoreo Manual
+
+**Paso 1**: Crea un script de dashboard basico
+
+```bash
+nano agent_dashboard.py
+```
+
+**Paso 2**: Agrega el siguiente contenido
+
+```python
+from datetime import datetime
+
+alerts = []
+
+def add_alert(level, message, source):
+    alerts.append({
+        "timestamp": datetime.now().isoformat(),
+        "level": level,
+        "message": message,
+        "source": source
+    })
+
+# Agrega alertas de ejemplo
+add_alert("CRITICAL", "CVE-2026-41371 attempt detected", "10.0.0.50")
+add_alert("HIGH", "Failed login attempts", "10.0.0.51")
+add_alert("MEDIUM", "Rate limit exceeded", "10.0.0.52")
+
+# Muestra el dashboard
+print("=" * 60)
+print("AGENT SECURITY DASHBOARD")
+print("=" * 60)
+print(f"Total alertas: {len(alerts)}\n")
+
+for alert in alerts:
+    print(f"  [{alert['level']}] {alert['message']}")
+    print(f"    {alert['timestamp']} - {alert['source']}")
+```
+
+**Paso 3**: Ejecuta el dashboard
+
+```bash
+python3 agent_dashboard.py
+```
+
+---
+
+## Paso 6: Threat Hunting para Agentes IA
+
+### 6.1 Hypothesis-Based Hunting Manual
+
+**Paso 1**: Selecciona una hipotesis de investigacion
+
+| Hipotesis | Indicadores | Herramientas |
+|-----------|-------------|-------------|
+| **H1: Credenciales comprometidas** | Multiples IPs, horarios inusuales | Log analysis, SIEM queries |
+| **H2: Prompt Injection activo** | Tokens extraeos, respuestas anmalas | Conversation logs analysis |
+| **H3: Modelo comprometido** | Respuestas fuera de contexto | Baseline analysis |
+| **H4: Sandbox escape** | File descriptors extraeos | System call monitoring |
+
+**Paso 2**: Ejecuta las queries de SIEM correspondientes
+
+```bash
+# Ejemplo: Buscar credenciales comprometidas
+grep -i "failed login" /var/log/auth.log | awk '{print $11}' | sort | uniq -c | sort -rn
+
+# Ejemplo: Buscar horarios inusuales
+grep -E "login|session" /var/log/auth.log | awk '{print $3}' | sort | uniq -c
+```
+
+**Paso 3**: Documenta hallazgos en el reporte de hunting
+
+```bash
+nano threat_hunting_report.md
 ```
 
 ### 4.2 Configuracion de Policy

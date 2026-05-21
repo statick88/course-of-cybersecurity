@@ -383,6 +383,7 @@ kubectl exec -it backend -n techcorp-prod -- redis-cli -h database ping
 ```
 
 **Resultados Esperados**:
+
 - ✅ Frontend → Backend: Conexion exitosa (puerto 8080 permitido)
 - ❌ Frontend → Database: Conexion bloqueada (no hay politica que lo permita)
 - ✅ Backend → Database: Conexion exitosa (puerto 6379 permitido)

@@ -241,8 +241,6 @@ Abre tu terminal y crea un directorio de trabajo:
 
 ```bash
 mkdir -p ~/cybersecurity-labs/nist-csf
-```bash
-mkdir -p ~/cybersecurity-labs/nist-csf
 cd ~/cybersecurity-labs/nist-csf
 ```
 
