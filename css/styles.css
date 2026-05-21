@@ -312,3 +312,56 @@ footer {
     font-size: 1.5rem;
   }
 }
+
+/* ============================================================
+   ÚLTIMO RECURSO: Override de títulos blancos para TODOS los modos
+   ============================================================ */
+
+/* Override universal para títulos -在任何颜色模式下 */
+h1.title,
+h2.title,
+h3.title,
+h4.title,
+h5.title,
+h6.title,
+.title,
+.sidebar-title,
+.section-title,
+.book-title {
+  color: #1a1a2e !important;
+}
+
+/* En modo oscuro (todos los selectores posibles) */
+html.quarto-dark h1.title,
+html.quarto-dark h2.title,
+html.quarto-dark h3.title,
+html.quarto-dark h4.title,
+html.quarto-dark h5.title,
+html.quarto-dark h6.title,
+html.quarto-dark .title,
+html.quarto-dark .sidebar-title,
+html.quarto-dark .section-title,
+html.quarto-dark .book-title,
+body.quarto-dark h1.title,
+body.quarto-dark h2.title,
+body.quarto-dark h3.title,
+body.quarto-dark h4.title,
+body.quarto-dark h5.title,
+body.quarto-dark h6.title,
+body.quarto-dark .title,
+body.quarto-dark .sidebar-title,
+body.quarto-dark .section-title,
+body.quarto-dark .book-title,
+[data-mode="dark"] h1.title,
+[data-mode="dark"] h2.title,
+[data-mode="dark"] h3.title,
+[data-mode="dark"] h4.title,
+[data-mode="dark"] h5.title,
+[data-mode="dark"] h6.title,
+[data-mode="dark"] .title,
+[data-mode="dark"] .sidebar-title,
+[data-mode="dark"] .section-title,
+[data-mode="dark"] .book-title {
+  color: #ffffff !important;
+  background-color: transparent !important;
+}
