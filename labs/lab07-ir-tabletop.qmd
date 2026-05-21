@@ -1,5 +1,5 @@
 ---
-title: "Lab 7: tabletop Exercise - Ransomware Response"
+title: "Lab 7: Tabletop Exercise - Ransomware Response"
 module: "lab-07"
 type: "lab"
 description: "Practica de respuesta a incidentes con simulacion de ransomware"

@@ -75,25 +75,23 @@ Los profesionales de ciberseguridad tienen un poder unico: la capacidad de encon
 
 ### Ejemplo de Clause de Autorizacion
 
-```
-AUTORIZACION DE PRUEBA DE SEGURIDAD
+::: {.callout-note}
+## Autorizacion de Prueba de Seguridad
 
-Yo, [NOMBRE CLIENTE], representante legal de [EMPRESA],
-autorizo a [NOMBRE CONSULTOR] a realizar pruebas de seguridad
-en los siguientes sistemas:
+Yo, **[NOMBRE CLIENTE]**, representante legal de **[EMPRESA]**, autorizo a **[NOMBRE CONSULTOR]** a realizar pruebas de seguridad en los siguientes sistemas:
 
-- Sistema: [DESCRIPCION]
-- IP/Dominio: [DIRECCIONES]
-- Alcance: [LIMITACIONES]
-- Periodo: [FECHAS]
+- **Sistema**: [DESCRIPCION]
+- **IP/Dominio**: [DIRECCIONES]
+- **Alcance**: [LIMITACIONES]
+- **Periodo**: [FECHAS]
 
-El alcance NO incluye:
+**El alcance NO incluye:**
 - Sistemas de produccion criticos
 - Datos de clientes reales
 - Redes de terceros
 
-Firma: _____________  Fecha: _____________
-```
+**Firma**: _____________  **Fecha**: _____________
+:::
 
 ---
 
@@ -128,17 +126,17 @@ Firma: _____________  Fecha: _____________
 
 ### Template de Reporte
 
-```
-REPORTE DE VULNERABILIDAD
+::: {.callout-tip}
+## Reporte de Vulnerabilidad
 
-Titulo: [Resumen ejecutivo]
-Severidad: [Critica/Alta/Media/Baja]
-Sistemaafectado: [URL/IP]
-Descripcion: [Que encontraste]
-Impacto: [Que podria pasar]
-PoC: [Comandos de prueba]
-Recomendacion: [Como mitigar]
-```
+- **Titulo**: [Resumen ejecutivo]
+- **Severidad**: [Critica/Alta/Media/Baja]
+- **Sistema afectado**: [URL/IP]
+- **Descripcion**: [Que encontraste]
+- **Impacto**: [Que podria pasar]
+- **PoC**: [Comandos de prueba]
+- **Recomendacion**: [Como mitigar]
+:::
 
 ### Plazos de Responsible Disclosure
 
@@ -199,18 +197,20 @@ Recomendacion: [Como mitigar]
 
 ## Juramento del Profesional de Seguridad
 
-```
-Yo, como profesional de ciberseguridad, jurando:
+::: {.callout-important}
+## Juramento
+
+Yo, como profesional de ciberseguridad, juro:
 
 - Usare mis conocimientos de manera etica
 - Protectere la informacion confidencial
 - No causare dano intencional
 - Mantendre actualizada mi competencia
 - Reportare vulnerabilidades responsablemente
-- Defendere el bien comun digitales
+- Defendere el bien comun digital
 
-Este es mi compromiso.
-```
+**Este es mi compromiso.**
+:::
 
 ---
 

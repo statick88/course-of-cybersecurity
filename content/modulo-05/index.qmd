@@ -95,6 +95,7 @@ CVSS v3.1 calcula la severidad usando dos sub-scores: **Exploitabilidad** y **Im
 > **Nota**: Scope NO es un peso numerico. Es un **multiplicador de formula**: cuando Scope = "Changed", el score base se multiplica por **1.08**, aumentando significativamente la severidad final.
 
 **Rangos de severidad**:
+
 | Score | Nivel |
 |-------|-------|
 | 0.0 | None |
@@ -146,16 +147,16 @@ CVSS v3.1 calcula la severidad usando dos sub-scores: **Exploitabilidad** y **Im
 
 **Paso 1**: Identifica cada metrica CVSS v3.1
 
-```
-Attack Vector:        ?  (Network, Adjacent, Local, Physical)
-Attack Complexity:    ?  (Low, High)
-Privileges Required:  ?  (None, Low, High)
-User Interaction:     ?  (None, Required)
-Scope:                ?  (Unchanged, Changed)
-Confidentiality:      ?  (High, Low, None)
-Integrity:            ?  (High, Low, None)
-Availability:         ?  (High, Low, None)
-```
+| Metrica | Tu Valor | Opciones |
+|---------|----------|----------|
+| Attack Vector | ? | Network, Adjacent, Local, Physical |
+| Attack Complexity | ? | Low, High |
+| Privileges Required | ? | None, Low, High |
+| User Interaction | ? | None, Required |
+| Scope | ? | Unchanged, Changed |
+| Confidentiality | ? | High, Low, None |
+| Integrity | ? | High, Low, None |
+| Availability | ? | High, Low, None |
 
 **Paso 2**: Razona cada valor
 
@@ -178,26 +179,18 @@ Con estas metricas (A:Adjacent, AC:Low, PR:N, UI:N, S:Changed, C:H, I:N, A:N), e
 
 **Paso 1**: Visita `first.org/epss` y busca un CVE reciente
 
-```
-# En tu navegador, ve a:
-https://www.first.org/epss/calculator/CVE-2024-3094
-
-# Observa:
-# - EPSS Score (probabilidad)
-# - Percentile (comparado con otros CVEs)
-```
+1. En tu navegador, ve a: **https://www.first.org/epss/calculator/CVE-2024-3094**
+2. Observa:
+   - **EPSS Score** (probabilidad)
+   - **Percentile** (comparado con otros CVEs)
 
 **Paso 2**: Verifica si el CVE esta en el catalogo KEV
 
-```
-# En tu navegador, ve a:
-https://www.cisa.gov/known-exploited-vulnerabilities-catalog
-
-# Busca el CVE y anota:
-# - Fecha de adicion al catalogo
-# - Deadline de remediacion
-# - Producto afectado
-```
+1. En tu navegador, ve a: **https://www.cisa.gov/known-exploited-vulnerabilities-catalog**
+2. Busca el CVE y anota:
+   - **Fecha de adicion** al catalogo
+   - **Deadline de remediacion**
+   - **Producto afectado**
 
 **Paso 3**: Toma una decision de priorizacion
 
@@ -240,13 +233,16 @@ Para cada una de estas vulnerabilidades, investiga y completa la tabla:
 
 **Paso 2**: Completa la matriz de decision
 
-```
-CVE          | CVSS | EPSS | KEV? | Activo afectado    | Prioridad
--------------|------|------|------|--------------------|----------
-CVE-2024-3094|      |      |      |                    |
-CVE-2024-21762|     |      |      |                    |
-...
-```
+| CVE | CVSS | EPSS | KEV? | Activo afectado | Prioridad |
+|-----|------|------|------|-----------------|-----------|
+| CVE-2024-3094 | | | | | |
+| CVE-2024-21762 | | | | | |
+| CVE-2025-24384 | | | | | |
+| CVE-2024-6387 | | | | | |
+| CVE-2024-3400 | | | | | |
+| CVE-2025-12345 | | | | | |
+| CVE-2024-45490 | | | | | |
+| CVE-2024-4367 | | | | | |
 
 **Paso 3**: Ordena por prioridad y justifica
 
@@ -284,6 +280,7 @@ Investiga si alguna de estas vulnerabilidades tiene un exploit disponible en Met
 5. **Reporte de Estado**: Template de reporte mensual para la direccion de TechCorp
 
 **Criterios de Evaluacion**:
+
 - [ ] La politica de escaneo cubre todos los activos de TechCorp
 - [ ] La matriz de priorizacion usa CVSS + EPSS + contexto (no solo CVSS)
 - [ ] Los SLA son realistas y proporcionales al riesgo

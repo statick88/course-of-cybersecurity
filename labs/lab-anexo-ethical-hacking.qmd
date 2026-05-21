@@ -1,5 +1,5 @@
 ---
-title: "Lab Anexo: Ethical Hacking Environment - Kali Linux VM + MCP + Specialized Models"
+title: "Lab Anexo: Ethical Hacking Environment - Kali Linux VM + MCP"
 module: "lab-anexo-03"
 type: "lab"
 description: "Practica avanzada de ethical hacking con Kali Linux, modelos especializados y MCP config"

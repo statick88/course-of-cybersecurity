@@ -123,11 +123,22 @@ Minimizar el **impacto operativo, financiero y reputacional** de un incidente de
 
 **Paso 1**: Clasifica el incidente
 
-```
-Tipo de incidente: [ ] Ransomware  [ ] Phishing  [ ] Data Breach  [ ] DDoS  [ ] Insider Threat
-Severidad: [ ] Critica  [ ] Alta  [ ] Media  [ ] Baja
-Justificacion: _______________
-```
+**Tipo de incidente**
+
+- [ ] Ransomware
+- [ ] Phishing
+- [ ] Data Breach
+- [ ] DDoS
+- [ ] Insider Threat
+
+**Severidad**
+
+- [ ] Critica
+- [ ] Alta
+- [ ] Media
+- [ ] Baja
+
+**Justificacion**: _______________
 
 **Paso 2**: Ejecuta los primeros 3 pasos de contencion
 
@@ -172,28 +183,32 @@ find /tmp -type f -mmin -60 -ls
 
 Completa este formulario de incidente:
 
-```
-REPORTE DE INCIDENTE — TechCorp
-================================
+**REPORTE DE INCIDENTE — TechCorp**
 
-Fecha y hora de deteccion: _______________
-Detectado por: [ ] SIEM  [ ] EDR  [ ] Usuario  [ ] Tercero
-Tipo de incidente: _______________
-Severidad inicial: _______________
+**Fecha y hora de deteccion**: _______________
 
-Primeras acciones de contencion:
+**Detectado por**
+
+- [ ] SIEM
+- [ ] EDR
+- [ ] Usuario
+- [ ] Tercero
+
+**Tipo de incidente**: _______________
+**Severidad inicial**: _______________
+
+**Primeras acciones de contencion**:
 1. _______________
 2. _______________
 3. _______________
 
-Evidencia recolectada:
+**Evidencia recolectada**:
 - IPs sospechosas: _______________
 - Procesos sospechosos: _______________
 - Archivos sospechosos: _______________
 
-MTTD: _______________ (tiempo entre incidente y deteccion)
-MTTC: _______________ (tiempo entre deteccion y contencion)
-```
+**MTTD**: _______________ (tiempo entre incidente y deteccion)
+**MTTC**: _______________ (tiempo entre deteccion y contencion)
 
 ## 🧪 Laboratorio
 
@@ -231,20 +246,19 @@ Estructura sugerida:
 
 **Paso 2**: Simula el incidente
 
-Usa este escenario para probar tu playbook:
+::: {.callout-important}
+## Escenario: Ransomware en TechCorp
 
-```
-ESCENARIO: RANSOMWARE EN TECHCORP
-==================================
-
-Dia: Lunes, 08:00 AM
-Vector: Email de phishing con adjunto malicioso
-Victima inicial: Empleado del departamento de contabilidad
-Ransomware: Variante simulada "CryptoLock-2025"
-Propagacion: Se expande a 3 servidores en 2 horas
-Impacto: Servidor de archivos cifrado, backups en red cifrados, backups offline intactos
-Exigencia: USD 50,000 en Bitcoin en 48 horas
-```
+| Campo | Detalle |
+|-------|---------|
+| **Dia** | Lunes, 08:00 AM |
+| **Vector** | Email de phishing con adjunto malicioso |
+| **Victima inicial** | Empleado del departamento de contabilidad |
+| **Ransomware** | Variante simulada "CryptoLock-2025" |
+| **Propagacion** | Se expande a 3 servidores en 2 horas |
+| **Impacto** | Servidor de archivos cifrado, backups en red cifrados, backups offline intactos |
+| **Exigencia** | USD 50,000 en Bitcoin en 48 horas |
+:::
 
 **Paso 3**: Ejecuta el playbook paso a paso
 
@@ -255,43 +269,48 @@ Para cada paso del playbook, escribe:
 3. **Como documentarias la accion** (formulario, log, screenshot)
 4. **Cual seria el resultado esperado**
 
-Ejemplo para el Paso 1:
+**Ejemplo para el Paso 1**:
 
-```
-PASO 1: Detectar y Confirmar
-=============================
+::: {.callout-tip}
+## Paso 1: Detectar y Confirmar
 
-Accion: Verificar alerta del SIEM y confirmar que es ransomware real
-Comandos:
-  - Revisar alerta del SIEM: "Multiple file extensions changed to .encrypted"
-  - Verificar en el endpoint afectado:
-    ls -la /shared/documents/*.encrypted
-  - Confirmar la nota de rescate:
-    cat /shared/documents/README_DECRYPT.txt
-Herramientas: SIEM, acceso al endpoint, EDR
-Documentacion: Formulario de incidente #IR-2025-001
-Resultado esperado: Ransomware confirmado, activar playbook completo
-```
+**Accion**: Verificar alerta del SIEM y confirmar que es ransomware real
+
+**Comandos**:
+- Revisar alerta del SIEM: `"Multiple file extensions changed to .encrypted"`
+- Verificar en el endpoint afectado:
+  ```bash
+  ls -la /shared/documents/*.encrypted
+  ```
+- Confirmar la nota de rescate:
+  ```bash
+  cat /shared/documents/README_DECRYPT.txt
+  ```
+
+**Herramientas**: SIEM, acceso al endpoint, EDR
+
+**Documentacion**: Formulario de incidente #IR-2025-001
+
+**Resultado esperado**: Ransomware confirmado, activar playbook completo
+:::
 
 **Paso 4**: Calcula las metricas IR
 
 Con los tiempos de tu simulacion, calcula:
 
-```
-MTTD: Tiempo entre el primer archivo cifrado y la deteccion
-      = ______ horas
+| Metrica | Formula | Tu Resultado |
+|---------|---------|-------------|
+| **MTTD** | Tiempo entre el primer archivo cifrado y la deteccion | ______ horas |
+| **MTTC** | Tiempo entre la deteccion y la contencion completa | ______ horas |
+| **MTTR** | Tiempo entre la contencion y la restauracion de servicios | ______ horas |
 
-MTTC: Tiempo entre la deteccion y la contencion completa
-      = ______ horas
+**¿Cumplen los objetivos?**
 
-MTTR: Tiempo entre la contencion y la restauracion de servicios
-      = ______ horas
-
-¿Cumplen los objetivos?
-MTTD < 24h: [ ] Si  [ ] No
-MTTC < 4h:  [ ] Si  [ ] No
-MTTR < 48h: [ ] Si  [ ] No
-```
+| Objetivo | Meta | ¿Cumple? |
+|----------|------|----------|
+| MTTD | < 24h | [ ] Si [ ] No |
+| MTTC | < 4h | [ ] Si [ ] No |
+| MTTR | < 48h | [ ] Si [ ] No |
 
 **Resultados Esperados**:
 - Playbook de ransomware con 7+ pasos detallados

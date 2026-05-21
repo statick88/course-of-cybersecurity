@@ -1,5 +1,5 @@
 ---
-title: "Lab Anexo: Local LLMs for Cybersecurity - Ollama & LM Studio (Advanced)"
+title: "Lab Anexo: Local LLMs for Cybersecurity with Ollama & LM Studio"
 module: "lab-anexo-02"
 type: "lab"
 description: "Practica avanzada con LLMs locales para pentesting, vulnerability analysis, threat hunting y RAG"
@@ -258,14 +258,10 @@ ollama list
 
 ### 2.2 Comparativa y Seleccion
 
-```bash
-cat > security_models_analysis.md << 'EOF'
-# Analisis Profundo: Modelos para Ciberseguridad
+**Matriz de Capacidades**
 
-## Matriz de Capacidades
-
-| Modelo | Tamano | VRAM | Pentest | Code Review | TH | Malware | Costo |
-|--------|--------|------|---------|-----------|-----|---------|-------|
+| Modelo | Tamano | VRAM Req. | Pentest | Code Review | Threat Hunting | Malware Analysis | Costo |
+|--------|--------|-----------|---------|-------------|----------------|------------------|-------|
 | The-Xploiter | 9.2GB | 10GB | +++ | ++ | ++ | + | Alto |
 | Pentester | 7B | 8GB | +++ | +++ | + | + | Medio |
 | nu11secur1tyAI | 3.3GB | 4GB | ++ | ++ | +++ | ++ | Bajo |
@@ -273,38 +269,22 @@ cat > security_models_analysis.md << 'EOF'
 | Llama 3.1 8B | 4.9GB | 6GB | ++ | +++ | ++ | + | Bajo |
 | Mistral 7B | 4.1GB | 5GB | + | ++ | + | + | Bajo |
 
-##Seleccion por Objetivo
+**Seleccion por Objetivo**
 
-### Pentesting Activo
-1. The-Xploiter (primario)
-2. Pentester (backup)
-3. Mistral (rapidez)
+| Objetivo | Primario | Backup | Rapidez |
+|----------|----------|--------|---------|
+| **Pentesting Activo** | The-Xploiter | Pentester | Mistral |
+| **Code Review** | Llama 3.1 8B | Qwen 2.5 | Mistral |
+| **Threat Hunting** | nu11secur1tyAI | CyberThreat | Llama 3.1 |
+| **Malware Analysis** | The-Xploiter | Qwen 2.5 | — |
 
-### CodeReview
-1. Llama 3.1 8B (precisión)
-2. Qwen 2.5 (velocidad)
-3. Mistral (balance)
+**Configuracion por Hardware**
 
-### Threat Hunting
-1. nu11secur1tyAI (velocidad)
-2. CyberThreatAnalysis (accuracy)
-3. Llama 3.1 (contexto)
-
-### MalwareAnalysis
-1. The-Xploiter (profundidad)
-2. Qwen 2.5 (velocidad)
-
-## Configuracion por Hardware
-
-| VRAM |ModeloPrimario | Alternativa |
-|------|---------------|--------------|
-| 4GB | nu11secur1tyAI | Mistral |
+| VRAM Disponible | Modelo Primario | Alternativa |
+|-----------------|-----------------|-------------|
+| 4GB | nu11secur1tyAI | Mistral 7B |
 | 8GB | The-Xploiter | Pentester |
-| 16GB+ | Multiple | Ensemble |
-EOF
-
-cat security_models_analysis.md
-```
+| 16GB+ | Multiple modelos | Ensemble |
 
 ---
 

@@ -9,11 +9,7 @@ author: "Diego Saavedra"
 
 # Fundamentos de Ciberseguridad
 
-::: {.quarto-cover-image style="text-align: center;"}
-
-![Fundamentos de Ciberseguridad](images/cover.png){width=280px style="display: block; margin: 0 auto;"}
-
-:::
+> **Curso profesional de ciberseguridad con enfoque practico basado en NIST CSF 2.0 y tendencias 2026**
 
 ## Objetivo del Curso
 

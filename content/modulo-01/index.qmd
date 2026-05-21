@@ -241,68 +241,59 @@ Abre tu terminal y crea un directorio de trabajo:
 
 ```bash
 mkdir -p ~/cybersecurity-labs/nist-csf
-cd ~/cybersecurity-labs/nist-csf
-```
-
-Crea un archivo de evaluación:
-
 ```bash
-touch nist-csf-assessment.md
+mkdir -p ~/cybersecurity-labs/nist-csf
+cd ~/cybersecurity-labs/nist-csf
 ```
 
 #### Paso 2: Estructurar la evaluación
 
 Abre el archivo en tu editor y escribe la siguiente estructura:
 
-```markdown
-# NIST CSF 2.0 Assessment — TechCorp
+**NIST CSF 2.0 Assessment — TechCorp**
 
-## Información General
+**Informacion General**
+
 - Empresa: TechCorp
 - Empleados: 50
 - Infraestructura: AWS (cloud)
 - Equipo de seguridad: 0 dedicado
-- Fecha de evaluación: [hoy]
+- Fecha de evaluacion: [hoy]
 
-## Evaluación por Función
-```
+#### Paso 3: Evaluar cada funcion
 
-#### Paso 3: Evaluar cada función
+Para cada una de las 6 funciones, evalua el nivel de madurez usando esta escala:
 
-Para cada una de las 6 funciones, evalúa el nivel de madurez usando esta escala:
-
-| Nivel | Descripción | Criterio |
+| Nivel | Descripcion | Criterio |
 |-------|------------|----------|
-| **0** | Inexistente | No hay ningún control ni conciencia |
+| **0** | Inexistente | No hay ningun control ni conciencia |
 | **1** | Ad hoc | Controles informales, no documentados |
-| **2** | En desarrollo | Algunos controles documentados, implementación parcial |
+| **2** | En desarrollo | Algunos controles documentados, implementacion parcial |
 | **3** | Definido | Controles documentados, implementados y consistentes |
 | **4** | Optimizado | Controles medidos, mejorados continuamente |
 
-Escribe en tu archivo la evaluación de cada función. Por ejemplo:
+Escribe en tu archivo la evaluacion de cada funcion. Por ejemplo:
 
-```markdown
-### GOVERN (Gobernanza)
+**GOVERN (Gobernanza)**
+
 - Nivel actual: 1
-- Evidencia: No existe política de seguridad formal. El CEO toma decisiones de seguridad reactivamente.
-- Categorías evaluadas:
+- Evidencia: No existe politica de seguridad formal. El CEO toma decisiones de seguridad reactivamente.
+- Categorias evaluadas:
   - GV.OC (Contexto organizacional): Nivel 1
-  - GV.RM (Gestión de riesgo): Nivel 0
-  - GV.PS (Política de seguridad): Nivel 0
+  - GV.RM (Gestion de riesgo): Nivel 0
+  - GV.PS (Politica de seguridad): Nivel 0
   - GV.SC (Cadena de suministro): Nivel 0
-- Mejora prioritaria: Crear política de seguridad formal (GV.PS)
-```
+- Mejora prioritaria: Crear politica de seguridad formal (GV.PS)
 
 Repite este proceso para las 6 funciones. Usa el contexto de TechCorp proporcionado en los ejemplos.
 
 #### Paso 4: Calcular el puntaje total
 
-Al final de tu archivo, añade un resumen:
+Al final de tu archivo, anade un resumen:
 
-```markdown
-## Resumen de Madurez
+**Resumen de Madurez**
 
-| Función | Nivel (0-4) | Prioridad |
+| Funcion | Nivel (0-4) | Prioridad |
 |---------|-------------|-----------|
 | Govern | ? | ? |
 | Identify | ? | ? |
@@ -311,21 +302,18 @@ Al final de tu archivo, añade un resumen:
 | Respond | ? | ? |
 | Recover | ? | ? |
 | **Promedio** | **?** | |
-```
 
-Calcula el promedio y determina la prioridad de cada función (las de menor nivel son mayor prioridad).
+Calcula el promedio y determina la prioridad de cada funcion (las de menor nivel son mayor prioridad).
 
 #### Paso 5: Proponer un plan de mejora
 
-Basado en tu evaluación, propone al menos 3 acciones de mejora priorizadas:
+Basado en tu evaluacion, propone al menos 3 acciones de mejora priorizadas:
 
-```markdown
-## Plan de Mejora Priorizado
+**Plan de Mejora Priorizado**
 
-1. **[Prioridad Alta]** Acción específica → Función/Categoría → Costo estimado → Tiempo
-2. **[Prioridad Media]** Acción específica → Función/Categoría → Costo estimado → Tiempo
-3. **[Prioridad Baja]** Acción específica → Función/Categoría → Costo estimado → Tiempo
-```
+1. **[Prioridad Alta]** Accion especifica → Funcion/Categoria → Costo estimado → Tiempo
+2. **[Prioridad Media]** Accion especifica → Funcion/Categoria → Costo estimado → Tiempo
+3. **[Prioridad Baja]** Accion especifica → Funcion/Categoria → Costo estimado → Tiempo
 
 **Resultados Esperados**:
 - Archivo `nist-csf-assessment.md` con evaluación completa de las 6 funciones

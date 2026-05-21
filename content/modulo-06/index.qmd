@@ -66,7 +66,10 @@ El enfoque **hibrido** es clave: se usa tanto el algoritmo clasico como el post-
 - **2026-2028**: Pilotaje en sistemas no criticos
 - **2028-2035**: Migracion completa de sistemas criticos
 
-> **Nota critica**: La amenaza es **presente** aunque las computadoras cuanticas no existan todavia. La estrategia **"harvest now, decrypt later"** significa que adversarios estan almacenando datos cifrados hoy para descifrarlos cuando tengan capacidad cuantica suficiente. Si TechCorp maneja datos que deben permanecer secretos por 10+ anos (secretos industriales, datos de salud, informacion gubernamental), la migracion PQC es urgente.
+::: {.callout-warning}
+## Nota Critica
+La amenaza es **presente** aunque las computadoras cuanticas no existan todavia. La estrategia **"harvest now, decrypt later"** significa que adversarios estan almacenando datos cifrados hoy para descifrarlos cuando tengan capacidad cuantica suficiente. Si TechCorp maneja datos que deben permanecer secretos por 10+ anos (secretos industriales, datos de salud, informacion gubernamental), la migracion PQC es urgente.
+:::
 
 ### ¿Dónde? — Donde Aplica
 
@@ -149,16 +152,34 @@ openssl s_client -connect google.com:443 -servername google.com </dev/null 2>/de
 
 Para cada sistema de TechCorp, completa esta ficha:
 
-```
-Sistema: _______________
-Tipo de criptografia: [ ] Simetrica  [ ] Asimetrica  [ ] Hash
-Algoritmo actual: _______________
-Tamaño de clave: _______________
-¿Afectado por Shor? [ ] Si  [ ] No
-¿Afectado por Grover? [ ] Si  [ ] No
-Prioridad de migracion: [ ] Alta  [ ] Media  [ ] Baja
-Fecha estimada de migracion: _______________
-```
+**Sistema**: _______________
+
+**Tipo de criptografia**
+
+- [ ] Simetrica
+- [ ] Asimetrica
+- [ ] Hash
+
+**Algoritmo actual**: _______________
+**Tamano de clave**: _______________
+
+**¿Afectado por Shor?**
+
+- [ ] Si
+- [ ] No
+
+**¿Afectado por Grover?**
+
+- [ ] Si
+- [ ] No
+
+**Prioridad de migracion**
+
+- [ ] Alta
+- [ ] Media
+- [ ] Baja
+
+**Fecha estimada de migracion**: _______________
 
 **Paso 3**: Clasifica por prioridad
 
@@ -235,14 +256,22 @@ inventory_crypto()
 
 Para cada uno de los 8 sistemas, determina:
 
-```
-Sistema: _______________
-Algoritmo(s) usado(s): _______________
-¿Vulnerable a Shor? [ ] Si  [ ] No  [ ] Parcialmente
-¿Vulnerable a Grover? [ ] Si  [ ] No
-Algoritmo PQC de reemplazo: _______________
-Justificacion: _______________
-```
+**Sistema**: _______________
+**Algoritmo(s) usado(s)**: _______________
+
+**¿Vulnerable a Shor?**
+
+- [ ] Si
+- [ ] No
+- [ ] Parcialmente
+
+**¿Vulnerable a Grover?**
+
+- [ ] Si
+- [ ] No
+
+**Algoritmo PQC de reemplazo**: _______________
+**Justificacion**: _______________
 
 **Paso 2**: Crea el roadmap de migracion
 
@@ -257,12 +286,12 @@ Organiza los sistemas en las 4 fases del roadmap:
 
 **Paso 3**: Calcula el porcentaje de readiness
 
-```
-Total de sistemas: 8
-Sistemas PQC-ready (simetrica/hash): ___
-Sistemas que requieren migracion: ___
-Porcentaje de readiness: ___%
-```
+| Metrica | Valor |
+|---------|-------|
+| Total de sistemas | 8 |
+| Sistemas PQC-ready (simetrica/hash) | ___ |
+| Sistemas que requieren migracion | ___ |
+| **Porcentaje de readiness** | **___%** |
 
 **Resultados Esperados**:
 - Inventario completo de los 8 sistemas con analisis de vulnerabilidad cuantica

@@ -278,10 +278,7 @@ touch iam-access-matrix.md
 
 TechCorp tiene los siguientes recursos que necesitan control de acceso. Escribe esta lista en tu archivo:
 
-```markdown
-# Matriz de Acceso IAM — TechCorp
-
-## Recursos a Proteger
+**Recursos a Proteger**
 
 | ID | Recurso | Tipo | Sensibilidad |
 |----|---------|------|-------------|
@@ -293,12 +290,10 @@ TechCorp tiene los siguientes recursos que necesitan control de acceso. Escribe 
 | R6 | Email corporativo (Google Workspace) | Comunicación | Media |
 | R7 | Servidores de infraestructura | Infraestructura | Crítica |
 | R8 | Backups y disaster recovery | Infraestructura | Crítica |
-```
 
 #### Paso 4: Definir los roles
 
-```markdown
-## Roles de la Organización
+**Roles de la Organización**
 
 | ID | Rol | Cantidad | Descripción |
 |----|-----|----------|-------------|
@@ -308,7 +303,6 @@ TechCorp tiene los siguientes recursos que necesitan control de acceso. Escribe 
 | RL4 | Ventas/Marketing | 12 | Gestiona clientes y campañas |
 | RL5 | Dirección | 5 | Toma decisiones estratégicas |
 | RL6 | Contratista | 10 | Acceso temporal a proyectos |
-```
 
 #### Paso 5: Construir la matriz de acceso
 
@@ -323,8 +317,7 @@ Para cada combinación Rol × Recurso, asigna un nivel de acceso:
 
 Escribe la matriz en tu archivo:
 
-```markdown
-## Matriz de Acceso
+**Matriz de Acceso**
 
 | Rol \ Recurso | R1 GitHub | R2 AWS Dev | R3 AWS Prod | R4 SIEM | R5 CRM | R6 Email | R7 Servidores | R8 Backups |
 |---------------|-----------|------------|-------------|---------|--------|----------|---------------|------------|
@@ -332,45 +325,40 @@ Escribe la matriz en tu archivo:
 | Administrador | R | A | A | R | N | W | A | A |
 | Analista Seg. | R | R | R | W | N | W | R | R |
 | Ventas/Mktg | N | N | N | N | W | W | N | N |
-| Dirección | R | R | R | R | R | W | R | R |
+| Direccion | R | R | R | R | R | W | R | R |
 | Contratista | W* | W* | N | N | N | W | N | N |
-```
 
-(*) Acceso limitado al repositorio/proyecto asignado, con expiración automática.
+(*) Acceso limitado al repositorio/proyecto asignado, con expiracion automatica.
 
-#### Paso 6: Definir políticas de autenticación por rol
+#### Paso 6: Definir politicas de autenticacion por rol
 
-```markdown
-## Políticas de Autenticación por Rol
+**Politicas de Autenticacion por Rol**
 
-| Rol | MFA requerido | Tipo de MFA | Sesión máxima | JIT requerido |
+| Rol | MFA requerido | Tipo de MFA | Sesion maxima | JIT requerido |
 |-----|--------------|-------------|---------------|---------------|
-| Desarrollador | Sí | Passkey | 8 horas | No |
-| Administrador | Sí | FIDO2 Security Key | 4 horas | Sí (para prod) |
-| Analista Seg. | Sí | Passkey | 8 horas | No |
-| Ventas/Mktg | Sí | Passkey | 8 horas | No |
-| Dirección | Sí | Passkey | 4 horas | No |
-| Contratista | Sí | FIDO2 o Passkey | 2 horas | Sí |
-```
+| Desarrollador | Si | Passkey | 8 horas | No |
+| Administrador | Si | FIDO2 Security Key | 4 horas | Si (para prod) |
+| Analista Seg. | Si | Passkey | 8 horas | No |
+| Ventas/Mktg | Si | Passkey | 8 horas | No |
+| Direccion | Si | Passkey | 4 horas | No |
+| Contratista | Si | FIDO2 o Passkey | 2 horas | Si |
 
-#### Paso 7: Diseñar el flujo de offboarding
+#### Paso 7: Disenar el flujo de offboarding
 
 Escribe el procedimiento para revocar accesos cuando un empleado sale:
 
-```markdown
-## Procedimiento de Offboarding
+**Procedimiento de Offboarding**
 
-### Cuando un empleado sale de TechCorp:
+**Cuando un empleado sale de TechCorp:**
 
-1. **Hora 0**: Notificación de RRHH al equipo de IT
+1. **Hora 0**: Notificacion de RRHH al equipo de IT
 2. **Hora 0-1**: Desactivar cuenta de Google Workspace
 3. **Hora 1-2**: Revocar acceso a GitHub
 4. **Hora 2-4**: Revocar credenciales de AWS
 5. **Hora 4-8**: Revocar acceso a SIEM y CRM
 6. **Hora 8-24**: Auditar logs de actividad reciente
-7. **Día 2**: Confirmar que todos los accesos fueron revocados
-8. **Día 7**: Eliminar cuenta permanentemente (no solo desactivar)
-```
+7. **Dia 2**: Confirmar que todos los accesos fueron revocados
+8. **Dia 7**: Eliminar cuenta permanentemente (no solo desactivar)
 
 **Resultados Esperados**:
 - Archivo `iam-access-matrix.md` con matriz completa de 6 roles × 8 recursos
@@ -454,18 +442,15 @@ Crea un documento profesional llamado `techcorp-iam-policy.md` que incluya:
 
 #### Conexión con el Módulo 1
 
-Tu política IAM debe abordar directamente los gaps identificados en el Módulo 1. Si en tu evaluación NIST CSF 2.0 identificaste que `PR.AA` (Access Management) estaba en nivel 1, tu política IAM debe elevarlo al menos a nivel 2 o 3. Incluye una tabla de mapping:
+Tu politica IAM debe abordar directamente los gaps identificados en el Modulo 1. Si en tu evaluacion NIST CSF 2.0 identificaste que `PR.AA` (Access Management) estaba en nivel 1, tu politica IAM debe elevarlo al menos a nivel 2 o 3. Incluye una tabla de mapping:
 
-```markdown
-## Mapping IAM → NIST CSF 2.0
+**Mapping IAM → NIST CSF 2.0**
 
-| Política IAM | Función CSF | Categoría CSF | Gap que aborda |
+| Politica IAM | Funcion CSF | Categoria CSF | Gap que aborda |
 |-------------|-------------|---------------|----------------|
 | MFA obligatorio | Protect | PR.AA | Nivel 1 → Nivel 3 |
 | Matriz RBAC | Identify | ID.IM | Sin roles definidos |
 | Offboarding 24h | Govern | GV.RR | Sin procedimiento |
-| ITDR reglas | Detect | DE.AE | Sin monitoreo |
-```
 
 #### Fecha de Entrega
 
