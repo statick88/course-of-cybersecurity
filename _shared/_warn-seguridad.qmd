@@ -1,0 +1,7 @@
+::: {.callout-warning}
+## ADVERTENCIA
+
+- NO ejecutar en sistemas de produccion sin autorizacion
+- Usar entornos de prueba exclusivamente
+- Este laboratorio es educativo
+:::

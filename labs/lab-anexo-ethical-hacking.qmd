@@ -14,7 +14,7 @@ En este laboratorio vas a **configurar un entorno profesional de ethical hacking
 - Integrar herramientas con LLMs locales
 - Usar modelos especializados para analisis etico
 - Configurar Custom Implant (MCP) para testing autorizado
-- Construir laboratorio de pr cticas aislado
+- Construir laboratorio de practicas aislado
 
 ::: {.callout-warning}
 ## ADVERTENCIA LEGAL CRITICA
@@ -236,7 +236,7 @@ sudo systemctl enable postgresql
 sudo systemctl start postgresql
 msfdb init
 
-# Crear usuario de pr cticas
+# Crear usuario de practicas
 echo "[4] Creando usuario..."
 sudo useradd -m -s /bin/bash pentest
 sudo usermod -aG sudo,pentest pentest
@@ -290,11 +290,11 @@ ollama pull xploiter/the-xploiter 2>/dev/null || echo "    [!] No disponible"
 echo "    [*] Pentester Agent..."
 ollama pull xploiter/pentester 2>/dev/null || echo "    [!] No disponible"
 
-# Modelos general con foco en cdigo
+# Modelos general con foco en codigo
 echo ""
 echo "[2] Modelos para code analysis..."
 
-# Codellama (anlisis de cdigo)
+# Codellama (anlisis de codigo)
 echo "    [*] Codellama..."
 ollama pull codellama:7b-instruct 2>/dev/null || echo "    [!] No disponible"
 
@@ -327,32 +327,32 @@ cat > authorized_models.md << 'EOF'
 | Modelo | Uso | Disponibilidad |
 |--------|-----|-----------------|
 | **xploiter/the-xploiter** | Pentest methodology | Ollama |
-| **xploiter/pentester** | Guide y ayuda | Ollama |
+| **xploiter/pentester** | Guia y ayuda | Ollama |
 | **codellama:7b-instruct** | Code review | Ollama |
-| **deepseek-coder:6.7b** | Anlisis de cdigo | Ollama |
+| **deepseek-coder:6.7b** | Analisis de codigo | Ollama |
 | **gpt4free** | General assistance | Multiple |
 
 ## Lo que NO se debe hacer
 
 - Generar malware o ransomware funcional
 - Crear exploits para sistemas sin autorizacion
-- Generar payloads de ataque direcionados
+- Generar payloads de ataque dirigidos
 - Tools para bypass de seguridad sin contexto educativo
 - Phishing campaigns
 
 ## Lo que SI esta permitido
 
-- Anlisis de cdigo vulnerable para aprendizaje
+- Analisis de codigo vulnerable para aprendizaje
 - Generar payloads de prueba para entornos controlados
-- Guias de metodologa de pentesting
-- Anlisis de configuraciones inseguras
+- Guias de metodologia de pentesting
+- Analisis de configuraciones inseguras
 - Study de vulnerabilidades documentadas
 - Preparacion para certificaciones (OSCP, CEH)
 
 ## Guidelines de Uso
 
 1. SIEMPRE verificar la fuente del modelo
-2. NO executar outputs sin analizar
+2. NO ejecutar outputs sin analizar
 3. Usar solo en entornos aislados
 4. Documentar toda la actividad
 5. Follow Rules of Engagement (ROE)
@@ -812,7 +812,7 @@ VBoxManage natnetwork add -n pentest-lab \
     --netname "pentestlab"
 
 # Conectar VMs a red aislada
-echo "Conectando VMs a red isolada..."
+echo "Conectando VMs a red aislada..."
 vboxmanage modifyvm "Kali-Security-Lab" --nic2 natnetwork --nat-network2 pentest-lab
 vboxmanage modifyvm "Metasploitable3" --nic1 natnetwork --nat-network1 pentest-lab
 vboxmanage modifyvm "DVWA" --nic1 natnetwork --nat-network1 pentest-lab
@@ -829,7 +829,7 @@ echo "DHCP: 192.168.56.101-254"
 
 ### Objetivo
 
-Configurar un laboratorio funcional para pr cticas de ethical hacking:
+Configurar un laboratorio funcional para practicas de ethical hacking:
 
 1. Kali Linux VM funcionando
 2. VMs vulnerables disponibles
@@ -856,7 +856,7 @@ Configurar un laboratorio funcional para pr cticas de ethical hacking:
 
 ---
 
-## Comandos tile
+## Comandos utiles
 
 ```bash
 # Conectar a Kali

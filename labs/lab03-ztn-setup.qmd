@@ -18,7 +18,7 @@ En este laboratorio, vas a implementar una **red privadaZero Trust** usando Wire
 ::: {.callout-warning}
 ## ADVERTENCIA DE SEGURIDAD
 
-- NO executar comandos en sistemas de produccion
+- NO ejecutar comandos en sistemas de produccion
 - Usar exclusivamente entornos aislados (VM, Docker)
 - Los comandos deben probarse primero en desarrollo
 - Este laboratorio es educativos - no para sistemas reales

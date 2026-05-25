@@ -18,7 +18,7 @@ En este laboratorio, vas a **configurar autenticacion multifactor** usando proto
 ::: {.callout-warning}
 ## ADVERTENCIA DE SEGURIDAD
 
-- NO executar comandos en sistemas de produccion
+- NO ejecutar comandos en sistemas de produccion
 - Usar exclusivamente entornos aislados (VM, Docker)
 - Los comandos deben probarse primero en desarrollo
 - Este laboratorio es educativo - NO usar para sistemas reales

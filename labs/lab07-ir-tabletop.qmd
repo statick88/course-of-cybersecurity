@@ -15,13 +15,7 @@ En este laboratorio, vas a **ejecutar un tabletop exercise** simulando un ataque
 - Coordinar equipo de respuesta
 - Documentar lecciones aprendidas
 
-::: {.callout-warning}
-## ADVERTENCIA
-
-- NO ejecutar en sistemas de produccion sin autorizacion
-- Usar entornos de prueba exclusivamente
-- Este laboratorio es educativo
-:::
+{{< include ../_shared/_warn-seguridad.qmd >}}
 
 ## Duracion
 

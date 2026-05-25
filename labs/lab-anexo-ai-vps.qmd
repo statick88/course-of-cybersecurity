@@ -1,0 +1,604 @@
+---
+title: "Lab Anexo: IA Privada en VPS — Gemma 4 + Ollama + Open WebUI"
+module: "lab-anexo-06"
+type: "lab"
+description: "Despliega tu propio asistente de IA privado sin censura en un VPS usando Gemma 4, Ollama y Open WebUI para ciberseguridad"
+---
+
+## Objetivo del Laboratorio {#sec-lab-anexo-ai-vps}
+
+En este laboratorio vas a **desplegar tu propio asistente de inteligencia artificial privado** en un servidor VPS utilizando Gemma 4, Ollama y Open WebUI. Este ejercicio te permitira:
+
+- Comprender la diferencia entre IA comercial (censurada) vs IA privada (sin restricciones)
+- Configurar un VPS con Ubuntu 24.04 y Ollama
+- Instalar Open WebUI como interfaz grafica tipo ChatGPT
+- Descargar y ejecutar el modelo Super Gemma 4 (26B parametros) sin censura
+- Hardening basico del servidor para uso seguro
+- Usar la IA privada como asistente de ciberseguridad
+
+::: {.callout-warning}
+## ADVERTENCIA LEGAL
+
+- Este laboratorio es SOLO para uso educativo y etico
+- El modelo sin censura NO significa que tu no tengas responsabilidad
+- Usalo para aprender hacking etico, practicar en laboratorios controlados
+- NUNCA uses estas capacidades contra sistemas sin autorizacion explicita
+- La herramienta no tiene limites — TU si debes tenerlos
+:::
+
+## Requisitos
+
+- **Opcion A (VPS Real)**: VPS con minimo 8GB RAM (recomendado 32GB), 4+ cores, 100GB+ SSD
+  - Proveedor recomendado: Hostinger KVM 2 (8GB) o KVM 8 (32GB) — link con descuento en recursos
+  - Sistema Operativo: Ubuntu 24.04
+- **Opcion B (VM Local)**: VirtualBox/VMware con 16GB+ RAM asignados, 8 cores, 100GB disco
+  - Alternativa para quienes no tienen VPS
+  - Las instrucciones son identicas, cambia solo la IP de conexion
+
+## Duracion
+
+- Tiempo estimado: 2-3 horas (dependiendo de velocidad de descarga del modelo ~16.8GB)
+- Tipo: Individual
+- IMPORTANTE: DEBES teclear todos los comandos manualmente
+
+---
+
+## ¿Por que una IA Privada?
+
+Los modelos comerciales (ChatGPT, Gemini, Claude) tienen restricciones de seguridad que bloquean consultas sobre hacking etico. Si les preguntas como funciona una tecnica de ataque para entenderla y defenderte, te tratan igual que a un atacante real. Esto frena el aprendizaje.
+
+**La solucion**: Correr tu propio modelo en un servidor privado donde tu controlas las restricciones.
+
+<div class="compact-diagram" style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:14px 18px;margin:14px 0;">
+<svg viewBox="0 0 500 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:500px;">
+<text x="250" y="16" text-anchor="middle" fill="#f1f5f9" font-size="12" font-weight="bold">IA Comercial vs IA Privada en Ciberseguridad</text>
+<!-- Comercial -->
+<rect x="10" y="28" width="230" height="50" rx="6" fill="#ef4444"/>
+<text x="125" y="48" text-anchor="middle" fill="white" font-size="10" font-weight="bold">IA COMERCIAL</text>
+<text x="125" y="66" text-anchor="middle" fill="#fecaca" font-size="9">ChatGPT · Gemini · Claude</text>
+<text x="20" y="95" fill="#fca5a5" font-size="8">• Datos viajan a servidores externos</text>
+<text x="20" y="110" fill="#fca5a5" font-size="8">• Censura bloquea consultas de seguridad</text>
+<text x="20" y="125" fill="#fca5a5" font-size="8">• Sin control sobre privacidad</text>
+<text x="20" y="140" fill="#fca5a5" font-size="8">• Modelo no personalizable</text>
+<!-- VS -->
+<circle cx="260" cy="53" r="16" fill="#f59e0b"/>
+<text x="260" y="58" text-anchor="middle" fill="white" font-size="14" font-weight="bold">VS</text>
+<!-- Privada -->
+<rect x="290" y="28" width="200" height="50" rx="6" fill="#10b981"/>
+<text x="390" y="48" text-anchor="middle" fill="white" font-size="10" font-weight="bold">IA PRIVADA</text>
+<text x="390" y="66" text-anchor="middle" fill="#d1fae5" font-size="9">Tu VPS · Ollama · Gemma 4</text>
+<text x="300" y="95" fill="#6ee7b7" font-size="8">• Datos 100% en tu servidor</text>
+<text x="300" y="110" fill="#6ee7b7" font-size="8">• Sin censura · Respuestas completas</text>
+<text x="300" y="125" fill="#6ee7b7" font-size="8">• Control total de privacidad</text>
+<text x="300" y="140" fill="#6ee7b7" font-size="8">• Modelos intercambiables</text>
+</svg>
+</div>
+
+---
+
+## Paso 1: Seleccion y Provision del VPS
+
+### 1.1 Elegir el Plan
+
+Para que la IA funcione con fluidez, especialmente modelos de 26 mil millones de parametros, necesitas un servidor con suficiente potencia.
+
+| Componente | Minimo | Recomendado |
+|-----------|--------|-------------|
+| **CPU** | 4 cores | 8 cores |
+| **RAM** | 8 GB | 32 GB |
+| **Disco** | 50 GB | 400 GB SSD |
+| **SO** | Ubuntu 24.04 | Ubuntu 24.04 |
+
+El modelo Super Gemma 4 pesa aproximadamente **16.8 GB**, asi que necesitas espacio suficiente.
+
+### 1.2 Crear el VPS en Hostinger
+
+Desde el panel de control:
+
+1. Ve a **Herramientas de desarrollo > VPS**
+2. Haz clic en **"Nuevo VPS"**
+3. Selecciona el plan **KVM 2** (minimo) o **KVM 8** (recomendado)
+4. Elige la **ubicacion del servidor** mas cercana a tu posicion
+5. En **Aplicaciones**, busca y selecciona **Ollama** (esto instala Ollama sobre Ubuntu 24.04 automaticamente)
+6. Define una contraseña robusta para el usuario **root**
+7. Confirma y espera ~10 minutos a que el despliegue termine
+
+::: {.callout-tip}
+## Alternativa Local — VM en VirtualBox
+
+Si no tienes VPS, puedes crear una VM en VirtualBox con:
+- Ubuntu Server 24.04 LTS
+- 8+ GB RAM, 4+ cores, 100GB disco
+- Red en modo "Bridge" para acceso desde tu host
+- Las instrucciones de instalacion son identicas solo cambia la IP
+
+**Requisitos extra para VM local**:
+- Tu PC debe tener 16GB+ RAM total para asignar 8GB a la VM
+- CPU con virtualizacion habilitada (VT-x/AMD-V)
+:::
+
+---
+
+## Paso 2: Configuracion Inicial del Servidor
+
+Una vez que el VPS esta desplegado, conectate via SSH:
+
+```bash
+# Conectar al VPS
+# Usa la IP que aparece en el panel de Hostinger
+ssh root@IP_DE_TU_VPS
+
+# Si es la primera vez, acepta la huella del servidor
+# Escribe: yes
+
+# Luego ingresa la contraseña que definiste en el paso anterior
+```
+
+::: {.callout-warning}
+## Seguridad SSH — Claves vs Contraseña
+
+Por ahora usaremos contraseña, pero en el Paso 6 configuraremos claves SSH para mayor seguridad. NUNCA dejes un servidor con autenticacion por contraseña a largo plazo.
+:::
+
+Una vez conectado, actualiza el sistema:
+
+```bash
+# Actualizar lista de paquetes
+sudo apt update
+
+# Actualizar todos los paquetes instalados
+sudo apt upgrade -y
+
+# Limpiar paquetes innecesarios
+sudo apt autoremove -y
+```
+
+**Resultado esperado:** El sistema queda actualizado sin errores.
+
+### Verificar que Ollama esta instalado
+
+Si seleccionaste la opcion "Ollama" al crear el VPS, ya deberia estar instalado:
+
+```bash
+# Verificar version de Ollama
+ollama --version
+
+# Verificar que el servicio esta corriendo
+systemctl status ollama
+
+# Deberias ver: "active (running)"
+```
+
+**Resultado esperado:**
+```
+ollama version 0.X.X
+● ollama.service - Ollama Service
+   Loaded: loaded
+   Active: active (running)
+```
+
+Si Ollama no aparece instalado (por ejemplo, en VM local), instalalo manualmente:
+
+```bash
+# Instalar Ollama desde el script oficial
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
+---
+
+## Paso 3: Instalar Open WebUI
+
+Ollama viene con interfaz de linea de comandos, pero para tener una experiencia tipo ChatGPT necesitamos Open WebUI.
+
+Open WebUI es una interfaz web que se conecta a Ollama y permite:
+- Chat grafico desde el navegador
+- Subir archivos (PDF, imagenes, codigo)
+- Gestionar multiples modelos
+- Busqueda web integrada
+- Dictado por voz
+
+### 3.1 Instalar Docker (metodo recomendado)
+
+```bash
+# Verificar que Docker no esta instalado
+docker --version
+
+# Si no esta instalado, instalar Docker
+sudo apt install -y docker.io
+
+# Iniciar y habilitar Docker
+sudo systemctl enable --now docker
+
+# Verificar instalacion
+sudo docker run hello-world
+```
+
+**Resultado esperado:** El contenedor hello-world se ejecuta y muestra un mensaje de confirmacion.
+
+### 3.2 Desplegar Open WebUI
+
+```bash
+# Crear directorio para datos persistentes
+mkdir -p ~/open-webui-data
+
+# Desplegar Open WebUI con Docker
+sudo docker run -d \
+  --name open-webui \
+  --restart always \
+  -p 8080:8080 \
+  -v ~/open-webui-data:/app/backend/data \
+  -e OLLAMA_BASE_URL=http://host.docker.internal:11434 \
+  ghcr.io/open-webui/open-webui:main
+```
+
+**Explicacion de los flags**:
+- `-d`: Ejecutar en background (detached)
+- `--name open-webui`: Nombre del contenedor
+- `--restart always`: Reiniciar automaticamente si se cae
+- `-p 8080:8080`: Mapear puerto 8080 del contenedor al host
+- `-v`: Volumen para datos persistentes (usuarios, chats, configuracion)
+- `-e OLLAMA_BASE_URL`: Donde buscar Ollama (host.docker.internal = la maquina host)
+
+**Resultado esperado:** El contenedor se despliega y puedes acceder a `http://IP_DE_TU_VPS:8080`
+
+### 3.3 Acceder por primera vez
+
+```bash
+# Verificar que el contenedor esta corriendo
+sudo docker ps
+
+# Deberias ver algo como:
+# CONTAINER ID   IMAGE                                ...   STATUS         PORTS
+# abc12345       ghcr.io/open-webui/open-webui:main   ...   Up 2 minutes   0.0.0.0:8080->8080/tcp
+```
+
+<div class="compact-diagram" style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:14px 18px;margin:14px 0;">
+<svg viewBox="0 0 460 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:460px;">
+<text x="230" y="14" text-anchor="middle" fill="#f1f5f9" font-size="11" font-weight="bold">Arquitectura del Despliegue</text>
+<!-- Navegador -->
+<rect x="5" y="24" width="100" height="30" rx="6" fill="#3b82f6"/>
+<text x="55" y="44" text-anchor="middle" fill="white" font-size="9" font-weight="bold">NAVEGADOR</text>
+<text x="55" y="56" text-anchor="middle" fill="#93c5fd" font-size="7">puerto 8080</text>
+<!-- Flecha -->
+<line x1="105" y1="39" x2="125" y2="39" stroke="#64748b" stroke-width="2"/>
+<polygon points="125,39 120,35 120,43" fill="#64748b"/>
+<!-- Open WebUI -->
+<rect x="128" y="24" width="120" height="30" rx="6" fill="#10b981"/>
+<text x="188" y="44" text-anchor="middle" fill="white" font-size="9" font-weight="bold">Open WebUI</text>
+<text x="188" y="56" text-anchor="middle" fill="#d1fae5" font-size="7">Docker Container</text>
+<!-- Flecha -->
+<line x1="248" y1="39" x2="268" y2="39" stroke="#64748b" stroke-width="2"/>
+<polygon points="268,39 263,35 263,43" fill="#64748b"/>
+<!-- Ollama -->
+<rect x="271" y="24" width="120" height="30" rx="6" fill="#8b5cf6"/>
+<text x="331" y="44" text-anchor="middle" fill="white" font-size="9" font-weight="bold">Ollama</text>
+<text x="331" y="56" text-anchor="middle" fill="#ede9fe" font-size="7">Modelo Gemma 4</text>
+<!-- Firewall -->
+<rect x="5" y="70" width="120" height="24" rx="4" fill="#ef4444"/>
+<text x="65" y="86" text-anchor="middle" fill="white" font-size="8" font-weight="bold">UFW: 22, 8080</text>
+<rect x="271" y="70" width="120" height="24" rx="4" fill="#f59e0b"/>
+<text x="331" y="86" text-anchor="middle" fill="white" font-size="8" font-weight="bold">Almacenamiento Local</text>
+</svg>
+</div>
+
+Ahora abre tu navegador y ve a `http://IP_DE_TU_VPS:8080`. Deberias ver la pantalla de bienvenida de Open WebUI.
+
+::: {.callout-tip}
+## Firewall — Puerto 8080
+
+Si no puedes acceder, probablemente el firewall del VPS bloquea el puerto 8080. Lo configuraremos en el Paso 6 de Hardening. Por ahora, puedes abrirlo temporalmente:
+
+```bash
+sudo ufw allow 8080/tcp
+```
+:::
+
+### 3.4 Crear tu cuenta
+
+1. En la pantalla de bienvenida, haz clic en **"Comenzar"**
+2. Ingresa tu **nombre, email y contraseña**
+3. Haz clic en **"Crear cuenta"**
+
+Una vez dentro, veras una interfaz similar a ChatGPT. Por defecto viene con un modelo ligero (Llama 3.2 1B) que probablemente este censurado.
+
+---
+
+## Paso 4: Descargar el Modelo Sin Censura (Super Gemma 4)
+
+Usaremos **Super Gemma 4** de 26B parametros, una version modificada por el investigador "Johson" (verificado en Hugging Face) que elimina las restricciones del modelo original de Google.
+
+::: {.callout-warning}
+## Verificacion de Modelos en Hugging Face
+
+Siempre verifica la fuente del modelo antes de instalarlo:
+1. Revisa el perfil del autor (GitHub, Twitter, papers)
+2. Verifica que las descargas sean constantes en el tiempo (no un unico pico sospechoso)
+3. Lee los comentarios y issues de la comunidad
+4. Prefiere modelos de autores reconocidos en el ambito de seguridad
+
+**Nunca instales un modelo sin verificar su procedencia** — podria contener backdoors o codigo malicioso.
+:::
+
+### 4.1 Descargar desde Open WebUI
+
+Desde la interfaz de Open WebUI:
+
+1. Haz clic en tu **avatar/perfil** (abajo a la izquierda)
+2. Ve a **Administracion > Ajustes**
+3. Selecciona la pestana **Modelos**
+4. En el campo **"Gestionar"** (Pull/Extraer modelo), pega el identificador del modelo:
+   ```
+   johson/super-gemma-4-26b
+   ```
+5. Haz clic en el boton de **descargar/extraer**
+
+El servidor comenzara a descargar los **~16.8 GB** del modelo. Esto puede tomar entre 10-60 minutos dependiendo de tu conexion.
+
+**Resultado esperado:** La barra de progreso llega al 100% y el modelo aparece en tu lista de modelos disponibles.
+
+### 4.2 Alternativa: Descargar desde Terminal
+
+Si prefieres usar la terminal (mas rapido):
+
+```bash
+# Ver modelos disponibles en Ollama
+ollama list
+
+# Descargar Super Gemma 4
+ollama pull johson/super-gemma-4-26b
+
+# Monitorear el progreso
+# Veras algo como:
+# pulling manifest
+# pulling 3b8c2c8d1e5a... 100% ▕█████████████████████▏ 16.8 GB
+# pulling 9b8c2c8d1e5b... 100% ▕█████████████████████▏ 1.2 KB
+# verifying sha256 digest
+# writing manifest
+# success
+```
+
+### 4.3 Configurar el Modelo
+
+Una vez descargado, desde Open WebUI:
+
+1. Haz clic en el icono del **lapiz** junto al modelo en tu lista
+2. Puedes cambiarle el nombre para identificarlo facilmente
+3. Habilita las capacidades que necesites:
+   - **Vision**: Para subir y analizar imagenes
+   - **Subida de archivos**: Para analizar codigo, PDFs, documentos
+   - **Busqueda web**: Para consultar informacion actualizada
+   - **Interprete de codigo**: Para ejecutar codigo generado
+4. Haz clic en **Guardar y actualizar**
+
+### 4.4 Probar el Modelo
+
+Crea un nuevo chat y selecciona **Super Gemma 4** como modelo. Prueba con una pregunta que los modelos comerciales bloquearian:
+
+```bash
+# En el chat de Open WebUI, escribe:
+"Escribeme un script en Python para realizar una reverse shell usando el modulo subprocess"
+```
+
+**Resultado esperado:** El modelo genera el script sin rechazos, explicando cada parte del codigo.
+
+---
+
+## Paso 5: Hardening de Seguridad
+
+Un VPS expuesto en internet es blanco de ataques constantes. Segun CrowdStrike 2026, el tiempo promedio de "breakout" de un atacante es de solo **27 segundos**. Debes proteger tu servidor inmediatamente.
+
+### 5.1 Configurar Firewall (UFW)
+
+```bash
+# Verificar estado actual
+sudo ufw status
+
+# Politica por defecto: denegar todo el trafico entrante
+sudo ufw default deny incoming
+
+# Permitir trafico saliente
+sudo ufw default allow outgoing
+
+# Permitir SSH (puerto 22)
+sudo ufw allow 22/tcp
+
+# Permitir Open WebUI (puerto 8080)
+sudo ufw allow 8080/tcp
+
+# Habilitar el firewall
+sudo ufw enable
+
+# Verificar reglas activas
+sudo ufw status verbose
+```
+
+**Resultado esperado:**
+```
+Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+22/tcp                     ALLOW IN    Anywhere
+8080/tcp                   ALLOW IN    Anywhere
+```
+
+### 5.2 Configurar Claves SSH (Reemplazar Contraseña)
+
+```bash
+# EN TU MAQUINA LOCAL (NO en el VPS):
+# Generar par de claves SSH (si no tienes una)
+ssh-keygen -t ed25519 -f ~/.ssh/vps_ai_key
+
+# Presiona Enter para no usar contraseña (o pon una frase de paso)
+# Esto genera dos archivos:
+#   ~/.ssh/vps_ai_key      <- clave PRIVADA (NUNCA compartir)
+#   ~/.ssh/vps_ai_key.pub  <- clave PUBLICA (se copia al servidor)
+
+# Copiar la clave publica al VPS
+ssh-copy-id -i ~/.ssh/vps_ai_key.pub root@IP_DE_TU_VPS
+```
+
+**Explicacion**: `ssh-keygen -t ed25519` genera un par de claves usando el algoritmo Ed25519 (mas seguro y rapido que RSA). La clave publica se copia al servidor, la privada se queda en tu maquina.
+
+```bash
+# Verificar que puedes conectarte sin contraseña
+ssh -i ~/.ssh/vps_ai_key root@IP_DE_TU_VPS
+
+# Si funciona, ahora deshabilita la autenticacion por contraseña
+# (ESTANDO DENTRO DEL VPS)
+sudo nano /etc/ssh/sshd_config
+```
+
+Busca y modifica estas lineas en `/etc/ssh/sshd_config`:
+
+```
+# Antes (comentado o con "yes"):
+#PasswordAuthentication yes
+#ChallengeResponseAuthentication yes
+
+# Despues:
+PasswordAuthentication no
+ChallengeResponseAuthentication no
+PermitRootLogin prohibit-password
+```
+
+Guarda los cambios y reinicia SSH:
+
+```bash
+# Aplicar cambios
+sudo systemctl restart sshd
+
+# Verificar que el servicio sigue funcionando
+sudo systemctl status sshd
+```
+
+::: {.callout-danger}
+## CUIDADO: No te cierres fuera
+
+Antes de cerrar la sesion actual, abre UNA NUEVA terminal y verifica que puedes conectarte con la clave SSH. Si algo falla, la sesion actual sigue activa para corregirlo.
+
+Comando de prueba desde nueva terminal:
+```bash
+ssh -i ~/.ssh/vps_ai_key root@IP_DE_TU_VPS
+```
+
+Solo cuando esto funcione, cierra la sesion original.
+:::
+
+### 5.3 Deshabilitar Login Root por SSH (Opcional Avanzado)
+
+Para mayor seguridad, crea un usuario NO-root para acceso diario:
+
+```bash
+# Crear usuario (dentro del VPS)
+sudo adduser tu_usuario
+
+# Darle permisos sudo
+sudo usermod -aG sudo tu_usuario
+
+# Copiar la clave SSH al nuevo usuario
+# Desde tu maquina local:
+ssh-copy-id -i ~/.ssh/vps_ai_key tu_usuario@IP_DE_TU_VPS
+
+# Probar conexion como nuevo usuario
+ssh tu_usuario@IP_DE_TU_VPS
+
+# Si funciona, deshabilitar login root en /etc/ssh/sshd_config:
+# PermitRootLogin no
+```
+
+### 5.4 Configurar Fail2Ban (Opcional)
+
+```bash
+# Instalar fail2ban
+sudo apt install -y fail2ban
+
+# Crear configuracion local
+sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+
+# Habilitar proteccion SSH
+sudo systemctl enable --now fail2ban
+
+# Verificar estado
+sudo fail2ban-client status
+```
+
+---
+
+## Paso 6: Uso en Ciberseguridad
+
+Ahora tienes tu propio asistente de IA privado sin restricciones. Aqui algunos casos de uso etico:
+
+### 6.1 Analisis de Codigo Malicioso
+
+Sube un script de un CTF o laboratorio y pide:
+
+```bash
+# Ejemplo de prompt:
+"Analiza este script y explícame paso a paso como funciona su lógica.
+Identifica el vector de ataque, la vulnerabilidad que explota,
+y como podria detectarse en un entorno de produccion."
+```
+
+### 6.2 Generacion de Scripts de Prueba
+
+```bash
+# Ejemplo de prompt:
+"Genera un script en Python que automatice un escaneo basico de puertos
+usando sockets. Incluye manejo de errores, timeouts y salida formateada.
+Este script es para uso educativo en mi laboratorio local autorizado."
+```
+
+### 6.3 Ingenieria Inversa
+
+```bash
+# Ejemplo de prompt:
+"Analiza esta estructura de codigo e identifica posibles vulnerabilidades
+BOLA (Broken Object Level Authorization). Propone correcciones seguras."
+```
+
+---
+
+## Troubleshooting
+
+| Problema | Causa | Solucion |
+|----------|-------|----------|
+| No puedo acceder al puerto 8080 | Firewall bloqueando | `sudo ufw allow 8080/tcp` |
+| Open WebUI no inicia | Docker no corre | `sudo docker ps` y `sudo docker logs open-webui` |
+| Error "host.docker.internal" no resuelve | Linux no tiene ese hostname por defecto | Usar IP real: `--network host` o cambiar a `-e OLLAMA_BASE_URL=http://127.0.0.1:11434` |
+| Modelo se descarga muy lento | Conexion lenta o muchos usuarios en Hugging Face | Usar `ollama pull` desde terminal (suele ser mas rapido) |
+| Modelo no aparece en Open WebUI | No se refresco la lista | Ir a Administracion > Modelos > Refresh |
+| Error "CUDA out of memory" | RAM insuficiente para el modelo | Usar un modelo mas pequeño como `llama3.2:3b` o `qwen2.5:7b` |
+| SSH "Permission denied" despues de hardening | Clave SSH no configurada correctamente | Conectarse por consola VPS (Hostinger panel) y revertir cambios en sshd_config |
+
+---
+
+## Desafio Extra
+
+1. **Instala un segundo modelo**: Descarga `qwen2.5:7b` o `llama3.1:8b` y compara su rendimiento con Super Gemma 4
+2. **Configura HTTPS**: Usa Let's Encrypt (Certbot) para agregar SSL a Open WebUI
+3. **Automatiza respaldos**: Crea un script que respalde los chats y configuracion de Open WebUI
+4. **Proxy inverso**: Configura Nginx como proxy inverso para Open WebUI con autenticacion basica adicional
+
+---
+
+## Recursos
+
+- Ollama: https://ollama.com
+- Open WebUI: https://openwebui.com
+- Hugging Face - Super Gemma 4: https://huggingface.co/johson
+- Hostinger VPS: https://hostinger.com (codigo RINKU para descuento)
+- CrowdStrike 2026 Threat Report: https://www.crowdstrike.com
+- UFW Essentials: https://help.ubuntu.com/community/UFW
+
+---
+
+*Lab Anexo: IA Privada en VPS*
+*Duracion: 2-3 horas*
+*Nivel: Intermedio*
+*Licencia: CC BY-SA 4.0*
+*ADVERTENCIA: Solo para uso educativo y etico*
+

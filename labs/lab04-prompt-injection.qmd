@@ -18,7 +18,7 @@ En este laboratorio, vas a **implementar un sistema de deteccion** de prompt inj
 ::: {.callout-warning}
 ## ADVERTENCIA DE SEGURIDAD
 
-- NO executar estos ataques en sistemas reales
+- NO ejecutar estos ataques en sistemas reales
 - Usar exclusivamente entornos de prueba
 - Este laboratorio es educativo - aprender a defenderse
 :::

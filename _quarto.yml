@@ -92,6 +92,9 @@ book:
     - minicursos/minicurso-gobuster.qmd
     - minicursos/minicurso-netcat.qmd
     - minicursos/minicurso-tcpdump.qmd
+    # Labs de IA en Ciberseguridad
+    - labs/lab-anexo-ai-vps.qmd
+    - labs/lab-anexo-kali-mcp.qmd
     # Curso Simplificado (Fundamentos)
     - content-simplified/index.qmd
     - content-simplified/modulo-01-seguridad-basica.qmd

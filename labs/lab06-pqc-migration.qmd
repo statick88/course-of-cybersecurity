@@ -15,13 +15,7 @@ En este laboratorio, vas a **crear un inventory de sistemas criptograficos** par
 - Crear plan de migracion
 - Evaluar proveedores
 
-::: {.callout-warning}
-## ADVERTENCIA
-
-- NO ejecutar en sistemas de produccion sin autorizacion
-- Usar entornos de prueba exclusivamente
-- Este laboratorio es educativo
-:::
+{{< include ../_shared/_warn-seguridad.qmd >}}
 
 ## Duracion
 

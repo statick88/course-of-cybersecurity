@@ -16,7 +16,7 @@ En este laboratorio avanzado, vas a **implementar y utilizar LLMs locales** para
 - Integrar con Burp Suite, Metasploit, Nuclei
 - Realizar threat hunting automatizado
 - Construir RAG con bases de conocimiento
-- Desarrollar agentes deIA para pentesting
+- Desarrollar agentes de IA para pentesting
 
 ::: {.callout-warning}
 ## ADVERTENCIA

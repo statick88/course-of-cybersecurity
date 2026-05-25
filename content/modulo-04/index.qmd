@@ -408,6 +408,56 @@ Verifica que cada caso de prueba fue clasificado correctamente. Los prompts con 
 
 ---
 
+## 🔬 Laboratorios Adicionales — IA Aplicada a Ciberseguridad
+
+Los siguientes laboratorios complementan la teoria de este modulo con practica real de despliegue y uso de IA en entornos de ciberseguridad.
+
+### Lab 1: Desplegar tu Propio Asistente de IA Privado
+
+**Objetivo**: Instalar y configurar un asistente de IA privado (Gemma 4 + Ollama + Open WebUI) en un VPS, sin censura y accesible desde cualquier dispositivo.
+
+**Habilidades**: Provisionamiento de servidores, Docker, modelos LLM, hardening de seguridad.
+
+:::{.callout-tip}
+**Alternativa sin VPS**: Si no tienes un VPS, puedes seguir las mismas instrucciones usando una maquina virtual local con Ubuntu Server 24.04, 8GB+ RAM y 100GB de disco. La IP cambiara de publica a privada, pero el proceso es identico.
+:::
+
+::: {.callout-warning}
+## Requisito Previo
+
+Completa primero el lab teorico de OWASP LLM Security (arriba) para entender los riesgos de seguridad de los LLMs. Luego despliega tu propio LLM en el VPS para aplicar esos conceptos en un entorno real.
+:::
+
+> **Ver**: @sec-lab-anexo-ai-vps — Lab completo paso a paso
+
+**Alineacion con objetivos del modulo**:
+- Objetivo 3 (MCP risks): Al desplegar Open WebUI, veras como un LLM interactua con herramientas externas
+- Objetivo 4 (Defensa con IA): Experimentaras con un LLM privado como asistente de SOC
+- Objetivo 5 (Proyecto TechCorp): Usaras este conocimiento para proponer arquitecturas de IA mas seguras
+
+### Lab 2: Kali Linux + Claude Code via MCP
+
+**Objetivo**: Conectar Claude Desktop con Kali Linux a traves del Model Context Protocol (MCP) para ejecutar herramientas de pentesting desde lenguaje natural.
+
+**Habilidades**: Kali Linux, SSH, MCP, Claude Code, automatizacion de pentesting.
+
+> **Ver**: @sec-lab-anexo-kali-mcp — Configuracion completa de MCP Kali Server
+
+**Alineacion con objetivos del modulo**:
+- Objetivo 3 (MCP risks): Implementaras el MCP real y comprenderas sus riesgos de primera mano
+- Objetivo 1 (amenazas IA): Veras como la IA acelera el reconocimiento ofensivo
+- Objetivo 4 (Defensa con IA): Entenderas como los defensores deben responder a ataques aumentados por IA
+
+:::{.callout-warning}
+## Orden Recomendado
+
+1. Primero el **Lab OWASP LLM Security** (arriba) — conceptos de seguridad en LLMs
+2. Luego **Lab: IA Privada en VPS** — despliegue practico de un LLM
+3. Finalmente **Lab: Kali Linux MCP** — uso ofensivo/defensivo de IA con herramientas reales
+:::
+
+---
+
 ## 📝 Tarea (Project-Based Learning)
 
 ### Plan de Evaluacion de Riesgos IA y Defensa para TechCorp
@@ -461,8 +511,14 @@ Verifica que cada caso de prueba fue clasificado correctamente. Los prompts con 
 - Los deepfakes son cada vez mas sofisticados y representan un riesgo real de ingenieria social
 - La defensa con IA requiere deteccion de anomalias (UEBA), respuesta automatizada y red teaming continuo
 - MITRE ATLAS proporciona un framework de tacticas y tecnicas para evaluar sistemas de IA
+- **Lab: IA Privada en VPS** — Aprende a desplegar tu propio LLM sin censura con Gemma 4 + Ollama + Open WebUI
+- **Lab: Kali Linux MCP** — Conecta Claude Code con Kali Linux para ejecutar pentesting desde lenguaje natural
 
 ### Siguiente: Modulo 5
+
+Continua con **Gestion de Vulnerabilidades** — o profundiza en los laboratorios adicionales de este modulo:
+- @sec-lab-anexo-ai-vps — Despliega tu IA privada
+- @sec-lab-anexo-kali-mcp — Kali + Claude Code via MCP
 
 Continuamos con **Gestion de Vulnerabilidades**
 
