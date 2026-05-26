@@ -89,7 +89,22 @@ El **Model Context Protocol (MCP)** es un protocolo estandarizado que permite a 
 
 ## Paso 1: Preparar Kali Linux
 
-### 1.1 Verificar o Instalar Kali 2025.3+
+### 1.1 VM Limpia (Recomendacion Clave)
+
+El autor del video tutorial en que se basa este lab (RINKU) recomienda **crear una maquina virtual (VM) nueva y limpia** dedicada exclusivamente a estas pruebas. Esto evita conflictos con herramientas existentes y permite revertir facilmente si algo falla.
+
+**Recomendacion:** Usa VirtualBox o VMware con una instalacion fresca de Kali Linux.
+
+::: {.callout-important}
+## Instantanea (Snapshot) — OBLIGATORIO
+
+Antes de instalar cualquier herramienta, TOMA UNA INSTANTANEA de tu VM. Si algo falla, la restauras en segundos.
+
+**En VirtualBox**: Maquina > Instantaneas > Tomar instantanea
+**Nombre**: "Antes de instalar IA tools"
+:::
+
+### 1.2 Verificar o Instalar Kali 2025.3+
 
 Lo primero es asegurarte de tener Kali Linux 2025.3+ (la version que incluye Gemini CLI nativamente).
 
@@ -107,27 +122,21 @@ sudo apt update && sudo apt full-upgrade -y
 
 **Resultado esperado:** El sistema se actualiza a la ultima version.
 
-::: {.callout-tip}
-## Instantanea Antes de Empezar
-
-Antes de instalar cualquier herramienta nueva, crea una instantanea (snapshot) de tu VM Kali. Si algo falla, puedes restaurarla en segundos.
-
-**En VirtualBox**: Maquina > Instantaneas > Tomar instantanea
-**Nombre**: "Antes de instalar IA tools"
-:::
-
-### 1.2 Acceso como Root
+### 1.3 Acceso como Root
 
 Para evitar tener que escribir `sudo` constantemente durante el laboratorio:
 
 ```bash
-# Establecer contraseña de root (si no la tienes)
-sudo passwd root
+# Opcion A: Cambiar a root directamente (recomendado)
+sudo su
 
-# Cambiar a root
+# Opcion B: Usando su con contraseña
+sudo passwd root   # solo si no tienes contraseña de root
 su -
 
-# Alternativa: usar sudo para cada comando
+# Luego verifica que eres root:
+whoami
+# Deberia mostrar: root
 ```
 
 ---
@@ -174,13 +183,22 @@ Selecciona la opcion **1** (cuenta de Google). Se abrira un enlace en tu navegad
 ```bash
 # Escribe en el prompt de Gemini:
 realiza un escaneo con Nmap a mi dominio ejemplo.com
-
-# Gemini detectara la herramienta y preguntara:
-# "¿Permitir la ejecucion de Nmap?"
-# Opciones: [1] Una vez [2] Esta sesion [3] Siempre
-
-# Selecciona 1 (Una vez) por seguridad
 ```
+
+Gemini detectara la herramienta y preguntara:
+```
+? Herramienta detectada: nmap
+? ¿Permitir la ejecucion?
+  1) Una vez        ← RECOMENDADO: permite solo este comando
+  2) Esta sesion    ← permite hasta que cierres la terminal
+  3) Siempre        ← NUNCA: riesgo de seguridad
+```
+
+::: {.callout-warning}
+## Seguridad con Gemini CLI
+
+Siempre selecciona **"Una vez" (opcion 1)**. Esto evita que la IA ejecute comandos sin tu supervision. La regla de oro: **cada comando, una confirmacion**.
+:::
 
 **Resultado esperado:** Gemini ejecuta Nmap y muestra los resultados directamente en la terminal.
 
@@ -204,15 +222,21 @@ ollama --version
 
 ### 3.2 Descargar un Modelo Ligero
 
-Para Kali (que corre en VM con recursos limitados), instala un modelo pequeño:
+Para Kali (que corre en VM con recursos limitados), instala un modelo pequeño. Tienes varias opciones segun tu RAM:
 
 ```bash
-# Llama 3.2 (1B parametros — ~2GB, muy ligero)
+# Opcion A: Llama 3.2 (3B — ~2GB, el del tutorial RINKU)
+# Buena relacion calidad/rendimiento para 8GB+ RAM
+ollama pull llama3.2
+
+# Opcion B: Llama 3.2 1B (~700MB, muy ligero para 4GB RAM)
 ollama pull llama3.2:1b
 
-# Alternativa: Qwen 2.5 (3B parametros — mejor calidad)
+# Opcion C: Qwen 2.5 (3B — mejor calidad, ~2GB)
 ollama pull qwen2.5:3b
 ```
+
+**Tip:** Si tu VM tiene 4GB RAM, usa `llama3.2:1b`. Si tiene 8GB+, usa `llama3.2` (3B) o `qwen2.5:3b`.
 
 ### 3.3 Probar el Modelo Local
 
@@ -294,12 +318,14 @@ ip addr show | grep "inet "
 
 ### 4.3 Generar Claves SSH en el Host
 
-**En Windows (Git Bash):**
+Tienes dos opciones. La **Opcion A** usa una clave dedicada para Kali (mas clara si manejas multiples servidores). La **Opcion B** es la del tutorial RINKU (mas simple).
+
+**Opcion A: Clave dedicada para Kali (recomendada para este lab)**
 
 ```bash
-# Abrir Git Bash (instalado en el paso 1)
+# En Windows (Git Bash) o macOS/Linux (Terminal):
 
-# Generar par de claves SSH
+# Generar par de claves SSH con nombre especifico
 ssh-keygen -t ed25519 -f ~/.ssh/kali_key
 
 # Presiona Enter para no usar contraseña (conexion automatica)
@@ -308,32 +334,51 @@ ssh-keygen -t ed25519 -f ~/.ssh/kali_key
 #   ~/.ssh/kali_key.pub   <- clave PUBLICA (se copia a Kali)
 ```
 
-**En macOS/Linux (Terminal nativa):**
+**Opcion B: Clave por defecto (estilo tutorial RINKU)**
 
 ```bash
-# Mismos comandos que arriba
-ssh-keygen -t ed25519 -f ~/.ssh/kali_key
+# Generar par de claves SSH con nombre por defecto
+ssh-keygen -t ed25519
+
+# Presiona Enter para la ruta por defecto (~/.ssh/id_ed25519)
+# Presiona Enter dos veces mas (sin contraseña)
+# Esto genera:
+#   ~/.ssh/id_ed25519       <- clave PRIVADA
+#   ~/.ssh/id_ed25519.pub   <- clave PUBLICA
 ```
 
 ### 4.4 Copiar Clave Publica a Kali
 
+**Si usaste Opcion A (clave dedicada):**
 ```bash
-# Copiar la clave publica a Kali
 # Reemplaza USUARIO con tu usuario de Kali (ej: kali) e IP con la que anotaste
 ssh-copy-id -i ~/.ssh/kali_key.pub USUARIO@IP_DE_KALI
-
-# Te pedira la contraseña de Kali una ultima vez
-# Luego confirmara que la clave se agrego
 ```
+
+**Si usaste Opcion B (clave por defecto):**
+```bash
+# ssh-copy-id usa ~/.ssh/id_*.pub automaticamente
+ssh-copy-id USUARIO@IP_DE_KALI
+```
+
+Ambos metodos te pediran la contraseña de Kali **una ultima vez**. Luego confirmaran que la clave se agrego a `~/.ssh/authorized_keys`.
 
 ### 4.5 Probar Conexion sin Contraseña
 
+**Si usaste Opcion A (clave dedicada):**
 ```bash
-# Probar conexion SSH — NO debe pedir contraseña
 ssh -i ~/.ssh/kali_key USUARIO@IP_DE_KALI
+```
 
-# Si entras sin contraseña, la configuracion SSH es correcta
-# Salir con:
+**Si usaste Opcion B (clave por defecto):**
+```bash
+ssh USUARIO@IP_DE_KALI
+```
+
+**Resultado esperado:** La conexion SSH se establece **sin pedir contraseña**. Esto significa que la autenticacion con clave publica funciona correctamente.
+
+```bash
+# Salir de Kali y volver al host
 exit
 ```
 
@@ -343,7 +388,12 @@ exit
 
 ## Paso 5: Instalar MCP Kali Server
 
-El MCP Kali Server es el puente que permite a Claude comunicarse con las herramientas de Kali.
+El MCP Kali Server es el puente que permite a Claude comunicarse con las herramientas de Kali. El paquete `mcp-kali-server` instala **dos binarios** que trabajan juntos:
+
+| Binario | Rol | Descripcion |
+|---------|-----|-------------|
+| `kali-server-mcp` | API REST | Servidor Flask que expone herramientas Kali en el puerto 5000 |
+| `mcp-server` | Bridge MCP | Cliente stdio que se conecta al API y habla MCP con Claude |
 
 ### 5.1 Instalar en Kali
 
@@ -354,39 +404,55 @@ sudo apt update
 # Instalar MCP Kali Server
 sudo apt install -y mcp-kali-server
 
-# Verificar instalacion
+# Verificar instalacion — DEBEN aparecer ambos binarios
+which kali-server-mcp
 which mcp-server
-which mcp-kali-server
 ```
 
-### 5.2 Iniciar el Servidor MCP
+**Resultado esperado:** Ambos comandos muestran su ruta de instalacion.
 
-Abre dos terminales en Kali (o dos sesiones SSH):
+### 5.2 Iniciar los Servicios MCP
 
-**Terminal 1 — Servidor MCP principal:**
+El paquete instala **dos servicios** que deben correr simultaneamente. Abre **dos terminales** en Kali:
+
+**Terminal 1 — API REST (kali-server-mcp):**
 ```bash
-# Iniciar el servidor MCP base
+# Inicia el servidor API que expone las herramientas de Kali en el puerto 5000
+kali-server-mcp
+```
+
+**Terminal 2 — Bridge MCP (mcp-server):**
+```bash
+# Inicia el bridge que conecta Claude con el API de Kali
 mcp-server
 ```
 
-**Terminal 2 — Bridge MCP-Kali:**
+::: {.callout-warning}
+## Orden Correcto
+
+`kali-server-mcp` DEBE iniciarse primero (abre el puerto 5000). Luego `mcp-server` se conecta a ese puerto. Si `mcp-server` falla con "Connection refused", es porque `kali-server-mcp` aun no esta listo.
+
+**Verificacion rapida:**
 ```bash
-# Iniciar el bridge que conecta MCP con herramientas Kali
-mcp-kali-server
+# En una tercera terminal, verifica que el puerto 5000 esta abierto:
+ss -tlnp | grep 5000
+# Deberias ver: LISTEN 127.0.0.1:5000
 ```
+:::
 
-Ambos servicios deben quedar ejecutandose. No los cierres.
-
-**Resultado esperado:** Ningun mensaje de error. Los procesos quedan en primer plano esperando conexiones.
+**Resultado esperado:** Ambos servicios quedan ejecutandose en primer plano sin errores. No los cierres.
 
 ::: {.callout-tip}
 ## Version Alternativa: mcp-gu-server
 
-Dependiendo de la version de Kali, el paquete puede llamarse `mcp-gu-server` (MCP Gateway Universal Server). Si `mcp-kali-server` no existe, prueba:
+En versiones anteriores de Kali, el paquete se llamaba `mcp-gu-server` (MCP Gateway Universal Server). Si `mcp-kali-server` no existe, prueba:
 
 ```bash
 sudo apt install -y mcp-gu-server
-mcp-gu-server
+
+# El binario correspondiente es:
+kali-server-mcp    # mismo nombre!
+mcp-gu-server      # en vez de mcp-server
 ```
 :::
 
@@ -472,34 +538,36 @@ En Windows, las rutas deben usar DOBLE barra invertida (`\\`) porque JSON requie
 **Resultado esperado:** Deberias ver `kali-server` en la lista con estado **"En ejecucion"**.
 
 <div class="compact-diagram" style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:14px 18px;margin:14px 0;">
-<svg viewBox="0 0 480 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:480px;">
-<text x="240" y="14" text-anchor="middle" fill="#f1f5f9" font-size="11" font-weight="bold">Flujo de Configuracion MCP</text>
-<!-- Step 1 -->
-<rect x="10" y="26" width="100" height="30" rx="6" fill="#10b981"/>
-<text x="60" y="40" text-anchor="middle" fill="white" font-size="8" font-weight="bold">1. Kali VM</text>
-<text x="60" y="52" text-anchor="middle" fill="#d1fae5" font-size="7">mcp-server corriendo</text>
-<!-- Step 2 -->
-<rect x="130" y="26" width="100" height="30" rx="6" fill="#3b82f6"/>
-<text x="180" y="40" text-anchor="middle" fill="white" font-size="8" font-weight="bold">2. SSH Config</text>
-<text x="180" y="52" text-anchor="middle" fill="#93c5fd" font-size="7">Clave publica + Bridge</text>
-<!-- Step 3 -->
-<rect x="250" y="26" width="100" height="30" rx="6" fill="#d97706"/>
-<text x="300" y="40" text-anchor="middle" fill="white" font-size="8" font-weight="bold">3. Claude Desktop</text>
-<text x="300" y="52" text-anchor="middle" fill="#fde68a" font-size="7">config.json con SSH</text>
-<!-- Step 4 -->
-<rect x="370" y="26" width="100" height="30" rx="6" fill="#8b5cf6"/>
-<text x="420" y="40" text-anchor="middle" fill="white" font-size="8" font-weight="bold">4. Verificar</text>
-<text x="420" y="52" text-anchor="middle" fill="#ede9fe" font-size="7">Estado "En ejecucion"</text>
-<!-- Arrows -->
-<line x1="110" y1="41" x2="127" y2="41" stroke="#64748b" stroke-width="1.5"/>
-<polygon points="127,41 123,38 123,44" fill="#64748b"/>
-<line x1="230" y1="41" x2="247" y2="41" stroke="#64748b" stroke-width="1.5"/>
-<polygon points="247,41 243,38 243,44" fill="#64748b"/>
-<line x1="350" y1="41" x2="367" y2="41" stroke="#64748b" stroke-width="1.5"/>
-<polygon points="367,41 363,38 363,44" fill="#64748b"/>
-<!-- Failure -->
-<rect x="80" y="68" width="320" height="26" rx="4" fill="#ef4444"/>
-<text x="240" y="85" text-anchor="middle" fill="white" font-size="9" font-weight="bold">FALLA COMUN: Claude no se cerro completamente → Cerrar desde Task Manager</text>
+<svg viewBox="0 0 520 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:520px;">
+<text x="260" y="14" text-anchor="middle" fill="#f1f5f9" font-size="11" font-weight="bold">Arquitectura MCP: Dos Servicios en Kali</text>
+<!-- Left: Kali VM box -->
+<rect x="5" y="24" width="200" height="90" rx="8" fill="#1e293b" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,2"/>
+<text x="105" y="40" text-anchor="middle" fill="#f87171" font-size="8" font-weight="bold">KALI LINUX VM</text>
+<!-- Service 1: kali-server-mcp -->
+<rect x="15" y="48" width="180" height="26" rx="5" fill="#10b981"/>
+<text x="105" y="58" text-anchor="middle" fill="white" font-size="8" font-weight="bold">kali-server-mcp</text>
+<text x="105" y="70" text-anchor="middle" fill="#d1fae5" font-size="7">API REST · puerto 5000</text>
+<!-- Service 2: mcp-server -->
+<rect x="15" y="80" width="180" height="26" rx="5" fill="#8b5cf6"/>
+<text x="105" y="90" text-anchor="middle" fill="white" font-size="8" font-weight="bold">mcp-server</text>
+<text x="105" y="102" text-anchor="middle" fill="#ede9fe" font-size="7">Bridge stdio ←→ API</text>
+<!-- Arrow right -->
+<line x1="205" y1="70" x2="235" y2="70" stroke="#64748b" stroke-width="2"/>
+<polygon points="235,70 230,66 230,74" fill="#64748b"/>
+<!-- SSH Transport box -->
+<rect x="238" y="48" width="110" height="42" rx="6" fill="#3b82f6"/>
+<text x="293" y="64" text-anchor="middle" fill="white" font-size="9" font-weight="bold">SSH</text>
+<text x="293" y="78" text-anchor="middle" fill="#93c5fd" font-size="7">Clave publica</text>
+<!-- Arrow right -->
+<line x1="348" y1="70" x2="378" y2="70" stroke="#64748b" stroke-width="2"/>
+<polygon points="378,70 373,66 373,74" fill="#64748b"/>
+<!-- Claude Desktop -->
+<rect x="381" y="48" width="130" height="42" rx="8" fill="#d97706"/>
+<text x="446" y="64" text-anchor="middle" fill="white" font-size="9" font-weight="bold">CLAUDE DESKTOP</text>
+<text x="446" y="78" text-anchor="middle" fill="#fde68a" font-size="7">Tu PC (Windows/Mac/Linux)</text>
+<!-- Warning strip -->
+<rect x="5" y="120" width="506" height="24" rx="4" fill="#ef4444"/>
+<text x="258" y="136" text-anchor="middle" fill="white" font-size="8" font-weight="bold">ORDEN: 1° kali-server-mcp  →  2° mcp-server  →  3° Claude conecta por SSH</text>
 </svg>
 </div>
 
@@ -554,19 +622,22 @@ y finalmente genera un reporte en markdown con los hallazgos priorizados por sev
 | Problema | Causa | Solucion |
 |----------|-------|----------|
 | Claude no encuentra `ssh` en Windows | Ruta incorrecta en config.json | Usa la ruta completa de Git Bash: `C:\\Program Files\\Git\\usr\\bin\\ssh.exe` |
-| MCP server muestra "Connection refused" | SSH no esta corriendo en Kali | `sudo systemctl start ssh` y `sudo systemctl status ssh` |
+| `mcp-server` muestra "Connection refused" | `kali-server-mcp` no esta corriendo | Inicia `kali-server-mcp` PRIMERO en otra terminal, luego `mcp-server` |
+| `kali-server-mcp` no se inicia | Puerto 5000 ocupado | `ss -tlnp \| grep 5000` para ver que proceso lo ocupa, o usa `--port 5001` |
+| SSH muestra "Connection refused" | SSH no esta corriendo en Kali | `sudo systemctl start ssh` y `sudo systemctl status ssh` |
 | No se ve la IP de Kali en la red | Red en NAT en vez de Bridge | Cambiar a Adaptador Puente en VirtualBox |
 | Claude no reconoce el MCP server | Claude no se cerro completamente | Cerrar desde Task Manager/Activity Monitor y reabrir |
-| Error "Permission denied" al conectar SSH | Clave publica no copiada correctamente | Re-ejecutar `ssh-copy-id` |
-| MCP server no se instala | Paquete con otro nombre | `sudo apt install -y mcp-gu-server` como alternativa |
-| Gemini CLI falla al conectar | Firewall bloqueando | Verificar conexion a internet desde Kali |
-| Ollama muy lento en VM | Recursos insuficientes | Asignar 8GB+ RAM a la VM, usar modelos mas pequeños |
+| Error "Permission denied" al conectar SSH | Clave publica no copiada | Re-ejecutar `ssh-copy-id` (si usaste clave dedicada, incluye `-i ~/.ssh/kali_key.pub`) |
+| Comando `mcp-kali-server` no existe | Nombre incorrecto del binario | El comando correcto es `kali-server-mcp` (no `mcp-kali-server`) |
+| Paquete `mcp-kali-server` no encontrado | Version de Kali anterior | `sudo apt install -y mcp-gu-server` como alternativa |
+| Gemini CLI falla al conectar | Firewall o sin internet | Verificar conectividad desde Kali con `ping -c 3 google.com` |
+| Ollama muy lento en VM | RAM insuficiente | Asignar 8GB+ RAM a la VM. Con 4GB solo usa `llama3.2:1b` |
 
 ---
 
 ## Desafio Extra
 
-1. **Automatiza el inicio**: Crea un script que inicie `mcp-server` y `mcp-kali-server` automaticamente al arrancar Kali
+1. **Automatiza el inicio**: Crea un script que inicie `kali-server-mcp` y `mcp-server` automaticamente al arrancar Kali
 2. **Pipeline multi-herramienta**: Haz que Claude ejecute: Nmap → Nikto → Searchsploit → Reporte. Documenta el resultado
 3. **Kali + Open WebUI**: Configura Open WebUI en Kali (usando Docker) para tener interfaz grafica local a tus modelos Ollama
 4. **Scripting MCP**: Escribe un script que automatice la configuracion completa de SSH + MCP en un solo comando
