@@ -435,13 +435,13 @@ Completa primero el lab teorico de OWASP LLM Security (arriba) para entender los
 - Objetivo 4 (Defensa con IA): Experimentaras con un LLM privado como asistente de SOC
 - Objetivo 5 (Proyecto TechCorp): Usaras este conocimiento para proponer arquitecturas de IA mas seguras
 
-### Lab 2: Kali Linux + Claude Code via MCP
+### Lab 2: Kali Linux + OpenCode via MCP
 
-**Objetivo**: Conectar Claude Desktop con Kali Linux a traves del Model Context Protocol (MCP) para ejecutar herramientas de pentesting desde lenguaje natural.
+**Objetivo**: Conectar OpenCode (o Claude Desktop) con Kali Linux a traves del Model Context Protocol (MCP) para ejecutar herramientas de pentesting desde lenguaje natural usando modelos gratuitos.
 
-**Habilidades**: Kali Linux, SSH, MCP, Claude Code, automatizacion de pentesting.
+**Habilidades**: Kali Linux, SSH, MCP, OpenCode, Antigravity CLI, automatizacion de pentesting.
 
-> **Ver**: @sec-lab-anexo-kali-mcp — Configuracion completa de MCP Kali Server
+> **Ver**: @sec-lab-anexo-kali-mcp — Configuracion completa de MCP con OpenCode
 
 **Alineacion con objetivos del modulo**:
 - Objetivo 3 (MCP risks): Implementaras el MCP real y comprenderas sus riesgos de primera mano
@@ -453,7 +453,7 @@ Completa primero el lab teorico de OWASP LLM Security (arriba) para entender los
 
 1. Primero el **Lab OWASP LLM Security** (arriba) — conceptos de seguridad en LLMs
 2. Luego **Lab: IA Privada en VPS** — despliegue practico de un LLM
-3. Finalmente **Lab: Kali Linux MCP** — uso ofensivo/defensivo de IA con herramientas reales
+3. Finalmente **Lab: Kali Linux MCP** — uso ofensivo/defensivo de IA con herramientas reales (OpenCode + Antigravity CLI + modelos gratuitos)
 :::
 
 ---
@@ -512,13 +512,13 @@ Completa primero el lab teorico de OWASP LLM Security (arriba) para entender los
 - La defensa con IA requiere deteccion de anomalias (UEBA), respuesta automatizada y red teaming continuo
 - MITRE ATLAS proporciona un framework de tacticas y tecnicas para evaluar sistemas de IA
 - **Lab: IA Privada en VPS** — Aprende a desplegar tu propio LLM sin censura con Gemma 4 + Ollama + Open WebUI
-- **Lab: Kali Linux MCP** — Conecta Claude Code con Kali Linux para ejecutar pentesting desde lenguaje natural
+- **Lab: Kali Linux MCP** — Conecta OpenCode con Kali Linux para ejecutar pentesting desde lenguaje natural
 
 ### Siguiente: Modulo 5
 
 Continua con **Gestion de Vulnerabilidades** — o profundiza en los laboratorios adicionales de este modulo:
 - @sec-lab-anexo-ai-vps — Despliega tu IA privada
-- @sec-lab-anexo-kali-mcp — Kali + Claude Code via MCP
+- @sec-lab-anexo-kali-mcp — Kali + OpenCode via MCP
 
 Continuamos con **Gestion de Vulnerabilidades**
 

@@ -1,20 +1,20 @@
 ---
-title: "Lab Anexo: Kali Linux MCP — Conecta Claude Code con tu VM de Pentesting"
+title: "Lab Anexo: Kali Linux MCP — Conecta OpenCode con tu VM de Pentesting"
 module: "lab-anexo-07"
 type: "lab"
-description: "Configura el Model Context Protocol (MCP) entre Claude Code y Kali Linux para ejecutar herramientas de pentesting desde lenguaje natural"
+description: "Configura el Model Context Protocol (MCP) entre OpenCode (modelos gratuitos) y Kali Linux para ejecutar herramientas de pentesting desde lenguaje natural"
 ---
 
 ## Objetivo del Laboratorio {#sec-lab-anexo-kali-mcp}
 
-En este laboratorio vas a **conectar Claude Code (o Claude Desktop) con Kali Linux** a traves del Model Context Protocol (MCP), permitiendote ejecutar herramientas de pentesting escribiendo lenguaje natural. Este ejercicio te permitira:
+En este laboratorio vas a **conectar OpenCode (o Claude Desktop) con Kali Linux** a traves del Model Context Protocol (MCP), permitiendote ejecutar herramientas de pentesting escribiendo lenguaje natural. Este ejercicio te permitira:
 
 - Configurar Kali Linux 2025.3+ como entorno de pentesting aumentado con IA
-- Instalar Gemini CLI (integrado en Kali 2025.3+) como agente conversacional en terminal
+- Instalar Antigravity CLI (integrado en Kali 2025.3+) como agente conversacional en terminal
 - Instalar Ollama para IA local sin enviar datos a servidores externos
 - Configurar conexion SSH segura entre host y VM Kali
-- Instalar y configurar MCP Kali Server para conectar Claude con las herramientas de Kali
-- Ejecutar Nmap, Nikto y otras herramientas desde el chat de Claude
+- Instalar y configurar MCP Kali Server para conectar OpenCode con las herramientas de Kali
+- Ejecutar Nmap, Nikto y otras herramientas desde el chat de OpenCode
 
 ::: {.callout-warning}
 ## ADVERTENCIA LEGAL
@@ -31,7 +31,7 @@ En este laboratorio vas a **conectar Claude Code (o Claude Desktop) con Kali Lin
 - **Host**: Windows, macOS o Linux con 8GB+ RAM
 - **VirtualBox** o **VMware** (licencia gratuita)
 - **Kali Linux 2025.3+** — VM con 4GB+ RAM, 2+ cores, 50GB+ disco
-- **Claude Desktop** (descargar de claude.ai/download) o Claude Code
+- **Claude Desktop** (descargar de claude.ai/download) o OpenCode
 - **Git Bash** (solo Windows) para el cliente SSH
 - CPU con virtualizacion habilitada (VT-x/AMD-V)
 
@@ -45,19 +45,20 @@ En este laboratorio vas a **conectar Claude Code (o Claude Desktop) con Kali Lin
 
 ## ¿Que es MCP y por que importa?
 
-El **Model Context Protocol (MCP)** es un protocolo estandarizado que permite a modelos de lenguaje (como Claude) interactuar con herramientas externas. En 2025-2026, Kali Linux integro soporte nativo para MCP, permitiendo:
+El **Model Context Protocol (MCP)** es un protocolo estandarizado que permite a modelos de lenguaje (como OpenCode) interactuar con herramientas externas. En 2025-2026, Kali Linux integro soporte nativo para MCP, permitiendo:
 
-- Hablar en lenguaje natural y que Claude ejecute Nmap por ti
+- Hablar en lenguaje natural y que OpenCode ejecute Nmap por ti
 - Encadenar herramientas: Nmap → Nikto → Searchsploit en un solo prompt
 - Obtener resultados estructurados sin tocar la terminal de Kali
+- Usar **modelos gratuitos** incluidos en OpenCode o modelos locales con Ollama
 
 <div class="compact-diagram" style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:14px 18px;margin:14px 0;">
 <svg viewBox="0 0 500 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:500px;">
-<text x="250" y="16" text-anchor="middle" fill="#f1f5f9" font-size="12" font-weight="bold">Arquitectura MCP: Claude ↔ Kali Linux</text>
-<!-- Claude -->
+<text x="250" y="16" text-anchor="middle" fill="#f1f5f9" font-size="12" font-weight="bold">Arquitectura MCP: OpenCode ↔ Kali Linux</text>
+<!-- OpenCode Host -->
 <rect x="5" y="30" width="110" height="40" rx="8" fill="#d97706"/>
-<text x="60" y="50" text-anchor="middle" fill="white" font-size="10" font-weight="bold">CLAUDE</text>
-<text x="60" y="64" text-anchor="middle" fill="#fde68a" font-size="8">Chat Desktop/Code</text>
+<text x="60" y="50" text-anchor="middle" fill="white" font-size="10" font-weight="bold">OPENCODE</text>
+<text x="60" y="64" text-anchor="middle" fill="#fde68a" font-size="8">Chat Desktop/CLI</text>
 <!-- Flecha -->
 <line x1="115" y1="50" x2="145" y2="50" stroke="#64748b" stroke-width="2"/>
 <polygon points="145,50 140,46 140,54" fill="#64748b"/>
@@ -81,7 +82,7 @@ El **Model Context Protocol (MCP)** es un protocolo estandarizado que permite a 
 <text x="444" y="64" text-anchor="middle" fill="#fecaca" font-size="8">Nmap · Nikto · Search</text>
 <!-- Bottom bar -->
 <rect x="5" y="86" width="489" height="24" rx="4" fill="#1e293b" stroke="#334155" stroke-width="1"/>
-<text x="250" y="102" text-anchor="middle" fill="#94a3b8" font-size="8">Tu escribes lenguaje natural → Claude ejecuta las herramientas en Kali real</text>
+<text x="250" y="102" text-anchor="middle" fill="#94a3b8" font-size="8">Tu escribes lenguaje natural → OpenCode ejecuta las herramientas en Kali real</text>
 </svg>
 </div>
 
@@ -106,7 +107,7 @@ Antes de instalar cualquier herramienta, TOMA UNA INSTANTANEA de tu VM. Si algo 
 
 ### 1.2 Verificar o Instalar Kali 2025.3+
 
-Lo primero es asegurarte de tener Kali Linux 2025.3+ (la version que incluye Gemini CLI nativamente).
+Lo primero es asegurarte de tener Kali Linux 2025.3+ (la version que incluye Antigravity CLI nativamente).
 
 ```bash
 # Verificar version actual de Kali
@@ -141,51 +142,56 @@ whoami
 
 ---
 
-## Paso 2: Configurar Gemini CLI
+## Paso 2: Configurar Antigravity CLI
 
-Gemini CLI es un agente de IA conversacional integrado directamente en la terminal de Kali 2025.3+. Puedes escribirle en lenguaje natural y el ejecuta herramientas por ti.
+Antigravity CLI (comando `agy`) es el nuevo agente de IA conversacional de Google, anunciado en Google I/O 2026, que reemplaza a Gemini CLI. Integra modelos Gemini 3.5 Flash (gratuito) y se ejecuta directamente en la terminal de Kali 2025.3+. Puedes escribirle en lenguaje natural y el ejecuta herramientas por ti.
 
 ### 2.1 Instalacion
 
 ```bash
-# Ejecutar Gemini CLI por primera vez
-# Esto detecta que no esta instalado y pregunta si deseas instalarlo
-gemini-cli
+# Instalar Antigravity CLI (disponible en Kali 2025.3+)
+sudo apt update && sudo apt install -y antigravity-cli
 
-# Responde: Y (yes) y presiona Enter
+# Alternativa: instalacion manual via curl
+# curl -fsSL https://antigravity.google/cli/install.sh | bash
 
-# Si el comando falla, primero actualiza:
-sudo apt update && sudo apt upgrade -y
-
-# Luego instala explícitamente:
-sudo apt install -y gemini-cli
+# Verificar instalacion
+agy --version
 ```
 
 ### 2.2 Iniciar Sesion
 
 ```bash
-# Ejecutar Gemini CLI nuevamente
-gemini-cli
+# Ejecutar Antigravity CLI por primera vez
+agy
 ```
 
-Se abrira una pantalla con tres opciones de autenticacion:
+Se abrira una pantalla con opciones de autenticacion:
 
-1. **Iniciar sesion con cuenta de Google** (recomendado para este lab)
-2. Usar una API Key de Gemini
-3. Usar Vertex AI
+1. **Iniciar sesion con cuenta de Google** (recomendado, modelo gratuito Gemini 3.5 Flash)
+2. Usar una API Key
+3. Autenticacion sin conexion (modo offline, modelos locales)
 
 Selecciona la opcion **1** (cuenta de Google). Se abrira un enlace en tu navegador para autenticarte.
 
-**Resultado esperado:** La terminal muestra `✓ Gemini CLI conectado` y un prompt interactivo.
+**Resultado esperado:** La terminal muestra `✓ Antigravity CLI conectado` y un prompt interactivo.
 
-### 2.3 Probar Gemini CLI
+### 2.3 Modo Gratuito — Sin Costo
+
+Antigravity CLI incluye acceso gratuito al modelo **Gemini 3.5 Flash** sin necesidad de API key. Solo necesitas una cuenta de Google. Esto es suficiente para:
+
+- Ejecutar herramientas de pentesting (Nmap, Nikto, searchsploit)
+- Obtener analisis y recomendaciones
+- Generar reportes en lenguaje natural
+
+### 2.4 Probar Antigravity CLI
 
 ```bash
-# Escribe en el prompt de Gemini:
+# Escribe en el prompt de Antigravity:
 realiza un escaneo con Nmap a mi dominio ejemplo.com
 ```
 
-Gemini detectara la herramienta y preguntara:
+Antigravity detectara la herramienta y preguntara:
 ```
 ? Herramienta detectada: nmap
 ? ¿Permitir la ejecucion?
@@ -195,12 +201,12 @@ Gemini detectara la herramienta y preguntara:
 ```
 
 ::: {.callout-warning}
-## Seguridad con Gemini CLI
+## Seguridad con Antigravity CLI
 
 Siempre selecciona **"Una vez" (opcion 1)**. Esto evita que la IA ejecute comandos sin tu supervision. La regla de oro: **cada comando, una confirmacion**.
 :::
 
-**Resultado esperado:** Gemini ejecuta Nmap y muestra los resultados directamente en la terminal.
+**Resultado esperado:** Antigravity ejecuta Nmap y muestra los resultados directamente en la terminal.
 
 ---
 
@@ -262,18 +268,18 @@ Para mejor rendimiento: asigna 8GB+ RAM a la VM y usa modelos como qwen2.5:7b.
 <svg viewBox="0 0 460 90" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:460px;">
 <text x="230" y="14" text-anchor="middle" fill="#f1f5f9" font-size="11" font-weight="bold">Ecosistema de IA en Kali Linux 2025.3+</text>
 <rect x="5" y="24" width="135" height="28" rx="6" fill="#d97706"/>
-<text x="72" y="43" text-anchor="middle" fill="white" font-size="9" font-weight="bold">Gemini CLI (Google)</text>
+<text x="72" y="43" text-anchor="middle" fill="white" font-size="9" font-weight="bold">Antigravity CLI (Google)</text>
 
 <rect x="155" y="24" width="135" height="28" rx="6" fill="#8b5cf6"/>
 <text x="222" y="43" text-anchor="middle" fill="white" font-size="9" font-weight="bold">Ollama (Local)</text>
 
 <rect x="305" y="24" width="150" height="28" rx="6" fill="#10b981"/>
-<text x="380" y="43" text-anchor="middle" fill="white" font-size="9" font-weight="bold">MCP Server (Claude)</text>
+<text x="380" y="43" text-anchor="middle" fill="white" font-size="9" font-weight="bold">MCP Server (OpenCode)</text>
 
 <!-- Sub-info -->
 <text x="115" y="68" text-anchor="middle" fill="#94a3b8" font-size="7">Agente en terminal</text>
 <text x="222" y="68" text-anchor="middle" fill="#94a3b8" font-size="7">Modelos locales·Privacidad</text>
-<text x="380" y="68" text-anchor="middle" fill="#94a3b8" font-size="7">Claude ↔ Kali bridge</text>
+<text x="380" y="68" text-anchor="middle" fill="#94a3b8" font-size="7">OpenCode ↔ Kali bridge</text>
 </svg>
 </div>
 
@@ -281,7 +287,7 @@ Para mejor rendimiento: asigna 8GB+ RAM a la VM y usa modelos como qwen2.5:7b.
 
 ## Paso 4: Configurar SSH entre Host y VM Kali
 
-Para que Claude Desktop (en tu maquina host) pueda conectarse a Kali, necesitas una conexion SSH segura y automatica (sin contraseña).
+Para que OpenCode (en tu maquina host) pueda conectarse a Kali, necesitas una conexion SSH segura y automatica (sin contraseña).
 
 ### 4.1 Configurar Red en VirtualBox
 
@@ -388,12 +394,12 @@ exit
 
 ## Paso 5: Instalar MCP Kali Server
 
-El MCP Kali Server es el puente que permite a Claude comunicarse con las herramientas de Kali. El paquete `mcp-kali-server` instala **dos binarios** que trabajan juntos:
+El MCP Kali Server es el puente que permite a OpenCode comunicarse con las herramientas de Kali. El paquete `mcp-kali-server` instala **dos binarios** que trabajan juntos:
 
 | Binario | Rol | Descripcion |
 |---------|-----|-------------|
 | `kali-server-mcp` | API REST | Servidor Flask que expone herramientas Kali en el puerto 5000 |
-| `mcp-server` | Bridge MCP | Cliente stdio que se conecta al API y habla MCP con Claude |
+| `mcp-server` | Bridge MCP | Cliente stdio que se conecta al API y habla MCP con OpenCode |
 
 ### 5.1 Instalar en Kali
 
@@ -423,7 +429,7 @@ kali-server-mcp
 
 **Terminal 2 — Bridge MCP (mcp-server):**
 ```bash
-# Inicia el bridge que conecta Claude con el API de Kali
+# Inicia el bridge que conecta OpenCode con el API de Kali
 mcp-server
 ```
 
@@ -458,23 +464,43 @@ mcp-gu-server      # en vez de mcp-server
 
 ---
 
-## Paso 6: Configurar Claude Desktop
+## Paso 6: Configurar OpenCode (Modelos Gratuitos)
 
-### 6.1 Instalar Claude Desktop
+OpenCode es un agente de IA coding **open source** con modelos gratuitos incluidos y soporte nativo para MCP. A diferencia de Claude Desktop (que requiere suscripcion), OpenCode te permite trabajar sin costo alguno.
 
-1. Ve a [claude.ai/download](https://claude.ai/download)
-2. Descarga e instala **Claude Desktop** para tu sistema operativo
-3. Inicia sesion con tu cuenta de Anthropic
+### 6.1 Instalar OpenCode
 
-### 6.2 Configurar MCP en Claude Desktop
+```bash
+# En tu maquina HOST (Windows/macOS/Linux):
+# Usa el instalador oficial
+curl -fsSL https://opencode.ai/install | bash
 
-1. Abre **Claude Desktop**
-2. Ve a **Configuracion > Desarrollador** (o Settings > Developer)
-3. Haz clic en **Editar Configuracion** (Edit Config)
-4. Se abrira el archivo `claude_desktop_config.json`
+# Verificar instalacion
+opencode --version
+```
 
-Pega la siguiente configuracion, ajustando los valores para tu entorno:
+OpenCode soporta **75+ proveedores de LLM** e incluye modelos gratuitos de fabrica. Tambien puedes conectarlo a Ollama para usar modelos locales 100% gratis.
 
+### 6.2 Configurar MCP en OpenCode
+
+OpenCode soporta MCP de forma nativa, igual que Claude Desktop. La configuracion se hace en el archivo `opencode.json` de tu proyecto:
+
+```json
+{
+  "mcpServers": {
+    "kali-server": {
+      "command": "/usr/bin/ssh",
+      "args": [
+        "-T",
+        "USUARIO@IP_DE_KALI",
+        "mcp-server"
+      ]
+    }
+  }
+}
+```
+
+**En Windows** (ajusta la ruta de SSH):
 ```json
 {
   "mcpServers": {
@@ -494,48 +520,30 @@ Pega la siguiente configuracion, ajustando los valores para tu entorno:
 
 | Parametro | Tu valor |
 |-----------|----------|
-| `command` | Ruta completa a `ssh.exe` (Windows) o `ssh` (macOS/Linux) |
+| `command` | Ruta completa a `ssh` (ver `which ssh` en tu sistema) |
 | `USUARIO` | Tu usuario de Kali (ej: `kali`, `root`) |
 | `IP_DE_KALI` | La IP que obtuviste con `ip addr` en Kali |
 
-**En macOS/Linux** (la ruta es diferente):
+::: {.callout-tip}
+## Alternativa: Claude Desktop (si tienes suscripcion)
 
-```json
-{
-  "mcpServers": {
-    "kali-server": {
-      "command": "/usr/bin/ssh",
-      "args": [
-        "-T",
-        "kali@192.168.1.100",
-        "mcp-server"
-      ]
-    }
-  }
-}
-```
+Si ya tienes una suscripcion a Claude, puedes usar Claude Desktop en lugar de OpenCode. La configuracion MCP es la misma, solo cambia el archivo de configuracion:
 
-::: {.callout-warning}
-## Windows: Escapado de Barras
-
-En Windows, las rutas deben usar DOBLE barra invertida (`\\`) porque JSON requiere escapado:
-
-✅ `"C:\\Program Files\\Git\\usr\\bin\\ssh.exe"`
-❌ `"C:\Program Files\Git\usr\bin\ssh.exe"`
-
-**Como encontrar la ruta exacta**:
-1. Abre Git Bash
-2. Ejecuta: `which ssh`
-3. Copia la ruta y reemplaza cada `\` por `\\`
+1. Ve a [claude.ai/download](https://claude.ai/download) y descarga Claude Desktop
+2. Configuracion > Desarrollador > Editar Configuracion
+3. Pega el mismo JSON de `mcpServers` en `claude_desktop_config.json`
 :::
 
 ### 6.3 Verificar la Conexion
 
-1. **Cierra Claude Desktop completamente** (incluyendo desde el administrador de tareas en Windows)
-2. Vuelve a abrir Claude Desktop
-3. Ve a **Configuracion > Desarrollador**
+1. **Guarda** el archivo `opencode.json`
+2. Ejecuta OpenCode en tu proyecto:
+   ```bash
+   opencode
+   ```
+3. OpenCode detectara automaticamente los servidores MCP configurados
 
-**Resultado esperado:** Deberias ver `kali-server` en la lista con estado **"En ejecucion"**.
+**Resultado esperado:** OpenCode muestra los servidores MCP conectados y puedes empezar a usar las herramientas de Kali desde el chat.
 
 <div class="compact-diagram" style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:14px 18px;margin:14px 0;">
 <svg viewBox="0 0 520 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:520px;">
@@ -561,31 +569,31 @@ En Windows, las rutas deben usar DOBLE barra invertida (`\\`) porque JSON requie
 <!-- Arrow right -->
 <line x1="348" y1="70" x2="378" y2="70" stroke="#64748b" stroke-width="2"/>
 <polygon points="378,70 373,66 373,74" fill="#64748b"/>
-<!-- Claude Desktop -->
+<!-- OpenCode Host (en PC local) -->
 <rect x="381" y="48" width="130" height="42" rx="8" fill="#d97706"/>
-<text x="446" y="64" text-anchor="middle" fill="white" font-size="9" font-weight="bold">CLAUDE DESKTOP</text>
+<text x="446" y="64" text-anchor="middle" fill="white" font-size="9" font-weight="bold">OPENCODE</text>
 <text x="446" y="78" text-anchor="middle" fill="#fde68a" font-size="7">Tu PC (Windows/Mac/Linux)</text>
 <!-- Warning strip -->
 <rect x="5" y="120" width="506" height="24" rx="4" fill="#ef4444"/>
-<text x="258" y="136" text-anchor="middle" fill="white" font-size="8" font-weight="bold">ORDEN: 1° kali-server-mcp  →  2° mcp-server  →  3° Claude conecta por SSH</text>
+<text x="258" y="136" text-anchor="middle" fill="white" font-size="8" font-weight="bold">ORDEN: 1° kali-server-mcp  →  2° mcp-server  →  3° OpenCode conecta por SSH</text>
 </svg>
 </div>
 
 ---
 
-## Paso 7: Ejecutar Herramientas desde Claude
+## Paso 7: Ejecutar Herramientas desde OpenCode
 
-Una vez configurado el bridge, ya no necesitas tocar la terminal de Kali. Puedes interactuar directamente con Claude en lenguaje natural.
+Una vez configurado el bridge, ya no necesitas tocar la terminal de Kali. Puedes interactuar directamente con OpenCode en lenguaje natural, usando **modelos gratuitos** (Gemini 3.5 Flash via Antigravity CLI o modelos locales via Ollama).
 
 ### 7.1 Escaneo de Red
 
-Escribe en el chat de Claude Desktop:
+Escribe en el chat de OpenCode:
 
 ```bash
 Realiza un escaneo de Nmap al dominio ejemplo.com
 ```
 
-Claude buscara la herramienta en el servidor MCP, ejecutara el comando en Kali y te devolvera:
+OpenCode buscara la herramienta en el servidor MCP, ejecutara el comando en Kali y te devolvera:
 
 - Puertos abiertos encontrados
 - Servicios y versiones detectadas
@@ -621,16 +629,16 @@ y finalmente genera un reporte en markdown con los hallazgos priorizados por sev
 
 | Problema | Causa | Solucion |
 |----------|-------|----------|
-| Claude no encuentra `ssh` en Windows | Ruta incorrecta en config.json | Usa la ruta completa de Git Bash: `C:\\Program Files\\Git\\usr\\bin\\ssh.exe` |
+| OpenCode no encuentra `ssh` en Windows | Ruta incorrecta en config.json | Usa la ruta completa de Git Bash: `C:\\Program Files\\Git\\usr\\bin\\ssh.exe` |
 | `mcp-server` muestra "Connection refused" | `kali-server-mcp` no esta corriendo | Inicia `kali-server-mcp` PRIMERO en otra terminal, luego `mcp-server` |
 | `kali-server-mcp` no se inicia | Puerto 5000 ocupado | `ss -tlnp \| grep 5000` para ver que proceso lo ocupa, o usa `--port 5001` |
 | SSH muestra "Connection refused" | SSH no esta corriendo en Kali | `sudo systemctl start ssh` y `sudo systemctl status ssh` |
 | No se ve la IP de Kali en la red | Red en NAT en vez de Bridge | Cambiar a Adaptador Puente en VirtualBox |
-| Claude no reconoce el MCP server | Claude no se cerro completamente | Cerrar desde Task Manager/Activity Monitor y reabrir |
+| OpenCode no reconoce el MCP server | archivo `opencode.json` mal configurado | Verifica la sintaxis JSON y las rutas SSH |
 | Error "Permission denied" al conectar SSH | Clave publica no copiada | Re-ejecutar `ssh-copy-id` (si usaste clave dedicada, incluye `-i ~/.ssh/kali_key.pub`) |
 | Comando `mcp-kali-server` no existe | Nombre incorrecto del binario | El comando correcto es `kali-server-mcp` (no `mcp-kali-server`) |
 | Paquete `mcp-kali-server` no encontrado | Version de Kali anterior | `sudo apt install -y mcp-gu-server` como alternativa |
-| Gemini CLI falla al conectar | Firewall o sin internet | Verificar conectividad desde Kali con `ping -c 3 google.com` |
+| Antigravity CLI falla al conectar | Firewall o sin internet | Verificar conectividad desde Kali con `ping -c 3 google.com` |
 | Ollama muy lento en VM | RAM insuficiente | Asignar 8GB+ RAM a la VM. Con 4GB solo usa `llama3.2:1b` |
 
 ---
@@ -638,7 +646,7 @@ y finalmente genera un reporte en markdown con los hallazgos priorizados por sev
 ## Desafio Extra
 
 1. **Automatiza el inicio**: Crea un script que inicie `kali-server-mcp` y `mcp-server` automaticamente al arrancar Kali
-2. **Pipeline multi-herramienta**: Haz que Claude ejecute: Nmap → Nikto → Searchsploit → Reporte. Documenta el resultado
+2. **Pipeline multi-herramienta**: Haz que OpenCode ejecute: Nmap → Nikto → Searchsploit → Reporte. Documenta el resultado
 3. **Kali + Open WebUI**: Configura Open WebUI en Kali (usando Docker) para tener interfaz grafica local a tus modelos Ollama
 4. **Scripting MCP**: Escribe un script que automatice la configuracion completa de SSH + MCP en un solo comando
 
@@ -647,7 +655,9 @@ y finalmente genera un reporte en markdown con los hallazgos priorizados por sev
 ## Recursos
 
 - Kali Linux: https://www.kali.org
-- Claude Desktop: https://claude.ai/download
+- OpenCode: https://opencode.ai
+- Antigravity CLI: https://antigravity.google
+- Claude Desktop (alternativa): https://claude.ai/download
 - MCP Specification: https://modelcontextprotocol.io
 - Ollama: https://ollama.com
 - S4vi - Kali AI Tutorial: https://www.youtube.com/@S4viOnSecurity
@@ -655,9 +665,10 @@ y finalmente genera un reporte en markdown con los hallazgos priorizados por sev
 
 ---
 
-*Lab Anexo: Kali Linux MCP — Claude + Kali Integration*
+*Lab Anexo: Kali Linux MCP — OpenCode + Kali Integration*
 *Duracion: 2 horas*
 *Nivel: Intermedio-Avanzado*
 *Licencia: CC BY-SA 4.0*
+*Modelos gratuitos: Gemini 3.5 Flash (Antigravity CLI) + Ollama (local)*
 *ADVERTENCIA: Solo para uso educativo y etico*
 
