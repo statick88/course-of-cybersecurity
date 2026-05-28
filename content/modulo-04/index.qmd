@@ -437,7 +437,7 @@ Completa primero el lab teorico de OWASP LLM Security (arriba) para entender los
 
 ### Lab 2: Kali Linux + OpenCode via MCP
 
-**Objetivo**: Conectar OpenCode (o Claude Desktop) con Kali Linux a traves del Model Context Protocol (MCP) para ejecutar herramientas de pentesting desde lenguaje natural usando modelos gratuitos.
+**Objetivo**: Conectar OpenCode con Kali Linux a traves del Model Context Protocol (MCP) para ejecutar herramientas de pentesting desde lenguaje natural usando modelos gratuitos.
 
 **Habilidades**: Kali Linux, SSH, MCP, OpenCode, Antigravity CLI, automatizacion de pentesting.
 

@@ -7,7 +7,7 @@ description: "Configura el Model Context Protocol (MCP) entre OpenCode (modelos 
 
 ## Objetivo del Laboratorio {#sec-lab-anexo-kali-mcp}
 
-En este laboratorio vas a **conectar OpenCode (o Claude Desktop) con Kali Linux** a traves del Model Context Protocol (MCP), permitiendote ejecutar herramientas de pentesting escribiendo lenguaje natural. Este ejercicio te permitira:
+En este laboratorio vas a **conectar OpenCode con Kali Linux** a traves del Model Context Protocol (MCP), permitiendote ejecutar herramientas de pentesting escribiendo lenguaje natural. Este ejercicio te permitira:
 
 - Configurar Kali Linux 2025.3+ como entorno de pentesting aumentado con IA
 - Instalar Antigravity CLI (integrado en Kali 2025.3+) como agente conversacional en terminal
@@ -31,7 +31,7 @@ En este laboratorio vas a **conectar OpenCode (o Claude Desktop) con Kali Linux*
 - **Host**: Windows, macOS o Linux con 8GB+ RAM
 - **VirtualBox** o **VMware** (licencia gratuita)
 - **Kali Linux 2025.3+** — VM con 4GB+ RAM, 2+ cores, 50GB+ disco
-- **Claude Desktop** (descargar de claude.ai/download) o OpenCode
+- **OpenCode** (descargar de opencode.ai)
 - **Git Bash** (solo Windows) para el cliente SSH
 - CPU con virtualizacion habilitada (VT-x/AMD-V)
 
@@ -466,7 +466,7 @@ mcp-gu-server      # en vez de mcp-server
 
 ## Paso 6: Configurar OpenCode (Modelos Gratuitos)
 
-OpenCode es un agente de IA coding **open source** con modelos gratuitos incluidos y soporte nativo para MCP. A diferencia de Claude Desktop (que requiere suscripcion), OpenCode te permite trabajar sin costo alguno.
+OpenCode es un agente de IA coding **open source** con modelos gratuitos incluidos y soporte nativo para MCP. OpenCode te permite trabajar sin costo alguno, usando modelos gratuitos de fabrica o conectandote a Ollama para inferencia local.
 
 ### 6.1 Instalar OpenCode
 
@@ -483,7 +483,7 @@ OpenCode soporta **75+ proveedores de LLM** e incluye modelos gratuitos de fabri
 
 ### 6.2 Configurar MCP en OpenCode
 
-OpenCode soporta MCP de forma nativa, igual que Claude Desktop. La configuracion se hace en el archivo `opencode.json` de tu proyecto:
+OpenCode soporta MCP de forma nativa. La configuracion se hace en el archivo `opencode.json` de tu proyecto:
 
 ```json
 {
@@ -523,16 +523,6 @@ OpenCode soporta MCP de forma nativa, igual que Claude Desktop. La configuracion
 | `command` | Ruta completa a `ssh` (ver `which ssh` en tu sistema) |
 | `USUARIO` | Tu usuario de Kali (ej: `kali`, `root`) |
 | `IP_DE_KALI` | La IP que obtuviste con `ip addr` en Kali |
-
-::: {.callout-tip}
-## Alternativa: Claude Desktop (si tienes suscripcion)
-
-Si ya tienes una suscripcion a Claude, puedes usar Claude Desktop en lugar de OpenCode. La configuracion MCP es la misma, solo cambia el archivo de configuracion:
-
-1. Ve a [claude.ai/download](https://claude.ai/download) y descarga Claude Desktop
-2. Configuracion > Desarrollador > Editar Configuracion
-3. Pega el mismo JSON de `mcpServers` en `claude_desktop_config.json`
-:::
 
 ### 6.3 Verificar la Conexion
 
@@ -657,7 +647,6 @@ y finalmente genera un reporte en markdown con los hallazgos priorizados por sev
 - Kali Linux: https://www.kali.org
 - OpenCode: https://opencode.ai
 - Antigravity CLI: https://antigravity.google
-- Claude Desktop (alternativa): https://claude.ai/download
 - MCP Specification: https://modelcontextprotocol.io
 - Ollama: https://ollama.com
 - S4vi - Kali AI Tutorial: https://www.youtube.com/@S4viOnSecurity
