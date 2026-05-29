@@ -1,0 +1,805 @@
+---
+title: "Minicurso: OpenSSL"
+module: "minicurso-openssl"
+type: "minicurso"
+description: "Tutorial completo de OpenSSL para ciberseguridad"
+---
+
+
+## ¿Qué es OpenSSL?
+
+OpenSSL es una biblioteca de criptografía de código abierto que implementa los protocolos SSL (Secure Sockets Layer) y TLS (Transport Layer Security). Proporciona herramientas para generar claves, crear certificados, cifrar/descifrar datos, y realizar operaciones criptográficas.
+
+El comando `openssl` es la interfaz de línea de comandos de esta biblioteca y ofrece cientos de subcomandos para diferentes operaciones criptográficas. Es la herramienta estándar de la industria para gestión de certificados y criptografía.
+
+En ciberseguridad, OpenSSL es esencial para crear y verificar certificados TLS, analizar conexiones seguras, generar claves criptográficas, cifrar archivos sensibles, crear autoridades certificadoras privadas, y diagnosticar problemas de seguridad en comunicaciones.
+
+## ¿Por qué aprenderlo?
+
+- **Certificados TLS**: Crear, verificar y diagnosticar certificados
+- **Criptografía**: Generar claves, cifrar datos, crear hashes
+- **Debugging**: Analizar handshakes TLS y encontrar problemas
+- **PKI**: Construir infraestructura de clave pública completa
+- **Universal**: Disponible en todos los sistemas, estándar de la industria
+
+## Instalación
+
+### macOS
+
+```bash
+# OpenSSL viene preinstalado (versión LibreSSL en macOS antiguo)
+openssl version
+# Esperado: LibreSSL x.x.x o OpenSSL 3.x.x
+
+# Instalar OpenSSL moderno con Homebrew
+brew install openssl@3
+
+# Usar la versión de Homebrew
+/opt/homebrew/opt/openssl@3/bin/openssl version
+# Esperado: OpenSSL 3.x.x
+```
+
+### Linux (Ubuntu/Debian)
+
+```bash
+# Generalmente preinstalado
+openssl version
+# Esperado: OpenSSL 3.x.x
+
+# Si no está instalado:
+sudo apt update
+sudo apt install -y openssl
+
+# Verificar
+openssl version -a
+# Esperado: versión, fecha de build, opciones compiladas
+```
+
+### Windows
+
+```powershell
+# Descargar desde https://slproweb.com/products/Win32OpenSSL.html
+# O con Chocolatey:
+choco install openssl
+
+# Verificar
+openssl version
+```
+
+## Nivel Básico
+
+### Conceptos Fundamentales
+
+**Clave privada**: Secreto que nunca se comparte. Usada para firmar y descifrar.
+
+**Clave pública**: Se distribuye libremente. Usada para verificar firmas y cifrar.
+
+**CSR (Certificate Signing Request)**: Solicitud de certificado que envías a una CA.
+
+**Certificado**: Documento que vincula una clave pública con una identidad, firmado por una CA.
+
+**CA (Certificate Authority)**: Entidad que firma certificados y los hace confiables.
+
+### Generar claves
+
+```bash
+# Generar clave RSA 4096 bits
+openssl genrsa -out private.key 4096
+# Esperado:
+# Generating RSA private key, 4096 bit long modulus
+# ....................++++
+# .....................................................++++
+
+# Extraer clave pública
+openssl rsa -in private.key -pubout -out public.key
+# Esperado: writing RSA key
+
+# Generar clave Ed25519 (moderna, recomendada)
+openssl genpkey -algorithm Ed25519 -out ed25519-private.key
+
+# Extraer clave pública Ed25519
+openssl pkey -in ed25519-private.key -pubout -out ed25519-public.key
+
+# Verificar clave
+openssl rsa -in private.key -check -noout
+# Esperado: RSA key ok
+```
+
+::: {.callout-warning}
+## Seguridad de Claves
+Protege tus claves privadas con `chmod 600`. Una clave privada expuesta = identidad comprometida.
+:::
+
+```bash
+# Proteger clave con passphrase
+openssl genrsa -aes256 -out encrypted.key 4096
+# Te pedirá una passphrase
+
+# Usar clave protegida
+openssl rsa -in encrypted.key -out decrypted.key
+# Te pedirá la passphrase
+```
+
+### Crear CSR (Certificate Signing Request)
+
+```bash
+# Crear CSR con clave existente
+openssl req -new -key private.key -out request.csr
+
+# Te pedirá información:
+# Country Name (2 letter code) []: EC
+# State or Province Name []: Pichincha
+# Locality Name []: Quito
+# Organization Name []: Mi Empresa
+# Organizational Unit Name []: IT Security
+# Common Name []: mi-empresa.com
+# Email Address []: admin@mi-empresa.com
+
+# Crear CSR en un solo comando (non-interactive)
+openssl req -new -key private.key -out request.csr \
+    -subj "/C=EC/ST=Pichincha/L=Quito/O=Mi Empresa/OU=IT Security/CN=mi-empresa.com"
+
+# Verificar CSR
+openssl req -in request.csr -text -noout
+# Esperado: detalles del CSR con los datos ingresados
+```
+
+### Certificado auto-firmado
+
+```bash
+# Generar clave y certificado auto-firmado en un paso
+openssl req -x509 -newkey rsa:4096 -nodes \
+    -keyout server.key \
+    -out server.crt \
+    -days 365 \
+    -subj "/CN=localhost"
+
+# Verificar certificado
+openssl x509 -in server.crt -text -noout
+# Esperado:
+# Certificate:
+#     Data:
+#         Version: 3 (0x2)
+#         Serial Number: ...
+#         Issuer: CN = localhost
+#         Validity
+#             Not Before: May 21 00:00:00 2026 GMT
+#             Not After : May 21 00:00:00 2027 GMT
+#         Subject: CN = localhost
+```
+
+### Cifrar y descifrar archivos
+
+```bash
+# Cifrar archivo con AES-256-CBC
+openssl enc -aes-256-cbc -salt -in secreto.txt -out secreto.enc
+# Te pedirá contraseña
+
+# Descifrar archivo
+openssl enc -aes-256-cbc -d -in secreto.enc -out secreto-dec.txt
+# Te pedirá la misma contraseña
+
+# Verificar
+diff secreto.txt secreto-dec.txt
+# Esperado: sin diferencias
+
+# Cifrar con clave en lugar de contraseña
+openssl enc -aes-256-cbc -in secreto.txt -out secreto.enc \
+    -K $(openssl rand -hex 32) \
+    -iv $(openssl rand -hex 16)
+```
+
+### Comandos Esenciales
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `genrsa` | Generar clave RSA | `openssl genrsa -out key.pem 4096` |
+| `genpkey` | Generar clave (cualquier tipo) | `openssl genpkey -algorithm Ed25519` |
+| `req` | CSR o certificado auto-firmado | `openssl req -x509 -new ...` |
+| `x509` | Gestionar certificados | `openssl x509 -in cert.crt -text` |
+| `rsa` | Gestionar claves RSA | `openssl rsa -in key.pem -check` |
+| `pkey` | Gestionar claves | `openssl pkey -in key.pem -pubout` |
+| `enc` | Cifrar/descifrar | `openssl enc -aes-256-cbc -d ...` |
+| `dgst` | Calcular hashes | `openssl dgst -sha256 file` |
+| `rand` | Generar datos aleatorios | `openssl rand -hex 32` |
+| `s_client` | Cliente TLS | `openssl s_client -connect host:443` |
+| `verify` | Verificar certificado | `openssl verify cert.crt` |
+| `pkcs12` | PKCS#12 (PFX) | `openssl pkcs12 -export ...` |
+
+### Generar hashes
+
+```bash
+# SHA-256 de un archivo
+openssl dgst -sha256 archivo.txt
+# Esperado: SHA256(archivo.txt)= abc123...
+
+# SHA-512
+openssl dgst -sha512 archivo.txt
+
+# MD5 (NO usar para seguridad, solo verificación)
+openssl dgst -md5 archivo.txt
+
+# Generar hash de contraseña
+openssl passwd -6 "mi-password"
+# Esperado: $6$rounds=656000$salt$hash...
+
+# Verificar contraseña contra hash
+openssl passwd -6 -salt "$(echo 'hash' | cut -d'$' -f3)" "mi-password"
+```
+
+### Generar datos aleatorios
+
+```bash
+# Bytes aleatorios en hex
+openssl rand -hex 32
+# Esperado: 64 caracteres hexadecimales
+
+# Bytes aleatorios en base64
+openssl rand -base64 32
+# Esperado: string base64
+
+# Generar contraseña aleatoria
+openssl rand -base64 24 | tr -d '/+=' | head -c 20
+# Esperado: 20 caracteres aleatorios
+
+# Generar archivo de datos aleatorios
+openssl rand -out random.bin 1024
+```
+
+### Ejercicio 1: Crear certificado auto-firmado para desarrollo
+
+**Objetivo:** Generar un certificado TLS para un servidor de desarrollo local.
+
+**Paso 1:** Generar clave y certificado
+
+```bash
+# Crear directorio
+mkdir -p ~/certs && cd ~/certs
+
+# Generar clave y certificado
+openssl req -x509 -newkey rsa:4096 -nodes \
+    -keyout dev-server.key \
+    -out dev-server.crt \
+    -days 365 \
+    -subj "/C=EC/ST=Pichincha/L=Quito/O=Dev Team/CN=localhost" \
+    -addext "subjectAltName=DNS:localhost,DNS:*.localhost,IP:127.0.0.1"
+
+# Verificar
+openssl x509 -in dev-server.crt -text -noout | head -20
+# Esperado: certificado con SAN (Subject Alternative Name)
+```
+
+**Paso 2:** Verificar el certificado
+
+```bash
+# Verificar fechas
+openssl x509 -in dev-server.crt -noout -dates
+# Esperado:
+# notBefore=May 21 00:00:00 2026 GMT
+# notAfter=May 21 00:00:00 2027 GMT
+
+# Verificar subject
+openssl x509 -in dev-server.crt -noout -subject
+# Esperado: subject=C = EC, ST = Pichincha, L = Quito, O = Dev Team, CN = localhost
+
+# Verificar fingerprint
+openssl x509 -in dev-server.crt -noout -fingerprint -sha256
+# Esperado: sha256 Fingerprint=AB:CD:EF:...
+```
+
+## Nivel Intermedio
+
+### Cadenas de certificados
+
+```bash
+# Verificar cadena de un certificado
+openssl verify -CAfile ca-chain.crt server.crt
+# Esperado: server.crt: OK
+
+# Ver cadena completa de un servidor
+echo | openssl s_client -connect example.com:443 -showcerts 2>/dev/null | \
+    openssl x509 -noout -issuer -subject
+
+# Verificar cadena completa
+openssl s_client -connect example.com:443 -showcerts </dev/null 2>/dev/null | \
+    awk '/BEGIN CERTIFICATE/,/END CERTIFICATE/' > chain.pem
+
+# Verificar
+openssl verify -CAfile /etc/ssl/certs/ca-certificates.crt chain.pem
+```
+
+### PKCS#12 (PFX)
+
+```bash
+# Crear archivo PKCS#12 (para importar en navegadores/servidores)
+openssl pkcs12 -export \
+    -in server.crt \
+    -inkey server.key \
+    -certfile ca-chain.crt \
+    -out server.p12 \
+    -name "mi-servidor"
+
+# Te pedirá contraseña de exportación
+
+# Extraer desde PKCS#12
+openssl pkcs12 -in server.p12 -nocerts -out extracted.key -nodes
+openssl pkcs12 -in server.p12 -clcerts -nokeys -out extracted.crt
+
+# Verificar contenido
+openssl pkcs12 -in server.p12 -info -nokeys
+```
+
+### S/MIME (Email cifrado)
+
+```bash
+# Firmar email
+openssl smime -sign \
+    -in email.txt \
+    -out email-signed.txt \
+    -signer cert.crt \
+    -inkey private.key \
+    -certfile ca-chain.crt
+
+# Cifrar email
+openssl smime -encrypt \
+    -in email.txt \
+    -out email-encrypted.txt \
+    recipient-cert.crt
+
+# Descifrar email
+openssl smime -decrypt \
+    -in email-encrypted.txt \
+    -inkey private.key \
+    -cert cert.crt
+```
+
+### Analizar conexión TLS
+
+```bash
+# Conectar a servidor y ver certificado
+openssl s_client -connect example.com:443 </dev/null 2>/dev/null | \
+    openssl x509 -noout -subject -issuer -dates
+
+# Ver cadena completa
+openssl s_client -connect example.com:443 -showcerts </dev/null
+
+# Ver protocolo y cipher negociado
+openssl s_client -connect example.com:443 </dev/null 2>/dev/null | \
+    grep -E "Protocol|Cipher"
+# Esperado:
+# Protocol  : TLSv1.3
+# Cipher    : TLS_AES_256_GCM_SHA384
+
+# Verificar con SNI (Server Name Indication)
+openssl s_client -connect example.com:443 -servername example.com </dev/null
+```
+
+### Ejercicio 2: Verificar seguridad de un sitio web
+
+**Objetivo:** Analizar la configuración TLS de un sitio web.
+
+**Paso 1:** Verificar protocolo y cipher
+
+```bash
+# Probar TLS 1.3
+openssl s_client -connect example.com:443 -tls1_3 </dev/null 2>&1 | \
+    grep -E "Protocol|Cipher"
+# Esperado: TLSv1.3 con cipher fuerte
+
+# Probar TLS 1.2
+openssl s_client -connect example.com:443 -tls1_2 </dev/null 2>&1 | \
+    grep -E "Protocol|Cipher"
+
+# Probar TLS 1.1 (debería fallar)
+openssl s_client -connect example.com:443 -tls1_1 </dev/null 2>&1 | \
+    grep -E "error|Protocol"
+# Esperado: error (TLS 1.1 está deprecado)
+```
+
+**Paso 2:** Verificar certificado
+
+```bash
+# Obtener y verificar certificado
+echo | openssl s_client -connect example.com:443 2>/dev/null | \
+    openssl x509 -noout -text | grep -E "Issuer|Subject|Not Before|Not After|DNS:"
+
+# Verificar fecha de expiración
+echo | openssl s_client -connect example.com:443 2>/dev/null | \
+    openssl x509 -noout -enddate
+# Esperado: notAfter=Dec 31 23:59:59 2026 GMT
+
+# Calcular días hasta expiración
+end_date=$(echo | openssl s_client -connect example.com:443 2>/dev/null | \
+    openssl x509 -noout -enddate | cut -d= -f2)
+end_epoch=$(date -d "$end_date" +%s)
+now_epoch=$(date +%s)
+days_left=$(( (end_epoch - now_epoch) / 86400 ))
+echo "Días hasta expiración: $days_left"
+```
+
+## Nivel Avanzado
+
+### Crear tu propia CA (Certificate Authority)
+
+```bash
+#!/bin/bash
+# create-ca.sh - Crear una CA privada
+
+set -euo pipefail
+
+CA_DIR="my-ca"
+CA_KEY="$CA_DIR/ca.key"
+CA_CERT="$CA_DIR/ca.crt"
+
+# Crear directorio
+mkdir -p "$CA_DIR"
+cd "$CA_DIR"
+
+echo "=== Creando Certificate Authority ==="
+
+# 1. Generar clave de la CA
+openssl genrsa -aes256 -out ca.key -passout pass:ca-password 4096
+echo "[+] Clave CA generada"
+
+# 2. Crear certificado de la CA (válido 10 años)
+openssl req -new -x509 -sha256 -days 3650 \
+    -key ca.key \
+    -passin pass:ca-password \
+    -out ca.crt \
+    -subj "/C=EC/ST=Pichincha/L=Quito/O=My Private CA/CN=My Private CA"
+echo "[+] Certificado CA generado"
+
+# 3. Configurar archivos de la CA
+mkdir -p certs newcerts crl
+touch index.txt
+echo "1000" > serial
+
+# 4. Crear configuración de la CA
+cat > openssl.cnf << 'EOF'
+[ca]
+default_ca = CA_default
+
+[CA_default]
+dir               = .
+certs             = $dir/certs
+new_certs_dir     = $dir/newcerts
+database          = $dir/index.txt
+serial            = $dir/serial
+certificate       = $dir/ca.crt
+private_key       = $dir/ca.key
+default_days      = 365
+default_md        = sha256
+policy            = policy_anything
+copy_extensions   = copy
+
+[policy_anything]
+countryName             = optional
+stateOrProvinceName     = optional
+localityName            = optional
+organizationName        = optional
+organizationalUnitName  = optional
+commonName              = supplied
+emailAddress            = optional
+
+[req]
+default_bits       = 4096
+default_md         = sha256
+distinguished_name = req_distinguished_name
+x509_extensions    = v3_ca
+
+[req_distinguished_name]
+CN = Common Name
+
+[v3_ca]
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always,issuer
+basicConstraints = critical, CA:true
+keyUsage = critical, digitalSignature, cRLSign, keyCertSign
+
+[server_cert]
+basicConstraints = CA:FALSE
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid,issuer
+keyUsage = critical, digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = localhost
+DNS.2 = *.example.com
+EOF
+
+echo "[+] CA configurada en $CA_DIR/"
+echo "[+] Certificado: $CA_CERT"
+echo "[+] Clave: $CA_KEY"
+```
+
+### Firmar certificados con tu CA
+
+```bash
+# 1. Generar clave para el servidor
+openssl genrsa -out server.key 4096
+
+# 2. Crear CSR
+openssl req -new -key server.key -out server.csr \
+    -subj "/CN=mi-servidor.example.com"
+
+# 3. Firmar con la CA
+openssl ca -config my-ca/openssl.cnf \
+    -passin pass:ca-password \
+    -extensions server_cert \
+    -days 365 \
+    -notext \
+    -md sha256 \
+    -in server.csr \
+    -out server.crt \
+    -batch
+
+# 4. Verificar certificado firmado
+openssl verify -CAfile my-ca/ca.crt server.crt
+# Esperado: server.crt: OK
+
+# 5. Verificar detalles
+openssl x509 -in server.crt -text -noout | grep -E "Issuer|Subject|DNS:"
+# Esperado:
+# Issuer: CN = My Private CA
+# Subject: CN = mi-servidor.example.com
+# DNS:localhost, DNS:*.example.com
+```
+
+### OCSP y CRL
+
+```bash
+# Crear CRL (Certificate Revocation List)
+openssl ca -config my-ca/openssl.cnf \
+    -passin pass:ca-password \
+    -gencrl \
+    -out my-ca/crl.pem
+
+# Verificar CRL
+openssl crl -in my-ca/crl.pem -text -noout
+
+# Revocar un certificado
+openssl ca -config my-ca/openssl.cnf \
+    -passin pass:ca-password \
+    -revoke server.crt
+
+# Regenerar CRL después de revocar
+openssl ca -config my-ca/openssl.cnf \
+    -passin pass:ca-password \
+    -gencrl \
+    -out my-ca/crl.pem
+
+# Verificar que el certificado fue revocado
+openssl verify -CAfile my-ca/ca.crt -CRLfile my-ca/crl.pem -crl_check server.crt
+# Esperado: error (certificate revoked)
+```
+
+### TLS Handshake Analysis
+
+```bash
+# Ver handshake completo
+openssl s_client -connect example.com:443 -state -debug </dev/null 2>&1 | head -50
+
+# Ver solo el handshake
+openssl s_client -connect example.com:443 -tlsextdebug </dev/null 2>&1 | \
+    grep -E "TLS extension|SSL-Session"
+
+# Probar cipher específico
+openssl s_client -connect example.com:443 \
+    -cipher 'ECDHE-RSA-AES256-GCM-SHA384' </dev/null 2>&1 | \
+    grep "Cipher is"
+
+# Listar ciphers soportados por el servidor
+for cipher in $(openssl ciphers 'ALL:eNULL' | tr ':' ' '); do
+    result=$(echo | openssl s_client -connect example.com:443 -cipher "$cipher" 2>&1)
+    if echo "$result" | grep -q "Cipher is"; then
+        echo "[OK] $cipher"
+    fi
+done
+```
+
+### Ejercicio 3: Infraestructura PKI completa
+
+**Objetivo:** Crear una CA, emitir certificados, y revocar uno.
+
+**Paso 1:** Crear CA
+
+```bash
+# Ejecutar script de creación
+bash create-ca.sh
+
+# Verificar
+ls -la my-ca/
+# Esperado: ca.key, ca.crt, openssl.cnf, certs/, newcerts/, etc.
+```
+
+**Paso 2:** Emitir certificados
+
+```bash
+# Certificado para servidor web
+openssl genrsa -out web-server.key 4096
+openssl req -new -key web-server.key -out web-server.csr \
+    -subj "/CN=web.example.com"
+
+openssl ca -config my-ca/openssl.cnf \
+    -passin pass:ca-password \
+    -extensions server_cert \
+    -days 365 \
+    -in web-server.csr \
+    -out web-server.crt \
+    -batch
+
+# Certificado para API
+openssl genrsa -out api-server.key 4096
+openssl req -new -key api-server.key -out api-server.csr \
+    -subj "/CN=api.example.com"
+
+openssl ca -config my-ca/openssl.cnf \
+    -passin pass:ca-password \
+    -extensions server_cert \
+    -days 365 \
+    -in api-server.csr \
+    -out api-server.crt \
+    -batch
+
+# Verificar ambos
+openssl verify -CAfile my-ca/ca.crt web-server.crt
+openssl verify -CAfile my-ca/ca.crt api-server.crt
+# Esperado: OK para ambos
+```
+
+**Paso 3:** Revocar y verificar
+
+```bash
+# Revocar certificado del API server
+openssl ca -config my-ca/openssl.cnf \
+    -passin pass:ca-password \
+    -revoke api-server.crt
+
+# Regenerar CRL
+openssl ca -config my-ca/openssl.cnf \
+    -passin pass:ca-password \
+    -gencrl -out my-ca/crl.pem
+
+# Verificar: web-server debe ser válido
+openssl verify -CAfile my-ca/ca.crt web-server.crt
+# Esperado: OK
+
+# Verificar: api-server debe estar revocado
+openssl verify -CAfile my-ca/ca.crt -CRLfile my-ca/crl.pem -crl_check api-server.crt
+# Esperado: error (certificate revoked)
+```
+
+## Uso en Ciberseguridad
+
+### Escenario 1: Diagnóstico de problemas TLS
+
+```bash
+#!/bin/bash
+# tls-diagnostic.sh - Diagnosticar problemas TLS
+
+set -euo pipefail
+
+TARGET="${1:?Uso: $0 <host:port>}"
+
+echo "=== TLS Diagnostic: $TARGET ==="
+echo ""
+
+# 1. Verificar conectividad
+echo "[1] Conectividad..."
+if echo | openssl s_client -connect "$TARGET" </dev/null 2>&1 | grep -q "CONNECTED"; then
+    echo "    [OK] Conexión establecida"
+else
+    echo "    [FAIL] No se pudo conectar"
+    exit 1
+fi
+
+# 2. Verificar certificado
+echo "[2] Certificado..."
+cert_info=$(echo | openssl s_client -connect "$TARGET" </dev/null 2>/dev/null | \
+    openssl x509 -noout -subject -issuer -dates 2>/dev/null)
+echo "    $cert_info"
+
+# 3. Verificar expiración
+echo "[3] Expiración..."
+end_date=$(echo | openssl s_client -connect "$TARGET" </dev/null 2>/dev/null | \
+    openssl x509 -noout -enddate 2>/dev/null | cut -d= -f2)
+echo "    Expira: $end_date"
+
+# 4. Verificar protocolo
+echo "[4] Protocolo y Cipher..."
+proto=$(echo | openssl s_client -connect "$TARGET" </dev/null 2>/dev/null | \
+    grep "Protocol  :" | head -1)
+cipher=$(echo | openssl s_client -connect "$TARGET" </dev/null 2>/dev/null | \
+    grep "Cipher    :" | head -1)
+echo "    $proto"
+echo "    $cipher"
+
+# 5. Verificar cadena
+echo "[5] Cadena de certificados..."
+chain_ok=$(echo | openssl s_client -connect "$TARGET" </dev/null 2>/dev/null | \
+    grep "Verify return code")
+echo "    $chain_ok"
+
+echo ""
+echo "[+] Diagnóstico completado"
+```
+
+### Escenario 2: Generar contraseñas seguras
+
+```bash
+# Generar contraseña aleatoria fuerte
+openssl rand -base64 32 | tr -d '/+=\n' | head -c 24
+# Esperado: 24 caracteres aleatorios
+
+# Generar múltiples contraseñas
+for i in {1..5}; do
+    echo "Password $i: $(openssl rand -base64 24 | tr -d '/+=\n' | head -c 20)"
+done
+
+# Generar hash de contraseña para /etc/shadow
+openssl passwd -6 "MiPasswordSeguro123!"
+# Esperado: $6$rounds=656000$salt$hash...
+
+# Generar clave API
+echo "API Key: $(openssl rand -hex 32)"
+# Esperado: 64 caracteres hexadecimales
+```
+
+### Escenario 3: Verificar integridad de descargas
+
+```bash
+# Descargar archivo y checksum
+curl -sSO https://example.com/software.tar.gz
+curl -sSO https://example.com/software.tar.gz.sha256
+
+# Verificar checksum
+expected=$(cat software.tar.gz.sha256 | awk '{print $1}')
+actual=$(openssl dgst -sha256 software.tar.gz | awk '{print $NF}')
+
+if [ "$expected" = "$actual" ]; then
+    echo "[OK] Integridad verificada"
+else
+    echo "[FAIL] Integridad comprometida!"
+    echo "  Esperado: $expected"
+    echo "  Actual:   $actual"
+fi
+
+# Verificar firma GPG (si disponible)
+curl -sSO https://example.com/software.tar.gz.asc
+gpg --verify software.tar.gz.asc software.tar.gz
+```
+
+## Referencia Rápida
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `genrsa` | Generar clave RSA | `openssl genrsa -out key.pem 4096` |
+| `genpkey` | Generar clave | `openssl genpkey -algorithm Ed25519` |
+| `req -new` | Crear CSR | `openssl req -new -key key.pem -out req.csr` |
+| `req -x509` | Auto-firmado | `openssl req -x509 -newkey rsa:4096 ...` |
+| `x509 -text` | Ver certificado | `openssl x509 -in cert.crt -text -noout` |
+| `x509 -dates` | Ver fechas | `openssl x509 -in cert.crt -noout -dates` |
+| `verify` | Verificar cert | `openssl verify -CAfile ca.crt cert.crt` |
+| `enc` | Cifrar/descifrar | `openssl enc -aes-256-cbc -d -in file.enc` |
+| `dgst` | Hash | `openssl dgst -sha256 file.txt` |
+| `rand` | Aleatorio | `openssl rand -hex 32` |
+| `s_client` | Cliente TLS | `openssl s_client -connect host:443` |
+| `pkcs12` | PKCS#12/PFX | `openssl pkcs12 -export -in cert.crt -inkey key.pem` |
+| `ca` | CA operations | `openssl ca -config ca.cnf -in req.csr -out cert.crt` |
+| `crl` | CRL operations | `openssl crl -in crl.pem -text -noout` |
+| `passwd` | Hash password | `openssl passwd -6 "password"` |
+
+## Recursos Adicionales
+
+- **Documentación oficial**: https://www.openssl.org/docs/
+- **OpenSSL Cookbook**: https://www.feistyduck.com/library/openssl-cookbook/
+- **SSL Labs Test**: https://www.ssllabs.com/ssltest/
+- **Mozilla TLS Config Generator**: https://ssl-config.mozilla.org/
+- **BadSSL (testing)**: https://badssl.com/
+- **Cryptography Engineering**: https://www.cryptographyengineering.com/
+
+---
+
+*Minicurso OpenSSL — Curso Fundamentos de Ciberseguridad — CC BY-SA 4.0*

@@ -1,0 +1,242 @@
+---
+title: "Quiz 2: Gestion de Identidad y Acceso (IAM)"
+module: "quiz-02"
+type: "quiz"
+description: "Evaluacion del modulo 2: Gestion de Identidad y Acceso con MFA phishing-resistant"
+---
+
+
+## Instrucciones
+
+- Tiempo: 30 minutos
+- Preguntas: 20 preguntas
+- Aprobacion: 70% o superior (14/20 correctas)
+- Restricciones: Sin materiales externos
+
+---
+
+## Seccion A: Fundamentos de Autenticacion
+
+### Pregunta 1
+
+Cuales son los tres factores de autenticacion?
+
+- [ ] Contraseña, email, telefono
+- [ ] Algo que sabes, algo que tienes, algo que eres
+- [ ] Usuario, contrasena, PIN
+- [ ] MFA, 2FA, SSO
+
+### Pregunta 2
+
+Un ejemplo de factor de posesion es:
+
+- [ ] Huella digital
+- [ ] Contrasena
+- [ ] Token de seguridad USB
+- [ ] Reconocimiento facial
+
+### Pregunta 3
+
+Que hace resistentes al phishing las claves FIDO2?
+
+- [ ] Usan encriptacion AES
+- [ ] La clave privada nunca sale del dispositivo
+- [ ] Se sincronizan en la nube
+- [ ] Usan biometria
+
+---
+
+## Seccion B: TIPOS DE MFA
+
+### Pregunta 4
+
+Cual NO es un ejemplo de MFA phishing-resistant?
+
+- [ ] SMS OTP
+- [ ] FIDO2 Security Key
+- [ ] Passkeys
+- [ ] TOTP (Google Authenticator)
+
+### Pregunta 5
+
+La principal vulnerabilidad de SMS OTP es:
+
+- [ ] Requiere smartphone
+- [ ] Vulnerable a SIM swapping
+- [ ] Solo 6 digitos
+- [ ] No funciona offline
+
+### Pregunta 6
+
+Passkeys se almacenan en:
+
+- [ ] Servidor remoto
+- [ ] Memoria RAM
+- [ ] Device secure enclave
+- [ ] Disco duro externo
+
+---
+
+## Seccion C: Gestion de Identidad
+
+### Pregunta 7
+
+Que significa JIT en gestion de acceso?
+
+- [ ] Just In Time - Acceso solo cuando se necesita
+- [ ] Java Interface Technology
+- [ ] Job Interview Training
+- [ ] Joint Integration Testing
+
+### Pregunta 8
+
+ITDR significa:
+
+- [ ] Identity Threat Detection and Response
+- [ ] Internet Technical Data Record
+- [ ] Integrated Token Distribution System
+- [ ] Internal Trust Database Registry
+
+### Pregunta 9
+
+Cual es la funcion de PAM (Privileged Access Management)?
+
+- [ ] Gestionar accesos de usuarios normales
+- [ ] Gestionar accesos privilegiados de admin
+- [ ] Registrar dispositivos
+- [ ] Monitorear red
+
+---
+
+## Seccion D: Conceptos de Zero Trust
+
+### Pregunta 10
+
+El principio core de Zero Trust es:
+
+- [ ] Confiar pero verificar
+- [ ] Nunca confiar, siempre verificar
+- [ ] Confiar pero limitado
+- [ ] Solo confianza interna
+
+### Pregunta 11
+
+ZTNA significa:
+
+- [ ] Zero Trust Network Access
+- [ ] Zone Transfer Network Architecture
+- [ ] Zero Time Network Alert
+- [ ] Zentralized Token Network Authority
+
+### Pregunta 12
+
+Cual es mejor que VPN para acceso remoto?
+
+- [ ] FTP clasico
+- [ ] ZTNA
+- [ ] Proxy Squid
+- [ ] DNS clasico
+
+---
+
+## Seccion E: Politicas de Acceso
+
+### Pregunta 13
+
+El acceso condicional se basa en:
+
+- [ ] Solo usuario y contrasena
+- [ ] Contexto (dispositivo, ubicacion, riesgo)
+- [ ] Hora del dia
+- [ ] Version del navegador
+
+### Pregunta 14
+
+OAuth 2.0 es un protocolo de:
+
+- [ ] Autenticacion
+- [ ] Autorizacion
+- [ ] Encriptacion
+- [ ] Monitoreo
+
+### Pregunta 15
+
+OpenID Connect se basa en:
+
+- [ ] JSON
+- [ ] OAuth 2.0
+- [ ] SAML
+- [ ] LDAP
+
+---
+
+## Seccion F: Estadisticas y Contexto
+
+### Pregunta 16
+
+Que porcentaje de brechas involucran credenciales comprometidas?
+
+- [ ] 41%
+- [ ] 61%
+- [ ] 81%
+- [ ] 91%
+
+### Pregunta 17
+
+La estadistica de +89% anual corresponde a:
+
+- [ ] Ataques de phishing tradicionales
+- [ ] Ataques habilitados por IA
+- [ ] Brechas de datos
+- [ ] Vulnerabilidades reportadas
+
+### Pregunta 18
+
+Cual es el costo promedio de una brecha de identidad?
+
+- [ ] $1.88M
+- [ ] $2.88M
+- [ ] $3.88M
+- [ ] $4.88M
+
+---
+
+## Seccion G: Practica
+
+### Pregunta 19
+
+Si un usuario tiene contrasena + MFA TOTP, que factor usa?
+
+- [ ] Solo conocimiento
+- [ ] Solo posesion
+- [ ] Dos factores (conocimiento + posesion)
+- [ ] Tres factores
+
+### Pregunta 20
+
+Para un accesso de alto riesgo, cual enfoque es mas seguro?
+
+- [ ] Solo contrasena
+- [ ] Contrasena + SMS
+- [ ] Contrasena + TOTP
+- [ ] FIDO2/Passkey sin contrasena
+
+---
+
+## Resultado
+
+| Score | Estado |
+|-------|--------|
+| 14/20 (70%) o superior | Aprobado |
+| Menos de 14/20 | Reprobado |
+
+Puntuacion: ____/20 = ____%
+
+**Siguiente paso**:
+
+- Aprobado -> Continuar al Modulo 3: Arquitectura Zero Trust
+- Reprobado -> Repasar Modulo 2 y tomar quiz nuevamente
+
+---
+
+*Quiz 2/7 - Curso Fundamentos de Ciberseguridad - CC BY-SA 4.0*

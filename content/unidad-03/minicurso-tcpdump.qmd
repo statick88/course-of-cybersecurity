@@ -1,0 +1,835 @@
+---
+title: "Minicurso: Tcpdump"
+module: "minicurso-tcpdump"
+type: "minicurso"
+description: "Tutorial completo de Tcpdump para análisis de tráfico de red en ciberseguridad"
+---
+
+
+## ¿Qué es Tcpdump?
+
+Tcpdump es el analizador de paquetes de línea de comandos más utilizado en sistemas Unix/Linux. Desarrollado por Van Jacobson, Craig Leres y Steven McCanne en Lawrence Berkeley Laboratory, captura y muestra paquetes de red en tiempo real, permitiendo inspeccionar el tráfico que pasa por una interfaz de red.
+
+Tcpdump utiliza la biblioteca libpcap (packet capture) para interceptar paquetes directamente del driver de red. Soporta filtros BPF (Berkeley Packet Filter) que permiten capturar solo el tráfico de interés, reduciendo la sobrecarga y el ruido. Los paquetes capturados se pueden guardar en formato pcap para análisis posterior con Wireshark u otras herramientas.
+
+En ciberseguridad, tcpdump es esencial para análisis forense de red, detección de tráfico malicioso, validación de reglas IDS/IPS, debugging de conexiones, y captura de evidencia de red. Es la herramienta que se ejecuta cuando necesitas ver exactamente qué está pasando en la red, sin la interfaz gráfica de Wireshark.
+
+## ¿Por qué aprenderlo?
+
+- **Línea de comandos**: Funciona en servidores sin GUI, SSH, y entornos headless
+- **Filtros BPF**: Captura solo el tráfico relevante con expresiones potentes
+- **Formato pcap**: Compatible con Wireshark, tshark, y otras herramientas
+- **Forensics**: Captura evidencia de red para análisis posterior
+- **Debugging**: Diagnostica problemas de red en tiempo real
+
+## Instalación
+
+### macOS
+
+```bash
+# macOS incluye tcpdump por defecto
+tcpdump --version
+# Esperado:
+# tcpdump version 4.99.x
+# libpcap version 1.10.x
+
+# Requiere sudo para capturar
+sudo tcpdump --version
+
+# Instalar versión más reciente
+brew install tcpdump
+```
+
+::: {.callout-warning}
+## Permisos en macOS
+macOS requiere permisos especiales para captura de red. Debes usar `sudo` y posiblemente otorgar permisos de "Screen Recording" en System Preferences > Security & Privacy.
+:::
+
+### Linux (Ubuntu/Debian)
+
+```bash
+# Instalar desde repositorios
+sudo apt update
+sudo apt install -y tcpdump
+
+# Verificar
+tcpdump --version
+# Esperado:
+# tcpdump version 4.99.x
+# libpcap version 1.10.x
+
+# Verificar interfaces disponibles
+tcpdump -D
+# Esperado: lista de interfaces de red
+# 1.eth0
+# 2.lo
+# 3.any (Pseudo-device that captures on all interfaces)
+```
+
+### Windows
+
+```powershell
+# Tcpdump no tiene versión nativa para Windows
+# Opción 1: Usar WSL
+wsl --install
+# Luego en WSL:
+sudo apt install -y tcpdump
+
+# Opción 2: Usar WinDump (port de tcpdump para Windows)
+# Descargar: https://www.winpcap.org/windump/
+# Requiere WinPcap/Npcap instalado
+
+# Opción 3: Usar tshark (Wireshark CLI)
+# Descargar Wireshark: https://www.wireshark.org/download.html
+# tshark viene incluido
+```
+
+::: {.callout-warning}
+## Aviso Legal y Ético
+Capturar tráfico de red puede interceptar comunicaciones privadas incluyendo contraseñas, datos personales, y información confidencial. Solo captura tráfico en redes que te pertenecen o tienes autorización explícita para monitorear. La interceptación no autorizada de comunicaciones es ILEGAL en la mayoría de jurisdicciones.
+:::
+
+## Nivel Básico
+
+### Conceptos Fundamentales
+
+**Packet capture**: Interceptación de paquetes de red directamente del driver de interfaz.
+
+**Interface**: Dispositivo de red por donde pasa el tráfico (eth0, wlan0, lo, etc.).
+
+**BPF filters**: Expresiones de filtro que seleccionan qué paquetes capturar (host, port, protocol, etc.).
+
+**Promiscuous mode**: Modo que permite capturar TODO el tráfico en la red, no solo el dirigido a tu máquina.
+
+**Pcap format**: Formato estándar para guardar paquetes capturados, compatible con Wireshark.
+
+### Comandos Esenciales
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `tcpdump` | Captura en interfaz default | `sudo tcpdump` |
+| `-i <iface>` | Interfaz específica | `sudo tcpdump -i eth0` |
+| `-c <count>` | Número de paquetes | `sudo tcpdump -c 10` |
+| `-n` | No resolver nombres | `sudo tcpdump -n` |
+| `-nn` | No resolver nombres ni puertos | `sudo tcpdump -nn` |
+| `-w <file>` | Escribir a archivo pcap | `sudo tcpdump -w capture.pcap` |
+| `-r <file>` | Leer desde archivo pcap | `tcpdump -r capture.pcap` |
+| `-v/-vv/-vvv` | Verbosidad | `sudo tcpdump -v` |
+| `-X` | Hex + ASCII | `sudo tcpdump -X` |
+| `-XX` | Hex + ASCII (más detalle) | `sudo tcpdump -XX` |
+| `-A` | ASCII only | `sudo tcpdump -A` |
+| `host <ip>` | Filtrar por host | `sudo tcpdump host 192.168.1.100` |
+| `port <port>` | Filtrar por puerto | `sudo tcpdump port 80` |
+| `proto <proto>` | Filtrar por protocolo | `sudo tcpdump proto tcp` |
+
+### Captura Básica
+
+```bash
+# Captura en interfaz default (muestra todo el tráfico)
+sudo tcpdump
+# Esperado: líneas de paquetes capturados
+# 12:34:56.789012 IP 192.168.1.100.54321 > 93.184.216.34.80: Flags [S], seq 1234567890
+
+# Captura con interfaz específica
+sudo tcpdump -i eth0
+# eth0 = primera interfaz ethernet
+# wlan0 = interfaz WiFi
+# lo = loopback (localhost)
+
+# Captura en todas las interfaces
+sudo tcpdump -i any
+
+# Limitar número de paquetes
+sudo tcpdump -c 10
+# Se detiene después de 10 paquetes
+
+# Sin resolución de nombres (más rápido, output más limpio)
+sudo tcpdump -n
+# Muestra IPs en lugar de hostnames
+
+# Sin resolución de nombres NI puertos
+sudo tcpdump -nn
+# Muestra IPs y números de puerto
+# 12:34:56.789012 IP 192.168.1.100.54321 > 93.184.216.34.80: Flags [S]
+```
+
+::: {.callout-tip}
+## Identificar tu interfaz
+```bash
+# Linux
+ip addr show
+# o
+ifconfig
+
+# macOS
+ifconfig
+# o
+networksetup -listallhardwareports
+
+# La interfaz activa suele tener una IP asignada
+# Busca "inet" con una IP tipo 192.168.x.x o 10.x.x.x
+```
+:::
+
+### Filtros por Host
+
+```bash
+# Capturar tráfico de/hacia un host específico
+sudo tcpdump host 192.168.1.100
+
+# Capturar tráfico de un host source
+sudo tcpdump src host 192.168.1.100
+
+# Capturar tráfico hacia un host destination
+sudo tcpdump dst host 192.168.1.100
+
+# Capturar tráfico entre dos hosts
+sudo tcpdump host 192.168.1.100 and host 192.168.1.200
+
+# Excluir un host
+sudo tcpdump not host 192.168.1.1
+```
+
+### Filtros por Puerto
+
+```bash
+# Capturar tráfico en un puerto específico
+sudo tcpdump port 80
+
+# Puerto source o destination
+sudo tcpdump src port 80
+sudo tcpdump dst port 80
+
+# Múltiples puertos
+sudo tcpdump port 80 or port 443
+
+# Rango de puertos
+sudo tcpdump portrange 8000-9000
+
+# Puertos comunes de servicios
+sudo tcpdump port 22    # SSH
+sudo tcpdump port 53    # DNS
+sudo tcpdump port 80    # HTTP
+sudo tcpdump port 443   # HTTPS
+sudo tcpdump port 3306  # MySQL
+sudo tcpdump port 5432  # PostgreSQL
+```
+
+### Filtros por Protocolo
+
+```bash
+# Solo TCP
+sudo tcpdump tcp
+
+# Solo UDP
+sudo tcpdump udp
+
+# Solo ICMP (ping)
+sudo tcpdump icmp
+
+# Solo ARP
+sudo tcpdump arp
+
+# Combinar protocolo con host
+sudo tcpdump tcp host 192.168.1.100
+sudo tcpdump udp port 53
+
+# HTTP traffic (puerto 80)
+sudo tcpdump tcp port 80
+
+# DNS traffic
+sudo tcpdump udp port 53
+```
+
+### Ejercicio 1: Captura y análisis de tráfico HTTP
+
+**Objetivo:** Capturar tráfico HTTP y analizar las peticiones.
+
+**Paso 1:** Iniciar captura
+
+```bash
+# Capturar tráfico HTTP en background
+sudo tcpdump -i any -n -w http-capture.pcap port 80 &
+CAPTURE_PID=$!
+# Esperado: [1] 12345 (PID del proceso)
+
+# Verificar que está corriendo
+ps aux | grep tcpdump
+```
+
+**Paso 2:** Generar tráfico
+
+```bash
+# Generar tráfico HTTP
+curl -s http://example.com > /dev/null
+curl -s http://testphp.vulnweb.com > /dev/null
+
+# Esperar unos segundos
+sleep 3
+
+# Detener captura
+kill $CAPTURE_PID
+wait $CAPTURE_PID 2>/dev/null
+```
+
+**Paso 3:** Analizar captura
+
+```bash
+# Leer el archivo pcap
+tcpdump -r http-capture.pcap -n
+
+# Ver solo peticiones HTTP
+tcpdump -r http-capture.pcap -n -A | grep -i "GET\|POST\|HTTP"
+
+# Contar paquetes
+tcpdump -r http-capture.pcap | wc -l
+
+# Ver con detalle
+tcpdump -r http-capture.pcap -n -v | head -20
+```
+
+## Nivel Intermedio
+
+### Filtros BPF Complejos
+
+```bash
+# Combinar múltiples condiciones
+sudo tcpdump tcp port 80 and host 192.168.1.100
+
+# OR lógico
+sudo tcpdump port 80 or port 443 or port 8080
+
+# NOT lógico
+sudo tcpdump not port 22 and not port 53
+
+# Paréntesis para agrupar (escapar en shell)
+sudo tcpdump \(port 80 or port 443\) and host 192.168.1.100
+
+# Filtrar por tamaño de paquete
+sudo tcpdump less 100       # Paquetes menores a 100 bytes
+sudo tcpdump greater 1500   # Paquetes mayores a 1500 bytes
+
+# Filtrar por flags TCP
+sudo tcpdump 'tcp[tcpflags] & tcp-syn != 0'    # SYN packets
+sudo tcpdump 'tcp[tcpflags] & tcp-fin != 0'    # FIN packets
+sudo tcpdump 'tcp[tcpflags] & tcp-rst != 0'    # RST packets
+
+# SYN scan detection
+sudo tcpdump 'tcp[tcpflags] & tcp-syn != 0 and tcp[tcpflags] & tcp-ack == 0'
+# Solo SYN sin ACK = inicio de conexión o scan
+```
+
+::: {.callout-tip}
+## TCP Flags en BPF
+| Flag | BPF expression | Significado |
+|------|---------------|-------------|
+| SYN | `tcp[tcpflags] & tcp-syn != 0` | Inicio de conexión |
+| ACK | `tcp[tcpflags] & tcp-ack != 0` | Acknowledgment |
+| FIN | `tcp[tcpflags] & tcp-fin != 0` | Fin de conexión |
+| RST | `tcp[tcpflags] & tcp-rst != 0` | Reset (error/rechazo) |
+| PSH | `tcp[tcpflags] & tcp-push != 0` | Push data immediately |
+| URG | `tcp[tcpflags] & tcp-urg != 0` | Urgent data |
+:::
+
+### Write y Read de Archivos Pcap
+
+```bash
+# Capturar y guardar a archivo
+sudo tcpdump -i eth0 -w capture.pcap
+
+# Capturar con límite de tiempo
+sudo tcpdump -i eth0 -w capture.pcap -G 60 -W 1
+# -G 60: rota cada 60 segundos
+# -W 1: solo 1 archivo
+
+# Capturar con límite de tamaño
+sudo tcpdump -i eth0 -w capture.pcap -C 100
+# -C 100: rota cada 100MB
+
+# Ring buffer (archivos rotativos)
+sudo tcpdump -i eth0 -w capture.pcap -W 5 -C 50
+# -W 5: mantiene 5 archivos
+# -C 50: cada archivo de 50MB máximo
+# Archivos: capture.pcap0, capture.pcap1, ... capture.pcap4
+
+# Leer archivo pcap
+tcpdump -r capture.pcap
+
+# Leer con filtros
+tcpdump -r capture.pcap host 192.168.1.100
+tcpdump -r capture.pcap port 80
+tcpdump -r capture.pcap tcp
+
+# Leer con verbosidad
+tcpdump -r capture.pcap -v
+tcpdump -r capture.pcap -vv
+tcpdump -r capture.pcap -vvv
+
+# Leer y mostrar contenido ASCII
+tcpdump -r capture.pcap -A
+```
+
+### Snaplen y Packet Slicing
+
+```bash
+# Snaplen: cuántos bytes de cada paquete capturar
+sudo tcpdump -i eth0 -s 0
+# -s 0 = capturar paquete completo (default en versiones modernas)
+
+# Capturar solo headers (ahorra espacio)
+sudo tcpdump -i eth0 -s 96 -w headers-only.pcap
+# Solo primeros 96 bytes (headers TCP/IP)
+
+# Snaplen específico
+sudo tcpdump -i eth0 -s 128 -w partial.pcap
+# Solo primeros 128 bytes de cada paquete
+```
+
+### Output Formatting
+
+```bash
+# Output en ASCII (para ver contenido HTTP, etc.)
+sudo tcpdump -i eth0 -A port 80
+# Esperado: contenido legible de peticiones HTTP
+
+# Output en hex + ASCII
+sudo tcpdump -i eth0 -X port 80
+# Esperado: hex dump + ASCII al lado
+
+# Output más detallado en hex
+sudo tcpdump -i eth0 -XX port 80
+# Incluye link-layer headers
+
+# Output con timestamps relativos
+sudo tcpdump -i eth0 -tt
+# Timestamps relativos al primer paquete
+
+# Output con timestamps delta
+sudo tcpdump -i eth0 -ttt
+# Diferencia de tiempo entre paquetes
+
+# Output con timestamps de Unix epoch
+sudo tcpdump -i eth0 -tttt
+# Timestamps legibles: 2024-01-15 12:34:56.789012
+
+# Output numérico (sin resolución)
+sudo tcpdump -i eth0 -nn
+# IPs y puertos numéricos
+
+# Combinar formatos
+sudo tcpdump -i eth0 -nn -A -c 5 port 80
+# Numérico + ASCII + 5 paquetes + puerto 80
+```
+
+### Estadísticas de Captura
+
+```bash
+# Estadísticas al finalizar (Ctrl+C)
+sudo tcpdump -i eth0 -c 100
+# Al terminar muestra:
+# 100 packets captured
+# 100 packets received by filter
+# 0 packets dropped by kernel
+
+# Capturar con contador
+sudo tcpdump -i eth0 -c 1000 -w stats.pcap
+# Después de 1000 paquetes, muestra estadísticas
+
+# Ver estadísticas de interfaz
+sudo tcpdump -i eth0 -v -c 1
+# -v muestra info adicional por paquete
+```
+
+### Ejercicio 2: Captura de tráfico DNS
+
+**Objetivo:** Capturar y analizar consultas DNS.
+
+**Paso 1:** Capturar tráfico DNS
+
+```bash
+# Capturar DNS (puerto 53, usualmente UDP)
+sudo tcpdump -i any -n -c 20 udp port 53
+# Esperado:
+# 12:34:56.789012 IP 192.168.1.100.54321 > 8.8.8.8.53: 12345+ A? example.com.
+# 12:34:56.790123 IP 8.8.8.8.53 > 192.168.1.100.54321: 12345 1/0/0 A 93.184.216.34
+
+# Capturar con detalle
+sudo tcpdump -i any -n -v -c 10 udp port 53
+# -v muestra más detalles de la consulta DNS
+```
+
+**Paso 2:** Generar consultas DNS
+
+```bash
+# Generar consultas DNS mientras capturas
+nslookup example.com
+nslookup google.com
+dig testphp.vulnweb.com
+host github.com
+```
+
+**Paso 3:** Analizar resultados
+
+```bash
+# Capturar y guardar
+sudo tcpdump -i any -n -w dns-capture.pcap udp port 53 &
+DNS_PID=$!
+
+# Generar tráfico
+nslookup example.com
+dig google.com
+host github.com
+
+sleep 2
+kill $DNS_PID
+
+# Analizar
+tcpdump -r dns-capture.pcap -n
+tcpdump -r dns-capture.pcap -n -v | head -30
+
+# Extraer dominios consultados
+tcpdump -r dns-capture.pcap -n -A | grep -oP '[a-zA-Z0-9.-]+\.(com|net|org|io)' | sort -u
+```
+
+## Nivel Avanzado
+
+### Expresiones BPF Avanzadas
+
+```bash
+# Filtrar por subnet
+sudo tcpdump net 192.168.1.0/24
+sudo tcpdump net 10.0.0.0/8
+
+# Filtrar por rango de IPs
+sudo tcpdump src net 192.168.1.0/24 and dst net 10.0.0.0/8
+
+# Filtrar por Ethernet address (MAC)
+sudo tcpdump ether host aa:bb:cc:dd:ee:ff
+sudo tcpdump ether src aa:bb:cc:dd:ee:ff
+sudo tcpdump ether dst aa:bb:cc:dd:ee:ff
+
+# Filtrar por tipo de paquete IP
+sudo tcpdump ip proto 6    # TCP
+sudo tcpdump ip proto 17   # UDP
+sudo tcpdump ip proto 1    # ICMP
+
+# Filtrar por TCP flags combinados
+sudo tcpdump 'tcp[tcpflags] & (tcp-syn|tcp-ack) == tcp-syn'
+# Solo SYN (sin ACK) = nuevos intentos de conexión
+
+# Filtrar por offset en payload
+sudo tcpdump 'tcp[20:4] = 0x47455420'
+# 0x47455420 = "GET " en ASCII (peticiones HTTP)
+
+# Filtrar por string en payload
+sudo tcpdump -A 'tcp port 80 and tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x47455420'
+# Captura peticiones HTTP GET
+```
+
+### Remote Capture
+
+```bash
+# Capturar remotamente vía SSH
+ssh user@remote-server "sudo tcpdump -i eth0 -w - port 80" > remote-capture.pcap
+# El tráfico se captura en el servidor remoto y se guarda localmente
+
+# Capturar remotamente y ver en tiempo real
+ssh user@remote-server "sudo tcpdump -i eth0 -nn -c 20 port 80"
+
+# Capturar remotamente con Wireshark
+ssh user@remote-server "sudo tcpdump -i eth0 -w -" | wireshark -k -i -
+# Wireshark abre y muestra el tráfico remoto en tiempo real
+
+# Usar sshdump (incluido en Wireshark)
+wireshark -o "sshdump:sshdump|ssh_address=remote-server|ssh_username=user|ssh_interface=eth0"
+```
+
+### Scripting con Tcpdump
+
+```bash
+# Script para monitorear conexiones SSH entrantes
+cat > ssh-monitor.sh << 'SCRIPT'
+#!/bin/bash
+echo "=== Monitor de Conexiones SSH ==="
+sudo tcpdump -i any -nn -l port 22 | while read -r line; do
+    if echo "$line" | grep -q "Flags \[S\]"; then
+        echo "[NEW CONNECTION] $(date '+%Y-%m-%d %H:%M:%S') - $line"
+    fi
+done
+SCRIPT
+
+chmod +x ssh-monitor.sh
+sudo ./ssh-monitor.sh
+
+# Script para detectar scans de puertos
+cat > scan-detector.sh << 'SCRIPT'
+#!/bin/bash
+echo "=== Detector de Port Scans ==="
+# Un scan genera muchos SYN sin ACK desde una misma IP
+sudo tcpdump -i any -nn -l 'tcp[tcpflags] & tcp-syn != 0' | \
+    awk '{print $3}' | \
+    cut -d'.' -f1-4 | \
+    sort | uniq -c | sort -rn | \
+    while read -r count ip; do
+        if [ "$count" -gt 10 ]; then
+            echo "[ALERT] Possible scan from $ip ($count SYN packets)"
+        fi
+    done
+SCRIPT
+
+chmod +x scan-detector.sh
+sudo ./scan-detector.sh
+
+# Script para extraer URLs HTTP
+cat > http-urls.sh << 'SCRIPT'
+#!/bin/bash
+echo "=== Extracción de URLs HTTP ==="
+sudo tcpdump -i any -A -l port 80 | \
+    grep -oP 'GET [^ ]+|POST [^ ]+|Host: [^ ]+' | \
+    paste - - | \
+    sed 's/GET //;s/POST //;s/Host: //'
+SCRIPT
+
+chmod +x http-urls.sh
+sudo ./http-urls.sh
+```
+
+### Tshark Integration
+
+```bash
+# Tshark es el CLI de Wireshark, más potente que tcpdump para análisis
+
+# Instalar tshark
+sudo apt install -y tshark
+
+# Capturar con tshark (similar a tcpdump)
+sudo tshark -i eth0 -c 10
+
+# Leer pcap con tshark (más campos disponibles)
+tshark -r capture.pcap -T fields -e ip.src -e ip.dst -e tcp.dstport
+
+# Filtrar con display filters de Wireshark
+tshark -r capture.pcap -Y "http.request"
+tshark -r capture.pcap -Y "dns.qry.name"
+tshark -r capture.pcap -Y "tcp.flags.syn == 1"
+
+# Estadísticas con tshark
+tshark -r capture.pcap -q -z io,stat,1
+# Statistics por segundo
+
+tshark -r capture.pcap -q -z conv,tcp
+# Conversaciones TCP
+
+tshark -r capture.pcap -q -z endpoints,ip
+# Endpoints IP
+```
+
+### Ejercicio 3: Network forensics básico
+
+**Objetivo:** Analizar tráfico capturado para identificar actividad sospechosa.
+
+**Paso 1:** Capturar tráfico de red
+
+```bash
+# Capturar todo el tráfico por 60 segundos
+sudo tcpdump -i any -w forensics-capture.pcap -G 60 -W 1 &
+FORENSICS_PID=$!
+
+# Generar tráfico normal
+curl -s http://example.com > /dev/null
+curl -s http://testphp.vulnweb.com > /dev/null
+nslookup google.com
+
+sleep 10
+kill $FORENSICS_PID
+```
+
+**Paso 2:** Analizar tráfico capturado
+
+```bash
+# Resumen general
+tcpdump -r forensics-capture.pcap -nn | head -20
+
+# Contar paquetes por protocolo
+tcpdump -r forensics-capture.pcap -nn | \
+    awk '{print $5}' | \
+    cut -d'.' -f1 | \
+    sort | uniq -c | sort -rn
+
+# Top talkers (IPs con más tráfico)
+tcpdump -r forensics-capture.pcap -nn | \
+    awk '{print $3}' | \
+    cut -d'.' -f1-4 | \
+    sort | uniq -c | sort -rn | head -10
+
+# Conexiones únicas
+tcpdump -r forensics-capture.pcap -nn | \
+    awk '{print $3, $5}' | \
+    sort -u | head -20
+```
+
+**Paso 3:** Buscar patrones sospechosos
+
+```bash
+# Buscar conexiones a puertos inusuales
+tcpdump -r forensics-capture.pcap -nn | \
+    grep -v "port 80\|port 443\|port 53\|port 22" | \
+    head -20
+
+# Buscar paquetes grandes (posible exfiltración)
+tcpdump -r forensics-capture.pcap -nn -v | \
+    grep "length" | \
+    awk '{print $NF}' | \
+    sort -rn | head -10
+
+# Buscar múltiples conexiones a misma IP (posible C2)
+tcpdump -r forensics-capture.pcap -nn | \
+    awk '{print $5}' | \
+    cut -d'.' -f1-4 | \
+    sort | uniq -c | sort -rn | head -10
+
+# Generar reporte
+echo "=== Reporte Forense ===" > forensics-report.txt
+echo "Fecha: $(date)" >> forensics-report.txt
+echo "Paquetes totales: $(tcpdump -r forensics-capture.pcap | wc -l)" >> forensics-report.txt
+echo "" >> forensics-report.txt
+echo "=== Top Talkers ===" >> forensics-report.txt
+tcpdump -r forensics-capture.pcap -nn | \
+    awk '{print $3}' | cut -d'.' -f1-4 | \
+    sort | uniq -c | sort -rn | head -5 >> forensics-report.txt
+echo "" >> forensics-report.txt
+echo "=== Puertos Conectados ===" >> forensics-report.txt
+tcpdump -r forensics-capture.pcap -nn | \
+    awk '{print $5}' | grep -oP ':\d+' | sort -u >> forensics-report.txt
+
+cat forensics-report.txt
+```
+
+## Uso en Ciberseguridad
+
+### Escenario 1: Detección de tráfico malicioso
+
+```bash
+#!/bin/bash
+# malicious-traffic-detector.sh - Detectar patrones de tráfico sospechoso
+
+set -euo pipefail
+
+INTERFACE="${1:-any}"
+
+echo "=== Detector de Tráfico Malicioso ==="
+echo "Interface: $INTERFACE"
+echo ""
+
+# 1. Detectar SYN scans (muchos SYN sin ACK)
+echo "[1] Detectando SYN scans..."
+sudo tcpdump -i "$INTERFACE" -nn -c 1000 'tcp[tcpflags] & tcp-syn != 0 and tcp[tcpflags] & tcp-ack == 0' 2>/dev/null | \
+    awk '{print $3}' | cut -d'.' -f1-4 | sort | uniq -c | sort -rn | \
+    while read -r count ip; do
+        if [ "$count" -gt 50 ]; then
+            echo "[ALERT] Possible SYN scan from $ip ($count SYN packets)"
+        fi
+    done
+
+# 2. Detectar DNS tunneling (paquetes DNS grandes)
+echo "[2] Detectando posible DNS tunneling..."
+sudo tcpdump -i "$INTERFACE" -nn -c 500 'udp port 53 and greater 512' 2>/dev/null | \
+    head -10
+
+# 3. Detectar conexiones a puertos comunes de malware
+echo "[3] Detectando conexiones a puertos sospechosos..."
+sudo tcpdump -i "$INTERFACE" -nn -c 200 'port 4444 or port 5555 or port 6666 or port 1337 or port 31337' 2>/dev/null
+
+# 4. Detectar cleartext credentials
+echo "[4] Detectando credenciales en texto plano..."
+sudo tcpdump -i "$INTERFACE" -A -c 500 'port 21 or port 23 or port 110' 2>/dev/null | \
+    grep -i "pass\|user\|login" | head -5
+
+echo ""
+echo "=== Análisis Completo ==="
+```
+
+### Escenario 2: IDS/IPS Validation
+
+```bash
+# Verificar que las reglas IDS están funcionando
+
+# Capturar tráfico mientras ejecutas pruebas conocidas
+sudo tcpdump -i any -w ids-validation.pcap port 80 &
+VALIDATION_PID=$!
+
+# Ejecutar prueba de SQLi
+curl -s "http://target.com/page?id=1' OR '1'='1" > /dev/null
+
+# Ejecutar prueba de XSS
+curl -s "http://target.com/search?q=<script>alert(1)</script>" > /dev/null
+
+sleep 5
+kill $VALIDATION_PID
+
+# Verificar que el tráfico fue capturado
+tcpdump -r ids-validation.pcap -nn -A | grep -i "OR.*1.*=.*1"
+tcpdump -r ids-validation.pcap -nn -A | grep -i "script"
+
+# Si el IDS funciona, debería haber bloqueado estas peticiones
+# y no deberían aparecer en la captura (o deberían mostrar bloqueos)
+```
+
+### Escenario 3: Protocol analysis
+
+```bash
+# Analizar protocolo específico en detalle
+
+# HTTP analysis
+sudo tcpdump -i any -nn -A -l port 80 | grep -E "GET|POST|Host:|User-Agent:"
+
+# DNS analysis
+sudo tcpdump -i any -nn -l udp port 53 | awk '{print $NF}' | sed 's/\.$//'
+
+# TLS handshake analysis
+sudo tcpdump -i any -nn -v -l port 443 | grep -E "Client Hello|Server Hello"
+
+# SSH version exchange
+sudo tcpdump -i any -nn -A -l port 22 | grep "SSH-"
+
+# SMTP commands
+sudo tcpdump -i any -nn -A -l port 25 | grep -E "EHLO|MAIL|RCPT|DATA"
+```
+
+## Referencia Rápida
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `-i <iface>` | Interface | `sudo tcpdump -i eth0` |
+| `-c <count>` | Packet count | `sudo tcpdump -c 10` |
+| `-n` | No name resolve | `sudo tcpdump -n` |
+| `-nn` | No names/ports | `sudo tcpdump -nn` |
+| `-w <file>` | Write pcap | `sudo tcpdump -w capture.pcap` |
+| `-r <file>` | Read pcap | `tcpdump -r capture.pcap` |
+| `-v/-vv/-vvv` | Verbosity | `sudo tcpdump -vv` |
+| `-X/-XX` | Hex+ASCII | `sudo tcpdump -X` |
+| `-A` | ASCII | `sudo tcpdump -A` |
+| `host <ip>` | Host filter | `sudo tcpdump host 1.2.3.4` |
+| `port <port>` | Port filter | `sudo tcpdump port 80` |
+| `tcp/udp/icmp` | Protocol | `sudo tcpdump tcp` |
+| `src/dst` | Direction | `sudo tcpdump src host 1.2.3.4` |
+| `and/or/not` | Logic | `sudo tcpdump port 80 and host 1.2.3.4` |
+| `-s 0` | Full packet | `sudo tcpdump -s 0` |
+| `-G <sec>` | Rotate time | `sudo tcpdump -G 60 -w cap.pcap` |
+| `-C <MB>` | Rotate size | `sudo tcpdump -C 100 -w cap.pcap` |
+| `-W <count>` | Ring buffer | `sudo tcpdump -W 5 -C 50 -w cap.pcap` |
+| `-tttt` | Readable time | `sudo tcpdump -tttt` |
+| `-l` | Line buffered | `sudo tcpdump -l \| grep pattern` |
+
+## Recursos Adicionales
+
+- **Tcpdump man page**: `man tcpdump`
+- **BPF syntax**: `man pcap-filter`
+- **Wireshark display filters**: https://www.wireshark.org/docs/dfref/
+- **Practice**: https://tryhackme.com/ (labs de packet analysis)
+- **Malware Traffic Analysis**: https://www.malware-traffic-analysis.net/ (pcaps de práctica)
+- **Wireshark Sample Captures**: https://wiki.wireshark.org/SampleCaptures
+
+---
+
+*Minicurso Tcpdump — Curso Fundamentos de Ciberseguridad — CC BY-SA 4.0*

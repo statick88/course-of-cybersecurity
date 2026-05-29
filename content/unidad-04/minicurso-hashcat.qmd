@@ -1,0 +1,826 @@
+---
+title: "Minicurso: Hashcat"
+module: "minicurso-hashcat"
+type: "minicurso"
+description: "Tutorial completo de Hashcat para cracking de hashes en ciberseguridad"
+---
+
+
+## ¿Qué es Hashcat?
+
+Hashcat es la herramienta de recuperación de contraseñas más rápida y avanzada del mundo. Desarrollada por Jens Steube (atom), utiliza la potencia de GPUs (tarjetas gráficas) para realizar ataques de fuerza bruta, diccionario y rule-based contra más de 350 tipos de hashes diferentes.
+
+A diferencia de John the Ripper que funciona principalmente con CPU, Hashcat está optimizado para GPUs NVIDIA y AMD, lo que le permite probar millones (o billones) de contraseñas por segundo. Soporta ataques con wordlists, reglas de transformación, máscaras personalizadas, y ataques híbridos que combinan múltiples estrategias.
+
+En ciberseguridad, Hashcat se utiliza para validar políticas de contraseñas, analizar filtraciones de datos (breach analysis), recuperar contraseñas en investigaciones forenses, y demostrar a los stakeholders el riesgo real de contraseñas débiles. Es una herramienta esencial para cualquier auditor de seguridad.
+
+## ¿Por qué aprenderlo?
+
+- **Velocidad GPU**: Millones de intentos por segundo vs miles con CPU
+- **350+ tipos de hash**: MD5, SHA, bcrypt, NTLM, WPA, y muchos más
+- **Múltiples modos de ataque**: Diccionario, regla, máscara, híbrido, combinador
+- **Análisis de breaches**: Validar impacto de filtraciones reales
+- **Compliance**: Demostrar riesgos de políticas de contraseñas débiles
+
+## Instalación
+
+### macOS
+
+```bash
+# Con Homebrew
+brew install hashcat
+
+# Verificar instalación
+hashcat --version
+# Esperado:
+# v6.2.6 o superior
+
+# Verificar dispositivos disponibles
+hashcat -I
+# Esperado: lista de GPUs detectadas
+# Device #1: Apple M1/M2/M3 (si aplica)
+```
+
+::: {.callout-warning}
+## GPUs en macOS
+macOS con Apple Silicon tiene soporte limitado para hashcat. Para rendimiento óptimo, se recomienda Linux con GPU NVIDIA/AMD dedicada. En macOS, hashcat puede funcionar en modo CPU-only con rendimiento reducido.
+:::
+
+### Linux (Ubuntu/Debian)
+
+```bash
+# Instalar desde repositorios
+sudo apt update
+sudo apt install -y hashcat
+
+# Verificar
+hashcat --version
+# Esperado: v6.2.6+
+
+# Instalar drivers NVIDIA (para GPU acceleration)
+sudo apt install -y nvidia-driver-535 nvidia-utils-535
+
+# Verificar GPU
+nvidia-smi
+# Esperado: información de la GPU NVIDIA
+
+# Verificar que hashcat detecta la GPU
+hashcat -I
+# Esperado:
+# Device #1: NVIDIA GeForce RTX 3060
+# Type: GPU
+# Vendor: NVIDIA Corporation
+```
+
+### Windows
+
+```powershell
+# Descargar desde https://hashcat.net/hashcat/
+# Extraer el ZIP en C:\hashcat\
+
+# Verificar
+cd C:\hashcat
+.\hashcat.exe --version
+
+# Verificar GPU
+.\hashcat.exe -I
+```
+
+::: {.callout-warning}
+## Aviso Legal y Ético
+Hashcat es una herramienta de recuperación de contraseñas. Crackear hashes de sistemas que no te pertenecen o sin autorización explícita es ILEGAL. Solo trabaja con hashes de sistemas propios, de evaluaciones autorizadas, o de datasets públicos de práctica. El uso indebido puede resultar en cargos criminales graves.
+:::
+
+## Nivel Básico
+
+### Conceptos Fundamentales
+
+**Hash**: Función criptográfica unidireccional que convierte una contraseña en una cadena fija de caracteres. No se puede "des-hashear", solo se puede comparar.
+
+**Hash type (-m)**: Cada algoritmo de hash tiene un identificador numérico en hashcat. MD5=0, SHA1=100, NTLM=1000, bcrypt=3200, etc.
+
+**Attack mode (-a)**: Estrategia de ataque. 0=Dictionary, 3=Mask (brute force), 6=Hybrid (wordlist + mask), 7=Hybrid (mask + wordlist).
+
+**Wordlist**: Archivo de texto con contraseñas candidatas, una por línea. Rockyou.txt es el más famoso (14M+ contraseñas).
+
+**Rules**: Transformaciones aplicadas a cada palabra del diccionario (mayúsculas, leetspeak, appending números, etc.).
+
+**Mask**: Patrón que define qué caracteres probar en cada posición. ?l=lowercase, ?u=uppercase, ?d=digits, ?s=special, ?a=all.
+
+### Comandos Esenciales
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `hashcat -m <tipo> -a <modo> hash.txt dict.txt` | Ataque básico de diccionario | `hashcat -m 0 -a 0 hash.txt rockyou.txt` |
+| `-m 0` | MD5 | `hashcat -m 0 hash.txt dict.txt` |
+| `-m 100` | SHA1 | `hashcat -m 100 hash.txt dict.txt` |
+| `-m 1000` | NTLM | `hashcat -m 1000 hash.txt dict.txt` |
+| `-m 3200` | bcrypt | `hashcat -m 3200 hash.txt dict.txt` |
+| `-a 0` | Dictionary attack | `hashcat -a 0 -m 0 hash.txt dict.txt` |
+| `-a 3` | Mask (brute force) | `hashcat -a 3 -m 0 hash.txt ?l?l?l?l?l?l` |
+| `-a 6` | Hybrid: wordlist + mask | `hashcat -a 6 -m 0 hash.txt dict.txt ?d?d?d` |
+| `-o output.txt` | Guardar cracks | `hashcat -m 0 -o cracked.txt hash.txt dict.txt` |
+| `--show` | Mostrar cracks existentes | `hashcat -m 0 --show hash.txt` |
+| `-I` | Información de dispositivos | `hashcat -I` |
+| `-D 1,2` | Usar dispositivos específicos | `hashcat -D 1 -m 0 hash.txt dict.txt` |
+| `-w 3` | Workload profile (1-4) | `hashcat -w 3 -m 0 hash.txt dict.txt` |
+| `--status` | Mostrar estado durante ejecución | `hashcat --status -m 0 hash.txt dict.txt` |
+| `-b` | Benchmark | `hashcat -b -m 0` |
+
+### Identificar el Tipo de Hash
+
+```bash
+# Usar hashid para identificar el tipo
+hashid '$2b$12$LJ3m4ys3Lk9KqE1qK9qKqO'
+# Esperado:
+# [+] bcrypt
+# [+] Blowfish(OpenBSD)
+
+# Usar hash-identifier
+hash-identifier
+# Interactivo: pega el hash y te dice el tipo probable
+
+# Identificar manualmente por formato:
+# MD5:    32 chars hex (ej: 5f4dcc3b5aa765d61d8327deb882cf99)
+# SHA1:   40 chars hex
+# SHA256: 64 chars hex
+# NTLM:   32 chars hex
+# bcrypt: $2a$, $2b$, $2y$ prefix
+# WPA:    $WPAPK$ o handshake .cap
+```
+
+### Ataque de Diccionario Básico
+
+```bash
+# Crear archivo de hashes MD5
+echo "5f4dcc3b5aa765d61d8327deb882cf99" > hashes-md5.txt
+# Este es el hash de "password"
+
+# Crear wordlist pequeña para práctica
+cat > small-dict.txt << 'EOF'
+123456
+password
+12345678
+qwerty
+abc123
+monkey
+1234567
+letmein
+trustno1
+dragon
+EOF
+
+# Crackear MD5 con diccionario
+hashcat -m 0 -a 0 hashes-md5.txt small-dict.txt
+# Esperado:
+# 5f4dcc3b5aa765d61d8327deb882cf99:password
+
+# Ver resultado
+hashcat -m 0 --show hashes-md5.txt
+# Esperado:
+# 5f4dcc3b5aa765d61d8327deb882cf99:password
+```
+
+::: {.callout-tip}
+## Wordlists Recomendadas
+- **rockyou.txt**: 14M+ contraseñas reales de una filtración. Viene en Kali: `/usr/share/wordlists/rockyou.txt`. Descomprimir: `gunzip /usr/share/wordlists/rockyou.txt.gz`
+- **SecLists**: `https://github.com/danielmiessler/SecLists` — colección masiva de wordlists
+- **CrackStation**: `https://crackstation.net/` — wordlists gratuitas
+:::
+
+### Ataque con Máscara (Brute Force)
+
+```bash
+# Fuerza bruta: 4 dígitos numéricos
+hashcat -m 0 -a 3 hashes-md5.txt ?d?d?d?d
+# ?d = dígitos 0-9
+# Prueba: 0000, 0001, 0002, ... 9999
+
+# Fuerza bruta: 6 letras minúsculas
+hashcat -m 0 -a 3 hashes-md5.txt ?l?l?l?l?l?l
+# ?l = lowercase a-z
+# 26^6 = 308,915,776 combinaciones
+
+# Fuerza bruta: patrón personalizado
+hashcat -m 0 -a 3 hashes-md5.txt ?u?l?l?l?d?d?d
+# Ejemplo: Password123, Admin001
+# ?u = uppercase, ?l = lowercase, ?d = digits
+```
+
+::: {.callout-tip}
+## Character Sets para Máscaras
+| Charset | Significado | Caracteres |
+|---------|-------------|------------|
+| `?l` | lowercase | abcdefghijklmnopqrstuvwxyz |
+| `?u` | uppercase | ABCDEFGHIJKLMNOPQRSTUVWXYZ |
+| `?d` | digits | 0123456789 |
+| `?s` | special | !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~ |
+| `?a` | all | ?l + ?u + ?d + ?s |
+| `?b` | binary | 0x00 - 0xff |
+:::
+
+### Ejercicio 1: Crackear hashes MD5 y NTLM
+
+**Objetivo:** Crackear hashes de contraseñas comunes usando wordlist y máscara.
+
+**Paso 1:** Preparar hashes
+
+```bash
+# Crear archivo con múltiples hashes
+cat > exercise-hashes.txt << 'EOF'
+5f4dcc3b5aa765d61d8327deb882cf99
+e99a18c428cb38d5f260853678922e03
+d8578edf8458ce06fbc5bb76a58c5ca4
+482c811da5d5b4bc6d497ffa98491e38
+5ebe2294ecd0e0f08eab7690d2a6ee69
+EOF
+# Pistas: password, abc123, qwerty, secret, hello
+```
+
+**Paso 2:** Crackear con diccionario
+
+```bash
+# Usar rockyou o small-dict.txt
+hashcat -m 0 -a 0 exercise-hashes.txt small-dict.txt -o cracked-md5.txt
+
+# Ver resultados
+cat cracked-md5.txt
+# Esperado: varios hashes crackeados con sus contraseñas
+
+# Ver todos los cracks (incluyendo anteriores)
+hashcat -m 0 --show exercise-hashes.txt
+```
+
+**Paso 3:** Crackear hashes NTLM
+
+```bash
+# Crear hashes NTLM (Windows)
+cat > ntlm-hashes.txt << 'EOF'
+5f4dcc3b5aa765d61d8327deb882cf99
+482c811da5d5b4bc6d497ffa98491e38
+EOF
+
+# Crackear NTLM (mode 1000)
+hashcat -m 1000 -a 0 ntlm-hashes.txt small-dict.txt -o cracked-ntlm.txt
+
+# Ver resultados
+hashcat -m 1000 --show ntlm-hashes.txt
+```
+
+## Nivel Intermedio
+
+### Ataques Basados en Reglas
+
+Las reglas transforman palabras del diccionario para generar variantes.
+
+```bash
+# Reglas incorporadas más comunes
+hashcat -m 0 -a 0 hash.txt rockyou.txt -r rules/best64.rule
+# best64.rule: 64 reglas más efectivas
+
+# Reglas para leetspeak
+hashcat -m 0 -a 0 hash.txt rockyou.txt -r rules/leetspeak.rule
+# Transforma: password -> p@ssw0rd
+
+# Reglas para append números
+hashcat -m 0 -a 0 hash.txt rockyou.txt -r rules/d3adh0b0.rule
+# Añade números y sustituciones comunes
+
+# Múltiples reglas en secuencia
+hashcat -m 0 -a 0 hash.txt rockyou.txt \
+    -r rules/best64.rule \
+    -r rules/leetspeak.rule
+```
+
+### Sintaxis de Reglas Personalizadas
+
+```bash
+# Crear archivo de reglas personalizado
+cat > my-rules.rule << 'EOF'
+# Convertir primera letra a mayúscula
+c
+
+# Convertir todo a mayúsculas
+u
+
+# Append "123"
+$1 $2 $3
+
+# Append año actual
+$2 $0 $2 $4
+
+# Sustituir 'a' por '@'
+sa@
+
+# Sustituir 'e' por '3'
+se3
+
+# Sustituir 'o' por '0'
+so0
+
+# Sustituir 's' por '$'
+ss$
+
+# Duplicar palabra
+d
+
+# Revertir palabra
+r
+
+# Toggle case (alternar mayúsculas/minúsculas)
+T0
+T1
+T2
+
+# Append special character
+$!
+$@
+$#
+EOF
+
+# Usar reglas personalizadas
+hashcat -m 0 -a 0 hash.txt small-dict.txt -r my-rules.rule
+```
+
+::: {.callout-tip}
+## Reglas Más Útiles
+| Regla | Acción | Ejemplo |
+|-------|--------|---------|
+| `c` | Capitalize | password → Password |
+| `u` | UPPERCASE | password → PASSWORD |
+| `l` | lowercase | PASSWORD → password |
+| `r` | Reverse | password → drowssap |
+| `d` | Duplicate | password → passwordpassword |
+| `$1` | Append "1" | password → password1 |
+| `^1` | Prepend "1" | password → 1password |
+| `sa@` | Replace a→@ | password → p@ssword |
+| `se3` | Replace e→3 | password → passw0rd |
+| `T3` | Toggle char 3 | password → paSsword |
+:::
+
+### Ataque Híbrido (Wordlist + Máscara)
+
+```bash
+# Wordlist + suffix numérico (3 dígitos)
+hashcat -m 0 -a 6 hash.txt rockyou.txt ?d?d?d
+# Prueba: password000, password001, ... admin999
+
+# Wordlist + suffix especial
+hashcat -m 0 -a 6 hash.txt rockyou.txt ?s?s
+# Prueba: password!!, admin#@, etc.
+
+# Wordlist + suffix año
+hashcat -m 0 -a 6 hash.txt rockyou.txt ?d?d?d?d
+# Prueba: password2024, admin2023, etc.
+
+# Mask prefix + wordlist
+hashcat -m 0 -a 7 hash.txt ?d?d?d rockyou.txt
+# Prueba: 001password, 123admin, etc.
+```
+
+### Ataque Combinador
+
+```bash
+# Combinar dos wordlists (cada palabra de A + cada palabra de B)
+hashcat -m 0 -a 1 hash.txt dict1.txt dict2.txt
+# Si dict1 tiene "admin" y dict2 tiene "123":
+# Genera: admin123
+
+# Ejemplo práctico: palabras + números
+cat > words.txt << 'EOF'
+admin
+user
+root
+test
+EOF
+
+cat > numbers.txt << 'EOF'
+123
+456
+000
+2024
+EOF
+
+hashcat -m 0 -a 1 hash.txt words.txt numbers.txt
+# Genera: admin123, admin456, admin000, admin2024, user123, etc.
+```
+
+### Gestión de Sesiones
+
+```bash
+# Pausar un ataque en ejecución
+# Presionar: p (en la terminal de hashcat)
+
+# Reanudar
+# Presionar: r
+
+# Salir y guardar sesión
+# Presionar: q
+
+# Restaurar sesión guardada
+hashcat --restore
+
+# Restaurar sesión específica
+hashcat --restore hashcat.restore
+
+# Ver estado sin interrumpir
+hashcat --status
+
+# Saltar al siguiente hash
+# Presionar: s (durante ejecución)
+
+# Borrar sesión (eliminar .restore)
+rm hashcat.restore
+```
+
+::: {.callout-tip}
+## Sesiones con Nombre
+hashcat guarda sesiones en hashcat.restore. Para múltiples proyectos:
+```bash
+# Copiar sesión antes de empezar otro ataque
+cp hashcat.restore project-a.restore
+
+# Restaurar sesión específica
+hashcat --restore project-a.restore
+```
+:::
+
+### Ejercicio 2: Ataque con reglas contra NTLM
+
+**Objetivo:** Crackear hashes NTLM usando wordlist + reglas de transformación.
+
+**Paso 1:** Preparar hashes NTLM
+
+```bash
+# Crear hashes NTLM de contraseñas con patrones comunes
+cat > ntlm-exercise.txt << 'EOF'
+8846f7eaee8fb117ad06bdd830b7586c
+5835048ce94ad0564e29a924a03510ef
+d0f98c2c56085f54608867b5d8c64f25
+EOF
+# Pistas: password123, Admin2024, welcome!
+```
+
+**Paso 2:** Crear reglas específicas
+
+```bash
+# Reglas para este ejercicio
+cat > exercise-rules.rule << 'EOF'
+# Append 3 dígitos
+$1 $2 $3
+$4 $5 $6
+$0 $0 $7
+
+# Capitalize + append
+c $1 $2 $3
+
+# Leetspeak básico
+sa@
+se3
+si1
+so0
+
+# Append año
+c $2 $0 $2 $4
+
+# Append special
+c $!
+c $@
+EOF
+```
+
+**Paso 3:** Ejecutar ataque con reglas
+
+```bash
+# Ataque con reglas
+hashcat -m 1000 -a 0 ntlm-exercise.txt small-dict.txt \
+    -r exercise-rules.rule \
+    -o ntlm-cracked.txt
+
+# Ver resultados
+hashcat -m 1000 --show ntlm-exercise.txt
+```
+
+## Nivel Avanzado
+
+### Custom Character Sets
+
+```bash
+# Definir charset personalizado
+hashcat -m 0 -a 3 hash.txt -1 ?l?d ?1?1?1?1?1?1
+# -1 define charset custom: letras + dígitos
+# ?1 usa el charset custom
+
+# Múltiples charsets custom
+hashcat -m 0 -a 3 hash.txt \
+    -1 abcdef \
+    -2 012345 \
+    ?1?1?1?2?2?2
+# Solo usa a-f y 0-5
+
+# Charset para contraseñas españolas
+hashcat -m 0 -a 3 hash.txt \
+    -1 abcdefghijklmnñopqrstuvwxyz \
+    -2 0123456789 \
+    -3 !@#$%&* \
+    ?1?1?1?1?2?2?3
+# Patrón: 4 letras + 2 dígitos + 1 especial
+```
+
+### Benchmark y Optimización de GPU
+
+```bash
+# Benchmark de todos los modos para MD5
+hashcat -b -m 0
+# Esperado:
+# Speed.#1: 12345.6 MH/s (12.3 GH/s)
+
+# Benchmark para tipo específico
+hashcat -b -m 1000
+# NTLM hash rate
+
+# Benchmark con workload específico
+hashcat -b -m 0 -w 1  # Low (menos calor, más lento)
+hashcat -b -m 0 -w 2  # Default
+hashcat -b -m 0 -w 3  # High (recomendado)
+hashcat -b -m 0 -w 4  # Nightmare (máximo, puede crash)
+
+# Optimizar kernel size
+hashcat -m 0 -a 0 hash.txt rockyou.txt --kernel-accel 1 --kernel-loops 1
+# --kernel-accel: 1-1024 (default auto)
+# --kernel-loops: 1-1024 (default auto)
+
+# Usar solo CPU (sin GPU)
+hashcat -m 0 -a 0 hash.txt rockyou.txt -D 2
+# -D 1 = GPU, -D 2 = CPU, -D 1,2 = ambos
+```
+
+::: {.callout-tip}
+## Workload Profile
+| Profile | Flag | Uso | Temperatura |
+|---------|------|-----|-------------|
+| Low | `-w 1` | Laptops, poco calor | Baja |
+| Default | `-w 2` | Uso normal | Media |
+| High | `-w 3` | Desktop, recomendado | Alta |
+| Nightmare | `-w 4` | Máximo rendimiento | Muy alta |
+:::
+
+### Distributed Cracking con Hashtopolis
+
+```bash
+# Hashtopolis permite distribuir cracking entre múltiples máquinas
+# Servidor: https://github.com/hashtopolis/server
+# Agentes: https://github.com/hashtopolis/agent
+
+# Configurar agente
+./hashtopolis-agent.zip
+# Seguir wizard para conectar al servidor
+
+# El servidor distribuye tareas automáticamente
+# Cada agente reporta progreso y cracks
+
+# Alternativa simple: dividir hash file
+split -l 1000 hashes.txt hashes-part-
+# hashcat -m 0 -a 0 hashes-part-aa dict.txt &
+# hashcat -m 0 -a 0 hashes-part-ab dict.txt &
+```
+
+### Hashcat Brain Server
+
+```bash
+# Brain server: evita reprocesar el mismo candidate en múltiples sesiones
+# Iniciar brain server
+hashcat --brain-server --brain-port 9999 --brain-password mypassword
+
+# Conectar cliente al brain
+hashcat -m 0 -a 3 hash.txt ?l?l?l?l?l?l \
+    --brain-host 127.0.0.1 \
+    --brain-port 9999 \
+    --brain-password mypassword
+
+# El brain trackea qué candidates ya se probaron
+# Útil cuando tienes múltiples GPUs o sesiones
+```
+
+### Ataque contra WPA/WPA2
+
+```bash
+# Convertir capture a formato hashcat
+# Necesitas un handshake .cap con hcxpcapngtool
+hcxpcapngtool -o handshake.hc22000 capture.cap
+
+# Crackear WPA/WPA2
+hashcat -m 22000 -a 0 handshake.hc22000 rockyou.txt
+
+# Con reglas
+hashcat -m 22000 -a 0 handshake.hc22000 rockyou.txt -r rules/best64.rule
+
+# Con máscara (para PINs de 8 dígitos)
+hashcat -m 22000 -a 3 handshake.hc22000 ?d?d?d?d?d?d?d?d
+```
+
+### Ataque contra bcrypt
+
+```bash
+# bcrypt es intencionalmente lento (key stretching)
+# Hashcat lo soporta pero es mucho más lento que MD5/NTLM
+
+# Crackear bcrypt
+hashcat -m 3200 -a 0 bcrypt-hashes.txt rockyou.txt
+
+# Con reglas
+hashcat -m 3200 -a 0 bcrypt-hashes.txt rockyou.txt -r rules/best64.rule
+
+# Nota: bcrypt es ~1000x más lento que MD5
+# En GPU: MD5 = 100 GH/s, bcrypt = 100 KH/s
+# Usar wordlists de alta calidad, no brute force
+```
+
+### Ejercicio 3: Análisis de política de contraseñas
+
+**Objetivo:** Demostrar qué tan débiles son las contraseñas de una organización simulada.
+
+**Paso 1:** Preparar escenario
+
+```bash
+# Simular hashes de una empresa (NTLM de Active Directory)
+cat > company-hashes.txt << 'EOF'
+5f4dcc3b5aa765d61d8327deb882cf99
+e99a18c428cb38d5f260853678922e03
+482c811da5d5b4bc6d497ffa98491e38
+5ebe2294ecd0e0f08eab7690d2a6ee69
+d8578edf8458ce06fbc5bb76a58c5ca4
+7c6a180b36896a02c4c39468a47f7d7c
+25d55ad283aa400af464c76d713c07ad
+EOF
+```
+
+**Paso 2:** Ataque por fases
+
+```bash
+# Fase 1: Diccionario simple
+hashcat -m 0 -a 0 company-hashes.txt small-dict.txt \
+    -o phase1-cracked.txt
+
+# Fase 2: Diccionario + reglas
+hashcat -m 0 -a 0 company-hashes.txt small-dict.txt \
+    -r rules/best64.rule \
+    -o phase2-cracked.txt
+
+# Fase 3: Híbrido (diccionario + números)
+hashcat -m 0 -a 6 company-hashes.txt small-dict.txt ?d?d?d \
+    -o phase3-cracked.txt
+```
+
+**Paso 3:** Generar reporte
+
+```bash
+# Contar cracks por fase
+echo "=== Reporte de Política de Contraseñas ==="
+echo ""
+echo "Total hashes: $(wc -l < company-hashes.txt)"
+echo "Fase 1 (diccionario): $(wc -l < phase1-cracked.txt 2>/dev/null || echo 0)"
+echo "Fase 2 (reglas): $(wc -l < phase2-cracked.txt 2>/dev/null || echo 0)"
+echo "Fase 3 (híbrido): $(wc -l < phase3-cracked.txt 2>/dev/null || echo 0)"
+echo ""
+
+# Mostrar contraseñas crackeadas
+echo "=== Contraseñas Crackeadas ==="
+hashcat -m 0 --show company-hashes.txt
+
+# Calcular porcentaje
+TOTAL=$(wc -l < company-hashes.txt)
+CRACKED=$(hashcat -m 0 --show company-hashes.txt | wc -l)
+echo ""
+echo "Porcentaje crackeado: $(( CRACKED * 100 / TOTAL ))%"
+```
+
+## Uso en Ciberseguridad
+
+### Escenario 1: Validación de política de contraseñas
+
+```bash
+#!/bin/bash
+# password-policy-audit.sh - Auditar fortaleza de contraseñas
+
+set -euo pipefail
+
+HASH_FILE="${1:?Uso: $0 <hashes.txt>}"
+HASH_TYPE="${2:-0}"  # Default: MD5
+WORDLIST="${3:-/usr/share/wordlists/rockyou.txt}"
+
+echo "=== Auditoría de Política de Contraseñas ==="
+echo "Hash type: $HASH_TYPE"
+echo "Wordlist: $WORDLIST"
+echo ""
+
+TOTAL=$(wc -l < "$HASH_FILE")
+echo "Total de hashes: $TOTAL"
+echo ""
+
+# Fase 1: Top 1000 passwords comunes
+echo "[Fase 1] Probando top 1000 passwords..."
+hashcat -m "$HASH_TYPE" -a 0 "$HASH_FILE" \
+    /usr/share/wordlists/rockyou.txt \
+    --limit 1000 \
+    -o phase1.txt 2>/dev/null || true
+
+# Fase 2: Diccionario completo + reglas
+echo "[Fase 2] Diccionario + reglas..."
+hashcat -m "$HASH_TYPE" -a 0 "$HASH_FILE" \
+    "$WORDLIST" \
+    -r /usr/share/hashcat/rules/best64.rule \
+    -o phase2.txt 2>/dev/null || true
+
+# Reporte
+echo ""
+echo "=== Resultados ==="
+CRACKED=$(hashcat -m "$HASH_TYPE" --show "$HASH_FILE" | wc -l)
+echo "Crackeadas: $CRACKED / $TOTAL ($(( CRACKED * 100 / TOTAL ))%)"
+echo ""
+echo "=== Contraseñas encontradas ==="
+hashcat -m "$HASH_TYPE" --show "$HASH_FILE"
+```
+
+### Escenario 2: Análisis de breach (filtración de datos)
+
+```bash
+# Cuando una empresa sufre una filtración de hashes
+# Analizar qué tan comprometidos están los usuarios
+
+# 1. Extraer hashes del breach
+# (asumiendo formato: username:hash)
+cut -d: -f2 breach-database.txt > hashes-only.txt
+
+# 2. Crackear con múltiples estrategias
+hashcat -m 0 -a 0 hashes-only.txt rockyou.txt -o cracked-breach.txt
+hashcat -m 0 -a 6 hashes-only.txt rockyou.txt ?d?d?d -o cracked-breach2.txt
+
+# 3. Generar estadísticas
+TOTAL=$(wc -l < hashes-only.txt)
+CRACKED=$(wc -l < cracked-breach.txt)
+echo "Usuarios comprometidos: $CRACKED / $TOTAL"
+
+# 4. Identificar patrones comunes
+awk -F: '{print $2}' cracked-breach.txt | \
+    sort | uniq -c | sort -rn | head -20
+# Muestra las contraseñas más comunes
+```
+
+### Escenario 3: Forensics - recuperación de contraseñas
+
+```bash
+# En investigación forense, recuperar contraseñas de evidencia
+
+# Extraer hash de archivo protegido
+# PDF:
+pdf2john protected.pdf > pdf-hash.txt
+
+# ZIP:
+zip2john protected.zip > zip-hash.txt
+
+# SSH private key:
+ssh2john id_rsa > ssh-hash.txt
+
+# Crackear
+hashcat -m 10500 -a 0 pdf-hash.txt rockyou.txt  # PDF
+hashcat -m 13600 -a 0 zip-hash.txt rockyou.txt   # ZIP/7z
+hashcat -m 22921 -a 0 ssh-hash.txt rockyou.txt   # SSH key
+```
+
+## Referencia Rápida
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `-m 0` | MD5 | `hashcat -m 0 hash.txt dict.txt` |
+| `-m 100` | SHA1 | `hashcat -m 100 hash.txt dict.txt` |
+| `-m 1000` | NTLM | `hashcat -m 1000 hash.txt dict.txt` |
+| `-m 3200` | bcrypt | `hashcat -m 3200 hash.txt dict.txt` |
+| `-m 22000` | WPA/WPA2 | `hashcat -m 22000 handshake.hc22000 dict.txt` |
+| `-a 0` | Dictionary | `hashcat -a 0 hash.txt dict.txt` |
+| `-a 1` | Combinator | `hashcat -a 1 hash.txt dict1.txt dict2.txt` |
+| `-a 3` | Mask (brute) | `hashcat -a 3 hash.txt ?l?l?l?l?l?l` |
+| `-a 6` | Hybrid (word+mask) | `hashcat -a 6 hash.txt dict.txt ?d?d` |
+| `-r` | Rules | `hashcat -r rules/best64.rule hash.txt dict.txt` |
+| `-o` | Output | `hashcat -o cracked.txt hash.txt dict.txt` |
+| `--show` | Mostrar cracks | `hashcat --show hash.txt` |
+| `-b` | Benchmark | `hashcat -b -m 0` |
+| `-w 3` | Workload high | `hashcat -w 3 hash.txt dict.txt` |
+| `-I` | Device info | `hashcat -I` |
+| `--restore` | Restaurar sesión | `hashcat --restore` |
+| `-1 ?l?d` | Custom charset | `hashcat -1 ?l?d -a 3 hash.txt ?1?1?1` |
+
+## Recursos Adicionales
+
+- **Documentación oficial**: https://hashcat.net/hashcat/
+- **Wiki de hashcat**: https://hashcat.net/wiki/
+- **Lista de hash types**: https://hashcat.net/wiki/doku.php?id=example_hashes
+- **Reglas incorporadas**: `/usr/share/hashcat/rules/`
+- **Rockyou.txt**: `/usr/share/wordlists/rockyou.txt` (Kali Linux)
+- **SecLists**: https://github.com/danielmiessler/SecLists
+- **Hashtopolis**: https://github.com/hashtopolis/server (distributed cracking)
+- **Practice**: https://crackmes.one/ (desafíos de cracking legal)
+
+---
+
+*Minicurso Hashcat — Curso Fundamentos de Ciberseguridad — CC BY-SA 4.0*

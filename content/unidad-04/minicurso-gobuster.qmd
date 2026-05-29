@@ -1,0 +1,811 @@
+---
+title: "Minicurso: Gobuster"
+module: "minicurso-gobuster"
+type: "minicurso"
+description: "Tutorial completo de Gobuster para descubrimiento de recursos web en ciberseguridad"
+---
+
+
+## ¿Qué es Gobuster?
+
+Gobuster es una herramienta de fuerza bruta para descubrimiento de URIs (directorios y archivos), DNS subdomains, y Virtual Hosts en servidores web. Desarrollada por OJ Reeves en Go, es significativamente más rápida que herramientas legacy como DirBuster o DirB, gracias a la concurrencia nativa de Go.
+
+Gobuster funciona enviando miles de peticiones HTTP a un servidor web, probando diferentes paths contra una wordlist. Cuando el servidor responde con un código de estado que indica contenido existente (200, 301, 302, 403), Gobuster lo reporta como hallazgo. Soporta múltiples modos: dir (directorios), dns (subdominios), vhost (virtual hosts), s3 (buckets de Amazon S3), y gcs (Google Cloud Storage).
+
+En ciberseguridad, Gobuster es esencial para mapear la superficie de ataque de aplicaciones web. Permite descubrir directorios ocultos, archivos de backup, paneles de administración, APIs no documentadas, y configuraciones expuestas. Es la primera herramienta que se ejecuta después de identificar un servidor web activo.
+
+## ¿Por qué aprenderlo?
+
+- **Velocidad**: Go concurrency = miles de peticiones por segundo
+- **Múltiples modos**: dirs, dns, vhost, s3, gcs
+- **Filtrado inteligente**: Excluir status codes, tamaños, regex patterns
+- **Recursive scanning**: Descubrir directorios dentro de directorios
+- **Estándar profesional**: Reemplazo moderno de DirBuster/DirB
+
+## Instalación
+
+### macOS
+
+```bash
+# Con Homebrew
+brew install gobuster
+
+# Verificar instalación
+gobuster version
+# Esperado:
+# v3.6 o superior
+
+# Verificar help
+gobuster --help
+# Esperado: lista de modos disponibles
+```
+
+### Linux (Ubuntu/Debian)
+
+```bash
+# Instalar desde repositorios (puede ser versión antigua)
+sudo apt update
+sudo apt install -y gobuster
+
+# Verificar
+gobuster version
+
+# Instalar versión más reciente desde GitHub
+# Descargar el binario precompilado
+GOBUSTER_VER=$(curl -s https://api.github.com/repos/OJ/gobuster/releases/latest | grep tag_name | cut -d'"' -f4)
+wget "https://github.com/OJ/gobuster/releases/download/${GOBUSTER_VER}/gobuster_Linux_x86_64.tar.gz"
+tar xzf gobuster_Linux_x86_64.tar.gz
+sudo mv gobuster /usr/local/bin/
+gobuster version
+```
+
+### Windows
+
+```powershell
+# Descargar desde GitHub
+# https://github.com/OJ/gobuster/releases/latest
+# Descargar gobuster_Windows_x86_64.zip
+
+# Extraer y ejecutar
+.\gobuster.exe version
+
+# O con Scoop
+scoop install gobuster
+```
+
+::: {.callout-warning}
+## Aviso Legal y Ético
+Gobuster genera miles de peticiones HTTP que quedan registradas en logs del servidor. Escanear sitios web sin autorización puede violar términos de servicio y leyes de acceso no autorizado. Solo escanea sitios que te pertenecen o tienes permiso explícito para evaluar. El uso indebido puede resultar en cargos legales.
+:::
+
+## Nivel Básico
+
+### Conceptos Fundamentales
+
+**Directory brute force**: Probar paths contra una wordlist para encontrar recursos existentes.
+
+**Status codes**: Códigos HTTP que indican el resultado de la petición. 200=OK, 301=Moved, 302=Found/Redirect, 403=Forbidden, 404=Not Found.
+
+**Wordlist**: Archivo con paths candidatos, uno por línea. Las wordlists más comunes son dirb, dirbuster, y SecLists.
+
+**Extensions**: Extensiones de archivo a probar (.php, .asp, .txt, .bak, etc.).
+
+**Threads**: Número de peticiones simultáneas. Más threads = más rápido, pero más detectable.
+
+### Comandos Esenciales
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `gobuster dir -u <url> -w <wordlist>` | Escaneo básico de directorios | `gobuster dir -u http://target -w wordlist.txt` |
+| `-u <url>` | URL objetivo | `gobuster dir -u http://192.168.1.100` |
+| `-w <file>` | Wordlist | `gobuster dir -u http://target -w /usr/share/wordlists/dirb/common.txt` |
+| `-e` | Extended mode (show full URL) | `gobuster dir -u http://target -w wordlist.txt -e` |
+| `-s <codes>` | Status codes to show | `gobuster dir -u http://target -w wordlist.txt -s 200,301,403` |
+| `-x <ext>` | Extensions to try | `gobuster dir -u http://target -w wordlist.txt -x php,txt,bak` |
+| `-t <threads>` | Threads | `gobuster dir -u http://target -w wordlist.txt -t 50` |
+| `-o <file>` | Output file | `gobuster dir -u http://target -w wordlist.txt -o results.txt` |
+| `-k` | Skip TLS verification | `gobuster dir -u https://target -w wordlist.txt -k` |
+| `-q` | Quiet mode | `gobuster dir -u http://target -w wordlist.txt -q` |
+| `--delay <ms>` | Delay between requests | `gobuster dir -u http://target -w wordlist.txt --delay 500` |
+| `--timeout <ms>` | Timeout per request | `gobuster dir -u http://target -w wordlist.txt --timeout 5000` |
+| `-r` | Follow redirects | `gobuster dir -u http://target -w wordlist.txt -r` |
+| `-n` | No status codes in output | `gobuster dir -u http://target -w wordlist.txt -n` |
+| `-c <cookies>` | Cookies | `gobuster dir -u http://target -w wordlist.txt -c "session=abc"` |
+
+### Directory Brute Force Básico
+
+```bash
+# Escaneo básico de directorios
+gobuster dir -u http://192.168.1.100 -w /usr/share/wordlists/dirb/common.txt
+# Esperado:
+# ===============================================================
+# Gobuster v3.6 by OJ Reeves (@TheColonial) & Christian Mehlmauer
+# ===============================================================
+# [+] Url:                     http://192.168.1.100
+# [+] Method:                  GET
+# [+] Threads:                 10
+# [+] Wordlist:                /usr/share/wordlists/dirb/common.txt
+# [+] Status codes:            200,204,301,302,307,401,403
+# [+] Timeout:                 10s
+# ===============================================================
+# /admin                (Status: 301) [Size: 312] [--> http://192.168.1.100/admin/]
+# /images               (Status: 301) [Size: 313] [--> http://192.168.1.100/images/]
+# /index.html           (Status: 200) [Size: 10918]
+# /login                (Status: 200) [Size: 2345]
+# /css                  (Status: 301) [Size: 310] [--> http://192.168.1.100/css/]
+# /js                   (Status: 301) [Size: 309] [--> http://192.168.1.100/js/]
+```
+
+::: {.callout-tip}
+## Wordlists Recomendadas
+- **dirb common**: `/usr/share/wordlists/dirb/common.txt` (viene en Kali)
+- **dirb big**: `/usr/share/wordlists/dirb/big.txt` (más completo)
+- **SecLists**: `/usr/share/seclists/Discovery/Web-Content/`
+  - `directory-list-2.3-medium.txt`
+  - `directory-list-2.3-small.txt`
+  - `raft-medium-directories.txt`
+- **Instalar SecLists**: `sudo apt install -y seclists`
+:::
+
+### Extensiones y Filtros
+
+```bash
+# Probar con extensiones específicas
+gobuster dir -u http://192.168.1.100 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    -x php,txt,html,bak,old,sql
+# Prueba: /admin.php, /admin.txt, /admin.html, /admin.bak, etc.
+
+# Solo mostrar ciertos status codes
+gobuster dir -u http://192.168.1.100 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    -s 200,301,403
+
+# Excluir 404 (not found)
+gobuster dir -u http://192.168.1.100 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    -s 200,301,302,403
+
+# Mostrar URLs completas
+gobuster dir -u http://192.168.1.100 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    -e
+# Esperado: http://192.168.1.100/admin (Status: 301)
+```
+
+### Control de Velocidad y Threads
+
+```bash
+# Más threads = más rápido (red interna)
+gobuster dir -u http://192.168.1.100 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    -t 100
+
+# Menos threads = más sigiloso
+gobuster dir -u http://192.168.1.100 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    -t 5
+
+# Delay entre peticiones (evitar rate limiting)
+gobuster dir -u http://192.168.1.100 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    --delay 200
+# 200ms entre cada petición
+
+# Timeout personalizado
+gobuster dir -u http://192.168.1.100 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    --timeout 3000
+# 3 segundos de timeout por petición
+```
+
+### Ejercicio 1: Descubrimiento de directorios web
+
+**Objetivo:** Descubrir directorios y archivos ocultos en un servidor web.
+
+**Paso 1:** Configurar entorno de práctica
+
+```bash
+# Usar DVWA o Juice Shop
+docker run -d --name juice-shop -p 3000:3000 bkimminich/juice-shop
+
+# Verificar que está corriendo
+curl -s -o /dev/null -w "%{http_code}" http://localhost:3000
+# Esperado: 200
+```
+
+**Paso 2:** Escaneo básico
+
+```bash
+# Escaneo inicial con wordlist pequeña
+gobuster dir -u http://localhost:3000 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    -t 20 \
+    -o juice-basic.txt
+
+# Ver resultados
+cat juice-basic.txt
+```
+
+**Paso 3:** Escaneo con extensiones
+
+```bash
+# Escanear con extensiones comunes
+gobuster dir -u http://localhost:3000 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    -x js,json,html,txt,bak,old,zip \
+    -t 20 \
+    -o juice-extended.txt
+
+# Comparar resultados
+echo "=== Resultados básicos ==="
+grep "Status:" juice-basic.txt | wc -l
+echo "=== Resultados con extensiones ==="
+grep "Status:" juice-extended.txt | wc -l
+```
+
+## Nivel Intermedio
+
+### DNS Subdomain Enumeration
+
+```bash
+# Descubrir subdominios
+gobuster dns -d example.com -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-5000.txt
+
+# Con resolver personalizado
+gobuster dns -d example.com \
+    -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-5000.txt \
+    -r 8.8.8.8
+
+# Mostrar IPs resueltas
+gobuster dns -d example.com \
+    -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-5000.txt \
+    -i
+
+# Con wildcard filter (dominios con wildcard DNS)
+gobuster dns -d example.com \
+    -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-5000.txt \
+    --wildcard
+
+# Esperado:
+# Found: mail.example.com [192.168.1.10]
+# Found: www.example.com [192.168.1.10]
+# Found: api.example.com [192.168.1.20]
+# Found: dev.example.com [192.168.1.30]
+```
+
+::: {.callout-tip}
+## Wordlists DNS
+- **SecLists DNS**: `/usr/share/seclists/Discovery/DNS/`
+  - `subdomains-top1million-5000.txt`
+  - `subdomains-top1million-20000.txt`
+  - `combined_subdomains.txt`
+- **Amass**: `https://github.com/owasp-amass/amass` (wordlists incluidas)
+:::
+
+### VHost Discovery
+
+```bash
+# Descubrir virtual hosts
+gobuster vhost -u http://192.168.1.100 \
+    -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-5000.txt
+
+# Con filtro de tamaño (excluir respuestas genéricas)
+gobuster vhost -u http://192.168.1.100 \
+    -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-5000.txt \
+    --append-domain
+
+# Con header Host personalizado
+gobuster vhost -u http://192.168.1.100 \
+    -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-5000.txt \
+    --domain example.com
+
+# Esperado:
+# Found: admin.example.com (Status: 200) [Size: 4523]
+# Found: internal.example.com (Status: 403) [Size: 287]
+```
+
+### API Endpoint Discovery
+
+```bash
+# Descubrir endpoints de API
+gobuster dir -u http://192.168.1.100/api \
+    -w /usr/share/wordlists/seclists/Discovery/Web-Content/api/api-endpoints.txt \
+    -x json,xml
+
+# Con métodos HTTP específicos
+gobuster dir -u http://192.168.1.100/api \
+    -w /usr/share/wordlists/seclists/Discovery/Web-Content/api/api-endpoints.txt \
+    --method POST
+
+# Con headers de API
+gobuster dir -u http://192.168.1.100/api \
+    -w /usr/share/wordlists/seclists/Discovery/Web-Content/api/api-endpoints.txt \
+    -H "Authorization: Bearer token123" \
+    -H "Content-Type: application/json"
+```
+
+### Filtrado Avanzado
+
+```bash
+# Excluir respuestas de cierto tamaño
+gobuster dir -u http://192.168.1.100 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    --exclude-length 512
+# Excluye respuestas de exactamente 512 bytes
+
+# Excluir múltiples tamaños
+gobuster dir -u http://192.168.1.100 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    --exclude-length 512,1024,2048
+
+# Filtrar por regex en el body
+gobuster dir -u http://192.168.1.100 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    --exclude-regex "Page not found"
+
+# Filtrar por regex en el body (incluir solo matches)
+gobuster dir -u http://192.168.1.100 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    --include-regex "Welcome|Dashboard"
+
+# Wildcard filtering
+gobuster dir -u http://192.168.1.100 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    --wildcard
+```
+
+### Autenticación y Headers
+
+```bash
+# Con cookies de sesión
+gobuster dir -u http://192.168.1.100 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    -c "PHPSESSID=abc123; user=admin"
+
+# Con headers personalizados
+gobuster dir -u http://192.168.1.100 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    -H "X-Forwarded-For: 127.0.0.1" \
+    -H "User-Agent: Mozilla/5.0"
+
+# Con autenticación básica
+gobuster dir -u http://192.168.1.100 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    -U admin -P password
+
+# Con bearer token
+gobuster dir -u http://192.168.1.100 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..."
+```
+
+### Ejercicio 2: Descubrimiento de subdominios y VHosts
+
+**Objetivo:** Descubrir subdominios y virtual hosts de un dominio.
+
+**Paso 1:** Preparar wordlist DNS
+
+```bash
+# Crear wordlist pequeña para práctica
+cat > dns-small.txt << 'EOF'
+www
+mail
+ftp
+admin
+dev
+test
+staging
+api
+blog
+shop
+portal
+cdn
+dns
+ns1
+ns2
+smtp
+pop
+imap
+webmail
+intranet
+EOF
+```
+
+**Paso 2:** Enumerar subdominios
+
+```bash
+# Para un dominio real (con permiso) o local
+# Ejemplo con dominio de práctica
+gobuster dns -d testphp.vulnweb.com \
+    -w dns-small.txt \
+    -r 8.8.8.8 \
+    -i
+
+# Con wildcard
+gobuster dns -d testphp.vulnweb.com \
+    -w dns-small.txt \
+    --wildcard
+```
+
+**Paso 3:** Descubrir VHosts
+
+```bash
+# VHost discovery en servidor IP
+gobuster vhost -u http://192.168.1.100 \
+    -w dns-small.txt \
+    --append-domain \
+    -o vhosts-results.txt
+
+# Ver resultados
+cat vhosts-results.txt
+```
+
+## Nivel Avanzado
+
+### Recursive Scanning
+
+```bash
+# Escaneo recursivo (descubrir directorios dentro de directorios)
+gobuster dir -u http://192.168.1.100 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    -r
+# -r = recursive, escanea directorios encontrados
+
+# Con profundidad limitada
+gobuster dir -u http://192.168.1.100 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    -r --depth 2
+# Solo 2 niveles de profundidad
+
+# Con extensiones en recursión
+gobuster dir -u http://192.168.1.100 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    -r -x php,txt,bak --depth 2
+```
+
+::: {.callout-warning}
+## Recursive Scanning
+El escaneo recursivo puede generar MUCHAS peticiones. Si encuentras 10 directorios y cada uno tiene 10 subdirectorios, son 100+ peticiones adicionales. Usar con cuidado en producción.
+:::
+
+### S3 Bucket Discovery
+
+```bash
+# Descubrir buckets de Amazon S3
+gobuster s3 -w /usr/share/wordlists/seclists/Discovery/Web-Content/s3-buckets.txt
+
+# Con wordlist personalizada
+cat > s3-targets.txt << 'EOF'
+mycompany-backups
+mycompany-assets
+mycompany-logs
+mycompany-dev
+mycompany-staging
+EOF
+
+gobuster s3 -w s3-targets.txt
+
+# Esperado:
+# https://mycompany-assets.s3.amazonaws.com/ [Status: 200]
+# https://mycompany-backups.s3.amazonaws.com/ [Status: 403]
+```
+
+### Custom Headers y User Agents
+
+```bash
+# Rotar user agents para evasión básica
+gobuster dir -u http://192.168.1.100 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    -H "User-Agent: Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+
+# Simular crawler de buscador
+gobuster dir -u http://192.168.1.100 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    -H "User-Agent: Mozilla/5.0 (compatible; Bingbot/2.0; +http://www.bing.com/bingbot.htm)"
+
+# Bypass de WAF básico con headers
+gobuster dir -u http://192.168.1.100 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    -H "X-Original-URL: /admin" \
+    -H "X-Rewrite-URL: /admin"
+```
+
+### Output Formatting y Parsing
+
+```bash
+# Output en formato JSON (para procesar con scripts)
+gobuster dir -u http://192.168.1.100 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    -o results.txt
+
+# Parsear resultados para extraer URLs
+grep "Status:" results.txt | awk '{print $1}'
+# Extrae solo los paths encontrados
+
+# Extraer paths con status 200
+grep "Status: 200" results.txt | awk '{print $1}'
+
+# Extraer paths con status 403 (forbidden = interesante)
+grep "Status: 403" results.txt | awk '{print $1}'
+
+# Contar hallazgos por status code
+grep "Status:" results.txt | \
+    grep -oP 'Status: \d+' | \
+    sort | uniq -c | sort -rn
+```
+
+### Ejercicio 3: Auditoría completa de superficie web
+
+**Objetivo:** Mapear completamente la superficie de ataque de un servidor web.
+
+**Paso 1:** Escaneo inicial
+
+```bash
+# Crear directorio de auditoría
+mkdir -p ~/web-audit-$(date +%Y%m%d) && cd ~/web-audit-$(date +%Y%m%d)
+
+# Escaneo básico
+gobuster dir -u http://192.168.1.100 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    -t 50 \
+    -o phase1-basic.txt \
+    -e
+
+# Escaneo con extensiones
+gobuster dir -u http://192.168.1.100 \
+    -w /usr/share/wordlists/dirb/common.txt \
+    -x php,asp,aspx,txt,bak,old,sql,zip,tar,gz \
+    -t 50 \
+    -o phase2-extensions.txt \
+    -e
+```
+
+**Paso 2:** Escaneo de backup files
+
+```bash
+# Wordlist específica para backups
+cat > backup-words.txt << 'EOF'
+backup
+bak
+old
+temp
+tmp
+save
+copy
+orig
+original
+dev
+staging
+test
+debug
+config
+conf
+database
+db
+dump
+sql
+log
+logs
+EOF
+
+gobuster dir -u http://192.168.1.100 \
+    -w backup-words.txt \
+    -x bak,old,sql,zip,tar,gz,conf,cfg,ini,log \
+    -t 20 \
+    -o phase3-backups.txt \
+    -e
+```
+
+**Paso 3:** Generar reporte
+
+```bash
+# Consolidar resultados
+echo "=== Reporte de Superficie Web ===" > report.txt
+echo "Target: http://192.168.1.100" >> report.txt
+echo "Fecha: $(date)" >> report.txt
+echo "" >> report.txt
+
+echo "--- Directorios encontrados ---" >> report.txt
+grep "Status:" phase1-basic.txt >> report.txt
+echo "" >> report.txt
+
+echo "--- Archivos con extensiones ---" >> report.txt
+grep "Status:" phase2-extensions.txt >> report.txt
+echo "" >> report.txt
+
+echo "--- Backups y configs ---" >> report.txt
+grep "Status:" phase3-backups.txt >> report.txt
+echo "" >> report.txt
+
+echo "--- Resumen ---" >> report.txt
+echo "Total directorios: $(grep -c "Status:" phase1-basic.txt)" >> report.txt
+echo "Total con extensiones: $(grep -c "Status:" phase2-extensions.txt)" >> report.txt
+echo "Total backups/configs: $(grep -c "Status:" phase3-backups.txt)" >> report.txt
+
+cat report.txt
+```
+
+## Uso en Ciberseguridad
+
+### Escenario 1: Descubrimiento de archivos sensibles
+
+```bash
+#!/bin/bash
+# sensitive-files-finder.sh - Buscar archivos sensibles expuestos
+
+set -euo pipefail
+
+TARGET="${1:?Uso: $0 <url>}"
+OUTPUT="sensitive-files-$(date +%Y%m%d).txt"
+
+echo "=== Búsqueda de Archivos Sensibles ==="
+echo "Target: $TARGET"
+echo ""
+
+# Wordlist de archivos sensibles
+cat > sensitive-words.txt << 'EOF'
+.git
+.svn
+.env
+config
+configuration
+database
+db
+backup
+dump
+sql
+passwd
+shadow
+htpasswd
+htaccess
+wp-config
+phpinfo
+phpinfo.php
+test
+debug
+log
+logs
+error
+admin
+administrator
+panel
+dashboard
+api
+swagger
+graphql
+README
+readme
+LICENSE
+CHANGELOG
+composer.json
+package.json
+Gemfile
+requirements.txt
+Dockerfile
+docker-compose
+Makefile
+EOF
+
+# Escanear
+gobuster dir -u "$TARGET" \
+    -w sensitive-words.txt \
+    -x txt,bak,old,sql,conf,cfg,ini,log,json,yaml,yml,xml,php,asp,aspx \
+    -t 30 \
+    -s 200,301,403 \
+    -o "$OUTPUT" \
+    -e
+
+echo ""
+echo "=== Resultados ==="
+cat "$OUTPUT"
+
+# Alertar sobre hallazgos críticos
+echo ""
+echo "=== Hallazgos Críticos ==="
+grep -E "\.git|\.env|passwd|shadow|wp-config|config\.|database" "$OUTPUT" || echo "No se encontraron hallazgos críticos"
+```
+
+### Escenario 2: Mapeo de superficie de ataque
+
+```bash
+# Mapeo completo de un dominio
+TARGET="example.com"
+
+# 1. Subdomain enumeration
+gobuster dns -d "$TARGET" \
+    -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt \
+    -i -r 8.8.8.8 \
+    -o subdomains.txt
+
+# 2. Para cada subdominio encontrado, escanear directorios
+while read -r subdomain; do
+    url=$(echo "$subdomain" | awk '{print $2}')
+    echo "Escaneando: $url"
+    gobuster dir -u "http://$url" \
+        -w /usr/share/wordlists/dirb/common.txt \
+        -t 20 \
+        -o "dirscan-${url}.txt" \
+        -e 2>/dev/null || true
+done < <(grep "Found:" subdomains.txt)
+
+# 3. Consolidar resultados
+echo "=== Mapa de Superficie de Ataque ==="
+echo "Subdominios encontrados: $(grep -c "Found:" subdomains.txt)"
+echo ""
+for f in dirscan-*.txt; do
+    echo "[$f]"
+    grep "Status:" "$f" | head -10
+    echo ""
+done
+```
+
+### Escenario 3: Detección de misconfiguraciones
+
+```bash
+# Buscar configuraciones expuestas comunes
+TARGET="http://192.168.1.100"
+
+# Archivos de configuración
+gobuster dir -u "$TARGET" \
+    -w /usr/share/seclists/Discovery/Web-Content/common-and-french.txt \
+    -x conf,cfg,ini,xml,json,yaml,yml,env,properties \
+    -s 200,403 \
+    -t 20 \
+    -o misconfig.txt
+
+# Directorios de administración
+gobuster dir -u "$TARGET" \
+    -w /usr/share/seclists/Discovery/Web-Content/admin-panels.txt \
+    -s 200,301,403 \
+    -t 20 \
+    -o admin-panels.txt
+
+# APIs no documentadas
+gobuster dir -u "$TARGET/api" \
+    -w /usr/share/seclists/Discovery/Web-Content/api/api-endpoints.txt \
+    -s 200,401,403 \
+    -t 20 \
+    -o api-endpoints.txt
+
+# Analizar resultados
+echo "=== Misconfiguraciones Detectadas ==="
+echo "Config files: $(grep -c "Status:" misconfig.txt 2>/dev/null || echo 0)"
+echo "Admin panels: $(grep -c "Status:" admin-panels.txt 2>/dev/null || echo 0)"
+echo "API endpoints: $(grep -c "Status:" api-endpoints.txt 2>/dev/null || echo 0)"
+```
+
+## Referencia Rápida
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `dir` | Directory scan | `gobuster dir -u http://target -w wordlist.txt` |
+| `dns` | Subdomain scan | `gobuster dns -d example.com -w wordlist.txt` |
+| `vhost` | Virtual host scan | `gobuster vhost -u http://target -w wordlist.txt` |
+| `s3` | S3 bucket scan | `gobuster s3 -w wordlist.txt` |
+| `-u` | URL | `gobuster dir -u http://target` |
+| `-w` | Wordlist | `gobuster dir -u http://target -w wordlist.txt` |
+| `-x` | Extensions | `gobuster dir -u http://target -w wordlist.txt -x php,bak` |
+| `-s` | Status codes | `gobuster dir -u http://target -w wordlist.txt -s 200,301,403` |
+| `-t` | Threads | `gobuster dir -u http://target -w wordlist.txt -t 50` |
+| `-o` | Output file | `gobuster dir -u http://target -w wordlist.txt -o results.txt` |
+| `-e` | Extended URL | `gobuster dir -u http://target -w wordlist.txt -e` |
+| `-k` | Skip TLS verify | `gobuster dir -u https://target -w wordlist.txt -k` |
+| `-c` | Cookies | `gobuster dir -u http://target -w wordlist.txt -c "session=abc"` |
+| `-H` | Custom header | `gobuster dir -u http://target -w wordlist.txt -H "X-Header: value"` |
+| `-r` | Follow redirects | `gobuster dir -u http://target -w wordlist.txt -r` |
+| `--delay` | Delay (ms) | `gobuster dir -u http://target -w wordlist.txt --delay 500` |
+| `-i` | Show IPs (DNS) | `gobuster dns -d example.com -w wordlist.txt -i` |
+
+## Recursos Adicionales
+
+- **Documentación oficial**: https://github.com/OJ/gobuster
+- **SecLists**: https://github.com/danielmiessler/SecLists (wordlists)
+- **DirBuster wordlists**: `/usr/share/wordlists/dirb/` (Kali Linux)
+- **Practice**: https://tryhackme.com/ (labs de directory brute force)
+- **DVWA**: https://github.com/digininja/DVWA
+- **Juice Shop**: https://github.com/juice-shop/juice-shop
+
+---
+
+*Minicurso Gobuster — Curso Fundamentos de Ciberseguridad — CC BY-SA 4.0*

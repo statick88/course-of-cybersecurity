@@ -1,0 +1,361 @@
+---
+title: "Modulo 6: Criptografia Post-Cuantica"
+module: "modulo-06"
+type: "content"
+description: "Preparacion para la era cuantica con estandares NIST 2024"
+---
+
+
+## Objetivos SMART
+
+Al finalizar este modulo, el estudiante sera capaz de:
+
+1. **Explicar** por que la computacion cuantica amenaza a RSA, DSA, ECDSA y Diffie-Hellman
+2. **Identificar** los 3 estandares NIST PQC finales (FIPS 203, 204, 205) y sus usos
+3. **Crear** un inventario criptografico de al menos 8 sistemas de una organizacion
+4. **Disenar** un roadmap de migracion PQC con 4 fases para TechCorp
+5. **Evaluar** el riesgo de "harvest now, decrypt later" para datos sensibles
+
+## 📋 5W1H — Marco de Referencia
+
+### ¿Qué? — Definicion de Criptografia Post-Cuantica
+
+La **criptografia post-cuantica (PQC)** se refiere a algoritmos criptograficos diseñados para ser seguros tanto contra computadoras clasicas como contra computadoras cuanticas. No es criptografia "cuantica" (que usa propiedades cuanticas para cifrar) — son algoritmos **clasicos** que resisten ataques de maquinas cuanticas.
+
+El problema central: los algoritmos asimetricos actuales (RSA, ECDSA, Diffie-Hellman) dependen de problemas matematicos que las computadoras cuanticas pueden resolver eficientemente usando el **algoritmo de Shor**.
+
+<div class="compact-diagram" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px 18px;margin:14px 0;">
+<svg viewBox="0 0 440 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:440px;">
+<text x="220" y="14" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="bold">Impacto de la Computacion Cuantica en Criptografia</text>
+<!-- Quantum Computer -->
+<rect x="10" y="24" width="420" height="30" rx="6" fill="#8b5cf6"/><text x="220" y="44" text-anchor="middle" fill="white" font-size="10" font-weight="bold">COMPUTADORA CUANTICA — Qubits (superposicion) + Algoritmo de Shor/Grover</text>
+<!-- Arrows down -->
+<line x1="110" y1="54" x2="110" y2="68" stroke="#ef4444" stroke-width="2"/>
+<line x1="330" y1="54" x2="330" y2="68" stroke="#10b981" stroke-width="2"/>
+<!-- Vulnerable -->
+<rect x="10" y="70" width="200" height="60" rx="6" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
+<text x="110" y="86" text-anchor="middle" fill="#dc2626" font-size="9" font-weight="bold">⚠ AFECTADO (Shor)</text>
+<text x="20" y="100" fill="#991b1b" font-size="8">• RSA (factoreo)</text>
+<text x="20" y="112" fill="#991b1b" font-size="8">• DSA (logaritmo discreto)</text>
+<text x="20" y="124" fill="#991b1b" font-size="8">• ECDSA (curvas elipticas)</text>
+<!-- Safe -->
+<rect x="230" y="70" width="200" height="60" rx="6" fill="#f0fdf4" stroke="#10b981" stroke-width="1.5"/>
+<text x="330" y="86" text-anchor="middle" fill="#059669" font-size="9" font-weight="bold">✅ NO AFECTADO</text>
+<text x="240" y="100" fill="#166534" font-size="8">• AES-256 (simetrica)</text>
+<text x="240" y="112" fill="#166534" font-size="8">• SHA-3 (hash)</text>
+<text x="240" y="124" fill="#166534" font-size="8">• Simetrica moderna</text>
+</svg>
+</div>
+
+### ¿Cómo? — Como Funciona la Migracion
+
+La migracion a PQC no es un "switch" sino un proceso gradual de 4 fases:
+
+1. **Inventario**: Identificar todos los sistemas que usan criptografia vulnerable
+2. **Evaluacion**: Clasificar por criticidad y dependencia de algoritmos afectados
+3. **Pilotaje**: Implementar PQC en sistemas no criticos con enfoque hibrido (clasico + PQC)
+4. **Despliegue**: Migracion completa con validacion y monitoreo continuo
+
+El enfoque **hibrido** es clave: se usa tanto el algoritmo clasico como el post-cuantico simultaneamente, garantizando seguridad incluso si uno de los dos es comprometido.
+
+### ¿Cuándo? — Cuándo Actuar
+
+- **AHORA (2024-2025)**: Inventario criptografico y planificacion
+- **2025-2026**: Evaluacion de proveedores y productos PQC-ready
+- **2026-2028**: Pilotaje en sistemas no criticos
+- **2028-2035**: Migracion completa de sistemas criticos
+
+::: {.callout-warning}
+## Nota Critica
+La amenaza es **presente** aunque las computadoras cuanticas no existan todavia. La estrategia **"harvest now, decrypt later"** significa que adversarios estan almacenando datos cifrados hoy para descifrarlos cuando tengan capacidad cuantica suficiente. Si TechCorp maneja datos que deben permanecer secretos por 10+ anos (secretos industriales, datos de salud, informacion gubernamental), la migracion PQC es urgente.
+:::
+
+### ¿Dónde? — Donde Aplica
+
+La criptografia post-cuantica afecta a todos los sistemas que usan:
+
+- **TLS/HTTPS**: Certificados digitales, handshake de conexiones web
+- **Firmas digitales**: Documentos legales, actualizaciones de software, codigo firmado
+- **Cifrado de datos en reposo**: Bases de datos cifradas, backups, discos
+- **Comunicaciones seguras**: VPNs, email cifrado (S/MIME, PGP), mensajeria
+- **Infraestructura de clave publica (PKI)**: Autoridades de certificacion, CRLs, OCSP
+- **Blockchain y criptomonedas**: Firmas de transacciones, wallets
+
+### ¿Por qué? — Justificacion
+
+- **NIST publico estandares finales en 2024** (FIPS 203, 204, 205) — la tecnologia esta lista
+- **NSA exige CNSA 2.0** para sistemas de defensa nacional con deadlines concretos
+- **National Security Memorandum 10** (NSM-10) establece 2035 como meta federal USA
+- **El costo de migrar despues** es exponencialmente mayor que planificar ahora
+- **Datos con vida util larga** (secretos de estado, historiales medicos, propiedad intelectual) ya estan siendo capturados por adversarios
+
+### ¿Para qué? — Objetivo Final
+
+Garantizar la **confidencialidad a largo plazo** de la informacion sensible de TechCorp, anticipando la llegada de computadoras cuanticas capaces de romper la criptografia actual. No se trata de entrar en panico, sino de **planificar con tiempo** una transicion ordenada y medible.
+
+## 🔑 Conceptos Clave
+
+- **Algoritmo de Shor**: Algoritmo cuantico que factoriza numeros enteros y resuelve logaritmos discretos en tiempo polinomial. Rompe RSA, DSA, ECDSA y Diffie-Hellman. Requiere miles de qubits estables (estimado: 4000+ qubits logicos para RSA-2048).
+- **Algoritmo de Grover**: Algoritmo cuantico que acelera busquedas no estructuradas. Reduce la seguridad de algoritmos simetricos a la raiz cuadrada (AES-128 → seguridad equivalente a 64 bits). Solucion: usar AES-256.
+- **FIPS 203 (ML-KEM/Kyber)**: Estandar NIST para encapsulamiento de claves (key encapsulation mechanism). Basado en Module-LWE (Learning With Errors). Se usa para cifrado de clave en TLS, VPNs, y protocolos de intercambio.
+- **FIPS 204 (ML-DSA/Dilithium)**: Estandar NIST para firmas digitales basado en reticulos (lattice). Reemplaza a ECDSA y RSA-PSS en firmas de documentos, certificados y autenticacion.
+- **FIPS 205 (SLH-DSA/SPHINCS+)**: Estandar NIST para firmas digitales basadas en funciones hash. Mas conservador y lento que ML-DSA, pero con suposiciones de seguridad minimas. Se usa como respaldo.
+- **Enfoque hibrido**: Combinar algoritmo clasico + algoritmo PQC simultaneamente. Si uno falla, el otro protege. Estrategia recomendada durante la transicion.
+- **Harvest Now, Decrypt Later**: Estrategia de adversarios que capturan y almacenan trafico cifrado hoy, esperando descifrarlo cuando existan computadoras cuanticas suficientes.
+
+## 💡 Ejemplos
+
+### Ejemplo 1: "Harvest Now, Decrypt Later" en la Practica (2024-2025)
+
+**Contexto**: En 2024, la NSA y varias agencias de inteligencia confirmaron que adversarios estatales estaban capturando trafico TLS cifrado de redes gubernamentales y de defensa. El objetivo no era descifrarlo hoy — era almacenarlo para cuando existieran computadoras cuanticas capaces de ejecutar el algoritmo de Shor a escala.
+
+**Impacto en TechCorp**: Si TechCorp transmite datos de clientes, secretos comerciales o informacion de salud por TLS con RSA-2048 o ECDSA, ese trafico podria estar siendo capturado y almacenado. Si esos datos deben permanecer confidenciales por 10+ anos, el riesgo es **real e inmediato**.
+
+**Accion**: Implementar TLS hibrido (clasico + ML-KEM) para comunicaciones sensibles. Priorizar datos con mayor vida util de confidencialidad.
+
+### Ejemplo 2: Migracion de Google Chrome a PQC (2024)
+
+**Contexto**: En septiembre de 2024, Google Chrome 116 comenzo a experimentar con el algoritmo Kyber (ahora ML-KEM/FIPS 203) para el handshake TLS. En Chrome 124 (abril 2025), Kyber fue habilitado por defecto como parte de un handshake hibrido X25519Kyber768.
+
+**Leccion**: Los navegadores principales ya estan adoptando PQC. Si TechCorp opera servidores web, necesita estar preparado para aceptar handshakes hibridos. Los certificados PQC-ready y la configuracion de servidores deben actualizarse antes de que los clientes exijan PQC.
+
+## 🛠️ Práctica Guiada
+
+### Crear un Inventario Criptografico Basico
+
+**Escenario**: TechCorp necesita saber que sistemas usan criptografia vulnerable.
+
+**Paso 1**: Identifica los sistemas y su criptografia
+
+```bash
+# Paso 1: Verifica el algoritmo de un certificado TLS
+# Tipea este comando en tu terminal:
+
+openssl s_client -connect google.com:443 -servername google.com </dev/null 2>/dev/null | openssl x509 -noout -text | grep "Public Key Algorithm"
+
+# Esperado: algo como "id-ecPublicKey" o "rsaEncryption"
+# Anota el resultado
+```
+
+```bash
+# Paso 2: Verifica la version de TLS y cipher suite
+# Tipea este comando:
+
+openssl s_client -connect google.com:443 -servername google.com </dev/null 2>/dev/null | grep -E "Protocol|Cipher"
+
+# Esperado: algo como "TLSv1.3" y "TLS_AES_256_GCM_SHA384"
+# TLS 1.3 es seguro; TLS 1.2 requiere revision
+```
+
+**Paso 2**: Completa el inventario
+
+Para cada sistema de TechCorp, completa esta ficha:
+
+**Sistema**: _______________
+
+**Tipo de criptografia**
+
+- [ ] Simetrica
+- [ ] Asimetrica
+- [ ] Hash
+
+**Algoritmo actual**: _______________
+**Tamano de clave**: _______________
+
+**¿Afectado por Shor?**
+
+- [ ] Si
+- [ ] No
+
+**¿Afectado por Grover?**
+
+- [ ] Si
+- [ ] No
+
+**Prioridad de migracion**
+
+- [ ] Alta
+- [ ] Media
+- [ ] Baja
+
+**Fecha estimada de migracion**: _______________
+
+**Paso 3**: Clasifica por prioridad
+
+| Prioridad | Criterio | Ejemplo |
+|-----------|----------|---------|
+| Alta | Asimetrica + Internet-facing + datos sensibles | Certificados TLS web |
+| Media | Asimetrica + red interna | VPN interna |
+| Baja | Simetrica con clave >= 256 bits | AES-256 en backups |
+
+```python
+# Ejemplo: Script de inventory
+#!/usr/bin/env python3
+
+def inventory_crypto():
+    """Ejemplo de inventory criptografico"""
+    
+    systems = [
+        {
+            "name": "VPN Gateway",
+            "algo": "AES-256-GCM",
+            "type": "symmetric",
+            "pqc_ready": True
+        },
+        {
+            "name": "Web TLS Certificate",
+            "algo": "RSA-2048",
+            "type": "asymmetric",
+            "pqc_ready": False,
+            "migration_date": "2027-Q2"
+        },
+        {
+            "name": "Password Hash",
+            "algo": "bcrypt",
+            "type": "hashing",
+            "pqc_ready": True
+        }
+    ]
+    
+    # Analisis
+    pqc_ready = sum(1 for s in systems if s["pqc_ready"])
+    total = len(systems)
+    
+    print(f"Systems: {total}")
+    print(f"PQC Ready: {pqc_ready} ({pqc_ready/total*100:.1f}%)")
+    print(f"Needs Migration: {total-pqc_ready}")
+
+inventory_crypto()
+```
+
+## 🧪 Laboratorio
+
+### Lab: Inventario Criptografico y Roadmap PQC para TechCorp
+
+**Objetivo**: Crear un inventario criptografico completo y un roadmap de migracion para los sistemas de TechCorp.
+
+**Requisitos**:
+- Acceso a internet
+- OpenSSL instalado (viene con Linux/macOS)
+- Navegador web
+- Editor de texto
+
+**Entorno**: TechCorp tiene los siguientes sistemas que debes evaluar:
+
+1. Servidor web Apache (Internet-facing) con certificado TLS RSA-2048
+2. VPN OpenVPN con cifrado AES-256 + autenticacion RSA-4096
+3. Base de datos PostgreSQL con cifrado en transito (TLS 1.2, ECDSA P-256)
+4. Email corporativo con S/MIME (RSA-2048)
+5. Repositorio Git con commits firmados (ECDSA P-256)
+6. Backup cifrado con AES-256-GCM
+7. API interna con JWT firmado con RS256
+8. Firewall pfSense con OpenVPN site-to-site (RSA-2048)
+
+**Paso 1**: Analiza cada sistema
+
+Para cada uno de los 8 sistemas, determina:
+
+**Sistema**: _______________
+**Algoritmo(s) usado(s)**: _______________
+
+**¿Vulnerable a Shor?**
+
+- [ ] Si
+- [ ] No
+- [ ] Parcialmente
+
+**¿Vulnerable a Grover?**
+
+- [ ] Si
+- [ ] No
+
+**Algoritmo PQC de reemplazo**: _______________
+**Justificacion**: _______________
+
+**Paso 2**: Crea el roadmap de migracion
+
+Organiza los sistemas en las 4 fases del roadmap:
+
+| Fase | Periodo | Sistemas | Justificacion |
+|------|---------|----------|---------------|
+| 1. Inventario | 2024-2025 | Todos los sistemas | Identificar y documentar |
+| 2. Evaluacion | 2025-2026 | Sistemas no criticos | Probar PQC sin riesgo |
+| 3. Pilotaje | 2026-2028 | Sistemas de importancia media | Validar en produccion controlada |
+| 4. Despliegue | 2028-2035 | Sistemas criticos | Migracion completa |
+
+**Paso 3**: Calcula el porcentaje de readiness
+
+| Metrica | Valor |
+|---------|-------|
+| Total de sistemas | 8 |
+| Sistemas PQC-ready (simetrica/hash) | ___ |
+| Sistemas que requieren migracion | ___ |
+| **Porcentaje de readiness** | **___%** |
+
+**Resultados Esperados**:
+- Inventario completo de los 8 sistemas con analisis de vulnerabilidad cuantica
+- Roadmap de migracion con 4 fases y sistemas asignados
+- Porcentaje de readiness PQC de TechCorp
+- Justificacion escrita para cada decision de priorizacion
+
+**Troubleshooting**:
+- Si no sabes que algoritmo usa un sistema, investiga su documentacion oficial
+- AES-256 y SHA-3 NO son vulnerables a Shor (solo necesitan ajuste de tamaño de clave para Grover)
+- Recuerda: la migracion PQC solo aplica a criptografia asimetrica
+
+**Desafio Extra**:
+Investiga si algun proveedor de los sistemas de TechCorp (Apache, OpenVPN, PostgreSQL) ya tiene soporte experimental para algoritmos PQC. Anota la version minima requerida y el estado del soporte (experimental, beta, estable).
+
+## 📝 Tarea (Project-Based Learning)
+
+### Inventario Criptografico y Roadmap PQC para TechCorp
+
+**Contexto del Proyecto**: TechCorp necesita prepararse para la era post-cuantica. Como analista de seguridad, debes crear un inventario completo de todos los sistemas que usan criptografia y disenar un roadmap de migracion realista.
+
+**Entregable**: Documento de 4-6 paginas que incluya:
+
+1. **Inventario Criptografico**: Tabla con todos los sistemas de TechCorp, algoritmos actuales, vulnerabilidad cuantica, y estado de readiness PQC
+2. **Analisis de Riesgo "Harvest Now, Decrypt Later"**: Identifica que datos de TechCorp tienen vida util de confidencialidad > 10 anos y estan en riesgo
+3. **Roadmap de Migracion PQC**: Plan de 4 fases con cronograma, sistemas por fase, y hitos medibles
+4. **Recomendaciones de Proveedores**: Lista de productos/servicios PQC-ready que TechCorp deberia considerar
+5. **Presupuesto Estimado**: Costos aproximados de la migracion (herramientas, capacitacion, tiempo de personal)
+
+**Criterios de Evaluacion**:
+- [ ] El inventario cubre todos los sistemas de TechCorp con algoritmos especificos
+- [ ] El analisis de riesgo HNDL identifica datos con vida util larga
+- [ ] El roadmap tiene 4 fases con cronograma realista (2024-2035)
+- [ ] Las recomendaciones de proveedores son actuales (2024-2026)
+- [ ] El presupuesto es proporcionado al tamaño de TechCorp (50 empleados)
+
+**Conexion con Modulos Anteriores**: Este inventario se integrara con el assessment general de seguridad de TechCorp. La gestion de vulnerabilidades (M05) y la criptografia PQC (M06) son componentes complementarios del programa de seguridad.
+
+## 📊 Resumen
+
+- **Computacion cuantica rompera** RSA, DSA, ECDSA y Diffie-Hellman (algoritmo de Shor)
+- **AES-256 y SHA-3 son seguros** contra ataques cuanticos (solo necesitan ajuste para Grover)
+- **NIST publico 3 estandares finales**: FIPS 203 (ML-KEM/Kyber), FIPS 204 (ML-DSA/Dilithium), FIPS 205 (SLH-DSA/SPHINCS+)
+- **Migracion gradual 2024-2035**: Inventario → Evaluacion → Pilotaje → Despliegue
+- **"Harvest now, decrypt later" es una amenaza real**: datos sensibles ya estan siendo capturados
+- **Enfoque hibrido** (clasico + PQC) es la estrategia recomendada durante la transicion
+- **Empezar con inventario ahora**: es el paso mas importante y el mas postergado
+
+---
+
+<div class="compact-diagram" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px 16px;margin:12px 0;">
+<svg viewBox="0 0 500 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:500px;">
+<text x="250" y="15" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="bold">Roadmap de Migración PQC</text>
+<rect x="10" y="25" width="110" height="45" rx="6" fill="#3b82f6"/><text x="65" y="42" text-anchor="middle" fill="white" font-size="9" font-weight="bold">FASE 1</text><text x="65" y="55" text-anchor="middle" fill="#dbeafe" font-size="8">Inventario 24-25</text>
+<polygon points="120,47 140,47 137,44 140,50" fill="#94a3b8"/>
+<rect x="140" y="25" width="110" height="45" rx="6" fill="#10b981"/><text x="195" y="42" text-anchor="middle" fill="white" font-size="9" font-weight="bold">FASE 2</text><text x="195" y="55" text-anchor="middle" fill="#d1fae5" font-size="8">Evaluación 25-26</text>
+<polygon points="250,47 270,47 267,44 270,50" fill="#94a3b8"/>
+<rect x="270" y="25" width="110" height="45" rx="6" fill="#f59e0b"/><text x="325" y="42" text-anchor="middle" fill="white" font-size="9" font-weight="bold">FASE 3</text><text x="325" y="55" text-anchor="middle" fill="#fef3c7" font-size="8">Pilotaje 26-28</text>
+<polygon points="380,47 400,47 397,44 400,50" fill="#94a3b8"/>
+<rect x="400" y="25" width="90" height="45" rx="6" fill="#ef4444"/><text x="445" y="42" text-anchor="middle" fill="white" font-size="9" font-weight="bold">FASE 4</text><text x="445" y="55" text-anchor="middle" fill="#fecaca" font-size="8">Despliegue 28-35</text>
+<rect x="10" y="85" width="480" height="45" rx="6" fill="#1e293b"/><text x="30" y="102" fill="#94a3b8" font-size="8">Identificar → Categorizar → Documentar → Evaluar proveedores →</text><text x="30" y="118" fill="#94a3b8" font-size="8">Implementar no-críticos → Migrar críticos → Híbrido clásico+PQC</text>
+</svg>
+</div>
+
+---
+
+*Modulo 6 - Criptografia Post-Cuantica - 5 horas*
+*Curso Fundamentos de Ciberseguridad - CC BY-SA 4.0*

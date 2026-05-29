@@ -25,17 +25,15 @@ Transformar principiantes en **profesionales competentes de ciberseguridad**, ca
 
 ## Lo que Aprendras
 
-| Modulo | Tema | Horas | Desafios | Laboratorio |
-|--------|------|--------|----------|-------------|
-| 1 | Fundamentos NIST CSF 2.0 | 6 | 6 | SI |
-| 2 | Gestion de Identidad y Acceso | 6 | 6 | SI |
-| 3 | Arquitectura Zero Trust | 8 | 8 | SI |
-| 4 | Inteligencia Artificial en Seguridad | 6 | 6 | SI |
-| 5 | Gestion de Vulnerabilidades | 5 | 5 | SI |
-| 6 | Criptografia Post-Cuantica | 5 | 5 | SI |
-| 7 | Respuesta a Incidentes | 4 | 4 | SI |
+| Unidad | Tema | Horas | Desafios | Laboratorio |
+|--------|------|-------|----------|-------------|
+| I | Fundamentos NIST CSF 2.0 | 8 | 8 | SI |
+| II | Seguridad en SO y Gestion de Identidad | 10 | 10 | SI |
+| III | Protocolos de Red y Arquitectura Zero Trust | 10 | 10 | SI |
+| IV | Principios de Seguridad: Vulnerabilidades, Cripto, IA | 8 | 8 | SI |
+| V | Analisis de Datos y Respuesta a Incidentes | 6 | 6 | SI |
 
-**Total: 40 horas - 7 modulos - 40+ desafios - 7 labs - 7 quizzes**
+**Total: 42 horas - 5 unidades - 40+ desafios - 10+ labs - 10+ minicursos - 7 quizzes**
 
 ---
 
@@ -153,15 +151,13 @@ nikto       # Escaneo web
 
 ## Distribucion Semanal (8 semanas)
 
-| Semana | Modulo | Tema | Entregables |
-|--------|--------|------|------------|
-| 1 | 1 | Fundamentos NIST CSF 2.0 | Quiz 1 |
-| 2 | 2 | Gestion de Identidad | Lab 1, Quiz 2 |
-| 3-4 | 3 | Arquitectura Zero Trust | Lab 2-3, Quiz 3 |
-| 5 | 4 | IA en Seguridad | Lab 4, Quiz 4 |
-| 6 | 5 | Gestion Vulnerabilidades | Lab 5, Quiz 5 |
-| 7 | 6 | Criptografia Post-Cuantica | Lab 6, Quiz 6 |
-| 8 | 7 | Respuesta a Incidentes | Lab 7, Quiz 7 |
+| Semana | Unidad | Tema | Entregables |
+|--------|--------|------|-------------|
+| 1-2 | I | Fundamentos NIST CSF 2.0 | Lab 1, Quiz 1 |
+| 2-3 | II | Seguridad en SO y Gestion de Identidad | Lab 2-3, Quiz 2 |
+| 4-5 | III | Protocolos de Red y Zero Trust | Lab 4-5, Quiz 3 |
+| 6-7 | IV | Vuhnerabilidades, Criptografia, IA | Lab 6-8, Quiz 4-5 |
+| 8 | V | Analisis de Datos y Respuesta a Incidentes | Lab 9, Quiz 6-7 |
 
 **Proyecto Integrador**: Durante todo el curso (entrega semana 8)
 
@@ -171,10 +167,11 @@ nikto       # Escaneo web
 
 ### Contenido Principal
 
-- `content/modulo-XX/` - Teoria por modulo
-- `labs/` - Laboratorios praticos
-- `quizzes/` - Evaluaciones
-- `proyectos/` - Proyecto integrador
+- `content/unidad-0X/` - Teoria por unidad (teoria-*.qmd)
+- `content/unidad-0X/minicurso-*.qmd` - Minicursos practicos por unidad
+- `content/unidad-0X/lab-*.qmd` - Laboratorios integrados
+- `content/unidad-0X/quiz-*.qmd` - Evaluaciones por unidad
+- `minicursos/` - Minicursos adicionales (referencia)
 
 ### Material Instructor
 
@@ -245,5 +242,5 @@ Este curso esta bajo licencia **Creative Commons Compartir Igual 4.0 (CC BY-SA 4
 *"La seguridad no es un producto, es un proceso." — Bruce Schneier*
 
 :::{.centered-footer}
-Curso actualizado Mayo 2026 — 40 horas — 7 modulos — CC BY-SA 4.0
+Curso actualizado Mayo 2026 — 42 horas — 5 unidades — CC BY-SA 4.0
 :::

@@ -1,0 +1,870 @@
+---
+title: "Minicurso: Bash Scripting"
+module: "minicurso-bash"
+type: "minicurso"
+description: "Tutorial completo de Bash para ciberseguridad"
+---
+
+
+## ¿Qué es Bash?
+
+Bash (Bourne Again Shell) es el intérprete de comandos predeterminado en la mayoría de los sistemas Linux y macOS. Es tanto una interfaz interactiva para ejecutar comandos como un lenguaje de scripting completo que permite automatizar tareas complejas.
+
+Un script Bash es un archivo de texto que contiene una secuencia de comandos que el shell ejecuta en orden. Los scripts pueden incluir variables, condicionales, bucles, funciones y manejo de errores, lo que los convierte en herramientas poderosas para automatización.
+
+En ciberseguridad, Bash es fundamental para automatizar escaneos, procesar logs, crear herramientas de reconocimiento, gestionar configuraciones de seguridad, y construir pipelines de análisis. Casi todas las herramientas de seguridad en Linux se integran con Bash.
+
+## ¿Por qué aprenderlo?
+
+- **Automatización**: Scripts que ejecutan tareas repetitivas en segundos
+- **Pentesting**: Herramientas personalizadas para cada engagement
+- **Forense**: Procesamiento rápido de logs y evidencia digital
+- **DevSecOps**: Integración de seguridad en pipelines CI/CD
+- **Universal**: Disponible en el 99% de los servidores Linux del mundo
+
+## Instalación
+
+### macOS
+
+```bash
+# macOS viene con Bash 3.x (antiguo)
+# Instalar versión moderna con Homebrew
+brew install bash
+
+# Verificar versiones
+bash --version
+# Esperado: GNU bash, version 5.x.x
+
+# Hacer la nueva versión tu shell por defecto
+echo $(which bash) | sudo tee -a /etc/shells
+chsh -s $(which bash)
+```
+
+### Linux (Ubuntu/Debian)
+
+```bash
+# Bash ya viene instalado por defecto
+bash --version
+# Esperado: GNU bash, version 5.x.x
+
+# Si necesitas actualizar:
+sudo apt update
+sudo apt install --only-upgrade bash
+```
+
+### Windows
+
+```powershell
+# Usar WSL2 (recomendado)
+wsl --install
+# Dentro de WSL, bash está disponible
+
+# O usar Git Bash (incluye bash)
+# Descargar desde https://git-scm.com/download/win
+```
+
+## Nivel Básico
+
+### Conceptos Fundamentales
+
+**Shell**: El programa que interpreta tus comandos. Bash es el shell más común.
+
+**Script**: Archivo de texto con extensión `.sh` que contiene comandos Bash.
+
+**Shebang**: La primera línea `#!/bin/bash` que indica qué intérprete usar.
+
+**Permisos de ejecución**: Los scripts necesitan permiso `+x` para ejecutarse.
+
+### Variables
+
+```bash
+# Asignar variable (SIN espacios alrededor de =)
+nombre="Diego"
+edad=30
+
+# Usar variable (con $)
+echo "Hola, $nombre"
+echo "Tienes $edad años"
+
+# Variables de solo lectura
+readonly PI=3.14159
+
+# Variables de entorno (disponibles en procesos hijos)
+export API_KEY="sk-12345"
+
+# Variables especiales
+echo $0      # Nombre del script
+echo $1      # Primer argumento
+echo $2      # Segundo argumento
+echo $#      # Número de argumentos
+echo $@      # Todos los argumentos
+echo $?      # Código de salida del último comando
+echo $$      # PID del script actual
+```
+
+### Pipes y Redirecciones
+
+```bash
+# Pipe: enviar output de un comando a otro
+cat access.log | grep "404" | wc -l
+
+# Redirección de output (>)
+nmap -sV target.com > scan-results.txt
+
+# Redirección append (>>)
+echo "Log entry" >> audit.log
+
+# Redirección de error (2>)
+find / -name "*.conf" 2>/dev/null
+
+# Redirección de ambos (>&)
+command > output.txt 2>&1
+
+# Here-string (input directo)
+grep "error" <<< "This is an error message"
+```
+
+### Condicionales
+
+```bash
+# If simple
+if [ -f "/etc/passwd" ]; then
+    echo "El archivo existe"
+fi
+
+# If-else
+if [ $? -eq 0 ]; then
+    echo "Éxito"
+else
+    echo "Error"
+fi
+
+# If-elif-else
+if [ "$1" = "scan" ]; then
+    echo "Modo escaneo"
+elif [ "$1" = "exploit" ]; then
+    echo "Modo explotación"
+else
+    echo "Uso: $0 {scan|exploit}"
+fi
+
+# Operadores de comparación
+# Números: -eq, -ne, -gt, -ge, -lt, -le
+# Strings: =, !=, -z (vacío), -n (no vacío)
+# Archivos: -f (archivo), -d (directorio), -r (legible), -w (escribible), -x (ejecutable)
+```
+
+### Bucles
+
+```bash
+# For loop
+for ip in 192.168.1.{1..254}; do
+    ping -c 1 "$ip" > /dev/null 2>&1 && echo "$ip está activo"
+done
+
+# For con archivo
+while IFS= read -r line; do
+    echo "Procesando: $line"
+done < targets.txt
+
+# Until loop
+until [ -f "scan-complete.txt" ]; do
+    echo "Esperando escaneo..."
+    sleep 5
+done
+```
+
+### Funciones
+
+```bash
+# Definir función
+log_message() {
+    local level="$1"
+    local message="$2"
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] [$level] $message"
+}
+
+# Usar función
+log_message "INFO" "Escaneo iniciado"
+log_message "ERROR" "Host no responde"
+```
+
+### Comandos Esenciales
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `echo` | Imprimir texto | `echo "Hola $USER"` |
+| `read` | Leer input | `read -p "Target: " target` |
+| `test` / `[` | Evaluar condición | `[ -f file.txt ]` |
+| `grep` | Buscar patrones | `grep -i "error" log.txt` |
+| `awk` | Procesar columnas | `awk '{print $1}' file` |
+| `sed` | Editar texto | `sed 's/old/new/g' file` |
+| `cut` | Extraer columnas | `cut -d: -f1 /etc/passwd` |
+| `sort` | Ordenar líneas | `sort -u file.txt` |
+| `uniq` | Eliminar duplicados | `sort file \| uniq -c` |
+| `wc` | Contar | `wc -l file.txt` |
+| `find` | Buscar archivos | `find / -name "*.log"` |
+| `xargs` | Ejecutar con args | `find . -name "*.txt" \| xargs grep "error"` |
+
+### Ejercicio 1: Script de reconocimiento básico
+
+**Objetivo:** Crear un script que escanee hosts activos en una red.
+
+**Paso 1:** Crear el script
+
+```bash
+cat > host-discovery.sh << 'SCRIPT'
+#!/bin/bash
+# host-discovery.sh - Descubrimiento de hosts activos
+# USO ÉTICO SOLAMENTE
+
+# Validar argumentos
+if [ $# -lt 1 ]; then
+    echo "Uso: $0 <red/CIDR>"
+    echo "Ejemplo: $0 192.168.1.0/24"
+    exit 1
+fi
+
+NETWORK="$1"
+echo "=== Descubrimiento de hosts en $NETWORK ==="
+echo "Fecha: $(date)"
+echo ""
+
+# Escaneo rápido con ping
+echo "[*] Escaneando hosts activos..."
+for host in $(seq 1 254); do
+    ip="${NETWORK%/*}.$host"
+    if ping -c 1 -W 1 "$ip" > /dev/null 2>&1; then
+        echo "[+] Host activo: $ip"
+    fi
+done
+
+echo ""
+echo "[+] Escaneo completado"
+SCRIPT
+
+chmod +x host-discovery.sh
+```
+
+**Paso 2:** Ejecutar el script
+
+```bash
+# Ejecutar con una red
+./host-discovery.sh 192.168.1.0/24
+
+# Resultado esperado:
+# === Descubrimiento de hosts en 192.168.1.0/24 ===
+# Fecha: Thu May 21 10:30:00 2026
+#
+# [*] Escaneando hosts activos...
+# [+] Host activo: 192.168.1.1
+# [+] Host activo: 192.168.1.100
+# [+] Host activo: 192.168.1.254
+#
+# [+] Escaneo completado
+```
+
+## Nivel Intermedio
+
+### Arrays
+
+```bash
+# Definir array
+targets=("192.168.1.1" "192.168.1.100" "10.0.0.50")
+
+# Acceder a elementos
+echo "${targets[0]}"     # Primer elemento
+echo "${targets[@]}"     # Todos los elementos
+echo "${#targets[@]}"    # Número de elementos
+
+# Iterar sobre array
+for target in "${targets[@]}"; do
+    echo "Escaneando $target..."
+    nmap -sP "$target" > /dev/null 2>&1
+done
+
+# Array asociativo (bash 4+)
+declare -A severities
+severities["CVE-2024-1234"]="critical"
+severities["CVE-2024-5678"]="high"
+severities["CVE-2024-9012"]="medium"
+
+echo "CVE-2024-1234 es: ${severities[CVE-2024-1234]}"
+```
+
+### Process Substitution
+
+```bash
+# Comparar dos outputs sin archivos temporales
+diff <(sort file1.txt) <(sort file2.txt)
+
+# Usar output como archivo de entrada
+while read -r line; do
+    echo "Procesando: $line"
+done < <(grep -E "ERROR|WARN" /var/log/syslog)
+
+# Múltiples inputs
+paste <(cut -d: -f1 /etc/passwd) <(cut -d: -f7 /etc/passwd)
+```
+
+### Here-Docs
+
+```bash
+# Crear archivo multi-línea
+cat > config.yml << 'EOF'
+server:
+  host: 0.0.0.0
+  port: 8080
+  ssl: true
+database:
+  host: localhost
+  port: 5432
+  name: security_db
+EOF
+
+# Here-doc con variables (sin comillas en EOF)
+name="mi-proyecto"
+cat > README.md << EOF
+# $name
+Generado el $(date)
+Autor: $USER
+EOF
+```
+
+### Signal Handling y Traps
+
+```bash
+#!/bin/bash
+# cleanup.sh - Manejo seguro de señales
+
+TEMP_DIR=$(mktemp -d)
+echo "Directorio temporal: $TEMP_DIR"
+
+# Función de limpieza
+cleanup() {
+    echo ""
+    echo "[*] Limpiando..."
+    rm -rf "$TEMP_DIR"
+    echo "[+] Limpieza completada"
+    exit 0
+}
+
+# Capturar señales
+trap cleanup EXIT
+trap cleanup INT    # Ctrl+C
+trap cleanup TERM   # kill
+
+# Simular trabajo largo
+echo "[*] Procesando..."
+for i in {1..10}; do
+    echo "  Paso $i de 10"
+    sleep 1
+done
+
+echo "[+] Procesamiento completado"
+# Al salir (normal o por señal), cleanup se ejecuta automáticamente
+```
+
+### Ejercicio 2: Script de análisis de logs
+
+**Objetivo:** Crear un script que analice logs de autenticación y genere un reporte.
+
+**Paso 1:** Crear log de ejemplo
+
+```bash
+cat > sample-auth.log << 'EOF'
+May 15 08:23:01 server sshd[1234]: Accepted password for admin from 192.168.1.100 port 22
+May 15 08:25:12 server sshd[1235]: Failed password for root from 10.0.0.50 port 22
+May 15 08:25:15 server sshd[1236]: Failed password for root from 10.0.0.50 port 22
+May 15 08:25:18 server sshd[1237]: Failed password for root from 10.0.0.50 port 22
+May 15 08:30:00 server sshd[1240]: Accepted publickey for deploy from 192.168.1.200 port 22
+May 15 09:15:33 server sshd[1241]: Failed password for invalid user test from 203.0.113.50 port 22
+May 15 09:15:36 server sshd[1242]: Failed password for invalid user admin from 203.0.113.50 port 22
+May 15 09:15:39 server sshd[1243]: Failed password for invalid user guest from 203.0.113.50 port 22
+May 15 10:00:00 server sshd[1244]: Accepted password for admin from 192.168.1.100 port 22
+EOF
+```
+
+**Paso 2:** Crear script de análisis
+
+```bash
+cat > log-analyzer.sh << 'SCRIPT'
+#!/bin/bash
+# log-analyzer.sh - Analizador de logs de autenticación
+
+LOG_FILE="${1:-sample-auth.log}"
+
+if [ ! -f "$LOG_FILE" ]; then
+    echo "ERROR: Archivo no encontrado: $LOG_FILE"
+    exit 1
+fi
+
+echo "=== Análisis de Logs de Autenticación ==="
+echo "Archivo: $LOG_FILE"
+echo "Fecha de análisis: $(date)"
+echo ""
+
+# Total de entradas
+total=$(wc -l < "$LOG_FILE")
+echo "[*] Total de entradas: $total"
+
+# Intentos fallidos
+failed=$(grep -c "Failed password" "$LOG_FILE")
+echo "[!] Intentos fallidos: $failed"
+
+# Accesos exitosos
+success=$(grep -c "Accepted" "$LOG_FILE")
+echo "[+] Accesos exitosos: $success"
+
+echo ""
+echo "=== IPs con intentos fallidos ==="
+grep "Failed password" "$LOG_FILE" | \
+    grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' | \
+    sort | uniq -c | sort -rn
+
+echo ""
+echo "=== Usuarios objetivo ==="
+grep "Failed password" "$LOG_FILE" | \
+    grep -oE 'for (invalid user )?[a-zA-Z0-9_]+' | \
+    sed 's/for invalid user /for /' | \
+    sort | uniq -c | sort -rn
+
+echo ""
+echo "=== Accesos exitosos ==="
+grep "Accepted" "$LOG_FILE" | \
+    awk '{print $9, "desde", $11, "vía", $14}'
+
+echo ""
+echo "[+] Análisis completado"
+SCRIPT
+
+chmod +x log-analyzer.sh
+```
+
+**Paso 3:** Ejecutar
+
+```bash
+./log-analyzer.sh sample-auth.log
+
+# Resultado esperado:
+# === Análisis de Logs de Autenticación ===
+# Archivo: sample-auth.log
+# Fecha de análisis: Thu May 21 10:30:00 2026
+#
+# [*] Total de entradas: 9
+# [!] Intentos fallidos: 6
+# [+] Accesos exitosos: 3
+#
+# === IPs con intentos fallidos ===
+#       3 203.0.113.50
+#       3 10.0.0.50
+#
+# === Usuarios objetivo ===
+#       3 root
+#       1 test
+#       1 guest
+#       1 admin
+#
+# === Accesos exitosos ===
+# admin desde 192.168.1.100 vía port
+# deploy desde 192.168.1.200 vía port
+# admin desde 192.168.1.100 vía port
+#
+# [+] Análisis completado
+```
+
+## Nivel Avanzado
+
+### Scripting Seguro: set -euo pipefail
+
+```bash
+#!/bin/bash
+# Plantilla de script seguro
+
+# Opciones de seguridad
+set -e          # Exit on error
+set -u          # Exit on undefined variable
+set -o pipefail # Exit on pipe failure
+
+# Variables
+readonly SCRIPT_NAME="$(basename "$0")"
+readonly SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+readonly LOG_FILE="/var/log/${SCRIPT_NAME}.log"
+
+# Logging function
+log() {
+    local level="$1"
+    shift
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] [$level] $*" | tee -a "$LOG_FILE"
+}
+
+# Cleanup
+cleanup() {
+    local exit_code=$?
+    if [ $exit_code -ne 0 ]; then
+        log "ERROR" "Script failed with exit code: $exit_code"
+    fi
+    log "INFO" "Script completed"
+    exit $exit_code
+}
+trap cleanup EXIT
+
+# Validar que se ejecuta como root si es necesario
+check_root() {
+    if [ "$(id -u)" -ne 0 ]; then
+        log "ERROR" "Este script requiere privilegios de root"
+        exit 1
+    fi
+}
+
+# Main
+main() {
+    log "INFO" "Iniciando $SCRIPT_NAME"
+    check_root
+
+    # Tu lógica aquí
+    log "INFO" "Procesando..."
+
+    log "INFO" "Completado exitosamente"
+}
+
+main "$@"
+```
+
+### Debugging de scripts
+
+```bash
+# Ejecutar con debug (muestra cada comando antes de ejecutarlo)
+bash -x script.sh
+
+# Debug en parte específica del script
+set -x    # Activar debug
+# ... código a debuggear ...
+set +x    # Desactivar debug
+
+# Debug con output a archivo
+bash -x script.sh 2> debug.log
+
+# Debug condicional
+DEBUG=${DEBUG:-0}
+if [ "$DEBUG" -eq 1 ]; then
+    set -x
+fi
+```
+
+### Expresiones regulares en Bash
+
+```bash
+# Matching con =~ (bash 3.2+)
+email="user@example.com"
+if [[ "$email" =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]; then
+    echo "Email válido"
+fi
+
+# Extraer partes con BASH_REMATCH
+ip="192.168.1.100"
+if [[ "$ip" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+    echo "Octeto 1: ${BASH_REMATCH[1]}"
+    echo "Octeto 2: ${BASH_REMATCH[2]}"
+fi
+
+# Validar CIDR
+cidr="192.168.1.0/24"
+if [[ "$cidr" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/[0-9]+$ ]]; then
+    echo "CIDR válido"
+fi
+```
+
+### Ejercicio 3: Backup seguro con verificación
+
+**Objetivo:** Crear un script de backup con manejo de errores y verificación.
+
+```bash
+cat > secure-backup.sh << 'SCRIPT'
+#!/bin/bash
+# secure-backup.sh - Backup seguro con verificación
+
+set -euo pipefail
+
+# Configuración
+readonly BACKUP_DIR="/tmp/backups"
+readonly RETENTION_DAYS=7
+readonly TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+readonly BACKUP_FILE="backup_${TIMESTAMP}.tar.gz"
+
+# Logging
+log() {
+    echo "[$(date '+%H:%M:%S')] $*"
+}
+
+# Cleanup en caso de error
+cleanup() {
+    if [ $? -ne 0 ]; then
+        log "ERROR: Backup fallido. Limpiando..."
+        rm -f "${BACKUP_DIR}/${BACKUP_FILE}" 2>/dev/null
+    fi
+}
+trap cleanup EXIT
+
+# Validaciones
+validate() {
+    if [ $# -lt 1 ]; then
+        echo "Uso: $0 <directorio_a_backupear> [destino]"
+        exit 1
+    fi
+
+    local source_dir="$1"
+    if [ ! -d "$source_dir" ]; then
+        log "ERROR: Directorio no existe: $source_dir"
+        exit 1
+    fi
+}
+
+# Crear backup
+create_backup() {
+    local source_dir="$1"
+    local dest="${2:-$BACKUP_DIR}"
+
+    mkdir -p "$dest"
+
+    log "Creando backup de $source_dir..."
+    tar czf "${dest}/${BACKUP_FILE}" -C "$(dirname "$source_dir")" "$(basename "$source_dir")"
+
+    # Verificar integridad
+    log "Verificando integridad..."
+    if tar tzf "${dest}/${BACKUP_FILE}" > /dev/null 2>&1; then
+        local size=$(du -h "${dest}/${BACKUP_FILE}" | cut -f1)
+        log "Backup verificado: $size"
+    else
+        log "ERROR: Backup corrupto"
+        return 1
+    fi
+
+    # Generar checksum
+    sha256sum "${dest}/${BACKUP_FILE}" > "${dest}/${BACKUP_FILE}.sha256"
+    log "Checksum generado"
+}
+
+# Limpiar backups antiguos
+cleanup_old() {
+    log "Limpiando backups antiguos (> ${RETENTION_DAYS} días)..."
+    find "$BACKUP_DIR" -name "backup_*.tar.gz" -mtime +${RETENTION_DAYS} -delete
+    find "$BACKUP_DIR" -name "backup_*.sha256" -mtime +${RETENTION_DAYS} -delete
+    log "Limpieza completada"
+}
+
+# Main
+main() {
+    validate "$@"
+
+    local source_dir="$1"
+    local dest="${2:-$BACKUP_DIR}"
+
+    create_backup "$source_dir" "$dest"
+    cleanup_old
+
+    log "Backup completado: ${dest}/${BACKUP_FILE}"
+}
+
+main "$@"
+SCRIPT
+
+chmod +x secure-backup.sh
+
+# Ejecutar
+./secure-backup.sh /etc/nginx /tmp/backups
+```
+
+## Uso en Ciberseguridad
+
+### Escenario 1: Script de escaneo automatizado
+
+```bash
+#!/bin/bash
+# auto-scan.sh - Escaneo automatizado de seguridad
+
+set -euo pipefail
+
+readonly TARGET="${1:?Uso: $0 <target>}"
+readonly OUTPUT_DIR="scan-results/$(date +%Y%m%d)"
+
+mkdir -p "$OUTPUT_DIR"
+
+echo "=== Escaneo automatizado: $TARGET ==="
+
+# Fase 1: Descubrimiento
+echo "[1/4] Descubrimiento de hosts..."
+nmap -sn -oN "$OUTPUT_DIR/discovery.txt" "$TARGET"
+
+# Fase 2: Escaneo de puertos
+echo "[2/4] Escaneo de puertos..."
+nmap -sV -sC -T4 -oN "$OUTPUT_DIR/port-scan.txt" "$TARGET"
+
+# Fase 3: Escaneo de vulnerabilidades
+echo "[3/4] Escaneo de vulnerabilidades..."
+nmap --script vuln -oN "$OUTPUT_DIR/vuln-scan.txt" "$TARGET"
+
+# Fase 4: Generar reporte
+echo "[4/4] Generando reporte..."
+cat > "$OUTPUT_DIR/report.md" << EOF
+# Reporte de Escaneo: $TARGET
+Fecha: $(date)
+
+## Resumen
+- Hosts encontrados: $(grep "Nmap scan report" "$OUTPUT_DIR/discovery.txt" | wc -l)
+- Puertos abiertos: $(grep "open" "$OUTPUT_DIR/port-scan.txt" | wc -l)
+- Vulnerabilidades: $(grep "CVE" "$OUTPUT_DIR/vuln-scan.txt" | wc -l)
+
+## Puertos abiertos
+$(grep "open" "$OUTPUT_DIR/port-scan.txt")
+
+## Vulnerabilidades encontradas
+$(grep -A2 "CVE" "$OUTPUT_DIR/vuln-scan.txt")
+EOF
+
+echo "[+] Escaneo completado. Resultados en: $OUTPUT_DIR"
+```
+
+### Escenario 2: Hardening automático de servidor
+
+```bash
+#!/bin/bash
+# harden.sh - Hardening básico de servidor Linux
+
+set -euo pipefail
+
+check_root() {
+    if [ "$(id -u)" -ne 0 ]; then
+        echo "ERROR: Ejecutar como root"
+        exit 1
+    fi
+}
+
+harden_ssh() {
+    echo "[*] Hardening SSH..."
+    local sshd_config="/etc/ssh/sshd_config"
+
+    # Backup
+    cp "$sshd_config" "${sshd_config}.bak.$(date +%Y%m%d)"
+
+    # Aplicar cambios seguros
+    sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin no/' "$sshd_config"
+    sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication no/' "$sshd_config"
+    sed -i 's/^#\?MaxAuthTries.*/MaxAuthTries 3/' "$sshd_config"
+    sed -i 's/^#\?X11Forwarding.*/X11Forwarding no/' "$sshd_config"
+
+    echo "[+] SSH hardened. Verificar con: sshd -t"
+}
+
+harden_firewall() {
+    echo "[*] Configurando firewall básico..."
+
+    # Permitir SSH, HTTP, HTTPS
+    ufw default deny incoming
+    ufw default allow outgoing
+    ufw allow ssh
+    ufw allow http
+    ufw allow https
+    ufw --force enable
+
+    echo "[+] Firewall configurado"
+}
+
+# Main
+check_root
+harden_ssh
+harden_firewall
+echo "[+] Hardening completado"
+```
+
+### Escenario 3: Monitoreo de integridad de archivos
+
+```bash
+#!/bin/bash
+# integrity-check.sh - Verificar integridad de archivos críticos
+
+set -euo pipefail
+
+readonly CHECKSUM_DB="/var/lib/integrity-check/checksums.db"
+readonly ALERT_EMAIL="admin@example.com"
+
+mkdir -p "$(dirname "$CHECKSUM_DB")"
+
+# Generar base de datos inicial
+init_db() {
+    echo "Generando base de datos de checksums..."
+    find /etc /usr/bin /usr/sbin -type f -exec sha256sum {} \; > "$CHECKSUM_DB"
+    echo "Base de datos creada: $(wc -l < "$CHECKSUM_DB") archivos"
+}
+
+# Verificar integridad
+check_integrity() {
+    echo "Verificando integridad..."
+
+    local changes=0
+    while IFS= read -r line; do
+        local expected_hash=$(echo "$line" | awk '{print $1}')
+        local file=$(echo "$line" | awk '{print $2}')
+
+        if [ ! -f "$file" ]; then
+            echo "[!] ARCHIVO ELIMINADO: $file"
+            ((changes++))
+            continue
+        fi
+
+        local current_hash=$(sha256sum "$file" | awk '{print $1}')
+        if [ "$expected_hash" != "$current_hash" ]; then
+            echo "[!] ARCHIVO MODIFICADO: $file"
+            ((changes++))
+        fi
+    done < "$CHECKSUM_DB"
+
+    if [ $changes -gt 0 ]; then
+        echo "[ALERTA] $changes archivo(s) modificado(s)!"
+        # Enviar alerta
+        # mail -s "Integrity Alert" "$ALERT_EMAIL" < alert.txt
+    else
+        echo "[OK] Todos los archivos intactos"
+    fi
+}
+
+# Main
+case "${1:-check}" in
+    init)   init_db ;;
+    check)  check_integrity ;;
+    *)      echo "Uso: $0 {init|check}" ;;
+esac
+```
+
+## Referencia Rápida
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `echo` | Imprimir texto | `echo "Hola $USER"` |
+| `read` | Leer input | `read -p "Nombre: " name` |
+| `[ ]` | Evaluar condición | `[ -f file.txt ]` |
+| `grep` | Buscar patrones | `grep -iE "error\|warn" log` |
+| `awk` | Procesar columnas | `awk '{print $1, $3}' file` |
+| `sed` | Sustituir texto | `sed 's/old/new/g' file` |
+| `cut` | Extraer campos | `cut -d: -f1 /etc/passwd` |
+| `sort` | Ordenar | `sort -t: -k3 -n /etc/passwd` |
+| `uniq` | Duplicados | `sort file \| uniq -c` |
+| `find` | Buscar archivos | `find /etc -name "*.conf"` |
+| `xargs` | Ejecutar con args | `find . -name "*.log" \| xargs rm` |
+| `tar` | Archivar | `tar czf backup.tar.gz /data` |
+| `chmod` | Permisos | `chmod 755 script.sh` |
+| `set -e` | Exit on error | `set -euo pipefail` |
+| `trap` | Capturar señales | `trap cleanup EXIT` |
+
+## Recursos Adicionales
+
+- **Bash Reference Manual**: https://www.gnu.org/software/bash/manual/
+- **Bash Hackers Wiki**: https://wiki.bash-hackers.org/
+- **ShellCheck (linter)**: https://www.shellcheck.net/
+- **Bash Academy**: https://www.shellscript.sh/
+- **Advanced Bash Guide**: https://tldp.org/LDP/abs/html/
+- **Secure Bash Scripting**: https://github.com/alebcay/awesome-shell
+
+---
+
+*Minicurso Bash — Curso Fundamentos de Ciberseguridad — CC BY-SA 4.0*

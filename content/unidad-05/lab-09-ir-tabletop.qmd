@@ -1,0 +1,359 @@
+---
+title: "Lab 7: Tabletop Exercise - Ransomware Response"
+module: "lab-07"
+type: "lab"
+description: "Practica de respuesta a incidentes con simulacion de ransomware"
+---
+
+
+## Objetivo del Laboratorio
+
+En este laboratorio, vas a **ejecutar un tabletop exercise** simulando un ataque de ransomware. Este ejercicio te permitira:
+
+- Practicar el ciclo de respuesta
+- Identificar gaps en playbooks
+- Coordinar equipo de respuesta
+- Documentar lecciones aprendidas
+
+{{< include ../../_shared/_warn-seguridad.qmd >}}
+
+## Duracion
+
+- Tiempo estimado: 90 minutos
+- Tipo: Equipo (3-5 personas)
+- IMPORTANTE: DEBES teclear todos los comandos manualmente
+
+---
+
+## Paso 1: Preparar el Ejercicio
+
+### 1.1 Roles
+
+```
+TABLETOP ROLES
+==============
+
+[1] INCIDENT COMMANDER (IC)
+    - Lidera la respuesta
+    - Toma decisiones clave
+    - Coordina equipo
+
+[2] SECURITY ANALYST
+    - Analiza indicadores
+    - Investiga alcance
+    - Documentevidence
+
+[3] IT OPERATIONS
+    - Aplica contencion
+    - Coordina remediation
+    - Restaura sistemas
+
+[4] COMMUNICATIONS
+    - Maneja comunicacion
+    - Coordina con legal
+    - Notifica stakeholders
+```
+
+### 1.2 Escenario
+
+```
+SCENARIO: Ransomware Attack
+=========================
+
+Fecha: 2026-05-06, 14:30 UTC
+Ubicacion: Empresa medica en Ecuador
+Sistemas afectados: 
+  - 15 servidores Windows
+  - 50 estaciones de trabajo
+  - Servidor de archivos principal
+
+Indicadores iniciales:
+  - Archivos con extension .locked
+  - Nota de rescate en-desktop
+  - Extension de archivos modificada
+  - Variante desconocida
+```
+
+---
+
+## Paso 2: Detection y Analisis
+
+### 2.1 Identificar indicadores
+
+```bash
+cat > exercise/indicators.sh << 'EOF'
+#!/bin/bash
+# Indicators - Phase 1: Detection
+
+echo "=== PHASE 1: DETECTION AND ANALYSIS ==="
+echo ""
+echo "Timestamp: $(date)"
+echo ""
+echo "[INDICATORS IDENTIFIED]"
+echo ""
+echo "1. File Extension Changes"
+echo "   - Before: .doc, .xls, .pdf"
+echo "   - After: .locked"
+echo "   - Count: 2500+ files"
+echo ""
+echo "2. Files on Desktop"
+echo "   - README.txt"
+echo "   - Contains: Ransom note"
+echo "   - Language: Spanish"
+echo ""
+echo "3. Network Indicators"
+echo "   - Outbound connection to: 185.220.101.x"
+echo "   - Port: 4444 (C2)"
+echo "   - Protocol: HTTPS"
+echo ""
+echo "4. User Reports"
+echo "   - 14:15: First call to helpdesk"
+echo "   - 14:22: 15+ calls received"
+echo "   - 14:30: Escalated to SOC"
+echo ""
+echo "5. Security Tools"
+echo "   - EDR: Triggered on 3 endpoints"
+echo "   - SIEM: Rule fired"
+echo "   - Firewall: Blocked C2"
+echo ""
+echo "[QUESTIONS FOR TEAM]"
+echo "1. What is the scope of infection?"
+echo "2. Is the ransomware variant known?"
+echo "3. How did the attacker gain access?"
+echo "4. What data is encrypted?"
+echo "5. Are backups available?"
+EOF
+
+chmod +x exercise/indicators.sh
+./exercise/indicators.sh
+```
+
+---
+
+## Paso 3: Containment
+
+### 3.2 Plan de contencion
+
+```bash
+cat > exercise/containment.sh << 'EOF'
+#!/bin/bash
+# Containment Plan
+
+echo "=== PHASE 2A: CONTAINMENT (Short-term) ==="
+echo ""
+echo "[IMMEDIATE ACTIONS]"
+echo ""
+echo "[ ] 1. ISOLATE affected systems"
+echo "    - Disconnect from network: DONE"
+echo "    - Disable network share: PENDING"
+echo "    - Action by: IT Ops"
+echo "    - Time: 14:35 UTC"
+echo ""
+echo "[ ] 2. BLOCK C2 COMMUNICATION"
+echo "    - Firewall rule created: DONE"
+echo "    - IPS signature: PENDING"
+echo "    - Action by: Security"
+echo "    - Time: 14:36 UTC"
+echo ""
+echo "[ ] 3. DISABLE user accounts"
+echo "    - Compromised accounts: 3"
+echo "    - Accounts disabled: PENDING"
+echo "    - Action by: IAM"
+echo "    - Time: 14:38 UTC"
+echo ""
+echo "=== PHASE 2B: CONTAINMENT (Long-term) ==="
+echo ""
+echo "[CONTAINMENT ACTIONS]"
+echo ""
+echo "[ ] 4. Apply network segmentation"
+echo "    - Isolate critical systems"
+echo "    - Segment: Production"
+echo ""
+echo "[ ] 5. Review and patch initial vector"
+echo "    - Phishing email identified"
+echo "    - Credential compromise"
+echo ""
+echo "=== CONTAINMENT DECISIONS ==="
+echo ""
+echo "Q: Should we pay the ransom?"
+echo "A: No. Policy states: Do not pay."
+echo ""
+echo "Q: Should we negotiate?"
+echo "A: Only if absolutely necessary."
+echo ""
+echo "Q: When to involve law enforcement?"
+echo "A: After containment, contact DIASE."
+EOF
+
+chmod +x exercise/containment.sh
+./exercise/containment.sh
+```
+
+---
+
+## Paso 4: Eradication y Recovery
+
+### 4.1 Verificacion de limpieza
+
+```bash
+cat > exercise/eradication.sh << 'EOF'
+#!/bin/bash
+# Eradication and Recovery
+
+echo "=== PHASE 3: ERADICATION ==="
+echo ""
+echo "[VERIFICATION CHECKLIST]"
+echo ""
+echo "[ ] 1. Malware removed"
+echo "    - Scan all systems: PENDING"
+echo "    - No persistence: VERIFY"
+echo ""
+echo "[ ] 2. Vulnerability closed"
+echo "    - Initial vector: Phishing"
+echo "    - Training required: YES"
+echo ""
+echo "[ ] 3. No lateral movement"
+echo "    - Timeline: 14:15-14:30"
+echo "    - Systems: 65"
+echo "    - Scope: Limited"
+echo ""
+echo "=== PHASE 4: RECOVERY ==="
+echo ""
+echo "[RECOVERY OPTIONS]"
+echo ""
+echo "1. From Backup"
+echo "   - Last good backup: 2026-05-05 23:00"
+echo "   - Integrity: VERIFIED"
+echo "   - Recovery time: 12-24 hours"
+echo "   - Cost: $15,000"
+echo ""
+echo "2. Rebuild Systems"
+echo "   - 15 servers"
+echo "   - Time: 24-48 hours"
+echo "   - Cost: $50,000"
+echo ""
+echo "Decision: Option 1 (backup)"
+echo "         + rebuild 3 critical systems"
+echo ""
+echo "=== RECOVERY TIMELINE ==="
+echo ""
+echo "T+0h: Incident declared"
+echo "T+2h: Containment complete"
+echo "T+4h: Eradication verified"
+echo "T+24h: Recovery started"
+echo "T+48h: Critical ops restored"
+echo "T+72h: Full restoration"
+echo "T+1w: Return to normal"
+EOF
+
+chmod +x exercise/eradication.sh
+./exercise/eradication.sh
+```
+
+---
+
+## Paso 5: Post-Activity
+
+### 5.1 Lecciones aprendidas
+
+```bash
+cat > exercise/postmortem.sh << 'EOF'
+#!/bin/bash
+# Post-Activity
+
+echo "=== PHASE 5: POST-ACTIVITY ==="
+echo ""
+echo "=== INCIDENT SUMMARY ==="
+echo ""
+echo "Incident: RANSOMWARE-2026-0506"
+echo "Date: 2026-05-06"
+echo "Duration: 2.5 hours (containment)"
+echo "Systems: 65 affected"
+echo "Data encrypted: 2500 files"
+echo "Downtime: 48 hours"
+echo "Cost: $65,000"
+echo ""
+echo "=== IMPROVEMENTS IDENTIFIED ==="
+echo ""
+echo "1. Detection: MTTD was 15 min (OK)"
+echo "   Improve: Reduce to 5 min"
+echo ""
+echo "2. Response: Good coordination"
+echo "   Improve: Formalize runbooks"
+echo ""
+echo "3. Backup: Restored successfully"
+echo "   Improve: Test restore quarterly"
+echo ""
+echo "4. Prevention: Phishing training needed"
+echo "   Improve: Monthly exercises"
+echo ""
+echo "5. Communication: Effective"
+echo "   Improve: Pre-draft notifications"
+echo ""
+echo "=== ACTION ITEMS ==="
+echo ""
+echo "[ ] 1. Update ransomware playbook"
+echo "    Owner: Security Lead"
+echo "    Due: 2026-05-20"
+echo ""
+echo "[ ] 2. Test backup restore"
+echo "    Owner: IT Ops"
+echo "    Due: 2026-05-15"
+echo ""
+echo "[ ] 3. Phishing awareness campaign"
+echo "    Owner: Training"
+echo "    Due: 2026-06-01"
+echo ""
+echo "[ ] 4. Update contact list"  
+echo "    Owner: Comms"
+echo "    Due: 2026-05-10"
+echo ""
+echo "[ ] 5. Tabletop exercise Q2"
+echo "    Owner: IR Team"
+echo "    Due: 2026-06-15"
+EOF
+
+chmod +x exercise/postmortem.sh
+./exercise/postmortem.sh
+```
+
+---
+
+## Ejercicio: Documentar Lecciones
+
+### Objetivo
+
+1. Completar checklist de lessons learned
+2. Crear action items
+3. Actualizar playbook
+
+### Entregables
+
+1. Reporte en `reports/postmortem.md`
+
+---
+
+## Comandos
+
+```bash
+./exercise/indicators.sh
+./exercise/containment.sh
+./exercise/eradication.sh
+./exercise/postmortem.sh
+```
+
+---
+
+## Resumen
+
+| Metric | Result |
+|--------|--------|
+| MTTD | 15 min |
+| MTTC | 2 hours |
+| MTTR | 48 hours |
+| Cost | $65,000 |
+
+---
+
+*Lab 7/7 - Curso Fundamentos de Ciberseguridad*
+*Duration: 90 minutes*

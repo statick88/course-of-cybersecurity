@@ -1,0 +1,831 @@
+---
+title: "Minicurso: Nmap"
+module: "minicurso-nmap"
+type: "minicurso"
+description: "Tutorial completo de Nmap para ciberseguridad"
+---
+
+
+## ¿Qué es Nmap?
+
+Nmap (Network Mapper) es una herramienta de código abierto para descubrimimiento de redes y auditoría de seguridad. Creada por Gordon "Fyodor" Lyon en 1997, es el estándar de la industria para escaneo de puertos, detección de servicios, identificación de sistemas operativos y mapeo de redes. Su nombre proviene de "Network Mapper" y se ha convertido en la herramienta fundamental para cualquier profesional de ciberseguridad.
+
+Nmap funciona enviando paquetes especialmente crafted a los hosts objetivo y analizando las respuestas para determinar qué hosts están activos, qué puertos están abiertos, qué servicios se ejecutan en esos puertos, y qué sistema operativo utiliza cada host. Utiliza técnicas sofisticadas de fingerprinting basadas en diferencias en la implementación de stacks TCP/IP entre diferentes sistemas operativos.
+
+En ciberseguridad, Nmap es la primera herramienta que se ejecuta en cualquier evaluación de seguridad. Permite descubrir la superficie de ataque de una red, identificar servicios vulnerables, detectar configuraciones inseguras, y generar inventarios de activos de red. Su motor de scripting (NSE) permite automatizar detección de vulnerabilidades, explotación de servicios, y auditorías de compliance. Es utilizado por pentesters, administradores de sistemas, y equipos de blue team por igual.
+
+## ¿Por qué aprenderlo?
+
+- **Descubrimiento de red**: Identificar hosts activos y mapear topología de red
+- **Detección de servicios**: Saber qué aplicación y versión corre en cada puerto abierto
+- **Auditoría de seguridad**: Encontrar servicios sin parches o mal configurados
+- **NSE (Scripting Engine)**: Automatizar detección de vulnerabilidades con 600+ scripts
+- **Estándar de la industria**: Herramienta #1 en pentesting profesional, requerida en OSCP, CEH, CompTIA PenTest+
+
+## Instalación
+
+### macOS
+
+```bash
+# Con Homebrew
+brew install nmap
+
+# Verificar instalación
+nmap --version
+# Esperado:
+# Nmap version 7.95 ( https://nmap.org )
+# Platform: x86_64-apple-darwin23.4.0
+# Compiled with: nmap-liblua-5.4.4 openssl-3.1.4 nmap-libpcre-8.45
+# Available nsock engines: kqueue poll select
+
+# Verificar scripts disponibles
+ls /opt/homebrew/share/nmap/scripts/ | wc -l
+# Esperado: 600+ scripts NSE
+```
+
+### Linux (Ubuntu/Debian)
+
+```bash
+# Instalar desde repositorios
+sudo apt update
+sudo apt install -y nmap
+
+# Verificar
+nmap --version
+# Esperado: Nmap version 7.94+
+
+# Instalar versión más reciente desde fuente
+sudo apt install -y build-essential libssl-dev liblua5.4-dev
+wget https://nmap.org/dist/nmap-7.95.tar.bz2
+tar xjf nmap-7.95.tar.bz2
+cd nmap-7.95
+./configure && make && sudo make install
+
+# Verificar scripts
+nmap --script-updatedb
+# Esperado: NSE: Using script database /usr/local/share/nmap/scripts/script.db
+```
+
+### Windows
+
+```powershell
+# Descargar instalador desde https://nmap.org/download.html
+# Instalar con opciones default (incluye Ncat y Zenmap)
+
+# O con Scoop:
+scoop install nmap
+
+# Verificar
+nmap --version
+
+# Zenmap (GUI) se instala automáticamente
+# Buscar "Zenmap" en el menú de inicio
+```
+
+::: {.callout-warning}
+## Aviso Legal y Ético
+Nmap es una herramienta poderosa. Escanear redes sin autorización es ILEGAL en la mayoría de jurisdicciones. Solo escanea redes que te pertenecen o tienes permiso explícito por escrito para evaluar. El uso indebido puede resultar en cargos criminales. Muchos IDS/IPS detectan escaneos de Nmap y generan alertas de seguridad.
+:::
+
+## Nivel Básico
+
+### Conceptos Fundamentales
+
+**Host discovery**: Determinar qué hosts están activos en una red usando ICMP echo requests, TCP SYN a puertos comunes, y ARP requests.
+
+**Port scanning**: Identificar puertos abiertos (servicio escuchando), cerrados (sin servicio), o filtrados (firewall bloqueando).
+
+**Service detection**: Identificar qué aplicación y versión corre en un puerto abierto mediante banner grabbing y análisis de respuestas.
+
+**OS detection**: Inferir el sistema operativo del host basado en diferencias en la implementación del stack TCP/IP (TTL, window size, TCP options).
+
+**TCP SYN scan (-sS)**: Envía paquete SYN, espera SYN-ACK. No completa el handshake TCP (semi-open). Más rápido y stealthy. Requiere privilegios root.
+
+**TCP Connect scan (-sT)**: Completa el handshake TCP completo (SYN, SYN-ACK, ACK). Más ruidoso pero no requiere privilegios root.
+
+**UDP scan (-sU)**: Escanea puertos UDP. Más lento porque UDP no tiene handshake; se basa en ICMP port unreachable responses.
+
+**State categories**: open (servicio escuchando), closed (puerto accesible pero sin servicio), filtered (firewall bloquea), open|filtered (no se puede determinar).
+
+### Comandos Esenciales
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `nmap <host>` | Escaneo básico de 1000 puertos TCP | `nmap 192.168.1.1` |
+| `-sn` | Host discovery (sin escaneo de puertos) | `nmap -sn 192.168.1.0/24` |
+| `-sS` | TCP SYN scan (requiere root) | `sudo nmap -sS 192.168.1.1` |
+| `-sT` | TCP Connect scan | `nmap -sT 192.168.1.1` |
+| `-sV` | Detección de versiones de servicio | `nmap -sV 192.168.1.1` |
+| `-O` | Detección de sistema operativo | `sudo nmap -O 192.168.1.1` |
+| `-A` | Aggressive (OS + version + scripts + traceroute) | `sudo nmap -A 192.168.1.1` |
+| `-p <puertos>` | Escanear puertos específicos | `nmap -p 80,443,8080 host` |
+| `-p-` | Escanear TODOS los puertos (1-65535) | `nmap -p- host` |
+| `-T<0-5>` | Template de timing (0=lento, 5=rápido) | `nmap -T4 host` |
+| `-oN/-oX/-oG` | Output normal/XML/greppable | `nmap -oN scan.txt host` |
+| `--top-ports <n>` | Escanear los n puertos más comunes | `nmap --top-ports 100 host` |
+| `-F` | Fast scan (100 puertos más comunes) | `nmap -F host` |
+| `-v` / `-vv` | Verbose output | `nmap -vv host` |
+| `-Pn` | Sin ping (asumir host up) | `nmap -Pn host` |
+
+### Host Discovery
+
+```bash
+# Descubrir hosts activos en una red (sin escanear puertos)
+nmap -sn 192.168.1.0/24
+# Esperado:
+# Nmap scan report for 192.168.1.1
+# Host is up (0.0032s latency).
+# Nmap scan report for 192.168.1.100
+# Host is up (0.0014s latency).
+# Nmap done: 256 IP addresses (2 hosts up) scanned in 3.12 seconds
+
+# Descubrir con ping TCP (útil cuando ICMP está bloqueado)
+sudo nmap -sn -PS80,443 192.168.1.0/24
+# -PS = TCP SYN ping a puertos 80 y 443
+
+# Descubrir con ping TCP ACK
+sudo nmap -sn -PA80,443 192.168.1.0/24
+# -PA = TCP ACK ping
+
+# Descubrir con ARP (red local, más rápido)
+sudo nmap -sn -PR 192.168.1.0/24
+# -PR = ARP ping (solo red local)
+
+# Descubrir sin ping (asumir todos los hosts están up)
+nmap -sn -Pn 192.168.1.0/24
+# Útil cuando el firewall bloquea todos los tipos de ping
+```
+
+### Escaneo de Puertos Básico
+
+```bash
+# Escaneo básico (1000 puertos más comunes)
+nmap 192.168.1.1
+# Esperado:
+# PORT     STATE  SERVICE
+# 22/tcp   open   ssh
+# 80/tcp   open   http
+# 443/tcp  open   https
+# 8080/tcp closed http-proxy
+
+# Escaneo SYN (más rápido, requiere root)
+sudo nmap -sS 192.168.1.1
+
+# Escanear puertos específicos
+nmap -p 22,80,443,3306,5432 192.168.1.1
+
+# Escanear rango de puertos
+nmap -p 1-1024 192.168.1.1
+
+# Escanear TODOS los puertos
+nmap -p- 192.168.1.1
+# Nota: Esto toma más tiempo. Usa -T4 para acelerar.
+
+# Escanear los 100 puertos más comunes
+nmap --top-ports 100 192.168.1.1
+
+# Escaneo UDP (más lento)
+sudo nmap -sU --top-ports 20 192.168.1.1
+```
+
+### Detección de Servicios y OS
+
+```bash
+# Detectar versiones de servicios
+nmap -sV 192.168.1.1
+# Esperado:
+# PORT   STATE SERVICE VERSION
+# 22/tcp open  ssh     OpenSSH 8.9p1 Ubuntu 3ubuntu0.6
+# 80/tcp open  http    Apache httpd 2.4.52
+# 443/tcp open  ssl/http Apache httpd 2.4.52
+
+# Detectar sistema operativo
+sudo nmap -O 192.168.1.1
+# Esperado:
+# Device type: general purpose
+# Running: Linux 5.X
+# OS CPE: cpe:/o:linux:linux_kernel:5
+# OS details: Linux 5.0 - 5.15
+# Network Distance: 1 hops
+
+# Escaneo agresivo (todo en uno)
+sudo nmap -A 192.168.1.1
+# Incluye: -sV, -O, --script=default, --traceroute
+
+# Escaneo agresivo con todos los puertos
+sudo nmap -A -p- 192.168.1.1
+# Completo pero lento
+```
+
+::: {.callout-tip}
+## Timing Templates
+| Template | Velocidad | Uso |
+|----------|-----------|-----|
+| `-T0` (paranoid) | Muy lento | Evasión extrema de IDS |
+| `-T1` (sneaky) | Lento | Evasión de IDS |
+| `-T2` (polite) | Moderado-lento | Reducción de carga de red |
+| `-T3` (normal) | Normal | Default, balanceado |
+| `-T4` (aggressive) | Rápido | Redes confiables, recomendado |
+| `-T5` (insane) | Muy rápido | Puede perder resultados |
+:::
+
+```bash
+# Escaneo lento (evasión de IDS)
+sudo nmap -sS -sV -T2 192.168.1.1
+
+# Escaneo rápido (red interna)
+sudo nmap -sS -sV -T4 192.168.1.1
+
+# Escaneo muy rápido (puede perder resultados)
+sudo nmap -sS -T5 192.168.1.1
+```
+
+### Ejercicio 1: Mapeo de red local
+
+**Objetivo:** Descubrir todos los hosts activos en tu red y escanear sus servicios.
+
+**Paso 1:** Descubrir hosts
+
+```bash
+# Descubrir tu red
+ip addr show | grep "inet "
+# Esperado: inet 192.168.1.X/24 (tu IP y máscara)
+
+# Escanear toda la red para hosts activos
+nmap -sn 192.168.1.0/24
+# Anota las IPs que están "up"
+
+# Extraer solo IPs activas
+nmap -sn 192.168.1.0/24 | grep "Nmap scan" | awk '{print $5}'
+# Esperado: lista de IPs activas
+```
+
+**Paso 2:** Escanear un host objetivo
+
+```bash
+# Escaneo básico del gateway
+nmap -sS -sV -T4 192.168.1.1
+
+# Escanear un host específico descubierto
+nmap -sS -sV -T4 192.168.1.100
+
+# Escaneo completo con detección de OS
+sudo nmap -A -T4 192.168.1.100
+
+# Guardar resultados
+nmap -sS -sV -T4 -oN red-local.txt 192.168.1.0/24
+```
+
+**Paso 3:** Analizar resultados
+
+```bash
+# Ver el archivo de resultados
+cat red-local.txt
+
+# Extraer solo hosts y puertos abiertos
+grep -E "open|Nmap scan" red-local.txt
+
+# Extraer servicios específicos
+grep "open" red-local.txt | grep -E "ssh|http|mysql|postgres"
+
+# Contar puertos abiertos totales
+grep "open" red-local.txt | wc -l
+```
+
+## Nivel Intermedio
+
+### NSE Scripts (Nmap Scripting Engine)
+
+Nmap incluye más de 600 scripts para detección de vulnerabilidades, backdoors, configuraciones inseguras, y explotación automatizada. Los scripts están organizados en categorías.
+
+```bash
+# Ejecutar scripts de detección de vulnerabilidades
+nmap --script vuln 192.168.1.1
+
+# Ejecutar scripts seguros (no intrusivos)
+nmap --script safe 192.168.1.1
+
+# Ejecutar scripts por categoría
+nmap --script "auth" 192.168.1.1        # Autenticación
+nmap --script "discovery" 192.168.1.1   # Descubrimiento
+nmap --script "exploit" 192.168.1.1     # Explotación
+nmap --script "brute" 192.168.1.1       # Fuerza bruta
+nmap --script "default" 192.168.1.1     # Scripts por defecto
+nmap --script "external" 192.168.1.1    # Servicios externos
+nmap --script "fuzzer" 192.168.1.1      # Fuzzing
+nmap --script "intrusive" 192.168.1.1   # Intrusivos
+nmap --script "malware" 192.168.1.1     # Detección de malware
+nmap --script "safe" 192.168.1.1        # Seguros
+nmap --script "version" 192.168.1.1     # Detección de versión
+
+# Ejecutar script específico
+nmap --script http-enum 192.168.1.1
+nmap --script smb-vuln-ms17-010 192.168.1.1
+nmap --script ssl-enum-ciphers -p 443 192.168.1.1
+
+# Ejecutar múltiples scripts
+nmap --script "http-*" 192.168.1.1
+nmap --script "smb-*" 192.168.1.1
+
+# Pasar argumentos a scripts
+nmap --script http-enum --script-args http-enum.basepath="/api" 192.168.1.1
+
+# Ejecutar con output detallado
+nmap --script vuln -vv 192.168.1.1
+```
+
+::: {.callout-warning}
+## Scripts de Explotación
+Los scripts de categoría "exploit" y "brute" pueden ser intrusivos. Úsalos SOLO en entornos autorizados. Pueden causar inestabilidad en servicios, bloquear cuentas, o modificar datos. Siempre prueba scripts en un entorno de laboratorio antes de usarlos en producción.
+:::
+
+### Formatos de Output
+
+```bash
+# Output normal (legible)
+nmap -sS -sV -oN resultado.txt 192.168.1.1
+
+# Output XML (para procesar con herramientas)
+nmap -sS -sV -oX resultado.xml 192.168.1.1
+
+# Output greppable (para grep/awk)
+nmap -sS -sV -oG resultado.gnmap 192.168.1.1
+
+# Los tres formatos a la vez
+nmap -sS -sV \
+    -oN resultado.txt \
+    -oX resultado.xml \
+    -oG resultado.gnmap \
+    192.168.1.1
+
+# Output en todos los formatos con nombre base
+nmap -sS -sV -oA resultado 192.168.1.1
+# Crea: resultado.nmap, resultado.xml, resultado.gnmap
+
+# Convertir XML a HTML
+xsltproc resultado.xml > resultado.html
+
+# Parsear greppable output
+grep "open" resultado.gnmap | awk '{print $2, $4}'
+```
+
+### Escaneo de Múltiples Objetivos
+
+```bash
+# Múltiples hosts
+nmap -sS 192.168.1.1 192.168.1.100 192.168.1.200
+
+# Rango de IPs
+nmap -sS 192.168.1.1-50
+
+# CIDR notation
+nmap -sS 192.168.1.0/24
+
+# Desde archivo
+echo -e "192.168.1.1\n192.168.1.100\n10.0.0.1" > targets.txt
+nmap -sS -iL targets.txt
+
+# Excluir hosts
+nmap -sS 192.168.1.0/24 --exclude 192.168.1.1,192.168.1.254
+
+# Excluir rango
+nmap -sS 192.168.1.0/24 --exclude 192.168.1.200-254
+
+# Excluir desde archivo
+nmap -sS 192.168.1.0/24 --excludefile exclude.txt
+```
+
+### Detección Avanzada de Versiones
+
+```bash
+# Intensidad de detección (0-9, default 7)
+nmap -sV --version-intensity 9 192.168.1.1
+# Más intenso = más pruebas, más lento, más preciso
+
+# Detección ligera (rápida, menos precisa)
+nmap -sV --version-intensity 2 192.168.1.1
+
+# Detección de todos los puertos (incluye UDP)
+sudo nmap -sV --version-all 192.168.1.1
+
+# Mostrar razón de detección
+nmap -sV --reason 192.168.1.1
+
+# Detección de versiones con scripts
+nmap -sV --script "banner" 192.168.1.1
+```
+
+### Ejercicio 2: Escaneo de vulnerabilidades web
+
+**Objetivo:** Usar NSE para detectar vulnerabilidades comunes en un servidor web.
+
+**Paso 1:** Escanear servicios web
+
+```bash
+# Enumerar servicios HTTP
+nmap -p 80,443,8080,8443 --script http-enum 192.168.1.100
+
+# Buscar vulnerabilidades HTTP conocidas
+nmap -p 80,443 --script "http-vuln*" 192.168.1.100
+
+# Verificar headers de seguridad
+nmap -p 80,443 --script http-security-headers 192.168.1.100
+
+# Verificar métodos HTTP permitidos
+nmap -p 80,443 --script http-methods 192.168.1.100
+```
+
+**Paso 2:** Analizar resultados
+
+```bash
+# Guardar y analizar
+nmap -p 80,443 \
+    --script "http-enum,http-security-headers,http-methods" \
+    -oN web-scan.txt \
+    192.168.1.100
+
+# Extraer vulnerabilidades encontradas
+grep -A5 "VULNERABLE" web-scan.txt
+
+# Extraer headers faltantes
+grep -E "missing|not found" web-scan.txt
+```
+
+## Nivel Avanzado
+
+### Técnicas de Evasión
+
+```bash
+# Fragmentar paquetes (evade IDS simple)
+sudo nmap -sS --fragment 192.168.1.1
+
+# Tamaño de datos aleatorio (confunde fingerprinting)
+sudo nmap -sS --data-length 50 192.168.1.1
+
+# Spoofing de MAC address
+sudo nmap -sS --spoof-mac 00:11:22:33:44:55 192.168.1.1
+
+# MAC aleatoria
+sudo nmap -sS --spoof-mac 0 192.168.1.1
+
+# IP decoy (confunde sobre cuál es tu IP real)
+sudo nmap -sS -D RND:10 192.168.1.1
+# RND:10 genera 10 IPs aleatorias como decoy
+
+# Decoys específicos
+sudo nmap -sS -D 10.0.0.1,10.0.0.2,ME 192.168.1.1
+# ME = tu IP real entre los decoys
+
+# Fuente de paquetes personalizada
+sudo nmap -sS -S 192.168.1.50 -e eth0 192.168.1.1
+
+# Puerto fuente específico
+sudo nmap -sS --source-port 53 192.168.1.1
+
+# Sin ping (firewall bloquea ICMP)
+sudo nmap -sS -Pn 192.168.1.1
+
+# Idle scan (scan zombie, muy stealthy)
+sudo nmap -sI zombie-host 192.168.1.1
+# Requiere un host "zombie" con IPID incremental
+```
+
+::: {.callout-warning}
+## Evasión y Legalidad
+Las técnicas de evasión son para entornos controlados y autorizados. Usarlas contra sistemas sin permiso es ilegal y puede considerarse intento de intrusión agravado. En evaluaciones reales, documentar todas las técnicas utilizadas en el reporte final.
+:::
+
+### Desarrollo de Scripts NSE
+
+```bash
+# Estructura básica de un script NSE
+cat > http-custom-check.nse << 'EOF'
+local http = require "http"
+local shortport = require "shortport"
+local stdnse = require "stdnse"
+
+description = [[
+Verifica si un servidor web expone archivos de configuración sensibles.
+]]
+
+---
+-- @usage
+-- nmap --script http-custom-check -p 80 <target>
+--
+-- @output
+-- PORT   STATE SERVICE
+-- 80/tcp open  http
+-- |_http-custom-check: /config.yml found!
+
+author = "Tu Nombre"
+license = "Same as Nmap--See https://nmap.org/book/man-legal.html"
+categories = {"discovery", "safe"}
+
+portrule = shortport.http
+
+action = function(host, port)
+    local paths = {"/config.yml", "/.env", "/wp-config.php", "/config.php"}
+    local found = {}
+
+    for _, path in ipairs(paths) do
+        local response = http.get(host, port, path)
+        if response.status == 200 then
+            table.insert(found, path .. " found!")
+        end
+    end
+
+    if #found > 0 then
+        return stdnse.format_output(true, found)
+    end
+    return nil
+end
+EOF
+
+# Usar script personalizado
+nmap --script ./http-custom-check.nse -p 80 192.168.1.100
+
+# Instalar script en Nmap
+sudo cp http-custom-check.nse /usr/local/share/nmap/scripts/
+sudo nmap --script-updatedb
+nmap --script http-custom-check -p 80 192.168.1.100
+```
+
+### Escaneo UDP
+
+```bash
+# Escaneo UDP básico (lento)
+sudo nmap -sU --top-ports 20 192.168.1.1
+
+# UDP + TCP combinado
+sudo nmap -sS -sU --top-ports 20 192.168.1.1
+
+# UDP con detección de versiones
+sudo nmap -sU -sV --version-intensity 0 192.168.1.1
+# Intensidad 0 = solo probar servicios conocidos en puertos estándar
+
+# UDP específico para DNS
+sudo nmap -sU -p 53 --script dns-nsid 192.168.1.1
+
+# UDP para SNMP
+sudo nmap -sU -p 161 --script snmp-sysdescr 192.168.1.1
+```
+
+### Zenmap (GUI de Nmap)
+
+```bash
+# Instalar Zenmap
+sudo apt install zenmap    # Linux
+brew install --cask zenmap # macOS
+
+# Zenmap incluye perfiles predefinidos:
+# - Intense scan
+# - Intense scan + UDP
+# - Intense scan, all TCP ports
+# - Intense scan, no ping
+# - Quick scan
+# - Quick scan plus
+# - Quick traceroute
+# - Regular scan
+# - Slow comprehensive scan
+
+# Zenmap permite:
+# - Visualizar topología de red
+# - Comparar escaneos
+# - Guardar perfiles personalizados
+# - Generar reportes
+```
+
+### Ejercicio 3: Auditoría completa de red
+
+**Objetivo:** Realizar un escaneo completo de una red y generar un reporte profesional.
+
+**Paso 1:** Escaneo de descubrimiento
+
+```bash
+# Crear directorio de auditoría
+mkdir -p ~/audit-$(date +%Y%m%d) && cd ~/audit-$(date +%Y%m%d)
+
+# Descubrir hosts
+nmap -sn -oA discovery 192.168.1.0/24
+
+# Extraer hosts activos
+grep "Nmap scan" discovery.gnmap | awk '{print $5}' > live-hosts.txt
+cat live-hosts.txt
+```
+
+**Paso 2:** Escaneo de servicios
+
+```bash
+# Escanear servicios en hosts activos
+sudo nmap -sS -sV -O --top-ports 1000 \
+    -iL live-hosts.txt \
+    -oA services-scan \
+    -T4
+
+# Ejecutar scripts de vulnerabilidad
+sudo nmap --script vuln,safe \
+    -iL live-hosts.txt \
+    -oA vuln-scan \
+    -T4
+```
+
+**Paso 3:** Generar reporte
+
+```bash
+# Convertir XML a HTML (si tienes xsltproc)
+xsltproc services-scan.xml > services-report.html
+
+# Resumen de hallazgos
+echo "=== Resumen de Auditoría ==="
+echo "Hosts activos: $(wc -l < live-hosts.txt)"
+echo "Puertos abiertos: $(grep "open" services-scan.gnmap | wc -l)"
+echo "Vulnerabilidades: $(grep -c "VULNERABLE" vuln-scan.nmap)"
+
+# Generar reporte consolidado
+{
+    echo "# Reporte de Auditoría de Red"
+    echo "Fecha: $(date)"
+    echo ""
+    echo "## Hosts Activos"
+    cat live-hosts.txt
+    echo ""
+    echo "## Servicios Detectados"
+    grep "open" services-scan.nmap
+    echo ""
+    echo "## Vulnerabilidades"
+    grep -B2 -A5 "VULNERABLE" vuln-scan.nmap
+} > reporte-final.md
+```
+
+## Uso en Ciberseguridad
+
+### Escenario 1: Evaluación de superficie de ataque
+
+```bash
+#!/bin/bash
+# attack-surface.sh - Evaluar superficie de ataque
+
+set -euo pipefail
+
+TARGET="${1:?Uso: $0 <target>}"
+OUTPUT="attack-surface-$(date +%Y%m%d)"
+
+echo "=== Evaluación de Superficie de Ataque ==="
+echo "Target: $TARGET"
+echo ""
+
+# 1. Descubrimiento
+echo "[1] Descubrimiento de hosts..."
+sudo nmap -sn -oA "${OUTPUT}-discovery" "$TARGET"
+
+# 2. Escaneo de puertos
+echo "[2] Escaneo de puertos..."
+sudo nmap -sS -p- -T4 -oA "${OUTPUT}-ports" "$TARGET"
+
+# 3. Detección de servicios
+echo "[3] Detección de servicios..."
+sudo nmap -sV --top-ports 1000 -oA "${OUTPUT}-services" "$TARGET"
+
+# 4. Scripts de seguridad
+echo "[4] Scripts de seguridad..."
+sudo nmap --script "auth,default,vuln" -oA "${OUTPUT}-security" "$TARGET"
+
+# 5. Resumen
+echo ""
+echo "=== Resumen ==="
+echo "Archivos generados:"
+ls -la ${OUTPUT}-*
+echo ""
+echo "Revisar ${OUTPUT}-security.nmap para vulnerabilidades"
+```
+
+### Escenario 2: Monitoreo de cambios en la red
+
+```bash
+# Crear baseline
+sudo nmap -sS --top-ports 1000 -oG baseline.gnmap 192.168.1.0/24
+
+# Comparar con escaneo actual
+sudo nmap -sS --top-ports 1000 -oG current.gnmap 192.168.1.0/24
+diff baseline.gnmap current.gnmap
+
+# Script de detección de cambios
+#!/bin/bash
+TARGET="${1:?Uso: $0 <target>}"
+BASELINE="baseline.gnmap"
+
+if [ ! -f "$BASELINE" ]; then
+    echo "[+] Creando baseline..."
+    sudo nmap -sS --top-ports 1000 -oG "$BASELINE" "$TARGET"
+    echo "[+] Baseline creado. Ejecutar de nuevo para detectar cambios."
+    exit 0
+fi
+
+echo "[+] Escaneando para comparar..."
+sudo nmap -sS --top-ports 1000 -oG current.gnmap "$TARGET"
+
+echo "[+] Comparando con baseline..."
+diff "$BASELINE" current.gnmap || echo "[!] CAMBIOS DETECTADOS"
+
+echo "[+] Actualizando baseline..."
+cp current.gnmap "$BASELINE"
+```
+
+### Escenario 3: Compliance auditing
+
+```bash
+# Verificar puertos que NO deberían estar abiertos
+nmap -p 21,23,135,139,445,3389 192.168.1.0/24
+# 21=FTP, 23=Telnet, 135=RPC, 139=NetBIOS, 445=SMB, 3389=RDP
+# Estos puertos deberían estar cerrados en redes modernas
+
+# Verificar versiones desactualizadas
+nmap -sV --script ssl-enum-ciphers -p 443 192.168.1.1
+# Revisar que no use SSLv3, TLS 1.0, o ciphers débiles
+
+# Verificar autenticación por defecto
+nmap --script "default,auth" -p 22,23,3389 192.168.1.1
+
+# Verificar configuración de SSL/TLS
+nmap --script ssl-cert,ssl-date,ssl-enum-ciphers -p 443 192.168.1.1
+
+# Verificar vulnerabilidades conocidas
+nmap --script smb-vuln-ms17-010,smb-vuln-ms08-067 -p 445 192.168.1.0/24
+```
+
+## Referencia Rápida
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `-sn` | Host discovery | `nmap -sn 192.168.1.0/24` |
+| `-sS` | SYN scan | `sudo nmap -sS host` |
+| `-sT` | Connect scan | `nmap -sT host` |
+| `-sU` | UDP scan | `sudo nmap -sU host` |
+| `-sV` | Version detection | `nmap -sV host` |
+| `-O` | OS detection | `sudo nmap -O host` |
+| `-A` | Aggressive | `sudo nmap -A host` |
+| `-p` | Puertos | `nmap -p 80,443 host` |
+| `-p-` | Todos los puertos | `nmap -p- host` |
+| `-T4` | Timing rápido | `nmap -T4 host` |
+| `--script` | NSE scripts | `nmap --script vuln host` |
+| `-oA` | Output todos los formatos | `nmap -oA resultado host` |
+| `-iL` | Input desde archivo | `nmap -iL targets.txt` |
+| `--fragment` | Fragmentar paquetes | `sudo nmap --fragment host` |
+| `-D` | Decoys | `sudo nmap -D RND:10 host` |
+| `-Pn` | Sin ping | `nmap -Pn host` |
+| `-sI` | Idle scan | `sudo nmap -sI zombie host` |
+| `--reason` | Mostrar razón | `nmap --reason host` |
+
+## Recursos Adicionales
+
+- **Documentación oficial**: https://nmap.org/book/
+- **Nmap Scripting Engine**: https://nmap.org/nsedoc/
+- **Lista de scripts**: https://nmap.org/nsedoc/scripts/
+- **Zenmap GUI**: https://nmap.org/zenmap/
+- **Practice**: https://tryhackme.com/ (labs de Nmap)
+- **Nmap Online**: https://nmap.online/
+- **Book**: "Nmap Network Scanning" by Gordon Lyon (Fyodor)
+
+## Apéndice: NSE Scripts Más Útiles
+
+### Detección de Vulnerabilidades
+| Script | Qué detecta | Uso |
+|--------|-------------|-----|
+| `smb-vuln-ms17-010` | EternalBlue (WannaCry) | `--script smb-vuln-ms17-010` |
+| `smb-vuln-ms08-067` | Conficker | `--script smb-vuln-ms08-067` |
+| `ssl-heartbleed` | Heartbleed (OpenSSL) | `--script ssl-heartbleed` |
+| `smb-vuln-cve-2020-0796` | SMBGhost | `--script smb-vuln-cve-2020-0796` |
+| `http-shellshock` | Shellshock (Bash) | `--script http-shellshock` |
+| `vulners` | CVEs por versión | `--script vulners` |
+
+### Descubrimiento Web
+| Script | Qué detecta | Uso |
+|--------|-------------|-----|
+| `http-enum` | Directorios web | `--script http-enum` |
+| `http-security-headers` | Headers faltantes | `--script http-security-headers` |
+| `http-methods` | Métodos HTTP | `--script http-methods` |
+| `http-robots.txt` | Robots.txt entries | `--script http-robots.txt` |
+| `http-sql-injection` | SQLi básica | `--script http-sql-injection` |
+| `http-xssed` | XSS reflejado | `--script http-xssed` |
+
+### SSL/TLS
+| Script | Qué detecta | Uso |
+|--------|-------------|-----|
+| `ssl-enum-ciphers` | Ciphers soportados | `--script ssl-enum-ciphers` |
+| `ssl-cert` | Certificado SSL | `--script ssl-cert` |
+| `ssl-date` | Clock skew del server | `--script ssl-date` |
+| `ssl-known-key` | Keys comprometidas | `--script ssl-known-key` |
+| `tls-alpn` | ALPN protocols | `--script tls-alpn` |
+
+### Autenticación
+| Script | Qué detecta | Uso |
+|--------|-------------|-----|
+| `ssh-brute` | Fuerza bruta SSH | `--script ssh-brute` |
+| `ftp-brute` | Fuerza bruta FTP | `--script ftp-brute` |
+| `http-brute` | Fuerza bruta HTTP | `--script http-brute` |
+| `mysql-brute` | Fuerza bruta MySQL | `--script mysql-brute` |
+| `smb-brute` | Fuerza bruta SMB | `--script smb-brute` |
+
+---
+
+*Minicurso Nmap — Curso Fundamentos de Ciberseguridad — CC BY-SA 4.0*

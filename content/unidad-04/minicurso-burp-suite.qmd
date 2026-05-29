@@ -1,0 +1,1274 @@
+---
+title: "Minicurso: Burp Suite"
+module: "minicurso-burp-suite"
+type: "minicurso"
+description: "Tutorial completo de Burp Suite para testing de aplicaciones web"
+---
+
+
+## ¿Qué es Burp Suite?
+
+Burp Suite es la plataforma líder para testing de seguridad de aplicaciones web, desarrollada por PortSwigger. Funciona como un proxy interceptador que se coloca entre tu navegador y el servidor web, permitiéndote ver, modificar y reenviar todo el tráfico HTTP/HTTPS. Es la herramienta imprescindible para cualquier pentester de aplicaciones web.
+
+La herramienta incluye múltiples módulos integrados: **Proxy** (interceptar y modificar tráfico en tiempo real), **Repeater** (reenviar requests manualmente con modificaciones), **Intruder** (automatizar ataques de fuzzing y fuerza bruta), **Scanner** (detección automática de vulnerabilidades, solo Professional), **Sequencer** (análisis de aleatoriedad de tokens de sesión), **Decoder** (codificar/decodificar datos en múltiples formatos), **Comparer** (comparar responses lado a lado), y **Extender** (API para instalar extensiones de la BApp Store).
+
+En ciberseguridad, Burp Suite es la herramienta estándar para pentesting web. Permite encontrar vulnerabilidades como SQL injection, XSS, CSRF, autenticación rota, control de acceso deficiente, y lógica de negocio vulnerable. La versión Community es gratuita y suficiente para la mayoría de pruebas manuales. La versión Professional incluye scanner automático y soporte prioritario.
+
+## ¿Por qué aprenderlo?
+
+- **Proxy interceptador**: Ver y modificar todo tráfico HTTP/HTTPS en tiempo real
+- **Intruder**: Automatizar fuzzing, brute force, y ataques de enumeración
+- **Repeater**: Manipular requests manualmente para testing profundo
+- **Extender**: Ecosistema de extensiones (BApp Store) para funcionalidad ilimitada
+- **Estándar de la industria**: Herramienta #1 en web app pentesting, requerida en OSCP, OSWE, eWPT
+
+## Instalación
+
+### macOS
+
+```bash
+# Con Homebrew
+brew install --cask burp-suite
+
+# O descargar desde https://portswigger.net/burp/communitydownload
+# Abrir el DMG y arrastrar a Applications
+
+# Verificar instalación
+open /Applications/Burp\ Suite\ Community.app
+# Esperado: ventana de Burp Suite con wizard de configuración
+
+# Java requerido (viene incluido en Burp)
+java --version
+# Esperado: OpenJDK 17+ (incluido con Burp)
+```
+
+### Linux (Ubuntu/Debian)
+
+```bash
+# Descargar desde https://portswigger.net/burp/communitydownload
+# Descargar el archivo .sh installer
+
+# Hacer ejecutable e instalar
+chmod +x burpsuite_community_linux_v*.sh
+./burpsuite_community_linux_v*.sh
+
+# Verificar
+burpsuite &
+# o
+/opt/BurpSuiteCommunity/BurpSuiteCommunity &
+```
+
+### Windows
+
+```powershell
+# Descargar desde https://portswigger.net/burp/communitydownload
+# Ejecutar el installer .exe
+
+# Verificar
+# Buscar "Burp Suite Community" en el menú de inicio
+```
+
+::: {.callout-tip}
+## Versiones de Burp Suite
+| Versión | Precio | Características |
+|---------|--------|----------------|
+| **Community** | Gratis | Proxy, Repeater, Intruder (throttled), Decoder, Comparer |
+| **Professional** | $449/año | + Scanner automático, Intruder sin throttle, Collaborator |
+| **Enterprise** | Custom | + CI/CD integration, dashboard, multi-user |
+:::
+
+::: {.callout-warning}
+## Aviso Legal y Ético
+Burp Suite intercepta y modifica tráfico web. Usarlo contra aplicaciones web sin autorización es ILEGAL. Intercepta solo tráfico de aplicaciones que te pertenecen o tienes permiso explícito para evaluar. El uso indebido puede resultar en cargos criminales y violación de leyes de acceso no autorizado.
+:::
+
+## Nivel Básico
+
+### Conceptos Fundamentales
+
+**Proxy interceptador**: Burp se configura como proxy HTTP/HTTPS del navegador. Todo el tráfico pasa por Burp, permitiendo ver y modificar requests y responses.
+
+**Certificate Authority**: Burp genera su propio certificado CA para interceptar tráfico HTTPS. Debes instalar este CA certificate en tu navegador para evitar errores de SSL.
+
+**Scope**: Define qué URLs están dentro del alcance del testing. Burp puede ignorar tráfico fuera del scope para reducir ruido.
+
+**Intercept**: Pausa el tráfico entre navegador y servidor, permitiendo modificar requests antes de enviarlos o responses antes de que lleguen al navegador.
+
+**HTTP history**: Log completo de todas las peticiones y respuestas capturadas por el proxy.
+
+### Configuración Inicial del Proxy
+
+```bash
+# 1. Iniciar Burp Suite
+# Seleccionar "Temporary project" > "Use Burp defaults"
+
+# 2. Configurar proxy
+# Proxy > Options > Proxy Listeners
+# Verificar que hay un listener en 127.0.0.1:8080
+
+# 3. Configurar navegador para usar proxy
+# Firefox: Settings > Network Settings > Manual proxy configuration
+#   HTTP Proxy: 127.0.0.1, Port: 8080
+#   Check "Also use this proxy for HTTPS"
+
+# 4. Instalar CA certificate de Burp
+# Con el proxy configurado, visitar: http://burp
+# Descargar "CA Certificate"
+# Firefox: Settings > Privacy & Security > Certificates > View Certificates
+#   > Authorities > Import > seleccionar cacert.der
+#   > Check "Trust this CA to identify websites"
+
+# 5. Verificar que HTTPS funciona
+# Visitar https://example.com
+# Si carga sin errores de certificado, la configuración es correcta
+```
+
+::: {.callout-tip}
+## FoxyProxy (Recomendado)
+Instala la extensión FoxyProxy en Firefox para cambiar rápidamente entre proxy directo y proxy de Burp.
+1. Instalar FoxyProxy desde addons.mozilla.org
+2. Configurar proxy: 127.0.0.1:8080
+3. Usar el ícono de FoxyProxy para activar/desactivar Burp rápidamente
+:::
+
+### Tutorial: Interceptar Tráfico Localhost con Burp Suite en Kali Linux
+
+Uno de los escenarios más comunes (y frustrantes) al empezar con Burp Suite es que **no intercepta tráfico hacia `localhost`**. Esto ocurre porque Firefox y otros navegadores omiten el proxy para conexiones locales por defecto. Sigue este tutorial visual para resolverlo.
+
+<div class="mermaid-diagram" style="background: #0f172a; border-radius: 16px; padding: 24px; margin: 24px 0; border: 1px solid #334155;">
+<div style="color: #94a3b8; font-size: 0.85em; margin-bottom: 12px; font-family: monospace; letter-spacing: 0.5px;">Figura 1: Tutorial Visual — Interceptar Tráfico Localhost con Burp Suite</div>
+<svg viewBox="0 0 1000 920" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:1000px;">
+
+  <!-- Background -->
+  <rect x="0" y="0" width="1000" height="920" rx="12" fill="#0f172a"/>
+
+  <!-- Header Banner -->
+  <defs>
+    <linearGradient id="header-grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#4c1d95"/>
+      <stop offset="50%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#4c1d95"/>
+    </linearGradient>
+    <linearGradient id="glow-green" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#22c55e" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="glow-purple" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Title Bar -->
+  <rect x="0" y="0" width="1000" height="56" rx="12" fill="url(#header-grad)"/>
+  <rect x="0" y="40" width="1000" height="16" fill="url(#header-grad)"/>
+  <text x="500" y="34" text-anchor="middle" fill="#ffffff" font-size="17" font-weight="bold" font-family="Arial, sans-serif" letter-spacing="1">TUTORIAL: Intercept Localhost Traffic with Burp Suite in Kali Linux VM</text>
+
+  <!-- Kali Dragon logo (simplified) -->
+  <g transform="translate(925, 8)">
+    <polygon points="0,10 8,0 16,2 20,12 14,20 6,22 0,18" fill="#1793d1" opacity="0.9"/>
+    <polygon points="4,10 8,6 12,8 14,14 10,18 6,16" fill="#367c2b" opacity="0.8"/>
+    <circle cx="10" cy="9" r="1.5" fill="#fff"/>
+    <text x="22" y="14" fill="#1793d1" font-size="7" font-weight="bold" font-family="Arial">KALI</text>
+  </g>
+
+  <!-- ============================================ -->
+  <!-- SECTION 1: Prerequisites: Setup -->
+  <!-- ============================================ -->
+  <g transform="translate(20, 75)">
+    <rect x="0" y="0" width="465" height="385" rx="10" fill="#1e293b" stroke="#7c3aed" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="465" height="385" rx="10" fill="url(#glow-purple)"/>
+
+    <!-- Section Number -->
+    <circle cx="22" cy="22" r="12" fill="#7c3aed"/>
+    <text x="22" y="27" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold" font-family="Arial">1</text>
+
+    <!-- Section Title -->
+    <text x="42" y="26" fill="#e2e8f0" font-size="13" font-weight="bold" font-family="Arial">Prerequisites: Setup</text>
+
+    <!-- Divider -->
+    <line x1="10" y1="38" x2="455" y2="38" stroke="#334155" stroke-width="0.5"/>
+
+    <!-- Windows Desktop representation -->
+    <rect x="15" y="50" width="435" height="155" rx="6" fill="#1a1a2e" stroke="#2d2d4e" stroke-width="1"/>
+    <!-- Desktop taskbar -->
+    <rect x="15" y="185" width="435" height="20" rx="0" fill="#0f0f23"/>
+    <!-- Start button -->
+    <rect x="18" y="187" width="35" height="16" rx="3" fill="#2563eb"/>
+    <text x="35" y="199" text-anchor="middle" fill="#fff" font-size="7" font-family="Arial">Start</text>
+
+    <!-- VM Window on desktop -->
+    <rect x="80" y="62" width="280" height="130" rx="4" fill="#1e293b" stroke="#4c1d95" stroke-width="1.5"/>
+    <!-- VM Window Title Bar -->
+    <rect x="80" y="62" width="280" height="22" rx="4" fill="#4c1d95"/>
+    <rect x="80" y="78" width="280" height="6" fill="#4c1d95"/>
+    <!-- VM window buttons -->
+    <circle cx="92" cy="73" r="3" fill="#ef4444"/>
+    <circle cx="102" cy="73" r="3" fill="#eab308"/>
+    <circle cx="112" cy="73" r="3" fill="#22c55e"/>
+    <text x="220" y="77" text-anchor="middle" fill="#fff" font-size="8" font-family="Arial">Kali Linux — Running</text>
+
+    <!-- VM Content - terminal-ish -->
+    <rect x="86" y="86" width="268" height="100" rx="2" fill="#0f172a"/>
+    <text x="96" y="100" fill="#22c55e" font-size="7" font-family="monospace">~$ systemctl status apache2</text>
+    <text x="96" y="112" fill="#94a3b8" font-size="7" font-family="monospace">● apache2.service - The Apache...</text>
+    <text x="96" y="124" fill="#94a3b8" font-size="7" font-family="monospace">  Active: active (running)</text>
+    <text x="96" y="140" fill="#22c55e" font-size="7" font-family="monospace">~$ ifconfig</text>
+    <text x="96" y="152" fill="#94a3b8" font-size="7" font-family="monospace">eth0: inet 192.168.1.100</text>
+    <text x="96" y="164" fill="#94a3b8" font-size="7" font-family="monospace">lo: inet 127.0.0.1</text>
+    <text x="96" y="178" fill="#22c55e" font-size="7" font-family="monospace">~$ _</text>
+
+    <!-- VMware/VirtualBox icon -->
+    <rect x="160" y="168" width="120" height="16" rx="3" fill="#2563eb" opacity="0.8"/>
+    <text x="220" y="180" text-anchor="middle" fill="#fff" font-size="7" font-family="Arial">▼ VMware Workstation 17</text>
+
+    <!-- Firefox icon -->
+    <g transform="translate(250, 215)">
+      <rect x="0" y="0" width="60" height="20" rx="4" fill="#1e3a5f"/>
+      <rect x="0" y="0" width="60" height="20" rx="4" fill="none" stroke="#2563eb" stroke-width="0.8"/>
+      <text x="8" y="13" font-size="10" fill="#fff">🌐</text>
+      <text x="24" y="13" fill="#e2e8f0" font-size="8" font-family="Arial">Firefox</text>
+    </g>
+
+    <!-- FoxyProxy badge on Firefox -->
+    <g transform="translate(320, 210)">
+      <rect x="0" y="0" width="55" height="28" rx="5" fill="#f97316"/>
+      <text x="7" y="11" fill="#fff" font-size="5" font-family="Arial">🦊</text>
+      <text x="20" y="11" fill="#fff" font-size="6" font-weight="bold" font-family="Arial">Foxy</text>
+      <text x="20" y="19" fill="#fff" font-size="6" font-weight="bold" font-family="Arial">Proxy</text>
+      <circle cx="47" cy="8" r="5" fill="#22c55e" stroke="#fff" stroke-width="1"/>
+      <text x="47" y="11" text-anchor="middle" fill="#fff" font-size="6" font-weight="bold">✓</text>
+    </g>
+
+    <!-- Instruction text -->
+    <text x="20" y="270" fill="#e2e8f0" font-size="11" font-family="Arial">Start your Kali Linux Virtual Machine and open Firefox.</text>
+    <text x="20" y="290" fill="#94a3b8" font-size="9" font-family="Arial">Ensure FoxyProxy extension is installed in Firefox.</text>
+    <text x="20" y="310" fill="#94a3b8" font-size="9" font-family="Arial">Verify Burp Suite is running with default proxy listener.</text>
+
+    <!-- Tip box -->
+    <rect x="15" y="330" width="435" height="42" rx="6" fill="#2e1065" stroke="#7c3aed" stroke-width="0.8"/>
+    <text x="22" y="346" fill="#c084fc" font-size="8" font-weight="bold" font-family="Arial">💡 TIP</text>
+    <text x="22" y="360" fill="#e2e8f0" font-size="8" font-family="Arial">Usa una VM de Kali Linux para aislar tu entorno de pruebas.</text>
+    <text x="22" y="372" fill="#94a3b8" font-size="7" font-family="Arial">Esto evita conflictos con tu configuración de red principal.</text>
+  </g>
+
+  <!-- ============================================ -->
+  <!-- SECTION 2: Firefox Configuration -->
+  <!-- ============================================ -->
+  <g transform="translate(515, 75)">
+    <rect x="0" y="0" width="465" height="385" rx="10" fill="#1e293b" stroke="#22c55e" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="465" height="385" rx="10" fill="url(#glow-green)"/>
+
+    <!-- Section Number -->
+    <circle cx="22" cy="22" r="12" fill="#22c55e"/>
+    <text x="22" y="27" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold" font-family="Arial">2</text>
+
+    <!-- Section Title -->
+    <text x="42" y="26" fill="#e2e8f0" font-size="13" font-weight="bold" font-family="Arial">Step 2: Firefox Configuration (about:config)</text>
+
+    <!-- Divider -->
+    <line x1="10" y1="38" x2="455" y2="38" stroke="#334155" stroke-width="0.5"/>
+
+    <!-- Firefox Browser Window -->
+    <rect x="20" y="50" width="425" height="230" rx="6" fill="#1e1e2e" stroke="#334155" stroke-width="1"/>
+
+    <!-- Browser Title Bar -->
+    <rect x="20" y="50" width="425" height="32" rx="6" fill="#2d2d3d"/>
+    <rect x="20" y="76" width="425" height="6" fill="#2d2d3d"/>
+    <!-- Tabs -->
+    <rect x="28" y="58" width="100" height="20" rx="4" fill="#1e1e2e"/>
+    <text x="78" y="72" text-anchor="middle" fill="#e2e8f0" font-size="8" font-family="Arial">about:config</text>
+    <rect x="134" y="58" width="80" height="20" rx="4" fill="#2d2d3d"/>
+    <text x="174" y="72" text-anchor="middle" fill="#64748b" font-size="8" font-family="Arial">New Tab</text>
+
+    <!-- URL Bar with Green Glow -->
+    <rect x="28" y="86" width="330" height="26" rx="13" fill="#0f172a" stroke="#22c55e" stroke-width="2" filter="url(#glow)"/>
+    <text x="40" y="102" fill="#e2e8f0" font-size="9" font-family="Arial">🔒 about:config</text>
+    <rect x="370" y="86" width="55" height="26" rx="13" fill="#22c55e"/>
+    <text x="397" y="102" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold" font-family="Arial">GO</text>
+
+    <!-- Warning bar -->
+    <rect x="28" y="118" width="409" height="24" rx="3" fill="#451a03" stroke="#f59e0b" stroke-width="0.5"/>
+    <text x="36" y="133" fill="#fbbf24" font-size="7" font-family="Arial">⚠ Proceed with caution — changing preferences may affect security and performance</text>
+
+    <!-- Search bar -->
+    <rect x="28" y="148" width="409" height="22" rx="4" fill="#0f172a" stroke="#22c55e" stroke-width="1.5"/>
+    <text x="36" y="163" fill="#e2e8f0" font-size="8" font-family="monospace">Search preference name</text>
+    <!-- Green outline highlight on search -->
+    <rect x="28" y="148" width="409" height="22" rx="4" fill="none" stroke="#22c55e" stroke-width="2" filter="url(#glow)"/>
+
+    <!-- Search result -->
+    <rect x="28" y="176" width="409" height="50" rx="4" fill="#0f172a" stroke="#22c55e" stroke-width="0.8"/>
+    <!-- Result header -->
+    <text x="36" y="192" fill="#22c55e" font-size="8" font-weight="bold" font-family="monospace">✓ network.proxy.allow_hijacking_localhost</text>
+    <text x="36" y="206" fill="#94a3b8" font-size="7" font-family="Arial">Allow extension proxy to access localhost URLs</text>
+    <text x="36" y="220" fill="#64748b" font-size="7" font-family="Arial">Type: boolean   Status: modified   Value:</text>
+
+    <!-- Toggle Switch - green, set to true -->
+    <rect x="380" y="180" width="40" height="22" rx="11" fill="#22c55e"/>
+    <circle cx="412" cy="191" r="9" fill="#fff"/>
+    <text x="428" y="195" fill="#22c55e" font-size="9" font-weight="bold" font-family="Arial">true</text>
+
+    <!-- Green arrow pointing from toggle to text -->
+    <path d="M 370 191 L 360 191 L 350 181" fill="none" stroke="#22c55e" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+    <!-- Additional UI elements -->
+    <rect x="28" y="232" width="409" height="40" rx="4" fill="#0f172a" opacity="0.6"/>
+    <text x="36" y="248" fill="#64748b" font-size="7" font-family="monospace">network.proxy.allow_proxies_from_extension</text>
+    <text x="36" y="262" fill="#64748b" font-size="7" font-family="Arial">Allow proxy extensions to manage proxy settings</text>
+    <text x="380" y="258" fill="#64748b" font-size="8" font-family="Arial">false ←</text>
+
+    <!-- Instruction text -->
+    <text x="20" y="300" fill="#e2e8f0" font-size="11" font-family="Arial">In Firefox address bar, type: <tspan fill="#22c55e" font-weight="bold" font-family="monospace">about:config</tspan></text>
+    <text x="20" y="320" fill="#e2e8f0" font-size="11" font-family="Arial">Search for: <tspan fill="#22c55e" font-weight="bold" font-family="monospace">network.proxy.allow_hijacking_localhost</tspan></text>
+    <text x="20" y="340" fill="#e2e8f0" font-size="11" font-family="Arial">Toggle the preference to <tspan fill="#22c55e" font-weight="bold">true</tspan>.</text>
+
+    <!-- Tip box -->
+    <rect x="15" y="354" width="435" height="20" rx="5" fill="#052e16" stroke="#22c55e" stroke-width="0.6"/>
+    <text x="22" y="367" fill="#86efac" font-size="8" font-family="Arial">✓ This allows FoxyProxy to intercept localhost traffic via Burp Suite</text>
+  </g>
+
+  <!-- ============================================ -->
+  <!-- SECTION 3: Verification (Burp Suite) -->
+  <!-- ============================================ -->
+  <g transform="translate(20, 480)">
+    <rect x="0" y="0" width="465" height="385" rx="10" fill="#1e293b" stroke="#7c3aed" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="465" height="385" rx="10" fill="url(#glow-purple)"/>
+
+    <!-- Section Number -->
+    <circle cx="22" cy="22" r="12" fill="#7c3aed"/>
+    <text x="22" y="27" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold" font-family="Arial">3</text>
+
+    <!-- Section Title -->
+    <text x="42" y="26" fill="#e2e8f0" font-size="13" font-weight="bold" font-family="Arial">Step 3: Verification (Burp Suite)</text>
+
+    <!-- Divider -->
+    <line x1="10" y1="38" x2="455" y2="38" stroke="#334155" stroke-width="0.5"/>
+
+    <!-- Burp Suite Main UI -->
+    <rect x="15" y="50" width="435" height="185" rx="6" fill="#1a1a2e" stroke="#2d2d4e" stroke-width="1"/>
+
+    <!-- Burp Menu Bar -->
+    <rect x="15" y="50" width="435" height="22" rx="6" fill="#0d0d1a"/>
+    <rect x="15" y="66" width="435" height="6" fill="#0d0d1a"/>
+    <text x="22" y="64" fill="#64748b" font-size="7" font-family="Arial">Burp Suite Community Edition v2025.12</text>
+
+    <!-- Burp Tab Bar -->
+    <rect x="15" y="72" width="435" height="24" fill="#12121e"/>
+    <!-- Active Tab: Proxy -->
+    <rect x="15" y="72" width="55" height="24" fill="#4c1d95"/>
+    <text x="42" y="87" text-anchor="middle" fill="#fff" font-size="8" font-weight="bold" font-family="Arial">Proxy</text>
+    <!-- Other tabs -->
+    <rect x="70" y="72" width="55" height="24" fill="#12121e"/>
+    <text x="97" y="87" text-anchor="middle" fill="#64748b" font-size="8" font-family="Arial">Target</text>
+    <rect x="125" y="72" width="60" height="24" fill="#12121e"/>
+    <text x="155" y="87" text-anchor="middle" fill="#64748b" font-size="8" font-family="Arial">Repeater</text>
+    <rect x="185" y="72" width="55" height="24" fill="#12121e"/>
+    <text x="212" y="87" text-anchor="middle" fill="#64748b" font-size="8" font-family="Arial">Intruder</text>
+    <rect x="240" y="72" width="55" height="24" fill="#12121e"/>
+    <text x="267" y="87" text-anchor="middle" fill="#64748b" font-size="8" font-family="Arial">Decoder</text>
+
+    <!-- Proxy Sub-tabs -->
+    <rect x="15" y="96" width="435" height="20" fill="#1a1a2e"/>
+    <rect x="15" y="96" width="55" height="20" fill="#7c3aed"/>
+    <text x="42" y="109" text-anchor="middle" fill="#fff" font-size="7" font-weight="bold" font-family="Arial">Intercept</text>
+    <rect x="70" y="96" width="70" height="20" fill="#1a1a2e"/>
+    <text x="105" y="109" text-anchor="middle" fill="#94a3b8" font-size="7" font-family="Arial">HTTP history</text>
+    <rect x="140" y="96" width="85" height="20" fill="#1a1a2e"/>
+    <text x="182" y="109" text-anchor="middle" fill="#94a3b8" font-size="7" font-family="Arial">WebSocket history</text>
+
+    <!-- Intercept content area -->
+    <rect x="15" y="116" width="435" height="85" fill="#0f172a"/>
+
+    <!-- Intercept banner -->
+    <rect x="25" y="124" width="180" height="28" rx="14" fill="#065f46" stroke="#22c55e" stroke-width="1.5"/>
+    <circle cx="50" cy="138" r="5" fill="#22c55e"/>
+    <text x="60" y="142" fill="#22c55e" font-size="10" font-weight="bold" font-family="Arial">Intercept is on</text>
+
+    <!-- HTTP Request method line sample -->
+    <rect x="25" y="158" width="415" height="35" rx="3" fill="#1e293b"/>
+    <rect x="25" y="158" width="44" height="16" rx="3" fill="#3b82f6"/>
+    <text x="47" y="170" text-anchor="middle" fill="#fff" font-size="7" font-weight="bold" font-family="Arial">GET</text>
+    <text x="76" y="170" fill="#e2e8f0" font-size="7" font-family="monospace">/ HTTP/1.1</text>
+    <text x="25" y="186" fill="#94a3b8" font-size="6" font-family="monospace">Host: 127.0.0.1:3000</text>
+    <text x="25" y="193" fill="#94a3b8" font-size="6" font-family="monospace">User-Agent: Mozilla/5.0 (X11; Linux x86_64)</text>
+
+    <!-- Buttons -->
+    <rect x="240" y="124" width="68" height="22" rx="4" fill="#22c55e"/>
+    <text x="274" y="139" text-anchor="middle" fill="#fff" font-size="8" font-weight="bold" font-family="Arial">Forward</text>
+    <rect x="315" y="124" width="60" height="22" rx="4" fill="#ef4444"/>
+    <text x="345" y="139" text-anchor="middle" fill="#fff" font-size="8" font-weight="bold" font-family="Arial">Drop</text>
+
+    <!-- Burp Divider -->
+    <line x1="15" y1="204" x2="450" y2="204" stroke="#2d2d4e" stroke-width="0.5"/>
+
+    <!-- FoxyProxy Configuration Dialog -->
+    <g transform="translate(160, 210)">
+      <rect x="0" y="0" width="200" height="80" rx="6" fill="#1e293b" stroke="#f97316" stroke-width="1.5"/>
+      <rect x="0" y="0" width="200" height="22" rx="6" fill="#f97316"/>
+      <rect x="0" y="16" width="200" height="6" fill="#f97316"/>
+      <text x="100" y="14" text-anchor="middle" fill="#fff" font-size="8" font-weight="bold" font-family="Arial">FoxyProxy — Add Proxy</text>
+
+      <text x="10" y="38" fill="#94a3b8" font-size="7" font-family="Arial">Proxy Type:</text>
+      <text x="80" y="38" fill="#e2e8f0" font-size="7" font-family="monospace">HTTP</text>
+      <text x="10" y="52" fill="#94a3b8" font-size="7" font-family="Arial">IP Address:</text>
+      <text x="80" y="52" fill="#e2e8f0" font-size="7" font-family="monospace">127.0.0.1</text>
+      <text x="10" y="66" fill="#94a3b8" font-size="7" font-family="Arial">Port:</text>
+      <text x="80" y="66" fill="#e2e8f0" font-size="7" font-family="monospace">8080</text>
+
+      <!-- Green bubble -->
+      <circle cx="230" cy="40" r="28" fill="#065f46" stroke="#22c55e" stroke-width="2"/>
+      <text x="230" y="36" text-anchor="middle" fill="#22c55e" font-size="7" font-weight="bold" font-family="monospace">127.0.0.1</text>
+      <text x="230" y="48" text-anchor="middle" fill="#22c55e" font-size="7" font-weight="bold" font-family="monospace">:8080</text>
+    </g>
+
+    <!-- Instruction text -->
+    <text x="15" y="310" fill="#e2e8f0" font-size="11" font-family="Arial">Configure FoxyProxy to <tspan fill="#22c55e" font-weight="bold" font-family="monospace">127.0.0.1:8080</tspan></text>
+    <text x="15" y="330" fill="#e2e8f0" font-size="11" font-family="Arial">Ensure Burp Suite <tspan fill="#22c55e" font-weight="bold">Intercept</tspan> is <tspan fill="#22c55e" font-weight="bold">ON</tspan>.</text>
+    <text x="15" y="350" fill="#94a3b8" font-size="9" font-family="Arial">Toggle Intercept on/off to pause traffic before it reaches the server.</text>
+
+    <!-- Tip box -->
+    <rect x="15" y="365" width="435" height="16" rx="4" fill="#2e1065" stroke="#7c3aed" stroke-width="0.6"/>
+    <text x="22" y="376" fill="#c084fc" font-size="7" font-family="Arial">💡 Use the FoxyProxy icon in Firefox to quickly switch between proxy modes</text>
+  </g>
+
+  <!-- ============================================ -->
+  <!-- SECTION 4: Execute -->
+  <!-- ============================================ -->
+  <g transform="translate(515, 480)">
+    <rect x="0" y="0" width="465" height="385" rx="10" fill="#1e293b" stroke="#22c55e" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="465" height="385" rx="10" fill="url(#glow-green)"/>
+
+    <!-- Section Number -->
+    <circle cx="22" cy="22" r="12" fill="#22c55e"/>
+    <text x="22" y="27" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold" font-family="Arial">4</text>
+
+    <!-- Section Title -->
+    <text x="42" y="26" fill="#e2e8f0" font-size="13" font-weight="bold" font-family="Arial">Step 4: Execute</text>
+
+    <!-- Divider -->
+    <line x1="10" y1="38" x2="455" y2="38" stroke="#334155" stroke-width="0.5"/>
+
+    <!-- Two Browser Windows Side by Side -->
+    <!-- Left Browser: localhost -->
+    <g transform="translate(15, 50)">
+      <rect x="0" y="0" width="200" height="150" rx="5" fill="#1e1e2e" stroke="#334155" stroke-width="1"/>
+
+      <!-- Browser chrome -->
+      <rect x="0" y="0" width="200" height="24" rx="5" fill="#2d2d3d"/>
+      <rect x="0" y="20" width="200" height="4" fill="#2d2d3d"/>
+      <circle cx="10" cy="12" r="3" fill="#ef4444"/>
+      <circle cx="20" cy="12" r="3" fill="#eab308"/>
+      <circle cx="30" cy="12" r="3" fill="#22c55e"/>
+
+      <!-- URL bar -->
+      <rect x="45" y="6" width="130" height="12" rx="6" fill="#1e1e2e" stroke="#334155" stroke-width="0.5"/>
+      <text x="55" y="15" fill="#ef4444" font-size="6" font-family="monospace">http://localhost:3000</text>
+
+      <!-- Page content - Error -->
+      <rect x="15" y="30" width="170" height="60" rx="3" fill="#1e293b"/>
+      <text x="100" y="50" text-anchor="middle" fill="#ef4444" font-size="10" font-weight="bold" font-family="Arial">⚠ Connection Failed</text>
+      <text x="100" y="64" text-anchor="middle" fill="#94a3b8" font-size="6" font-family="Arial">localhost bypasses proxy</text>
+      <text x="100" y="76" text-anchor="middle" fill="#94a3b8" font-size="6" font-family="Arial">Traffic NOT captured</text>
+
+      <!-- Red X mark -->
+      <circle cx="175" cy="35" r="18" fill="#ef4444" opacity="0.15"/>
+      <line x1="165" y1="25" x2="185" y2="45" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+      <line x1="185" y1="25" x2="165" y2="45" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+
+      <!-- Error description -->
+      <rect x="10" y="96" width="180" height="24" rx="4" fill="#450a0a" stroke="#ef4444" stroke-width="0.5"/>
+      <text x="100" y="112" text-anchor="middle" fill="#fca5a5" font-size="7" font-family="Arial">✗ Bypasses proxy — no capture</text>
+    </g>
+
+    <!-- Right Browser: 127.0.0.1 -->
+    <g transform="translate(240, 50)">
+      <rect x="0" y="0" width="210" height="150" rx="5" fill="#1e1e2e" stroke="#334155" stroke-width="1"/>
+
+      <!-- Browser chrome -->
+      <rect x="0" y="0" width="210" height="24" rx="5" fill="#2d2d3d"/>
+      <rect x="0" y="20" width="210" height="4" fill="#2d2d3d"/>
+      <circle cx="10" cy="12" r="3" fill="#ef4444"/>
+      <circle cx="20" cy="12" r="3" fill="#eab308"/>
+      <circle cx="30" cy="12" r="3" fill="#22c55e"/>
+
+      <!-- URL bar -->
+      <rect x="45" y="6" width="140" height="12" rx="6" fill="#1e1e2e" stroke="#334155" stroke-width="0.5"/>
+      <text x="55" y="15" fill="#22c55e" font-size="6" font-family="monospace">http://127.0.0.1:3000</text>
+
+      <!-- Page content - Success -->
+      <rect x="15" y="30" width="180" height="60" rx="3" fill="#1e293b"/>
+      <text x="105" y="50" text-anchor="middle" fill="#22c55e" font-size="10" font-weight="bold" font-family="Arial">✓ Target Loaded</text>
+      <text x="105" y="64" text-anchor="middle" fill="#94a3b8" font-size="6" font-family="Arial">127.0.0.1 routes through proxy</text>
+      <text x="105" y="76" text-anchor="middle" fill="#94a3b8" font-size="6" font-family="Arial">Traffic CAPTURED in Burp</text>
+
+      <!-- Green Checkmark -->
+      <circle cx="185" cy="35" r="18" fill="#22c55e" opacity="0.15"/>
+      <path d="M 176 35 L 183 42 L 195 30" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+
+      <!-- Success description -->
+      <rect x="10" y="96" width="190" height="24" rx="4" fill="#052e16" stroke="#22c55e" stroke-width="0.5"/>
+      <text x="105" y="112" text-anchor="middle" fill="#86efac" font-size="7" font-family="Arial">✓ Routes through proxy — captured!</text>
+    </g>
+
+    <!-- Arrow from left to right -->
+    <g transform="translate(218, 115)">
+      <path d="M 0 0 L 18 0" fill="none" stroke="#64748b" stroke-width="2" stroke-dasharray="3,2"/>
+      <polygon points="18,-4 26,0 18,4" fill="#64748b"/>
+    </g>
+
+    <!-- Burp Traffic Log -->
+    <rect x="15" y="210" width="435" height="90" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+    <rect x="15" y="210" width="435" height="20" rx="6" fill="#1a1a2e"/>
+    <rect x="15" y="224" width="435" height="6" fill="#1a1a2e"/>
+    <text x="25" y="224" fill="#7c3aed" font-size="8" font-weight="bold" font-family="Arial">📋 Burp Suite — HTTP History (Captured Traffic)</text>
+
+    <!-- Table headers -->
+    <rect x="22" y="236" width="420" height="14" rx="2" fill="#1e293b"/>
+    <text x="26" y="246" fill="#64748b" font-size="6" font-family="Arial">#</text>
+    <text x="42" y="246" fill="#64748b" font-size="6" font-family="Arial">Method</text>
+    <text x="90" y="246" fill="#64748b" font-size="6" font-family="Arial">URL</text>
+    <text x="300" y="246" fill="#64748b" font-size="6" font-family="Arial">Status</text>
+    <text x="350" y="246" fill="#64748b" font-size="6" font-family="Arial">Size</text>
+    <text x="400" y="246" fill="#64748b" font-size="6" font-family="Arial">Time</text>
+
+    <!-- Row 1 -->
+    <rect x="22" y="250" width="420" height="14" fill="#0f172a"/>
+    <text x="26" y="260" fill="#94a3b8" font-size="6" font-family="monospace">1</text>
+    <rect x="38" y="251" width="36" height="11" rx="2" fill="#3b82f6"/>
+    <text x="56" y="260" text-anchor="middle" fill="#fff" font-size="5" font-weight="bold" font-family="Arial">GET</text>
+    <text x="80" y="260" fill="#e2e8f0" font-size="6" font-family="monospace">/  (127.0.0.1:3000)</text>
+    <rect x="298" y="251" width="30" height="11" rx="2" fill="#22c55e"/>
+    <text x="313" y="260" text-anchor="middle" fill="#fff" font-size="5" font-weight="bold" font-family="Arial">200</text>
+    <text x="350" y="260" fill="#94a3b8" font-size="6" font-family="monospace">2.4KB</text>
+    <text x="400" y="260" fill="#94a3b8" font-size="6" font-family="monospace">45ms</text>
+
+    <!-- Row 2 -->
+    <rect x="22" y="264" width="420" height="14" fill="#1e293b"/>
+    <text x="26" y="274" fill="#94a3b8" font-size="6" font-family="monospace">2</text>
+    <rect x="38" y="265" width="36" height="11" rx="2" fill="#f59e0b"/>
+    <text x="56" y="274" text-anchor="middle" fill="#fff" font-size="5" font-weight="bold" font-family="Arial">POST</text>
+    <text x="80" y="274" fill="#e2e8f0" font-size="6" font-family="monospace">/api/login</text>
+    <rect x="298" y="265" width="30" height="11" rx="2" fill="#22c55e"/>
+    <text x="313" y="274" text-anchor="middle" fill="#fff" font-size="5" font-weight="bold" font-family="Arial">200</text>
+    <text x="350" y="274" fill="#94a3b8" font-size="6" font-family="monospace">1.8KB</text>
+    <text x="400" y="274" fill="#94a3b8" font-size="6" font-family="monospace">120ms</text>
+
+    <!-- Row 3 -->
+    <rect x="22" y="278" width="420" height="14" fill="#0f172a"/>
+    <text x="26" y="288" fill="#94a3b8" font-size="6" font-family="monospace">3</text>
+    <rect x="38" y="279" width="36" height="11" rx="2" fill="#3b82f6"/>
+    <text x="56" y="288" text-anchor="middle" fill="#fff" font-size="5" font-weight="bold" font-family="Arial">GET</text>
+    <text x="80" y="288" fill="#e2e8f0" font-size="6" font-family="monospace">/assets/css/main.css</text>
+    <rect x="298" y="279" width="30" height="11" rx="2" fill="#22c55e"/>
+    <text x="313" y="288" text-anchor="middle" fill="#fff" font-size="5" font-weight="bold" font-family="Arial">200</text>
+    <text x="350" y="288" fill="#94a3b8" font-size="6" font-family="monospace">12KB</text>
+    <text x="400" y="288" fill="#94a3b8" font-size="6" font-family="monospace">30ms</text>
+
+    <!-- Instruction text -->
+    <text x="15" y="315" fill="#e2e8f0" font-size="11" font-family="Arial">Navigate to your target using <tspan fill="#22c55e" font-weight="bold" font-family="monospace">http://127.0.0.1:PORT</tspan></text>
+    <text x="15" y="335" fill="#e2e8f0" font-size="11" font-family="Arial">Verify traffic capture in Burp Suite <tspan fill="#22c55e" font-weight="bold">HTTP history</tspan>.</text>
+    <text x="15" y="355" fill="#94a3b8" font-size="9" font-family="Arial">You can now modify requests in Intercept and send them to Repeater/Intruder.</text>
+
+    <!-- Tip box -->
+    <rect x="15" y="368" width="435" height="15" rx="4" fill="#052e16" stroke="#22c55e" stroke-width="0.6"/>
+    <text x="22" y="379" fill="#86efac" font-size="7" font-family="Arial">✓ Replace <tspan fill="#22c55e" font-weight="bold" font-family="monospace">localhost</tspan> with <tspan fill="#22c55e" font-weight="bold" font-family="monospace">127.0.0.1</tspan> in all your URLs while using Burp proxy</text>
+  </g>
+
+  <!-- ============================================ -->
+  <!-- FOOTER -->
+  <!-- ============================================ -->
+  <!-- Burp Suite logo simplified -->
+  <g transform="translate(20, 878)">
+    <rect x="0" y="0" width="18" height="18" rx="4" fill="#f97316"/>
+    <text x="9" y="13" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold" font-family="Arial">B</text>
+    <text x="22" y="13" fill="#f97316" font-size="8" font-weight="bold" font-family="Arial">Burp</text>
+    <text x="48" y="13" fill="#94a3b8" font-size="7" font-family="Arial">Suite</text>
+  </g>
+
+  <!-- Center Footer Banner -->
+  <rect x="250" y="875" width="500" height="28" rx="14" fill="#1e293b" stroke="#7c3aed" stroke-width="1"/>
+  <text x="500" y="893" text-anchor="middle" fill="#c084fc" font-size="10" font-weight="bold" font-family="Arial" letter-spacing="1.5">⚠ For Educational/Legal Security Testing Only</text>
+
+</svg>
+</div>
+
+### Comandos y Funciones Esenciales
+
+| Función | Descripción | Uso |
+|---------|-------------|-----|
+| **Proxy > Intercept** | Activar/desactivar interceptación | Botón "Intercept is on/off" |
+| **Proxy > HTTP history** | Ver todas las peticiones capturadas | Tab HTTP history |
+| **Proxy > WebSockets history** | Ver tráfico WebSocket | Tab WebSockets history |
+| **Target > Site map** | Mapa del sitio web descubierto | Tab Site map |
+| **Target > Scope** | Definir URLs en scope | Right-click > "Add to scope" |
+| **Repeater** | Reenviar request manualmente | Right-click > "Send to Repeater" (Ctrl+R) |
+| **Intruder** | Ataques automatizados | Right-click > "Send to Intruder" (Ctrl+I) |
+| **Decoder** | Codificar/decodificar datos | Tab Decoder |
+| **Comparer** | Comparar responses | Right-click > "Send to Comparer" |
+| **Extender > BApp Store** | Instalar extensiones | Tab BApp Store |
+
+### Intercept y Modify Requests
+
+```
+# Paso 1: Activar intercept
+# Proxy > Intercept > Click "Intercept is off" para cambiar a "Intercept is on"
+
+# Paso 2: Navegar en el navegador
+# Cualquier petición se pausa en Burp
+
+# Paso 3: Modificar la petición
+# Ejemplo original:
+GET /profile HTTP/1.1
+Host: target.com
+Cookie: session=abc123
+
+# Modificar para probar IDOR:
+GET /profile?id=2 HTTP/1.1
+Host: target.com
+Cookie: session=abc123
+
+# Paso 4: Forward (Ctrl+F) para enviar la petición modificada
+# O Drop para descartarla
+
+# Paso 5: Ver la response en la pestaña Intercept
+```
+
+### Repeater - Testing Manual
+
+```
+# Paso 1: Capturar una petición en HTTP history
+# Paso 2: Right-click > "Send to Repeater" (Ctrl+R)
+
+# Paso 3: En Repeater, modificar y reenviar
+# Request original:
+POST /api/login HTTP/1.1
+Host: target.com
+Content-Type: application/json
+
+{"username": "admin", "password": "password123"}
+
+# Modificar para probar SQLi:
+POST /api/login HTTP/1.1
+Host: target.com
+Content-Type: application/json
+
+{"username": "admin' OR '1'='1", "password": "anything"}
+
+# Click "Send" y observar la response
+
+# Paso 4: Probar múltiples variaciones
+# Cambiar headers, métodos, parámetros, body
+# Cada cambio se envía independientemente
+```
+
+::: {.callout-tip}
+## Atajos de Repeater
+- **Ctrl+R**: Send to Repeater
+- **Ctrl+Enter**: Send request
+- **Ctrl+Shift+R**: Send request in new tab
+- **Ctrl+U**: URL-encode selection
+- **Ctrl+Shift+U**: URL-decode selection
+:::
+
+### Decoder - Codificar/Decodificar Datos
+
+```
+# Decoder permite transformar datos entre múltiples formatos
+
+# Formatos soportados:
+# - ASCII (texto plano)
+# - Hex (hexadecimal)
+# - Base64
+# - URL (percent encoding)
+# - HTML entities
+# - XML entities
+# - MD5, SHA1, SHA256 (hashing)
+# - Gzip (compress/decompress)
+
+# Ejemplo: decodificar Base64
+# Input: YWRtaW46cGFzc3dvcmQ=
+# Decode as: Base64
+# Output: admin:password
+
+# Ejemplo: URL-encode
+# Input: <script>alert("XSS")</script>
+# Encode as: URL
+# Output: %3Cscript%3Ealert(%22XSS%22)%3C%2Fscript%3E
+
+# Ejemplo: encadenar transformaciones
+# Input: admin:password
+# 1. Encode as: Base64 → YWRtaW46cGFzc3dvcmQ=
+# 2. Encode as: URL → YWRtaW46cGFzc3dvcmQ%3D
+# 3. Encode as: Hex → 59575274695734366347467A63646F51253344
+
+# Ejemplo práctico: decodificar JWT
+# Input: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0
+# Decode as: Base64
+# Output: {"alg":"HS256","typ":"JWT"}
+```
+
+### Comparer - Comparar Responses
+
+```
+# Comparer permite comparar dos responses lado a lado
+
+# Uso típico: comparar response de usuario normal vs admin
+# 1. Login como usuario normal > Send to Comparer (a)
+# 2. Login como admin > Send to Comparer (b)
+# 3. Ir a Comparer > Select a y b > Compare
+# 4. Ver diferencias resaltadas
+
+# Uso típico: detectar diferencias sutiles en SQLi
+# 1. Enviar request normal > Send to Comparer (a)
+# 2. Enviar request con payload SQLi > Send to Comparer (b)
+# 3. Comparar para ver si la response cambia
+
+# Uso típico: verificar bypass de autenticación
+# 1. Response de login fallido > Send to Comparer (a)
+# 2. Response de login manipulado > Send to Comparer (b)
+# 3. Comparar para ver si el bypass funcionó
+```
+
+### Sequencer - Análisis de Tokens de Sesión
+
+```
+# Sequencer analiza la aleatoriedad de tokens de sesión
+
+# Paso 1: Capturar múltiples tokens
+# Proxy > HTTP history > encontrar cookie de sesión
+# Right-click > Send to Sequencer
+
+# Paso 2: Iniciar live capture
+# Live capture > Start
+# Generar múltiples requests para capturar tokens
+
+# Paso 3: Analizar resultados
+# Analyze now
+# Esperado: análisis de entropía, bits efectivos, calidad del token
+
+# Interpretación:
+# Excellent: > 128 bits efectivos
+# Good: 100-128 bits
+# Marginal: 70-100 bits
+# Poor: < 70 bits (predecible)
+```
+
+### Ejercicio 1: Intercept y modificación de requests
+
+**Objetivo:** Configurar Burp Suite y practicar interceptación de tráfico web.
+
+**Paso 1:** Configurar entorno
+
+```bash
+# Iniciar servidor web vulnerable (DVWA o Juice Shop)
+docker run -d --name juice-shop -p 3000:3000 bkimminich/juice-shop
+
+# Iniciar Burp Suite
+# Configurar proxy: 127.0.0.1:8080
+# Instalar CA certificate
+```
+
+**Paso 2:** Interceptar tráfico
+
+```
+# 1. Activar Intercept en Burp
+# 2. En Firefox, visitar http://localhost:3000
+# 3. La petición se pausa en Burp
+# 4. Observar la petición GET / HTTP/1.1
+# 5. Modificar el User-Agent header
+# 6. Click Forward para enviar
+# 7. Ver la response
+```
+
+**Paso 3:** Usar Repeater
+
+```
+# 1. Ir a HTTP history
+# 2. Encontrar una petición interesante (login, API call)
+# 3. Right-click > Send to Repeater
+# 4. En Repeater, modificar parámetros
+# 5. Click Send y observar cambios en la response
+# 6. Probar diferentes valores y métodos HTTP
+```
+
+## Nivel Intermedio
+
+### Intruder - Ataques Automatizados
+
+Intruder automatiza el envío de múltiples peticiones con variaciones. Es esencial para fuzzing, brute force, y enumeración.
+
+```
+# Paso 1: Enviar petición a Intruder
+# Right-click en HTTP history > "Send to Intruder" (Ctrl+I)
+
+# Paso 2: Configurar posiciones (Positions tab)
+# Seleccionar el tipo de ataque:
+#   Sniper: Un payload set, una posición a la vez
+#   Battering ram: Un payload set, todas las posiciones con mismo valor
+#   Pitchfork: Múltiples payload sets, posiciones paralelas
+#   Cluster bomb: Múltiples payload sets, todas las combinaciones
+
+# Paso 3: Marcar posiciones con §
+# Ejemplo para brute force de login:
+# POST /login HTTP/1.1
+# username=§admin§&password=§password§
+
+# Paso 4: Configurar payloads (Payloads tab)
+# Payload set 1: Lista de usernames
+# Payload set 2: Lista de passwords
+
+# Paso 5: Iniciar ataque (Start attack)
+# Observar resultados en nueva ventana
+# Ordenar por Length o Status code para encontrar diferencias
+```
+
+### Tipos de Ataque Intruder
+
+```
+# SNIPER: Un payload, una posición
+# Prueba cada payload en cada posición individualmente
+# Útil: fuzzing de un solo parámetro
+
+# Posición: id=§1§
+# Payloads: 1, 2, 3, 4, 5
+# Requests: id=1, id=2, id=3, id=4, id=5
+
+# BATTERING RAM: Un payload, todas las posiciones
+# Mismo valor en todas las posiciones simultáneamente
+# Útil: testing de reflejo XSS
+
+# Posiciones: q=§test§&lang=§en§
+# Payloads: <script>, " OR 1=1--, ../../etc/passwd
+# Requests: q=<script>&lang=<script>, q=" OR 1=1--&lang=" OR 1=1--
+
+# PITCHFORK: Múltiples payloads, posiciones paralelas
+# Primer payload de cada set en primera posición, etc.
+# Útil: credenciales conocidas (user:pass pairs)
+
+# Posiciones: user=§admin§&pass=§password§
+# Payload set 1: admin, user, root
+# Payload set 2: admin123, password, toor
+# Requests: user=admin&pass=admin123, user=user&pass=password
+
+# CLUSTER BOMB: Múltiples payloads, todas las combinaciones
+# Cada payload de set 1 con cada payload de set 2
+# Útil: brute force completo
+
+# Payload set 1: admin, user, root (3 items)
+# Payload set 2: 123, 456, 789 (3 items)
+# Requests: 3 x 3 = 9 combinaciones
+```
+
+### Macros y Session Handling
+
+```
+# Macros: secuencia de requests que se ejecutan antes de cada petición
+# Útil para mantener sesiones activas durante testing
+
+# Paso 1: Project options > Sessions
+# Paso 2: Session Handling Rules > Add
+# Paso 3: Scope: seleccionar URLs en scope
+# Paso 4: Actions > Run a macro
+# Paso 5: Macro recorder > grab login flow
+# Paso 6: Parameter handling > extract session token
+# Paso 7: Update request > insert token in header
+
+# Ejemplo: macro para refresh de token JWT
+# 1. POST /api/auth/refresh
+# 2. Extract "access_token" from response
+# 3. Update subsequent requests with new token
+```
+
+### Scope Configuration
+
+```
+# Definir qué URLs están en scope del testing
+
+# Paso 1: Target > Scope
+# Paso 2: Add URL pattern:
+#   .*\.target\.com.*
+#   .*target\.com/api/.*
+
+# Paso 3: Proxy > Options > Intercept Client Requests
+#   Check "Use scope" para solo interceptar URLs en scope
+
+# Paso 4: Proxy > Options > Intercept Server Responses
+#   Check "Use scope" para solo interceptar responses de URLs en scope
+
+# Paso 5: Target > Site map > Filter
+#   Check "Show only in-scope items" para limpiar el site map
+```
+
+### Ejercicio 2: Brute force de login con Intruder
+
+**Objetivo:** Usar Intruder para realizar ataque de fuerza bruta contra un formulario de login.
+
+**Paso 1:** Capturar petición de login
+
+```
+# 1. Activar Intercept
+# 2. Intentar login en la aplicación
+# 3. Capturar la petición POST /login
+# 4. Send to Intruder (Ctrl+I)
+```
+
+**Paso 2:** Configurar Intruder
+
+```
+# Positions tab:
+# 1. Clear § (botón "Clear")
+# 2. Seleccionar el valor del password
+# 3. Click "Add §" para marcar: password=§password123§
+# 4. Attack type: Sniper
+
+# Payloads tab:
+# 1. Payload set: 1
+# 2. Payload type: Simple list
+# 3. Agregar passwords:
+#    password
+#    123456
+#    admin
+#    letmein
+#    welcome
+#    monkey
+#    dragon
+#    master
+#    qwerty
+#    login
+```
+
+**Paso 3:** Ejecutar y analizar
+
+```
+# 1. Start attack
+# 2. Observar la tabla de resultados
+# 3. Ordenar por "Length" para encontrar respuestas diferentes
+# 4. La respuesta con length diferente probablemente es un login exitoso
+# 5. Verificar manualmente en Repeater
+```
+
+## Nivel Avanzado
+
+### Extender API y Custom Extensions
+
+```
+# Burp Extender permite crear extensiones en Java, Python, o Ruby
+
+# Instalar extensión desde BApp Store:
+# Extender > BApp Store > Buscar extensión > Install
+
+# Extensiones populares:
+# - Autorize: Testing de control de acceso
+# - Active Scan++: Mejoras al scanner
+# - JSON Web Tokens: Manipulación de JWT
+# - HTTP Request Smuggler: Detección de request smuggling
+# - Turbo Intruder: Intruder de alta velocidad
+# - Param Miner: Descubrimiento de parámetros ocultos
+
+# Crear extensión personalizada en Python:
+# Extender > Extensions > Add
+# Extension type: Python
+# Select file: mi-extension.py
+
+# Ejemplo de extensión básica:
+from burp import IBurpExtender, IHttpListener
+
+class BurpExtender(IBurpExtender, IHttpListener):
+    def registerExtenderCallbacks(self, callbacks):
+        self._callbacks = callbacks
+        self._helpers = callbacks.getHelpers()
+        callbacks.setExtensionName("Mi Extension")
+        callbacks.registerHttpListener(self)
+        print("Mi Extension loaded")
+
+    def processHttpMessage(self, toolFlag, messageIsRequest, messageInfo):
+        if messageIsRequest:
+            # Modificar request antes de enviar
+            request = messageInfo.getRequest()
+            analyzed = self._helpers.analyzeRequest(request)
+            headers = analyzed.getHeaders()
+            headers.add("X-Custom-Header: BurpTest")
+            body = request[analyzed.getBodyOffset():]
+            newRequest = self._helpers.buildHttpMessage(headers, body)
+            messageInfo.setRequest(newRequest)
+```
+
+### Collaborator (Professional)
+
+```
+# Burp Collaborator detecta interacciones out-of-band
+# Útil para blind SSRF, blind XSS, OOB data exfiltration
+
+# Paso 1: Burp > Collaborator client > Generate payload
+# Paso 2: Se genera un dominio único: abc123.burpcollaborator.net
+# Paso 3: Inyectar el payload en la aplicación vulnerable
+# Paso 4: Poll Collaborator para ver interacciones
+
+# Ejemplo: blind XSS
+# <script src="http://abc123.burpcollaborator.net/x"></script>
+
+# Ejemplo: blind SSRF
+# http://abc123.burpcollaborator.net/
+
+# Si la aplicación procesa el payload, Collaborator registra:
+# - DNS queries
+# - HTTP requests
+# - SMTP interactions
+```
+
+### CI/CD Integration (Professional)
+
+```
+# Burp Scanner se puede integrar en pipelines CI/CD
+
+# Usando burp-rest-api:
+# 1. Iniciar Burp en headless mode
+# 2. Configurar scan via REST API
+# 3. Ejecutar scan automáticamente
+# 4. Generar reporte en formato JSON/HTML
+
+# Ejemplo con curl:
+# Iniciar scan
+curl -X POST http://localhost:8090/v0.1/scan \
+    -H "Content-Type: application/json" \
+    -d '{"urls": ["http://target.com"]}'
+
+# Ver estado
+curl http://localhost:8090/v0.1/scan/1
+
+# Descargar reporte
+curl http://localhost:8090/v0.1/scan/1/report \
+    -o burp-report.html
+```
+
+### Ejercicio 3: Detección de vulnerabilidades web
+
+**Objetivo:** Usar Burp Suite para encontrar vulnerabilidades en una aplicación web.
+
+**Paso 1:** Mapear la aplicación
+
+```
+# 1. Activar proxy y navegar por toda la aplicación
+# 2. Target > Site map > revisar estructura
+# 3. Identificar endpoints de API, formularios, uploads
+# 4. Right-click en dominio > "Add to scope"
+# 5. Target > Site map > Filter > "Show only in-scope items"
+```
+
+**Paso 2:** Testing manual con Repeater
+
+```
+# 1. Enviar cada endpoint interesante a Repeater
+# 2. Probar SQLi en parámetros: ' OR 1=1--
+# 3. Probar XSS en inputs: <script>alert(1)</script>
+# 4. Probar IDOR cambiando IDs: /api/users/1 -> /api/users/2
+# 5. Probar path traversal: ../../etc/passwd
+# 6. Documentar cada hallazgo
+```
+
+**Paso 3:** Testing automatizado con Intruder
+
+```
+# 1. Identificar parámetros para fuzzing
+# 2. Send to Intruder
+# 3. Configurar payloads de SecLists
+# 4. Ejecutar ataque
+# 5. Analizar resultados por status code y length
+# 6. Verificar hallazgos manualmente en Repeater
+```
+
+## Uso en Ciberseguridad
+
+### Escenario 1: Web application pentesting
+
+```
+# Metodología de pentesting web con Burp Suite:
+
+# Fase 1: Reconnaissance
+# 1. Configurar proxy y navegar la aplicación
+# 2. Target > Site map > mapear toda la aplicación
+# 3. Identificar tecnologías (headers, cookies, frameworks)
+
+# Fase 2: Authentication testing
+# 1. Probar brute force con Intruder
+# 2. Probar bypass de autenticación
+# 3. Probar password reset functionality
+# 4. Verificar session management
+
+# Fase 3: Authorization testing
+# 1. Probar IDOR con Repeater
+# 2. Probar privilege escalation
+# 3. Usar extensión Autorize para testing automático
+
+# Fase 4: Input validation
+# 1. SQLi en todos los inputs
+# 2. XSS stored y reflected
+# 3. Command injection
+# 4. File upload vulnerabilities
+
+# Fase 5: Business logic
+# 1. Probar flujos de negocio
+# 2. Race conditions
+# 3. Price manipulation
+# 4. Workflow bypass
+```
+
+### Escenario 2: API security testing
+
+```
+# Testing de APIs REST con Burp Suite:
+
+# 1. Capturar todas las llamadas API
+# 2. Target > Site map > filtrar por /api/
+
+# 3. Probar authentication:
+#    - Requests sin token
+#    - Tokens expirados
+#    - Tokens de otros usuarios
+
+# 4. Probar authorization:
+#    - Acceder recursos de otros usuarios (IDOR)
+#    - Métodos HTTP no permitidos
+#    - Parámetros de admin
+
+# 5. Probar input validation:
+#    - SQLi en parámetros
+#    - NoSQL injection
+#    - XML external entities (XXE)
+#    - Server-side request forgery (SSRF)
+
+# 6. Probar rate limiting:
+#    - Intruder con muchas requests
+#    - Verificar si hay throttling
+```
+
+### Escenario 3: Authentication bypass testing
+
+```
+# Técnicas de bypass de autenticación:
+
+# 1. SQL injection en login:
+#    username: admin' OR '1'='1
+#    password: anything
+
+# 2. Response manipulation:
+#    Interceptar response de login fallido
+#    Cambiar "success": false a "success": true
+#    Forward al navegador
+
+# 3. Cookie manipulation:
+#    Cambiar cookie de admin=false a admin=true
+#    Cambiar role=user a role=admin
+
+# 4. JWT manipulation:
+#    Decodificar JWT en Decoder
+#    Cambiar payload (ej: role: admin)
+#    Re-encodear sin verificar signature (alg: none)
+
+# 5. Parameter pollution:
+#    username=admin&username=user
+#    role=user&role=admin
+```
+
+## Referencia Rápida
+
+| Función | Atajo | Descripción |
+|---------|-------|-------------|
+| Intercept on/off | - | Activar/desactivar interceptación |
+| Send to Repeater | Ctrl+R | Enviar petición a Repeater |
+| Send to Intruder | Ctrl+I | Enviar petición a Intruder |
+| Send to Decoder | Ctrl+D | Enviar datos a Decoder |
+| Send to Comparer | - | Enviar a Comparer |
+| Forward | Ctrl+F | Forward intercepted request |
+| Drop | - | Descartar intercepted request |
+| URL-encode | Ctrl+U | Codificar selección |
+| URL-decode | Ctrl+Shift+U | Decodificar selección |
+| HTML-decode | Ctrl+Shift+H | Decodificar HTML entities |
+| Base64-encode | - | Codificar en Base64 |
+| Base64-decode | - | Decodificar Base64 |
+| Add to scope | - | Agregar URL al scope |
+| Start attack | - | Iniciar ataque Intruder |
+
+## Recursos Adicionales
+
+- **Documentación oficial**: https://portswigger.net/burp/documentation
+- **Web Security Academy**: https://portswigger.net/web-security (labs gratuitos)
+- **BApp Store**: https://portswigger.net/bappstore (extensiones)
+- **Burp Suite shortcuts**: https://portswigger.net/burp/documentation/desktop/keyboard-shortcuts
+- **Practice**: https://portswigger.net/web-security (gratis, de los creadores de Burp)
+- **DVWA**: https://github.com/digininja/DVWA
+- **Juice Shop**: https://github.com/juice-shop/juice-shop
+
+### Custom Headers and Request Manipulation
+
+```
+# Agregar headers personalizados a todas las requests
+# Proxy > Options > Match and Replace
+
+# Agregar regla:
+# Type: Request header
+# Match: (empty)
+# Replace: X-Burp-Test: true
+# Enabled: checked
+
+# Esto agrega el header a TODAS las requests que pasan por el proxy
+
+# Modificar User-Agent globalmente
+# Type: Request header
+# Match: ^User-Agent:.*
+# Replace: User-Agent: Mozilla/5.0 (Custom Testing Agent)
+
+# Eliminar headers específicos
+# Type: Request header
+# Match: ^Referer:.*
+# Replace: (empty)
+
+# Modificar Host header (útil para VHost testing)
+# Type: Request header
+# Match: ^Host:.*
+# Replace: Host: admin.target.com
+```
+
+### Apéndice: Extensiones Recomendadas de BApp Store
+
+### Autorize
+- **Propósito**: Testing automático de control de acceso (IDOR, privilege escalation)
+- **Uso**: Configurar sesiones de diferentes usuarios y detectar accesos no autorizados
+- **Instalación**: Extender > BApp Store > buscar "Autorize" > Install
+
+### Turbo Intruder
+- **Propósito**: Intruder de alta velocidad (miles de requests por segundo)
+- **Uso**: Rate limiting bypass, brute force rápido, race conditions
+- **Instalación**: Extender > BApp Store > buscar "Turbo Intruder" > Install
+
+### JSON Web Tokens (JWT)
+- **Propósito**: Decodificar, modificar y re-encodear tokens JWT
+- **Uso**: Testing de algoritmo none, key confusion, payload manipulation
+- **Instalación**: Extender > BApp Store > buscar "JSON Web Tokens" > Install
+
+### Param Miner
+- **Propósito**: Descubrimiento de parámetros HTTP ocultos
+- **Uso**: Encontrar parámetros no documentados en APIs
+- **Instalación**: Extender > BApp Store > buscar "Param Miner" > Install
+
+### Active Scan++
+- **Propósito**: Mejoras al scanner automático de Burp
+- **Uso**: Detectar vulnerabilidades adicionales no cubiertas por el scanner default
+- **Instalación**: Extender > BApp Store > buscar "Active Scan++" > Install
+
+### HTTP Request Smuggler
+- **Propósito**: Detección de HTTP request smuggling
+- **Uso**: Encontrar discrepancias entre frontend y backend servers
+- **Instalación**: Extender > BApp Store > buscar "HTTP Request Smuggler" > Install
+
+---
+
+*Minicurso Burp Suite — Curso Fundamentos de Ciberseguridad — CC BY-SA 4.0*

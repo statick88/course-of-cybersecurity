@@ -1,0 +1,172 @@
+---
+title: "Seguridad en Sistemas Operativos"
+unit: "unidad-02"
+module: "unidad-02"
+type: "theory"
+description: "Principios de hardening en Windows y Linux para proteger sistemas operativos"
+---
+
+## 🎯 Objetivos de Aprendizaje
+
+Al completar esta sección, podrás:
+
+- Aplicar principios de hardening en Windows Server y Linux
+- Configurar políticas de seguridad locales y de grupo
+- Implementar actualizaciones y parches de seguridad
+- Auditar configuraciones de seguridad en ambos SO
+- Gestionar usuarios, grupos y permisos de forma segura
+
+## 📋 Conceptos Clave
+
+| Concepto | Definición |
+|----------|------------|
+| **Hardening** | Proceso de asegurar un sistema reduciendo su superficie de ataque |
+| **CIS Benchmarks** | Guías de configuración segura desarrolladas por el Center for Internet Security |
+| **Política de Seguridad Local** | Configuraciones de seguridad aplicadas a un equipo Windows |
+| **SELinux/AppArmor** | Módulos de seguridad de Linux que controlan el acceso a recursos |
+| **Patch Management** | Proceso de gestionar e instalar actualizaciones de seguridad |
+| **Auditoría** | Registro y análisis de eventos de seguridad del sistema |
+
+## 🔐 Principios de Hardening
+
+El hardening de sistemas operativos sigue el principio de **minimización**: cada servicio, puerto y usuario que no sea estrictamente necesario es un riesgo. Las áreas clave son:
+
+### 1. Gestión de Parches
+
+Mantener el SO actualizado es la medida más básica y efectiva:
+
+```bash
+# Linux (Debian/Ubuntu)
+sudo apt update && sudo apt upgrade -y
+
+# Linux (RHEL/CentOS/Fedora)
+sudo dnf update -y
+
+# Verificar parches de seguridad pendientes
+sudo apt list --upgradable 2>/dev/null | grep -i security
+```
+
+### 2. Configuración de Usuarios y Permisos
+
+```bash
+# Linux: Crear usuario con permisos mínimos
+sudo useradd -m -s /bin/bash analista
+sudo passwd analista
+
+# Agregar a grupo específico (sin sudo)
+sudo usermod -aG adm analista
+
+# Verificar usuarios con sudo
+grep -E '^sudo|^admin' /etc/group
+```
+
+### 3. Servicios Innecesarios
+
+```bash
+# Listar servicios activos
+systemctl list-units --type=service --state=running
+
+# Deshabilitar servicio no necesario
+sudo systemctl disable --now cups  # Ejemplo: servicio de impresión
+```
+
+### 4. Configuración de Firewall Local
+
+```bash
+# Linux: UFW
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow ssh
+sudo ufw enable
+
+# Verificar reglas
+sudo ufw status verbose
+```
+
+## 🪟 Seguridad en Windows
+
+### Políticas de Seguridad Local
+
+```powershell
+# PowerShell (como Administrador)
+# Ver políticas de contraseñas
+net accounts
+
+# Configurar política de contraseñas
+net accounts /minpwlen:12 /maxpwage:90 /minpwage:1
+
+# Ver usuarios locales
+Get-LocalUser | Format-Table Name, Enabled, LastLogon
+```
+
+### Windows Defender
+
+```powershell
+# Ver estado de protección
+Get-MpComputerStatus | Select-Object RealTimeProtectionEnabled, AntivirusEnabled
+
+# Realizar escaneo rápido
+Start-MpScan -ScanType QuickScan
+```
+
+## 🐧 Seguridad en Linux
+
+### Hardening de SSH
+
+```bash
+# Editar /etc/ssh/sshd_config con estas recomendaciones:
+#   PermitRootLogin no
+#   PasswordAuthentication no
+#   PubkeyAuthentication yes
+#   Port 2222  # Cambiar puerto por defecto
+
+# Verificar configuración
+sudo sshd -t
+
+# Reiniciar servicio
+sudo systemctl restart sshd
+```
+
+### Auditoría con Lynis
+
+```bash
+# Instalar Lynis
+sudo apt install -y lynis
+
+# Ejecutar auditoría
+sudo lynis audit system
+
+# Ver resumen
+sudo lynis audit system | grep -E 'Warning|Suggestion'
+```
+
+## 🔄 CIS Benchmarks
+
+Los CIS Benchmarks son el estándar de la industria para hardening:
+
+```bash
+# Descargar CIS Benchmark para Ubuntu 24.04
+wget https://www.cisecurity.org/benchmark/ubuntu_linux
+
+# Usar herramientas de automatización
+sudo apt install -y cis-cat  # Si está disponible
+```
+
+## ✅ Checklist de Hardening
+
+| # | Verificación | Windows | Linux |
+|---|-------------|---------|-------|
+| 1 | Parches actualizados | `Get-WUInstall` | `apt update && apt upgrade` |
+| 2 | Usuarios sin sudo/admin | `Get-LocalGroupMember Administradores` | `grep sudo /etc/group` |
+| 3 | Puertos abiertos mínimos | `netstat -an` | `ss -tlnp` |
+| 4 | Firewall activo | `Get-NetFirewallProfile` | `ufw status` |
+| 5 | Auditoría habilitada | `auditpol /get /category:*` | `ausearch --start today` |
+| 6 | SSH seguro | — | `sshd -T \| grep PermitRootLogin` |
+| 7 | SELinux/AppArmor activo | — | `getenforce` / `aa-status` |
+
+## 📚 Recursos
+
+- CIS Benchmarks: https://www.cisecurity.org/cis-benchmarks
+- Windows Security Baselines: https://aka.ms/securitybaseline
+- Lynis: https://cisofy.com/lynis
+- Linux Hardening Guide: https://linux-audit.com/linux-security-hardening/

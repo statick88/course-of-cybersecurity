@@ -1,0 +1,183 @@
+---
+title: "Quiz 7: Respuesta a Incidentes"
+module: "quiz-07"
+type: "quiz"
+description: "Evaluacion del modulo 7: Respuesta a incidentes"
+---
+
+
+## Instrucciones
+
+- Tiempo: 25 minutos
+- Preguntas: 15 preguntas
+- Aprobacion: 70% o superior
+
+---
+
+## Seccion A: Ciclo de Vida IR
+
+### Pregunta 1
+
+NIST SP 800-61r2 define fases:
+
+- [ ] 3 fases
+- [ ] 4 fases
+- [ ] 5 fases
+- [ ] 6 fases
+
+### Pregunta 2
+
+La primera fase es:
+
+- [ ] Detection
+- [ ] Containment
+- [ ] Preparation
+- [ ] Eradication
+
+### Pregunta 3
+
+Post-activity incluye:
+
+- [ ] Lecciones aprendidas
+- [ ] Solo reporte
+- [ ] Cerrar brecha
+- [ ] Parches
+
+---
+
+## Seccion B: Metricas
+
+### Pregunta 4
+
+MTTD significa:
+
+- [ ] Mean Time to Detect
+- [ ] Maximum Time to Detect
+- [ ] Min Time to Detect
+- [ ] Median Time to Detect
+
+### Pregunta 5
+
+MTTR mide:
+
+- [ ] Detect to Recover
+- [ ] Time to Respond
+- [ ] Time to Recover
+- [ ] Time to Resolve
+
+### Pregunta 6
+
+M objetivo para MTTC es:
+
+- [ ] < 24 horas
+- [ ] < 8 horas
+- [ ] < 4 horas
+- [ ] < 1 hora
+
+---
+
+## Seccion C: Containment
+
+### Pregunta 7
+
+Short-term containment incluye:
+
+- [ ] Rebuild systems
+- [ ] Aislar inmediatamente
+- [ ] Restaurar backups
+- [ ] Parches
+
+### Pregunta 8
+
+Antes de pagar ransomware:
+
+- [ ] Siempre puedes negociar
+- [ ] Verificar politica: NO PAGAR
+- [ ] Siempre es necesario
+- [ ] Contactar medios
+
+### Pregunta 9
+
+C2 communication debe:
+
+- [ ] Ignorarse
+- [ ] Bloquerse inmediatamente
+- [ ] Monitorearse
+- [ ] Archivarse
+
+---
+
+## Seccion D: Tipos de Incidentes
+
+### Pregunta 10
+
+El incidente mas frecuente en 2026 es:
+
+- [ ] DDoS
+- [ ] Ransomware
+- [ ] Phishing
+- [ ] Insider
+
+### Pregunta 11
+
+Data breach requiere:
+
+- [ ] Solo notificar usuarios
+- [ ] Notificar regulators (si aplica)
+- [ ] Ignorar
+- [ ] Solo llamar a abogado
+
+### Pregunta 12
+
+DDoS es tipicamente:
+
+- [ ] Interno
+- [ ] Externo
+- [ ] Combinado
+- [ ] Ninguno
+
+---
+
+## Practica
+
+### Pregunta 13
+
+Si detectas ransomware:
+
+- [ ] Apagar PC inmediatamente
+- [ ] Aislar red primero
+- [ ] Llamar a policia
+- [ ] Pagar el rescate
+
+### Pregunta 14
+
+Despues de recovery verificas:
+
+- [ ] Que el malware no retorno
+- [ ] Solo un scan
+- [ ] Ningunacheck
+- [ ] El usuario confirma
+
+### Pregunta 15
+
+Post-mortem debe incluir:
+
+- [ ] Solo que paso
+- [ ] Lessons learned + action items
+- [ ] Costo financiero
+- [ ] Nombres de victims
+
+---
+
+## Resultado
+
+| Score | Estado |
+|-------|--------|
+| 11/15 (73%) o superior | Aprobado |
+| Menos de 11/15 | Reprobado |
+
+Puntuacion: ____/15 = ____%
+
+---
+
+*Quiz 7/7 - Curso Fundamentos de Ciberseguridad*

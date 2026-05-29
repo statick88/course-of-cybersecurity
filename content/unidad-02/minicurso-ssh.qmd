@@ -1,0 +1,727 @@
+---
+title: "Minicurso: SSH"
+module: "minicurso-ssh"
+type: "minicurso"
+description: "Tutorial completo de SSH para ciberseguridad"
+---
+
+
+## ¿Qué es SSH?
+
+SSH (Secure Shell) es un protocolo de red que permite la comunicación segura entre dos sistemas a través de un canal cifrado. Reemplaza protocolos inseguros como Telnet, FTP y rlogin, proporcionando confidencialidad, integridad y autenticación en todas las comunicaciones.
+
+SSH opera en el puerto 22 por defecto y utiliza criptografía de clave pública para autenticar el servidor y, opcionalmente, el cliente. La conexión se cifra con algoritmos simétricos negociados durante el handshake inicial.
+
+En ciberseguridad, SSH es la herramienta fundamental para administrar servidores de forma remota, crear túneles seguros, transferir archivos de manera cifrada (SCP/SFTP), y establecer infraestructura de acceso seguro (bastion hosts, jump servers).
+
+## ¿Por qué aprenderlo?
+
+- **Acceso remoto seguro**: Administrar servidores sin exponer datos
+- **Túneles**: Crear conexiones seguras a través de redes no confiables
+- **Automatización**: Scripts que se conectan a servidores sin passwords
+- **Infraestructura**: Bastion hosts, jump servers, acceso seguro a producción
+- **Estándar**: Todo servidor Linux del mundo usa SSH
+
+## Instalación
+
+### macOS
+
+```bash
+# SSH cliente viene preinstalado
+ssh -V
+# Esperado: OpenSSH_9.x, LibreSSL x.x.x
+
+# Para servidor SSH (opcional):
+# System Preferences > Sharing > Remote Login
+
+# Instalar OpenSSH moderno con Homebrew
+brew install openssh
+```
+
+### Linux (Ubuntu/Debian)
+
+```bash
+# Cliente SSH viene preinstalado
+ssh -V
+
+# Instalar servidor SSH
+sudo apt update
+sudo apt install -y openssh-server
+
+# Verificar que el servicio está activo
+sudo systemctl status sshd
+# Esperado: active (running)
+
+# Habilitar al inicio
+sudo systemctl enable sshd
+```
+
+### Windows
+
+```powershell
+# Windows 10+ incluye OpenSSH cliente
+ssh -V
+
+# Instalar servidor SSH (opcional)
+Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+Start-Service sshd
+Set-Service -Name sshd -StartupType Automatic
+```
+
+## Nivel Básico
+
+### Conceptos Fundamentales
+
+**Cliente-Servidor**: El cliente SSH se conecta al servidor SSH (sshd) que escucha en el puerto 22.
+
+**Autenticación**: Puede ser por password o por clave pública (recomendado).
+
+**Host Key**: Cada servidor SSH tiene una clave única que el cliente verifica en `~/.ssh/known_hosts`.
+
+**Configuración**: El archivo `~/.ssh/config` permite personalizar conexiones.
+
+### Conexión básica
+
+```bash
+# Conexión simple
+ssh user@server.example.com
+# Esperado: prompt de password (primera vez) o acceso directo
+
+# Primera conexión (verificar fingerprint)
+# The authenticity of host 'server.example.com' can't be established.
+# ED25519 key fingerprint is SHA256:abc123...
+# Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+
+# Con puerto personalizado
+ssh -p 2222 user@server.example.com
+
+# Con verbo para debugging
+ssh -v user@server.example.com
+# -vv para más detalle, -vvv para máximo detalle
+```
+
+### Autenticación por clave pública
+
+```bash
+# Generar par de claves
+ssh-keygen -t ed25519 -C "tu@email.com"
+# Esperado:
+# Generating public/private ed25519 key pair.
+# Enter file in which to save the key (/home/user/.ssh/id_ed25519):
+# Enter passphrase (empty for no passphrase):
+# Enter same passphrase again:
+# Your identification has been saved in /home/user/.ssh/id_ed25519
+# Your public key has been saved in /home/user/.ssh/id_ed25519.pub
+
+# Verificar claves generadas
+ls -la ~/.ssh/
+# Esperado: id_ed25519 (privada) e id_ed25519.pub (pública)
+
+# Ver fingerprint de la clave
+ssh-keygen -lf ~/.ssh/id_ed25519.pub
+# Esperado: 256 SHA256:abc123... tu@email.com (ED25519)
+```
+
+::: {.callout-warning}
+## Seguridad Crítica
+La clave PRIVADA nunca sale de tu máquina. NUNCA la compartas, la subas a internet, o la envíes por email. La clave PÚBLICA es la que distribuyes.
+:::
+
+### Copiar clave pública al servidor
+
+```bash
+# Método automático (recomendado)
+ssh-copy-id user@server.example.com
+# Esperado:
+# /usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s)
+# Number of key(s) added: 1
+
+# Método manual
+cat ~/.ssh/id_ed25519.pub | ssh user@server.example.com \
+    "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+
+# Verificar en el servidor
+ssh user@server.example.com "cat ~/.ssh/authorized_keys"
+```
+
+### Archivo de configuración
+
+```bash
+# Crear/editar configuración
+cat > ~/.ssh/config << 'EOF'
+# Configuración global
+Host *
+    AddKeysToAgent yes
+    UseKeychain yes
+    IdentityFile ~/.ssh/id_ed25519
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+
+# Servidor de producción
+Host prod
+    HostName prod.example.com
+    User deploy
+    Port 22
+    IdentityFile ~/.ssh/id_ed25519
+
+# Servidor de desarrollo
+Host dev
+    HostName dev.example.com
+    User developer
+    Port 2222
+
+# Servidor con jump host
+Host internal-server
+    HostName 10.0.0.50
+    User admin
+    ProxyJump bastion
+
+# Wildcard para todos los servidores de la empresa
+Host *.example.com
+    User admin
+    IdentityFile ~/.ssh/company-key
+EOF
+
+# Usar configuración
+ssh prod          # Se conecta a prod.example.com como deploy
+ssh dev           # Se conecta a dev.example.com:2222 como developer
+ssh internal-server  # Se conecta vía bastion
+```
+
+### Comandos Esenciales
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `ssh user@host` | Conectar a servidor | `ssh admin@server.com` |
+| `ssh -p port` | Puerto personalizado | `ssh -p 2222 user@host` |
+| `ssh -v` | Verbose/debug | `ssh -v user@host` |
+| `ssh-keygen` | Generar claves | `ssh-keygen -t ed25519` |
+| `ssh-copy-id` | Copiar clave pública | `ssh-copy-id user@host` |
+| `scp file host:path` | Copiar archivo | `scp file.txt user@host:/tmp/` |
+| `sftp host` | Transferencia interactiva | `sftp user@host` |
+| `ssh-agent` | Agente de claves | `eval $(ssh-agent)` |
+| `ssh-add` | Añadir clave al agente | `ssh-add ~/.ssh/id_ed25519` |
+| `ssh-keyscan` | Obtener host keys | `ssh-keyscan host.com` |
+
+### Ejercicio 1: Configurar acceso seguro
+
+**Objetivo:** Configurar acceso SSH por clave pública a un servidor.
+
+**Paso 1:** Generar claves
+
+```bash
+# Generar clave Ed25519 (recomendada)
+ssh-keygen -t ed25519 -C "diego@cybersecurity-course" -f ~/.ssh/id_ed25519_course
+
+# No usar passphrase para este ejercicio (en producción, SIEMPRE usar)
+# Enter passphrase: (Enter vacío)
+
+# Verificar
+ls -la ~/.ssh/id_ed25519_course*
+# Esperado: id_ed25519_course y id_ed25519_course.pub
+```
+
+**Paso 2:** Configurar acceso
+
+```bash
+# Añadir al SSH config
+cat >> ~/.ssh/config << 'EOF'
+
+Host lab-server
+    HostName localhost
+    User $USER
+    Port 22
+    IdentityFile ~/.ssh/id_ed25519_course
+    StrictHostKeyChecking ask
+EOF
+
+# Copiar clave (en este caso, a localhost para práctica)
+ssh-copy-id -i ~/.ssh/id_ed25519_course.pub $USER@localhost
+
+# Probar conexión
+ssh lab-server "echo 'Conexión exitosa desde $(hostname)'"
+# Esperado: Conexión exitosa desde tu-hostname
+```
+
+**Paso 3:** Verificar seguridad
+
+```bash
+# Verificar que la clave está en el servidor
+ssh lab-server "cat ~/.ssh/authorized_keys | grep course"
+
+# Verificar permisos (deben ser restrictivos)
+ssh lab-server "ls -la ~/.ssh/"
+# Esperado:
+# drwx------  .ssh/
+# -rw-------  authorized_keys
+# -rw-------  id_ed25519 (si existe)
+# -rw-r--r--  id_ed25519.pub (si existe)
+```
+
+## Nivel Intermedio
+
+### Port Forwarding
+
+```bash
+# Local port forwarding
+# Acceder a un servicio remoto como si fuera local
+ssh -L 8080:localhost:80 user@server.com
+# Ahora http://localhost:8080 = http://server.com:80
+
+# Múltiple forwarding
+ssh -L 8080:localhost:80 -L 5432:db-server:5432 user@server.com
+
+# Remote port forwarding
+# Exponer un servicio local al servidor remoto
+ssh -R 9090:localhost:3000 user@server.com
+# Ahora en server.com:9090 = tu-maquina:3000
+
+# Dynamic port forwarding (SOCKS proxy)
+ssh -D 1080 user@server.com
+# Configurar navegador para usar SOCKS proxy en localhost:1080
+# Todo el tráfico del navegador pasa por el servidor SSH
+```
+
+### Agent Forwarding
+
+```bash
+# Habilitar agent forwarding
+ssh -A user@server.com
+
+# O en ~/.ssh/config
+Host bastion
+    HostName bastion.example.com
+    ForwardAgent yes
+
+# Verificar agent forwarding
+ssh user@bastion "ssh-add -l"
+# Esperado: lista de claves disponibles desde tu máquina local
+```
+
+::: {.callout-warning}
+## Precaución con Agent Forwarding
+El agent forwarding permite que el servidor remoto use tus claves. Si el servidor está comprometido, el atacante podría usar tus claves. Solo usar en servidores confiables.
+:::
+
+### Multiplexing (Connection Sharing)
+
+```bash
+# Configurar multiplexing
+cat >> ~/.ssh/config << 'EOF'
+
+Host *
+    ControlMaster auto
+    ControlPath ~/.ssh/control-%r@%h:%p
+    ControlPersist 600
+EOF
+
+# Primera conexión (crea el socket de control)
+ssh user@server.com
+
+# Segunda conexión (reutiliza la primera, instantánea)
+ssh user@server.com "uptime"
+# Mucho más rápido porque no negocia SSH de nuevo
+
+# Ver conexiones activas
+ls ~/.ssh/control-*
+
+# Cerrar conexión maestra
+ssh -O exit user@server.com
+```
+
+### SCP y SFTP
+
+```bash
+# SCP: Copiar archivo local a remoto
+scp archivo.txt user@server:/ruta/destino/
+
+# SCP: Copiar archivo remoto a local
+scp user@server:/ruta/archivo.txt ./
+
+# SCP: Copiar directorio completo
+scp -r proyecto/ user@server:/ruta/destino/
+
+# SCP: Con puerto personalizado
+scp -P 2222 archivo.txt user@server:/ruta/
+
+# SFTP: Sesión interactiva
+sftp user@server.com
+# Dentro de SFTP:
+#   ls          # Listar remoto
+#   lls         # Listar local
+#   cd /path    # Cambiar directorio remoto
+#   lcd /path   # Cambiar directorio local
+#   get file    # Descargar archivo
+#   put file    # Subir archivo
+#   mkdir dir   # Crear directorio remoto
+#   bye         # Salir
+```
+
+### Ejercicio 2: Túnel SSH para acceso seguro
+
+**Objetivo:** Crear un túnel SSH para acceder a un servicio web interno.
+
+**Paso 1:** Configurar túnel local
+
+```bash
+# En una terminal, crear túnel
+ssh -L 8080:internal-app:8080 -N user@bastion.example.com
+# -N: No ejecutar comando remoto (solo forwarding)
+# -f: Ir a background (opcional)
+
+# El túnel está activo. En otra terminal:
+curl http://localhost:8080
+# Esperado: respuesta del servicio interno
+```
+
+**Paso 2:** SOCKS proxy para navegación segura
+
+```bash
+# Crear SOCKS proxy
+ssh -D 1080 -N user@bastion.example.com &
+
+# Configurar navegador para usar SOCKS proxy:
+# Firefox: Preferences > Network Settings > SOCKS Host: localhost, Port: 1080
+# Chrome: chrome --proxy-server="socks5://localhost:1080"
+
+# Verificar que el tráfico pasa por el servidor
+curl --socks5 localhost:1080 https://api.ipify.org
+# Esperado: IP del servidor bastion, no tu IP local
+
+# Detener proxy
+kill %1  # O el PID del proceso ssh
+```
+
+## Nivel Avanzado
+
+### Jump Hosts (ProxyJump)
+
+```bash
+# Configuración en ~/.ssh/config
+Host bastion
+    HostName bastion.example.com
+    User admin
+    Port 22
+    IdentityFile ~/.ssh/bastion-key
+
+Host internal
+    HostName 10.0.0.50
+    User admin
+    ProxyJump bastion
+
+Host database
+    HostName 10.0.0.100
+    User dbadmin
+    ProxyJump bastion
+
+# Conectar directamente al servidor interno (pasa por bastion automáticamente)
+ssh internal
+# Esperado: conexión a 10.0.0.50 vía bastion.example.com
+
+# Copiar archivo a través de jump host
+scp -o ProxyJump=bastion archivo.txt internal:/tmp/
+```
+
+### Certificate-Based Authentication
+
+```bash
+# En el servidor CA (Certificate Authority):
+# Generar clave CA
+ssh-keygen -t ed25519 -f ~/.ssh/ca_key -C "SSH CA"
+
+# Firmar clave de usuario
+ssh-keygen -s ~/.ssh/ca_key \
+    -I "user-diego" \
+    -n "admin,deploy" \
+    -V "+52w" \
+    ~/.ssh/id_ed25519.pub
+
+# Genera: id_ed25519-cert.pub (certificado válido 52 semanas)
+
+# En el servidor destino (sshd_config):
+# TrustedUserCAKeys /etc/ssh/ca_key.pub
+
+# El usuario se conecta con su certificado (sin authorized_keys en cada servidor)
+ssh -i ~/.ssh/id_ed25519 user@any-server
+```
+
+### Hardening de sshd_config
+
+```bash
+# Backup de configuración actual
+sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak.$(date +%Y%m%d)
+
+# Configuración hardened
+sudo tee /etc/ssh/sshd_config.d/hardened.conf << 'EOF'
+# Protocolo y versiones
+Protocol 2
+
+# Autenticación
+PasswordAuthentication no
+PermitRootLogin no
+MaxAuthTries 3
+PubkeyAuthentication yes
+AuthenticationMethods publickey
+
+# Keys
+HostKey /etc/ssh/ssh_host_ed25519_key
+HostKeyAlgorithms ssh-ed25519
+
+# Cifrado
+KexAlgorithms curve25519-sha256@libssh.org
+Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com
+MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com
+
+# Acceso
+AllowGroups ssh-users
+AllowUsers admin deploy
+DenyUsers root guest
+
+# Logging
+LogLevel VERBOSE
+SyslogFacility AUTH
+
+# Timeouts
+LoginGraceTime 30
+ClientAliveInterval 300
+ClientAliveCountMax 2
+
+# Features
+X11Forwarding no
+AllowTcpForwarding yes
+PermitTunnel no
+PrintMotd no
+AcceptEnv LANG LC_*
+
+# SFTP only for specific users
+Match Group sftp-only
+    ForceCommand internal-sftp
+    ChrootDirectory /home/%u
+    AllowTcpForwarding no
+EOF
+
+# Verificar configuración
+sudo sshd -t
+# Si no hay output, la configuración es válida
+
+# Reiniciar servicio
+sudo systemctl restart sshd
+
+# NO CERRAR sesión actual hasta verificar que puedes conectar de nuevo
+ssh -v localhost "echo 'Conexión verificada'"
+```
+
+### Fail2ban Integration
+
+```bash
+# Instalar fail2ban
+sudo apt install -y fail2ban
+
+# Configurar para SSH
+sudo tee /etc/fail2ban/jail.local << 'EOF'
+[sshd]
+enabled = true
+port = ssh
+filter = sshd
+logpath = /var/log/auth.log
+maxretry = 3
+bantime = 3600
+findtime = 600
+banaction = ufw
+EOF
+
+# Iniciar fail2ban
+sudo systemctl enable fail2ban
+sudo systemctl start fail2ban
+
+# Verificar estado
+sudo fail2ban-client status sshd
+# Esperado:
+# Status for the jail: sshd
+# |- Filter: currently 0 failed
+# |- Actions: currently 0 banned
+# `- Banned IP list:
+```
+
+### Ejercicio 3: Hardening completo de SSH
+
+**Objetivo:** Configurar un servidor SSH con máxima seguridad.
+
+**Paso 1:** Generar nuevas host keys
+
+```bash
+# Eliminar keys antiguas (RSA es débil)
+sudo rm /etc/ssh/ssh_host_rsa_key*
+sudo rm /etc/ssh/ssh_host_dsa_key*
+sudo rm /etc/ssh/ssh_host_ecdsa_key*
+
+# Generar nuevas keys (solo Ed25519)
+sudo ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ""
+
+# Verificar
+ls -la /etc/ssh/ssh_host_*
+```
+
+**Paso 2:** Configurar y verificar
+
+```bash
+# Aplicar configuración hardened (ver sección anterior)
+sudo sshd -t  # Verificar sintaxis
+
+# Aplicar cambios
+sudo systemctl restart sshd
+
+# Verificar desde otra terminal
+ssh -o PreferredAuthentications=publickey \
+    -o PubkeyAuthentication=yes \
+    user@localhost "echo 'Hardening exitoso'"
+
+# Verificar que password auth está deshabilitado
+ssh -o PreferredAuthentications=password \
+    -o PubkeyAuthentication=no \
+    user@localhost
+# Esperado: Permission denied (publickey)
+```
+
+## Uso en Ciberseguridad
+
+### Escenario 1: Acceso seguro a infraestructura
+
+```bash
+# Arquitectura con bastion host:
+# Internet → Bastion → Internal Server → Database
+
+# Configuración en ~/.ssh/config
+Host bastion
+    HostName 203.0.113.10
+    User bastion-user
+    IdentityFile ~/.ssh/bastion-key
+    IdentitiesOnly yes
+
+Host internal-web
+    HostName 10.0.1.10
+    User webadmin
+    ProxyJump bastion
+
+Host internal-db
+    HostName 10.0.1.20
+    User dbadmin
+    ProxyJump bastion
+
+# Acceso directo a cualquier servidor interno
+ssh internal-web
+ssh internal-db
+
+# SCP a través de bastion
+scp -o ProxyJump=bastion backup.sql internal-db:/tmp/
+```
+
+### Escenario 2: Auditoría de configuración SSH
+
+```bash
+#!/bin/bash
+# ssh-audit.sh - Auditar configuración SSH de un servidor
+
+set -euo pipefail
+
+TARGET="${1:?Uso: $0 <host>}"
+PORT="${2:-22}"
+
+echo "=== SSH Audit: $TARGET:$PORT ==="
+echo ""
+
+# Escanear con ssh-audit (herramienta externa)
+if command -v ssh-audit &>/dev/null; then
+    ssh-audit -p "$PORT" "$TARGET"
+else
+    echo "[*] ssh-audit no instalado. Instalando..."
+    pip install ssh-audit
+    ssh-audit -p "$PORT" "$TARGET"
+fi
+
+echo ""
+echo "=== Verificación manual ==="
+
+# Verificar algoritmos soportados
+echo "[*] Algoritmos de clave:"
+ssh -Q key | head -5
+
+echo "[*] Ciphers:"
+ssh -Q cipher | head -5
+
+echo "[*] MACs:"
+ssh -Q mac | head -5
+
+echo ""
+echo "[+] Auditoría completada"
+```
+
+### Escenario 3: Monitoreo de intentos de acceso
+
+```bash
+#!/bin/bash
+# ssh-monitor.sh - Monitorear intentos de acceso SSH
+
+set -euo pipefail
+
+LOG_FILE="/var/log/auth.log"
+
+echo "=== SSH Access Monitor ==="
+echo "Fecha: $(date)"
+echo ""
+
+# Intentos fallidos últimos 24h
+echo "[!] Intentos fallidos (últimas 24h):"
+grep "Failed password" "$LOG_FILE" | \
+    grep "$(date +%b\ %e)" | \
+    grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' | \
+    sort | uniq -c | sort -rn | head -10
+
+echo ""
+
+# Accesos exitosos
+echo "[+] Accesos exitosos (últimas 24h):"
+grep "Accepted" "$LOG_FILE" | \
+    grep "$(date +%b\ %e)" | \
+    awk '{print $9, "desde", $11, "vía", $14}'
+
+echo ""
+
+# IPs baneadas por fail2ban
+echo "[*] IPs baneadas:"
+sudo fail2ban-client status sshd 2>/dev/null | \
+    grep "Banned IP list" || echo "  Ninguna"
+```
+
+## Referencia Rápida
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `ssh user@host` | Conectar | `ssh admin@server.com` |
+| `ssh -p port` | Puerto custom | `ssh -p 2222 user@host` |
+| `ssh -v` | Debug | `ssh -vvv user@host` |
+| `ssh -L l:h:p` | Local forward | `ssh -L 8080:localhost:80 host` |
+| `ssh -R r:h:p` | Remote forward | `ssh -R 9090:localhost:3000 host` |
+| `ssh -D port` | SOCKS proxy | `ssh -D 1080 host` |
+| `ssh -A` | Agent forward | `ssh -A bastion` |
+| `ssh -N` | Sin comando | `ssh -N -L 8080:localhost:80 host` |
+| `ssh -f` | Background | `ssh -f -N -L 8080:localhost:80 host` |
+| `ssh-keygen -t ed25519` | Generar clave | `ssh-keygen -t ed25519 -C "email"` |
+| `ssh-copy-id` | Copiar clave | `ssh-copy-id user@host` |
+| `scp file host:path` | Copiar archivo | `scp file.txt user@host:/tmp/` |
+| `sftp host` | Transferencia | `sftp user@host` |
+| `ssh-keyscan host` | Host keys | `ssh-keyscan host.com >> known_hosts` |
+| `ssh-add` | Añadir al agente | `ssh-add ~/.ssh/id_ed25519` |
+
+## Recursos Adicionales
+
+- **Documentación oficial**: https://www.openssh.com/manual.html
+- **SSH Config Generator**: https://www.ssh-config.com/
+- **ssh-audit**: https://github.com/jtesta/ssh-audit
+- **Mozilla SSH Guidelines**: https://wiki.mozilla.org/Security/Guidelines/OpenSSH
+- **SSH Tunneling Guide**: https://www.ssh.com/academy/ssh/tunneling
+- **STIG SSH Requirements**: https://www.stigviewer.com/stig/openssh/
+
+---
+
+*Minicurso SSH — Curso Fundamentos de Ciberseguridad — CC BY-SA 4.0*

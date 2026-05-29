@@ -1,0 +1,183 @@
+---
+title: "Protocolos e Infraestructura de Red"
+unit: "unidad-03"
+module: "unidad-03"
+type: "theory"
+description: "Fundamentos de protocolos de red, dispositivos y seguridad de infraestructura"
+---
+
+## 🎯 Objetivos de Aprendizaje
+
+Al completar esta sección, podrás:
+
+- Explicar el modelo TCP/IP y sus capas
+- Identificar protocolos clave (HTTP, DNS, TLS, DHCP) y sus vulnerabilidades
+- Configurar dispositivos de red con criterios de seguridad
+- Analizar tráfico de red para detectar anomalías
+- Implementar segmentación de red básica
+
+## 📋 Conceptos Clave
+
+| Concepto | Definición |
+|----------|------------|
+| **TCP/IP** | Conjunto de protocolos que permite la comunicación en redes |
+| **Modelo OSI** | Marco conceptual de 7 capas para estandarizar comunicaciones |
+| **Protocolo** | Conjunto de reglas que gobiernan la comunicación entre dispositivos |
+| **Puerto** | Identificador numérico de servicios en un host (0-65535) |
+| **Segmentación** | División de una red en subredes más pequeñas para aislar tráfico |
+| **MTIM** | Man-in-the-Middle — ataque donde un tercero intercepta comunicaciones |
+
+## 🌐 Modelo TCP/IP vs OSI
+
+```
+Modelo OSI              Modelo TCP/IP         Protocolos
+─────────────────────────────────────────────────────────────
+7. Aplicación     ─┐
+6. Presentación   ─┤  Aplicación            HTTP, DNS, TLS, SSH
+5. Sesión         ─┘
+4. Transporte     ───  Transporte            TCP, UDP
+3. Red            ───  Internet              IP, ICMP, ARP
+2. Enlace         ─┐
+                   ─┤  Acceso a Red          Ethernet, WiFi (802.11)
+1. Físico         ─┘
+```
+
+## 📡 Protocolos Esenciales
+
+### HTTP/HTTPS (Puertos 80/443)
+
+```bash
+# Ver cabeceras HTTP de un sitio
+curl -I https://ejemplo.com
+
+# Seguir redirecciones
+curl -IL https://httpbin.org/redirect/2
+
+# HTTP/2 y HTTP/3
+curl --http2 -I https://ejemplo.com
+curl --http3 -I https://ejemplo.com  # Requiere curl reciente
+```
+
+**Vulnerabilidades comunes**: HTTP claro (sin TLS), cabeceras de seguridad faltantes, cookies sin Secure/HttpOnly.
+
+### DNS (Puerto 53)
+
+```bash
+# Consultar registro A
+nslookup ejemplo.com
+
+# Consultar registro MX
+dig ejemplo.com MX
+
+# Usar DNS sobre TLS (DoT) para privacidad
+kdig +tls-ca @1.1.1.1 ejemplo.com
+```
+
+**Vulnerabilidades**: DNS spoofing, DNS tunneling, Domain Generation Algorithms (DGA).
+
+### TLS/SSL (Puerto 443)
+
+```bash
+# Ver certificado TLS de un servidor
+openssl s_client -connect ejemplo.com:443 -servername ejemplo.com
+
+# Verificar cadena de certificados
+openssl s_client -connect ejemplo.com:443 -showcerts
+```
+
+**Vulnerabilidades**: Certificados expirados, protocolos obsoletos (TLS 1.0/1.1), ciphers débiles.
+
+### DHCP (Puertos 67/68)
+
+```bash
+# Ver concesión DHCP en Linux
+dhclient -v 2>&1 | grep DHCPACK
+
+# Ver leases en sistemas macOS
+ipconfig getpacket en0
+```
+
+**Vulnerabilidades**: DHCP spoofing, rogue DHCP servers, starvation attacks.
+
+## 🛡️ Seguridad en Dispositivos de Red
+
+### Firewalls
+
+```bash
+# Linux: iptables (tradicional)
+sudo iptables -L -n -v
+
+# Linux: nftables (moderno)
+sudo nft list ruleset
+
+# Regla básica: permitir SSH, bloquear todo lo demás
+sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+sudo iptables -A INPUT -j DROP
+```
+
+### Segmentación con VLANs
+
+```markdown
+| VLAN | Propósito        | Subred           | Acceso |
+|------|------------------|------------------|--------|
+| 10   | Administración   | 192.168.10.0/24  | Solo IT |
+| 20   | Usuarios         | 192.168.20.0/24  | Todos  |
+| 30   | Servidores       | 192.168.30.0/24  | Restringido |
+| 40   | DMZ              | 192.168.40.0/24  | Público |
+| 99   | IoT/Dispositivos | 192.168.99.0/24  | Aislado |
+```
+
+### Monitoreo de Tráfico
+
+```bash
+# Capturar tráfico HTTP en tiempo real
+sudo tcpdump -i eth0 port 80 -A
+
+# Ver conexiones activas
+ss -tuln
+
+# Análisis con netstat
+netstat -ant | grep ESTABLISHED
+```
+
+## 📊 Matriz de Protocolos y Seguridad
+
+| Protocolo | Puerto | Cifrado | Riesgo Principal | Mitigación |
+|-----------|--------|---------|------------------|------------|
+| HTTP | 80 | No | Intercepción | Usar HTTPS (TLS) |
+| HTTPS | 443 | TLS 1.3 | Certificado inválido | Validar cadena |
+| DNS | 53 | No (DoT/DoH sí) | Spoofing | DNSSEC, DoH |
+| DHCP | 67/68 | No | Rogue server | DHCP snooping |
+| SSH | 22 | Sí | Brute force | Claves, Fail2ban |
+| FTP | 21 | No | Credenciales claras | SFTP/SCP |
+| SMTP | 25 | STARTTLS | Spoofing | SPF, DKIM, DMARC |
+| SNMP | 161/162 | v3 sí | Exposición info | Solo v3 |
+
+## 🔍 Análisis de Tráfico Sospechoso
+
+Indicadores comunes de compromiso a nivel de red:
+
+| Indicador | Posible Ataque | Comando de Detección |
+|-----------|---------------|----------------------|
+| Múltiples SYN a puertos cerrados | Escaneo de puertos | `tcpdump 'tcp[13] & 2 != 0'` |
+| Tráfico DNS a dominios aleatorios | C2/DGA | `tshark -Y dns.qry.name` |
+| Conexiones a IPs sospechosas | Exfiltración | `ss -tnp \| grep -E '10\.|172\.|192\.'` |
+| Tráfico en horas no laborales | Actividad anómala | Logs con timestamp |
+| Paquetes ICMP grandes | Covert channel | `tcpdump 'icmp[0] != 8 and icmp[0] != 0'` |
+
+## ✅ Checkpoint
+
+Antes de continuar a la siguiente sección, verifica que puedes:
+
+- [ ] Explicar la diferencia entre TCP y UDP
+- [ ] Identificar 5 protocolos y sus puertos
+- [ ] Capturar tráfico HTTP con tcpdump
+- [ ] Listar reglas de firewall activas
+- [ ] Explicar qué es una VLAN y por qué se usa
+
+## 📚 Recursos
+
+- TCP/IP Guide: https://www.tcpipguide.com
+- OWASP Transport Security: https://owasp.org/www-project-transport-layer-protection
+- Wireshark Network Analysis: https://www.wireshark.org/docs
+- NIST SP 800-77: Guide to IPsec VPNs

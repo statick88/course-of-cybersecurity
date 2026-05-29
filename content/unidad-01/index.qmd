@@ -1,0 +1,400 @@
+---
+title: "Módulo 1: Fundamentos y Marco NIST CSF 2.0"
+module: "modulo-01"
+type: "content"
+description: "Introducción al NIST Cybersecurity Framework 2.0 - Los 6 pilares de la ciberseguridad"
+---
+
+
+## 🎯 Objetivos SMART
+
+Al finalizar este módulo, serás capaz de:
+
+1. **Explicar** las 6 funciones del NIST CSF 2.0 y sus relaciones, con al menos 2 ejemplos por función
+2. **Mapear** 10+ controles de seguridad a sus categorías oficiales (GV.OC, PR.DS, DE.AE, etc.) con 90% de precisión
+3. **Realizar** una autoevaluación de madurez organizacional usando perfiles NIST CSF 2.0 para una empresa ficticia (TechCorp)
+4. **Interpretar** un perfil de riesgo y proponer al menos 3 mejoras priorizadas por función del framework
+
+---
+
+## 📋 5W1H — Marco de Referencia
+
+### ¿Qué? — ¿Qué es el NIST CSF 2.0?
+
+El **NIST Cybersecurity Framework (CSF) 2.0** es un conjunto de estándares, guías y mejores prácticas para gestionar el riesgo de ciberseguridad. Publicado por el National Institute of Standards and Technology (NIST) de EE.UU., es el framework más adoptado a nivel mundial.
+
+La versión 2.0 (febrero 2024) amplió el framework original de 5 a **6 funciones**, añadiendo **Govern (Gobernanza)** como pilar central. Usa una notación de categorías con **notación punto** (ej: `GV.OC` para Governance - Organizational Context).
+
+<div class="compact-diagram" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:16px 20px;margin:16px 0;">
+<svg viewBox="0 0 440 90" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:440px;">
+<!-- Title -->
+<text x="220" y="14" text-anchor="middle" fill="#1e293b" font-size="10" font-weight="bold">Evolución NIST CSF 1.1 (2018) → 2.0 (2024)</text>
+<!-- Left: 1.1 -->
+<rect x="10" y="24" width="170" height="56" rx="6" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/>
+<text x="95" y="38" text-anchor="middle" fill="#475569" font-size="9" font-weight="bold">CSF 1.1 — 5 funciones</text>
+<text x="20" y="52" fill="#64748b" font-family="monospace" font-size="8">Identify · Protect · Detect</text>
+<text x="20" y="64" fill="#64748b" font-family="monospace" font-size="8">Respond · Recover</text>
+<!-- Arrow -->
+<polygon points="195,52 210,52 207,49 210,55" fill="#94a3b8"/>
+<text x="210" y="72" text-anchor="middle" fill="#94a3b8" font-size="7">+ Govern</text>
+<!-- Right: 2.0 -->
+<rect x="220" y="24" width="210" height="56" rx="6" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="325" y="38" text-anchor="middle" fill="#1d4ed8" font-size="9" font-weight="bold">CSF 2.0 — 6 funciones</text>
+<text x="230" y="52" fill="#3b82f6" font-family="monospace" font-size="8">★ Govern · Identify · Protect</text>
+<text x="230" y="64" fill="#3b82f6" font-family="monospace" font-size="8">Detect · Respond · Recover</text>
+</svg>
+</div>
+
+### ¿Cómo? — ¿Cómo funciona el framework?
+
+El NIST CSF 2.0 organiza la ciberseguridad en **3 niveles jerárquicos**:
+
+1. **Funciones** (6): Govern, Identify, Protect, Detect, Respond, Recover
+2. **Categorías** (23): Subdivisiones dentro de cada función (ej: `GV.OC`, `PR.DS`)
+3. **Subcategorías** (106+): Acciones específicas y medibles
+
+El framework funciona como un **ciclo continuo**: Govern establece la estrategia → Identify descubre qué proteger → Protect implementa controles → Detect monitorea anomalías → Respond actúa ante incidentes → Recover restaura operaciones → y el ciclo se repite con lecciones aprendidas.
+
+### ¿Cuándo? — ¿Cuándo aplicar el NIST CSF 2.0?
+
+- **Al iniciar** un programa de ciberseguridad desde cero
+- **Al evaluar** la madurez actual de seguridad de una organización
+- **Al comunicar** el estado de seguridad a la dirección ejecutiva
+- **Al planificar** inversiones en controles de seguridad
+- **Al auditar** cumplimiento regulatorio (ISO 27001, SOC 2, GDPR)
+- **Después de un incidente** para identificar gaps y mejorar
+
+### ¿Dónde? — ¿Dónde se aplica?
+
+El NIST CSF 2.0 es **agnóstico al sector y tamaño**:
+
+| Contexto | Aplicación |
+|----------|-----------|
+| Empresas pequeñas | Autoevaluación básica, priorización de controles |
+| Grandes corporaciones | Programa formal de gestión de riesgo |
+| Sector público | Cumplimiento obligatorio (EE.UU.) |
+| Sector salud | Protección de PHI (HIPAA) |
+| Sector financiero | Gestión de riesgo operativo |
+| Infraestructura crítica | Protección de sistemas esenciales |
+
+### ¿Por qué? — ¿Por qué es importante?
+
+- **68% de las brechas** involucran el factor humano (Verizon DBIR 2024)
+- Las organizaciones con framework formal reducen **40% el tiempo de detección**
+- El costo promedio de una brecha es **$4.88M** (IBM 2024)
+- Es el framework **más reconocido** por aseguradoras de ciberseguridad
+- Permite **hablar el mismo idioma** entre técnicos y ejecutivos
+
+### ¿Para qué? — ¿Qué objetivo cumple?
+
+El NIST CSF 2.0 sirve para:
+
+1. **Evaluar** dónde estás hoy (perfil actual)
+2. **Definir** dónde quieres estar (perfil objetivo)
+3. **Priorizar** inversiones en seguridad basadas en riesgo
+4. **Comunicar** el estado de seguridad a stakeholders
+5. **Demostrar** diligencia debida ante reguladores y aseguradoras
+6. **Mejorar continuamente** con métricas estandarizadas
+
+### Relación entre Funciones
+
+<div class="compact-diagram" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:16px 20px;margin:16px 0;">
+<svg viewBox="0 0 460 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:460px;">
+<text x="230" y="14" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="bold">NIST CSF 2.0 — Relación entre Funciones</text>
+<!-- Govern at top center -->
+<rect x="130" y="24" width="200" height="30" rx="6" fill="#8b5cf6"/><text x="230" y="44" text-anchor="middle" fill="white" font-size="10" font-weight="bold">GOVERN — Estrategia y supervisión</text>
+<!-- Arrow down from Govern -->
+<line x1="230" y1="54" x2="230" y2="70" stroke="#94a3b8" stroke-width="2"/>
+<!-- Three columns: Identify, Protect, Detect -->
+<rect x="10" y="74" width="135" height="36" rx="6" fill="#3b82f6"/><text x="77" y="90" text-anchor="middle" fill="white" font-size="9" font-weight="bold">IDENTIFY</text><text x="77" y="103" text-anchor="middle" fill="#dbeafe" font-size="8">¿Qué proteger?</text>
+<rect x="162" y="74" width="135" height="36" rx="6" fill="#10b981"/><text x="230" y="90" text-anchor="middle" fill="white" font-size="9" font-weight="bold">PROTECT</text><text x="230" y="103" text-anchor="middle" fill="#d1fae5" font-size="8">¿Cómo proteger?</text>
+<rect x="314" y="74" width="135" height="36" rx="6" fill="#f59e0b"/><text x="382" y="90" text-anchor="middle" fill="white" font-size="9" font-weight="bold">DETECT</text><text x="382" y="103" text-anchor="middle" fill="#fef3c7" font-size="8">¿Qué sucede?</text>
+<!-- Arrows between columns -->
+<polygon points="145,92 162,92 159,89 162,95" fill="#94a3b8"/>
+<polygon points="297,92 314,92 311,89 314,95" fill="#94a3b8"/>
+<!-- Arrow down from middle column -->
+<line x1="230" y1="110" x2="230" y2="126" stroke="#94a3b8" stroke-width="2"/>
+<!-- Respond -->
+<rect x="130" y="130" width="200" height="30" rx="6" fill="#ef4444"/><text x="230" y="150" text-anchor="middle" fill="white" font-size="10" font-weight="bold">RESPOND — ¿Qué hacer?</text>
+<!-- Arrow down -->
+<line x1="230" y1="160" x2="230" y2="174" stroke="#94a3b8" stroke-width="2"/>
+<!-- Recover -->
+<rect x="150" y="177" width="160" height="28" rx="6" fill="#6366f1"/><text x="230" y="195" text-anchor="middle" fill="white" font-size="10" font-weight="bold">RECOVER — Recuperar</text>
+</svg>
+</div>
+
+---
+
+## 🔑 Conceptos Clave
+
+- **Perfil de Ciberseguridad**: Combinación personalizada de funciones, categorías y subcategorías que una organización selecciona según su contexto de negocio y riesgo. No todas las subcategorías aplican a todas las organizaciones.
+- **Nivel de Madurez (Tiers 1-4)**: Grado de formalización del programa de ciberseguridad. Tier 1 = Ad hoc/informal, Tier 2 = En desarrollo, Tier 3 = Definido y repetible, Tier 4 = Adaptativo y optimizado.
+- **Govern (Gobernanza)**: Nueva función en CSF 2.0 que establece la estrategia, políticas y supervisión de seguridad. Es el "cerebro" que dirige las demás funciones. Sin Govern, las demás funciones operan sin dirección estratégica.
+- **Notación Punto (Dot Notation)**: Sistema oficial de NIST para identificar categorías. Ej: `GV.OC` = Governance → Organizational Context, `PR.DS` = Protect → Data Security, `RS.MA` = Respond → Incident Management, `RS.IM` = Respond → Improvements.
+- **Risk Profile**: Documento que describe el riesgo actual de la organización, comparado con el riesgo aceptable definido por la dirección. Se construye usando perfiles NIST CSF.
+
+---
+
+## 💡 Ejemplos
+
+### Ejemplo 1: Brecha de Change Healthcare (febrero 2024)
+
+**Contexto**: Change Healthcare, subsidiaria de UnitedHealth Group, sufrió un ataque de ransomware que afectó a más de 100 millones de pacientes y paralizó el sistema de facturación farmacéutica de EE.UU.
+
+**Análisis con NIST CSF 2.0**:
+
+| Función | Falla identificada | Categoría NIST |
+|---------|-------------------|----------------|
+| **Govern** | Sin supervisión de seguridad de terceros | `GV.SC` (Supply Chain Risk) |
+| **Identify** | Acceso remoto sin MFA en servidor comprometido | `ID.IM` (Identity Management) |
+| **Protect** | Sin segmentación de red adecuada | `PR.AA` (Access Management) |
+| **Detect** | 6 días sin detectar la intrusión | `DE.AE` (Anomalous Events) |
+| **Respond** | Plan de respuesta insuficiente para escala del ataque | `RS.MA` (Incident Management) |
+| **Recover** | Semanas para restaurar servicios críticos | `RC.RP` (Recovery Planning) |
+
+**Lección**: Un solo punto de falla en Identify/Protect escaló porque Govern no supervisó el riesgo de cadena de suministro y Detect no alertó a tiempo.
+
+### Ejemplo 2: TechCorp — Empresa Ficticia del Curso
+
+**Contexto**: TechCorp es una empresa de 50 empleados con infraestructura en la nube (AWS), sin equipo dedicado de seguridad, sin políticas documentadas y sin plan de respuesta a incidentes.
+
+**Evaluación inicial con NIST CSF 2.0**:
+
+| Función | Tier actual | Tier objetivo | Gap principal |
+|---------|------------|---------------|---------------|
+| **Govern** | Tier 1 (Ad hoc) | Tier 2 | No hay política de seguridad formal |
+| **Identify** | Tier 1 | Tier 2 | Sin inventario de activos actualizado |
+| **Protect** | Tier 1 | Tier 3 | Sin MFA, sin cifrado de datos en reposo |
+| **Detect** | Tier 1 | Tier 2 | Sin monitoreo centralizado de logs |
+| **Respond** | Tier 1 | Tier 2 | Sin plan de respuesta documentado |
+| **Recover** | Tier 1 | Tier 2 | Backups existentes pero no probados |
+
+**Priorización**: El gap más crítico es `PR.AA` (Access Management) — implementar MFA para todos los accesos es la mejora de mayor impacto con menor costo.
+
+---
+
+## 🛠️ Práctica Guiada
+
+### Ejercicio: Mapeo de Controles al NIST CSF 2.0
+
+En este ejercicio, clasificarás controles de seguridad reales en las funciones y categorías del NIST CSF 2.0. Trabaja con papel y lápiz — escribe cada respuesta antes de verificar.
+
+**Paso 1**: Lee cada control de seguridad:
+
+1. Firewall perimetral que bloquea tráfico no autorizado
+2. Autenticación multifactor (MFA) para todos los empleados
+3. Plan de respuesta a incidentes documentado y probado
+4. Inventario actualizado de todos los servidores y aplicaciones
+5. Backups automáticos diarios con prueba de restauración mensual
+6. SIEM que correlaciona logs de múltiples fuentes
+7. Política de seguridad aprobada por la dirección
+8. Evaluación de riesgos de proveedores antes de contratar
+9. Cifrado AES-256 para datos sensibles en reposo
+10. Programa de concienciación en phishing para empleados
+
+**Paso 2**: Para cada control, identifica:
+- La **función** principal (Govern, Identify, Protect, Detect, Respond, Recover)
+- La **categoría** específica (usando notación punto)
+
+**Paso 3**: Verifica tus respuestas:
+
+| # | Control | Función | Categoría |
+|---|---------|---------|-----------|
+| 1 | Firewall perimetral | Protect | `PR.IP` (Technology Protection) |
+| 2 | MFA para empleados | Protect | `PR.AA` (Access Management) |
+| 3 | Plan de respuesta | Respond | `RS.MA` (Incident Management) |
+| 4 | Inventario de activos | Identify | `ID.AM` (Asset Management) |
+| 5 | Backups con prueba | Recover | `RC.RP` (Recovery Planning) |
+| 6 | SIEM con correlación | Detect | `DE.AE` (Anomalous Events) |
+| 7 | Política de seguridad | Govern | `GV.PS` (Security Policy) |
+| 8 | Evaluación de proveedores | Govern | `GV.SC` (Supply Chain Risk) |
+| 9 | Cifrado AES-256 | Protect | `PR.DS` (Data Security) |
+| 10 | Concienciación phishing | Protect | `PR.PS` (User Protection) |
+
+::: {.callout-tip}
+## Tip Profesional
+Algunos controles pueden mapearse a múltiples funciones. Por ejemplo, los backups también contribuyen a `PR.DS` (protección de datos). Lo importante es identificar la función **principal** donde el control tiene mayor impacto.
+:::
+
+---
+
+## 🧪 Laboratorio
+
+### Lab 1: Autoevaluación de Madurez NIST CSF 2.0 para TechCorp
+
+**Objetivo**: Realizar una evaluación de madurez de las 6 funciones del NIST CSF 2.0 para la empresa TechCorp, usando una metodología estructurada.
+
+**Requisitos Previos**:
+- Haber completado la Práctica Guiada (mapeo de controles)
+- Comprender las 6 funciones y sus categorías principales
+
+**Entorno Necesario**:
+- Terminal con acceso a internet
+- Editor de texto (VS Code, nano, o tu preferido)
+
+**Duración estimada**: 45 minutos
+
+#### Paso 1: Crear el archivo de evaluación
+
+Abre tu terminal y crea un directorio de trabajo:
+
+```bash
+mkdir -p ~/cybersecurity-labs/nist-csf
+cd ~/cybersecurity-labs/nist-csf
+```
+
+#### Paso 2: Estructurar la evaluación
+
+Abre el archivo en tu editor y escribe la siguiente estructura:
+
+**NIST CSF 2.0 Assessment — TechCorp**
+
+**Informacion General**
+
+- Empresa: TechCorp
+- Empleados: 50
+- Infraestructura: AWS (cloud)
+- Equipo de seguridad: 0 dedicado
+- Fecha de evaluacion: [hoy]
+
+#### Paso 3: Evaluar cada funcion
+
+Para cada una de las 6 funciones, evalua el nivel de madurez usando esta escala:
+
+| Nivel | Descripcion | Criterio |
+|-------|------------|----------|
+| **0** | Inexistente | No hay ningun control ni conciencia |
+| **1** | Ad hoc | Controles informales, no documentados |
+| **2** | En desarrollo | Algunos controles documentados, implementacion parcial |
+| **3** | Definido | Controles documentados, implementados y consistentes |
+| **4** | Optimizado | Controles medidos, mejorados continuamente |
+
+Escribe en tu archivo la evaluacion de cada funcion. Por ejemplo:
+
+**GOVERN (Gobernanza)**
+
+- Nivel actual: 1
+- Evidencia: No existe politica de seguridad formal. El CEO toma decisiones de seguridad reactivamente.
+- Categorias evaluadas:
+  - GV.OC (Contexto organizacional): Nivel 1
+  - GV.RM (Gestion de riesgo): Nivel 0
+  - GV.PS (Politica de seguridad): Nivel 0
+  - GV.SC (Cadena de suministro): Nivel 0
+- Mejora prioritaria: Crear politica de seguridad formal (GV.PS)
+
+Repite este proceso para las 6 funciones. Usa el contexto de TechCorp proporcionado en los ejemplos.
+
+#### Paso 4: Calcular el puntaje total
+
+Al final de tu archivo, anade un resumen:
+
+**Resumen de Madurez**
+
+| Funcion | Nivel (0-4) | Prioridad |
+|---------|-------------|-----------|
+| Govern | ? | ? |
+| Identify | ? | ? |
+| Protect | ? | ? |
+| Detect | ? | ? |
+| Respond | ? | ? |
+| Recover | ? | ? |
+| **Promedio** | **?** | |
+
+Calcula el promedio y determina la prioridad de cada funcion (las de menor nivel son mayor prioridad).
+
+#### Paso 5: Proponer un plan de mejora
+
+Basado en tu evaluacion, propone al menos 3 acciones de mejora priorizadas:
+
+**Plan de Mejora Priorizado**
+
+1. **[Prioridad Alta]** Accion especifica → Funcion/Categoria → Costo estimado → Tiempo
+2. **[Prioridad Media]** Accion especifica → Funcion/Categoria → Costo estimado → Tiempo
+3. **[Prioridad Baja]** Accion especifica → Funcion/Categoria → Costo estimado → Tiempo
+
+**Resultados Esperados**:
+- Archivo `nist-csf-assessment.md` con evaluación completa de las 6 funciones
+- Puntaje de madurez por función (0-4)
+- Plan de mejora con al menos 3 acciones priorizadas
+
+**Troubleshooting**:
+
+| Problema | Solución |
+|----------|----------|
+| No sé qué nivel asignar | Usa la tabla de criterios: si no está documentado, máximo nivel 1 |
+| No conozco las categorías | Revisa la sección de Conceptos Clave y los ejemplos |
+| Dudo entre dos niveles | Elige el nivel más bajo — es mejor ser conservador en la evaluación |
+
+::: {.callout-warning}
+## Regla Obligatoria
+DEBES teclear todos los comandos y contenido manualmente. NO uses copy-paste. La memoria muscular es parte del aprendizaje.
+:::
+
+---
+
+## 📝 Tarea (Project-Based Learning)
+
+### Proyecto: Evaluación de Madurez NIST CSF 2.0 para TechCorp
+
+**Contexto del Proyecto General**: Durante este curso, realizarás un **Security Assessment completo** de TechCorp, una empresa ficticia de 50 empleados con infraestructura cloud en AWS. Cada módulo contribuye a un entregable final que será un reporte de evaluación de seguridad profesional.
+
+**Tu rol**: Consultor de ciberseguridad contratado por TechCorp para evaluar su postura de seguridad usando el framework NIST CSF 2.0.
+
+#### Entregable
+
+Crea un documento profesional llamado `techcorp-nist-csf-assessment.md` que incluya:
+
+1. **Executive Summary** (1 párrafo): Resumen del estado de seguridad de TechCorp en lenguaje no técnico, dirigido al CEO.
+
+2. **Metodología**: Explica brevemente qué es el NIST CSF 2.0 y por qué lo elegiste como framework de evaluación.
+
+3. **Perfil Actual**: Tabla con las 6 funciones, su nivel de madurez (0-4), y evidencia concreta para cada nivel.
+
+4. **Perfil Objetivo**: Define el nivel de madurez objetivo para cada función (realista para una empresa de 50 empleados en 12 meses).
+
+5. **Gap Analysis**: Tabla comparativa Perfil Actual vs Perfil Objetivo con el gap numérico.
+
+6. **Plan de Acción**: Mínimo 5 acciones priorizadas, cada una con:
+   - Acción específica
+   - Función y categoría NIST CSF 2.0 que aborda
+   - Prioridad (Alta/Media/Baja)
+   - Costo estimado (Bajo/Medio/Alto)
+   - Tiempo estimado de implementación
+   - Métrica de éxito (cómo sabrás que se completó)
+
+7. **Roadmap Visual**: Un diagrama SVG simple mostrando la secuencia de implementación en los próximos 12 meses.
+
+#### Criterios de Evaluación
+
+| Criterio | Peso | Excelente (100%) | Aceptable (70%) | Insuficiente (<50%) |
+|----------|------|------------------|-----------------|---------------------|
+| Evaluación completa (6 funciones) | 30% | Todas evaluadas con evidencia | 4-5 funciones evaluadas | Menos de 4 funciones |
+| Justificación de niveles | 25% | Cada nivel tiene evidencia concreta | La mayoría tiene justificación | Justificación vaga o ausente |
+| Plan de acción priorizado | 25% | 5+ acciones con métricas de éxito | 3-4 acciones | Menos de 3 acciones |
+| Calidad del Executive Summary | 10% | Claro, conciso, no técnico | Comprensible pero técnico | Demasiado técnico o vago |
+| Diagrama de roadmap | 10% | SVG claro con timeline | Diagrama básico | Sin diagrama |
+
+#### Fecha de Entrega
+
+Al finalizar el Módulo 1. Este entregable será la base del reporte final de Security Assessment.
+
+---
+
+## 📊 Resumen
+
+### Puntos Clave
+
+- ✅ NIST CSF 2.0 tiene **6 funciones**: Govern, Identify, Protect, Detect, Respond, Recover
+- ✅ **Govern** es la nueva función (2024) que establece estrategia y supervisión
+- ✅ La notación oficial usa **punto**: `GV.OC`, `PR.DS`, `DE.AE`, `RS.MA`, etc.
+- ✅ Los **niveles de madurez (Tiers)** van de 1 (informal) a 4 (optimizado)
+- ✅ El framework es un **ciclo continuo**, no un checklist lineal
+- ✅ Un **perfil** es la combinación personalizada de controles según el contexto de cada organización
+
+### Conexión con el Proyecto
+
+Tu evaluación de madurez NIST CSF 2.0 de TechCorp es el **primer pilar** del Security Assessment. En el Módulo 2, diseñarás las políticas de identidad y acceso (IAM) que abordarán los gaps identificados en las funciones Identify y Protect.
+
+---
+
+*📖 Tiempo estimado: 6 horas • 🎯 6 objetivos SMART • 🧪 1 laboratorio • 📝 1 tarea PBL*

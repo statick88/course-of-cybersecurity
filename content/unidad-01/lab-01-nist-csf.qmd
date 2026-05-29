@@ -1,0 +1,357 @@
+---
+title: "Lab 1: Mapeo de Controles NIST CSF 2.0"
+module: "lab-01"
+type: "lab"
+description: "Practica de mapeo de controles de seguridad al framework NIST CSF 2.0"
+unit: "unidad-01"
+---
+
+## 📚 Prerrequisitos
+
+Antes de iniciar este laboratorio, completa:
+1. **Unidad I — Teoría**: La sección de conceptos del NIST CSF 2.0
+2. **Minicurso: Git y GitHub** — Para gestionar tus entregables
+3. Tener **Docker** instalado en tu equipo
+
+## 🎯 Objetivo del Laboratorio
+
+En este laboratorio, vas a **mapear controles de seguridad** existentes a las funciones del NIST CSF 2.0. Este ejercicio te permitira:
+
+- Identificar que controles tienes implementados
+- Clasificar cada control segun su funcion
+- Identificar gaps en tu postura de seguridad
+
+::: {.callout-warning}
+## ADVERTENCIA DE SEGURIDAD
+
+- NO ejecutar comandos en sistemas de produccion
+- Usar exclusivamente entornos aislados (VM, Docker)
+- Los comandos deben probarse primero en desarrollo
+:::
+
+## Duracion
+
+- Tiempo estimado: 90 minutos
+- Tipo: Individual
+- IMPORTANTE: DEBES teclear todos los comandos manualmente
+
+---
+
+## Paso 1: Preparar el Entorno
+
+### 1.1 Verificar Docker
+
+```{.bash filename="terminal"}
+# Verificar que Docker esta instalado
+docker --version
+
+# Si no esta instalado (macOS):
+# brew install --cask docker
+# Si no esta instalado (Linux):
+# sudo apt install -y docker.io
+# sudo systemctl enable --now docker
+
+# Verificar que el daemon esta corriendo
+docker ps
+```
+
+### 1.2 Crear contenedor aislado para el lab
+
+```{.bash filename="terminal"}
+# Crear red aislada para el laboratorio
+docker network create nist-lab-net
+
+# Ejecutar contenedor Ubuntu aislado
+docker run -d --name nist-lab \
+  --network nist-lab-net \
+  --hostname nist-assessment \
+  -v ~/cybersec-lab/nist-mapping:/workspace \
+  -w /workspace \
+  ubuntu:24.04 \
+  tail -f /dev/null
+
+# Verificar que esta corriendo
+docker ps | grep nist-lab
+
+# Entrar al contenedor
+docker exec -it nist-lab bash
+```
+
+### 1.3 Crear directorio de trabajo
+
+```{.bash filename="terminal"}
+# Dentro del contenedor Docker
+# Crear estructura de directorios
+mkdir -p ~/cybersec-lab/nist-mapping
+cd ~/cybersec-lab/nist-mapping
+
+# Inicializar Git
+git init
+
+# Crear estructura de directorios
+mkdir -p controles assessment reports
+```
+
+### 1.2 Descargar lista de controles NIST CSF
+
+```{.bash filename="terminal"}
+cat > controles/nist-csf-funciones.txt << 'EOF'
+FUNCIONES DEL NIST CSF 2.0
+
+G - GOVERN (Gobernanza)
+  GOV-01: Contexto organizacional
+  GOV-02: Estrategia de gestion de riesgos
+  GOV-03: Gestion de riesgos de cadena de suministro
+
+I - IDENTIFY (Identificacion)
+  ID-AM: Gestion de activos
+  ID-BE: Entorno de negocio
+  ID-GV: Gobernanza
+  ID-RA: Evaluacion de riesgos
+  ID-RM: Gestion de riesgos
+  ID-SC: Riesgo de cadena de suministro
+
+P - PROTECT (Proteccion)
+  PR-AA: Gestion de identidad y control de acceso
+  PR-DS: Seguridad de datos
+  PR-IP: Seguridad de plataforma
+  PR-PS: Resiliencia de infraestructura tecnologica
+
+D - DETECT (Deteccion)
+  DE-AE: Analisis de eventos adversos
+  DE-CM: Monitoreo continuo
+  DE-DP: Procesos de deteccion
+
+R - RESPOND (Respuesta)
+  RS-MI: Gestion de incidentes
+  RS-AN: Analisis de incidentes
+  RS-CO: Comunicacion de respuesta
+  RS-IM: Mejora de respuesta
+
+R - RECOVER (Recuperacion)
+  RC-RP: Plan de recuperacion
+  RC-CO: Comunicacion de recuperacion
+  RC-IM: Mejora de recuperacion
+EOF
+```
+
+::: {.callout-note}
+Verifica que el archivo se creo correctamente
+:::
+
+### 1.3 Verificar estructura
+
+```{.bash filename="terminal"}
+ls -la controles/
+head -20 controles/nist-csf-funciones.txt
+```
+
+---
+
+## Paso 2: Inventario de Controles Existentes
+
+### 2.1 Crear plantilla de assessment
+
+```{.bash filename="terminal"}
+cat > assessment/controles-organizacion.csv << 'EOF'
+ID_Control,Nombre_Control,Categoria,Implementado,Ultima_Revision,Observaciones
+AC-1,Politica de Control de Acceso,PR.AC,,,
+AC-2,Programa de Control de Acceso,PR.AC,,,
+AC-3,Imposicion de Control de Acceso,PR.AC,,,
+AU-1,Politica de Auditoria,PR-DS,,,
+AU-2,Eventos de Auditoria,PR-DS,,,
+AU-3,Proteccion de Auditoria,PR-DS,,,
+SI-1,Politica de Integridad del Sistema,PR-IP,,,
+SI-2,Remediacion de Flaws,PR-IP,,,
+SI-3,Proteccion contra Malware,PR-IP,,,
+SI-4,Monitoreo del Sistema,PR-DS,,,
+IR-1,Politica de Respuesta a Incidentes,RS-MI,,,
+IR-2,Capacitacion en Respuesta,RS-MI,,,
+IR-3,Pruebas de Respuesta,RS-MI,,,
+IR-4,Manejo de Incidentes,RS-MI,,,
+IR-5,Reporte de Incidentes,RS-AN,,,
+CP-1,Planificacion de Contingencia,RC-RP,,,
+CP-2,Plan de Contingencia,RC-RP,,,
+CP-3,Capacitacion de Contingencia,RC-RP,,,
+CP-4,Prueba del Plan,RC-RP,,,
+IA-1,Politica de Gestion de Identidad,PR-AA,,,
+IA-2,Prueba de Identidad,PR-AA,,,
+IA-3,Registro de Identidad,PR-AA,,,
+IA-4,Gestion de Identificadores,PR-AA,,,
+IA-5,Gestion de Autenticadores,PR-AA,,,
+MFA-1,Implementacion MFA,PR-AA,,,
+EOF
+```
+
+### 2.2 Listar controles del sistema (ejemplo Linux)
+
+```{.bash filename="terminal"}
+# Revisar politicas de auditoria existentes
+cat /etc/audit/auditd.conf 2>/dev/null || echo "auditd no configurado"
+
+# Revisar politicas de acceso
+cat /etc/pam.d/common-auth 2>/dev/null | head -10
+
+# Revisar firewall actual
+sudo iptables -L -n 2>/dev/null || echo "Revisar firewall manualmente"
+
+# Listar servicios activos
+systemctl list-units --type=service --state=running 2>/dev/null | head -20
+```
+
+---
+
+## Paso 3: Mapping a NIST CSF
+
+### 3.1 Crear script de mapeo
+
+```{.bash filename="terminal"}
+cat > assessment/map-controles.sh << 'EOF'
+#!/bin/bash
+
+echo "========================================="
+echo "Mapeo de Controles a NIST CSF 2.0"
+echo "========================================="
+
+# Funcion para clasificar
+map_control() {
+    local control=$1
+    local category=$2
+    
+    case $category in
+        "AC-"*|"IA-"*)
+            echo "$control -> PR-AA (Protect: Identity & Access)"
+            ;;
+        "AU-"*|"SI-"*)
+            echo "$control -> PR-DS (Protect: Data Security)"
+            ;;
+        "IR-"*)
+            echo "$control -> RS-MI (Respond: Incident Management)"
+            ;;
+        "CP-"*)
+            echo "$control -> RC-RP (Recover: Recovery Plan)"
+            ;;
+        "SC-"*)
+            echo "$control -> ID-SC (Identify: Supply Chain)"
+            ;;
+        "RA-"*)
+            echo "$control -> ID-RA (Identify: Risk Assessment)"
+            ;;
+        *)
+            echo "$control -> Revisar manualmente"
+            ;;
+    esac
+}
+
+# Ejecutar para ejemplos
+map_control "AC-1" "AC-"
+map_control "IR-1" "IR-"
+map_control "CP-1" "CP-"
+EOF
+
+chmod +x assessment/map-controles.sh
+./assessment/map-controles.sh
+```
+
+::: {.callout-tip}
+El mapeo ayuda a entender en que funcion del framework esta cada control
+:::
+
+---
+
+## Paso 4: Generacion de Reporte
+
+### 4.1 Crear reporte de madurez
+
+```{.bash filename="terminal"}
+cat > reports/reporte-madurez.md << 'EOF'
+# Reporte de Madurez NIST CSF 2.0
+
+## Fecha de Assessment: $(date +%Y-%m-%d)
+
+## Resultados por Funcion
+
+| Funcion NIST | Controles Total | Controles Implementados | % Madurez |
+|-------------|-----------------|-------------------------|-----------|
+| Govern (G) | - | - | % |
+| Identify (I) | - | - | % |
+| Protect (P) | - | - | % |
+| Detect (D) | - | - | % |
+| Respond (R) | - | - | % |
+| Recover (R) | - | - | % |
+
+## Nivel de Madurez
+
+- Nivel 1: Parcial (0-25%)
+- Nivel 2: Informado (26-50%)
+- Nivel 3: Repetible (51-75%)
+- Nivel 4: Adaptativo (76-90%)
+- Nivel 5: Optimizado (91-100%)
+
+## Gaps Identificados
+
+1. [Listar gaps aqui]
+
+## Recomendaciones
+
+1. [Listar recomendaciones aqui]
+EOF
+
+# Actualizar con fecha
+sed -i "s/\$(date +%Y-%m-%d)/$(date +%Y-%m-%d)/g" reports/reporte-madurez.md
+```
+
+---
+
+## Desafio Final: Completar el Mapping
+
+### Objetivo
+
+Completa el mapeo de al menos **20 controles** de la lista y genera tu reporte.
+
+### Entregables
+
+1. Archivo `assessment/controles-organizacion.csv` actualizado (15+ controles)
+2. Archivo `reports/reporte-madurez.md` con analisis completo
+3. Captura de pantalla de los comandos ejecutados
+
+### Criterios de Evaluacion
+
+| Criterio | Puntos |
+|---------|--------|
+| Completitud (15+ controles) | 30 pts |
+| Accuracy del mapeo | 30 pts |
+| Calidad del reporte | 25 pts |
+| Comandos ejecutados correctamente | 15 pts |
+
+---
+
+## Comandos Clave del Lab
+
+```{.bash filename="resumen"}
+# Exploracion
+mkdir -p ~/cybersec-lab/nist-mapping
+cd ~/cybersec-lab/nist-mapping
+
+# Mapping
+./assessment/map-controles.sh
+
+# Reporte
+cat reports/reporte-madurez.md
+```
+
+---
+
+## Recursos Adicionales
+
+- [NIST CSF 2.0](https://csrc.nist.gov/pubs/sp/800/53/r2/upd1/final)
+- [NIST SP 800-53R5](https://csrc.nist.gov/pubs/sp/800/53/r5/final)
+- [CSF Tool](https://www.nist.gov/itl/capability/cybersecurity-framework-tool)
+
+---
+
+::: {.callout-warning}
+Duracion: 90 minutos — NO copies/pegues los comandos — escribelos manualmente
+:::
+
+*Lab 1/7 del curso Fundamentos de Ciberseguridad*

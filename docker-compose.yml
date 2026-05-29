@@ -1,0 +1,102 @@
+# docker-compose.yml — Entorno de laboratorio para Fundamentos de Ciberseguridad
+# 
+# USO:
+#   docker compose up -d          # Iniciar todos los servicios
+#   docker compose up -d dvwa     # Solo DVWA
+#   docker compose down           # Detener todo
+#   docker compose exec kali bash # Terminal en Kali
+#
+# REQUISITOS:
+#   - Docker Engine 24.0+
+#   - Docker Compose 2.20+
+#   - 8 GB RAM recomendados (4 GB mínimos)
+#
+# PUERTOS:
+#   4280: DVWA (web vulnerable)
+#   4281: Kali noVNC (escritorio web)
+#   4282: Metasploitable2 (target vulnerable)
+
+services:
+  # ─── Kali Linux con herramientas de seguridad ───
+  kali:
+    image: kalilinux/kali-rolling:latest
+    container_name: curso-kali
+    hostname: kali
+    privileged: true
+    stdin_open: true
+    tty: true
+    networks:
+      - lab-net
+    ports:
+      - "4281:8080"   # noVNC web (opcional)
+    volumes:
+      - ./labs:/home/kali/labs:ro
+      - ./content:/home/kali/content:ro
+      - kali-data:/home/kali
+    command: >
+      bash -c "
+        apt-get update -qq &&
+        apt-get install -y -qq kali-tools-top10 nmap netcat-openbsd gobuster dirb
+          hydra john sqlmap metasploit-framework wireshark tcpdump
+          openssh-client python3-pip curl wget dnsutils 2>/dev/null | tail -5 &&
+        echo '=== KALI LISTA ===' &&
+        tail -f /dev/null
+      "
+    healthcheck:
+      test: ["CMD", "which", "nmap"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
+  # ─── DVWA — Damn Vulnerable Web Application ───
+  dvwa:
+    image: vulnerables/web-dvwa:latest
+    container_name: curso-dvwa
+    ports:
+      - "4280:80"
+    networks:
+      - lab-net
+    restart: unless-stopped
+
+  # ─── Metasploitable2 — Target vulnerable ───
+  # Nota: No existe imagen oficial Docker de Metasploitable2.
+  # Esta es una alternativa ligera con servicios vulnerables.
+  vuln-target:
+    image: tleemcjr/metasploitable2:latest
+    container_name: curso-vuln-target
+    ports:
+      - "4282:80"    # Web
+      - "4283:21"    # FTP
+      - "4284:22"    # SSH
+      - "4285:23"    # Telnet
+      - "4286:445"   # SMB
+      - "4287:3306"  # MySQL
+    networks:
+      - lab-net
+    restart: unless-stopped
+
+  # ─── DVWA Logstash — para laboratorio de monitoreo (Unidad V) ───
+  # Activar solo para labs de SIEM/monitoreo
+  # dvwa-logstash:
+  #   image: docker.elastic.co/logstash/logstash:8.12.0
+  #   container_name: curso-logstash
+  #   volumes:
+  #     - ./labs/scripts/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+  #   networks:
+  #     - lab-net
+  #   profiles:
+  #     - siem
+  #   depends_on:
+  #     - dvwa
+
+networks:
+  lab-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+          gateway: 172.28.0.1
+
+volumes:
+  kali-data:

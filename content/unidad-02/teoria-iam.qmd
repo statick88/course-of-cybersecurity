@@ -1,0 +1,494 @@
+---
+title: "Módulo 2: Gestión de Identidad y Acceso (IAM)"
+module: "modulo-02"
+type: "content"
+description: "Gestión de identidad y acceso con enfoque en MFA phishing-resistant"
+---
+
+
+## 🎯 Objetivos SMART
+
+Al finalizar este módulo, serás capaz de:
+
+1. **Implementar** autenticación multifactor (MFA) phishing-resistant usando FIDO2/WebAuthn, configurando al menos un passkey funcional
+2. **Configurar** gestión de acceso privilegiado (PAM) con principios de mínimo privilegio y acceso JIT (Just-in-Time) para 3 roles diferentes
+3. **Diseñar** una matriz de acceso basada en identidad para una organización de 50 empleados, cubriendo al menos 4 roles y 6 recursos
+4. **Gestionar** el ciclo de vida completo de identidades (onboarding → role change → offboarding) con procedimientos documentados
+
+---
+
+## 📋 5W1H — Marco de Referencia
+
+### ¿Qué? — ¿Qué es IAM?
+
+**Identity and Access Management (IAM)** es el conjunto de políticas, tecnologías y procesos que garantizan que las personas correctas tengan acceso a los recursos correctos, en el momento correcto, por las razones correctas.
+
+IAM responde a tres preguntas fundamentales:
+
+- **¿Quién eres?** → Autenticación (Authentication)
+- **¿Qué puedes hacer?** → Autorización (Authorization)
+- **¿Qué hiciste?** → Auditoría (Accounting)
+
+<div class="compact-diagram" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px 16px;margin:12px 0;">
+<svg viewBox="0 0 420 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:420px;">
+<text x="210" y="15" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="bold">Estadísticas 2024–2025 — Identidad</text>
+<rect x="10" y="25" width="190" height="30" rx="6" fill="#ef4444"/><text x="105" y="45" text-anchor="middle" fill="white" font-size="10" font-weight="bold">68% elemento humano (DBIR)</text>
+<rect x="220" y="25" width="190" height="30" rx="6" fill="#f59e0b"/><text x="315" y="45" text-anchor="middle" fill="white" font-size="10" font-weight="bold">277 días ciclo brecha (IBM)</text>
+<rect x="10" y="62" width="190" height="30" rx="6" fill="#8b5cf6"/><text x="105" y="82" text-anchor="middle" fill="white" font-size="10" font-weight="bold">49 días con IA se reduce</text>
+<rect x="220" y="62" width="190" height="30" rx="6" fill="#3b82f6"/><text x="315" y="82" text-anchor="middle" fill="white" font-size="10" font-weight="bold">$4.88M costo promedio (IBM)</text>
+</svg>
+</div>
+
+### ¿Cómo? — ¿Cómo funciona IAM?
+
+IAM opera mediante **4 componentes interconectados**:
+
+1. **Directorio de Identidades**: Repositorio central (Active Directory, LDAP, Okta) que almacena quién existe en la organización
+2. **Autenticación**: Verifica la identidad mediante factores (algo que sabes, tienes, eres)
+3. **Autorización**: Determina qué recursos puede acceder cada identidad, basado en roles (RBAC) o atributos (ABAC)
+4. **Gobernanza**: Supervisa el acceso, audita actividades y gestiona el ciclo de vida (crear, modificar, eliminar accesos)
+
+El flujo típico es:
+
+1. Usuario solicita acceso
+2. IAM autentica (¿quién eres?)
+3. IAM autoriza (¿qué puedes hacer?)
+4. Se registra la actividad (auditoría)
+
+### ¿Cuándo? — ¿Cuándo implementar IAM robusto?
+
+- **Desde el día 1** de cualquier organización (aunque sea pequeña)
+- **Al migrar a la nube**, donde el perímetro tradicional desaparece
+- **Al cumplir regulaciones** (SOX, HIPAA, GDPR requieren control de acceso)
+- **Después de una brecha** por credenciales comprometidas
+- **Al crecer la empresa** (>20 empleados, los accesos informales se vuelven insostenibles)
+- **Al incorporar contratistas** o trabajadores externos
+
+### ¿Dónde? — ¿Dónde se aplica IAM?
+
+| Contexto | Solución típica |
+|----------|----------------|
+| Empresa pequeña (<50) | Google Workspace / Microsoft 365 con MFA |
+| Empresa mediana (50-500) | Okta, Azure AD, JumpCloud |
+| Gran empresa (500+) | SailPoint, CyberArk, ForgeRock |
+| Infraestructura cloud | AWS IAM, Azure RBAC, GCP IAM |
+| DevOps/Developers | HashiCorp Vault, AWS SSO, GitHub Teams |
+| Acceso privilegiado | CyberArk PAM, BeyondTrust, Thycotic |
+
+### ¿Por qué? — ¿Por qué es crítico IAM?
+
+- **81% de las brechas** de datos usan credenciales comprometidas o robadas (Verizon DBIR 2024)
+- El **factor humano** está presente en el 68% de todos los incidentes de seguridad
+- Un empleado promedio tiene **acceso a 15+ aplicaciones** — cada una es un vector de ataque
+- Las credenciales privilegiadas (admin) son el **objetivo #1** de los atacantes
+- El acceso no revocado de ex-empleados causa **brechas internas** frecuentes
+- IAM es el **control #1** que las aseguradoras de ciberseguridad exigen
+
+### ¿Para qué? — ¿Qué objetivo cumple?
+
+1. **Prevenir** acceso no autorizado a sistemas y datos sensibles
+2. **Detectar** comportamientos anómalos de identidades (acceso a horas extrañas, desde ubicaciones inusuales)
+3. **Responder** rápidamente revocando accesos comprometidos
+4. **Cumplir** regulaciones que requieren control y auditoría de acceso
+5. **Reducir** la superficie de ataque eliminando privilegios innecesarios
+6. **Automatizar** el ciclo de vida de identidades (onboarding/offboarding)
+
+---
+
+## 🔑 Conceptos Clave
+
+- **MFA Phishing-Resistant**: Autenticación multifactor que no puede ser interceptada por phishing. FIDO2/WebAuthn y passkeys son los únicos métodos verdaderamente resistentes. SMS OTP y TOTP (Google Authenticator) **NO** son resistentes a phishing porque el código puede ser interceptado.
+- **FIDO2/WebAuthn**: Estándar abierto del FIDO Alliance y W3C que usa criografía de clave pública. El servidor envía un "challenge" que el authenticator firma con su clave privada. La clave privada **nunca sale del dispositivo**, haciendo imposible el phishing.
+- **Passkeys**: Credenciales FIDO2 sincronizadas entre dispositivos (iCloud Keychain, Google Password Manager). Eliminan la necesidad de contraseñas y son resistentes a phishing por diseño.
+- **PAM (Privileged Access Management)**: Gestión especializada de cuentas con privilegios elevados (admin, root). Incluye rotación automática de contraseñas, acceso JIT (Just-in-Time), y grabación de sesiones.
+- **JIT (Just-in-Time Access)**: Modelo donde los privilegios se otorgan solo cuando se necesitan y se revocan automáticamente después. Contrasta con el acceso permanente ("always-on").
+- **ITDR (Identity Threat Detection and Response)**: Categoría emergente que combina detección de amenazas de identidad con respuesta automatizada. Monitorea comportamiento de identidades y responde a anomalías en tiempo real.
+- **RBAC (Role-Based Access Control)**: Modelo donde los permisos se asignan a roles, y los usuarios se asignan a roles. Ej: rol "Desarrollador" → acceso a repositorios de código.
+
+---
+
+## 💡 Ejemplos
+
+### Ejemplo 1: Ataque de MFA Fatigue a Uber (septiembre 2022)
+
+**Contexto**: Un atacante obtuvo las credenciales de un contratista de Uber y, al intentar acceder, se encontró con MFA. En lugar de hackear el MFA, envió **decenas de notificaciones push** al teléfono del empleado durante horas, hasta que este aprobó una por frustración.
+
+**Análisis con conceptos IAM**:
+
+| Concepto | Falla | Solución |
+|----------|-------|----------|
+| **MFA tipo** | Push notifications (no phishing-resistant) | FIDO2/Security Key |
+| **PAM** | Contratista con acceso a sistemas críticos | Acceso JIT con aprobación |
+| **ITDR** | Sin detección de patrón anómalo (múltiples MFA requests) | Alerta automática tras 3+ MFA denegados |
+| **Ciclo de vida** | Acceso de contratista sin revisión periódica | Revisión trimestral de accesos |
+
+**Impacto**: El atacante accedió a 93 sistemas de Uber, robó datos de 7.5 millones de personas, y Uber pagó $148M en multas.
+
+**Lección**: MFA por push **NO** es phishing-resistant. Se necesita FIDO2 o passkeys para protección real.
+
+### Ejemplo 2: TechCorp — Diseño de Política IAM
+
+**Contexto**: TechCorp (50 empleados) tiene los siguientes roles y necesidades de acceso:
+
+| Rol | Cantidad | Recursos necesarios |
+|-----|----------|-------------------|
+| Desarrolladores | 15 | GitHub, AWS (dev), Slack, Jira |
+| Administradores | 3 | AWS (prod), servidores, DNS, backups |
+| Analistas | 5 | SIEM, logs, dashboards, reportes |
+| Ventas/Marketing | 12 | CRM, email, redes sociales, drive |
+| Dirección | 5 | Todos los dashboards, reportes financieros |
+| Contratistas | 10 | Acceso limitado a proyectos específicos |
+
+**Problema actual**: Todos comparten la misma cuenta de AWS con rol admin. No hay MFA. Un ex-empleado sigue teniendo acceso.
+
+**Diseño IAM propuesto**:
+
+| Principio | Implementación |
+|-----------|---------------|
+| **Mínimo privilegio** | Cada rol solo accede a lo que necesita |
+| **MFA obligatorio** | FIDO2 para admins, passkeys para todos |
+| **JIT para producción** | Acceso a AWS prod se solicita y expira en 4h |
+| **Offboarding automático** | Desactivación de accesos en <24h tras salida |
+| **Revisión trimestral** | Auditoría de accesos cada 3 meses |
+
+---
+
+## 🛠️ Práctica Guiada
+
+### Ejercicio: Clasificación de Métodos de Autenticación
+
+En este ejercicio, clasificarás métodos de autenticación por factores, nivel de assurance y resistencia a phishing.
+
+**Paso 1**: Lee cada método de autenticación:
+
+1. Contraseña tradicional (solo texto)
+2. SMS OTP (código por mensaje de texto)
+3. TOTP (Google Authenticator, Authy)
+4. FIDO2 Security Key (YubiKey)
+5. Face ID / Touch ID (biometría del dispositivo)
+6. Passkey (sincronizada en la nube)
+7. Push notification (aprobar en el teléfono)
+8. Email magic link
+
+**Paso 2**: Para cada método, determina:
+- ¿Qué **factor(es)** usa? (conocimiento, posesión, inherencia)
+- ¿Cuál es el **nivel de assurance**? (1, 2, o 3)
+- ¿Es **phishing-resistant**? (Sí/No)
+
+**Paso 3**: Verifica tus respuestas:
+
+<div class="compact-diagram" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px 18px;margin:14px 0;">
+<svg viewBox="0 0 440 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:440px;">
+<text x="220" y="14" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="bold">Niveles de Assurance — Autenticación</text>
+<!-- Nivel 1 -->
+<rect x="10" y="24" width="420" height="30" rx="6" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
+<text x="20" y="44" fill="#dc2626" font-size="10" font-weight="bold">Nivel 1:</text>
+<text x="68" y="44" fill="#7f1d1d" font-size="10">Contraseña</text>
+<text x="145" y="44" fill="#ef4444" font-size="9">⚠️ NO SEGURO — vulnerable a phishing</text>
+<!-- Nivel 2 -->
+<rect x="10" y="60" width="420" height="30" rx="6" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+<text x="20" y="80" fill="#d97706" font-size="10" font-weight="bold">Nivel 2:</text>
+<text x="68" y="80" fill="#78350f" font-size="10">Contraseña + MFA</text>
+<text x="175" y="80" fill="#f59e0b" font-size="9">✅ MEJOR — vulnerable a MFA fatigue</text>
+<!-- Nivel 3 -->
+<rect x="10" y="96" width="420" height="30" rx="6" fill="#f0fdf4" stroke="#10b981" stroke-width="1.5"/>
+<text x="20" y="116" fill="#059669" font-size="10" font-weight="bold">Nivel 3:</text>
+<text x="68" y="116" fill="#166534" font-size="10">FIDO2 / Passkeys</text>
+<text x="175" y="116" fill="#10b981" font-size="9">✅✅ EXCELENTE — resistente a phishing</text>
+</svg>
+</div>
+
+| # | Método | Factor(es) | Nivel | ¿Phishing-resistant? |
+|---|--------|-----------|-------|---------------------|
+| 1 | Contraseña | Conocimiento | 1 | ❌ No |
+| 2 | SMS OTP | Conocimiento + Posesión | 2 | ❌ No (SIM swap) |
+| 3 | TOTP | Conocimiento + Posesión | 2 | ❌ No (proxy attack) |
+| 4 | FIDO2 Key | Posesión | 3 | ✅ Sí |
+| 5 | Face ID | Inherencia | 2 | ⚠️ Parcial (device-bound) |
+| 6 | Passkey | Posesión | 3 | ✅ Sí |
+| 7 | Push | Posesión | 2 | ❌ No (MFA fatigue) |
+| 8 | Email link | Posesión | 2 | ❌ No (email comprometido) |
+
+::: {.callout-warning}
+## Hallazgo Crítico
+SMS OTP y TOTP son **mejores que solo contraseña**, pero NO son phishing-resistant. Un atacante con un sitio de phishing puede interceptar el código en tiempo real. Solo FIDO2 y passkeys ofrecen protección real contra phishing.
+:::
+
+### Ejercicio 2: Entendiendo FIDO2/WebAuthn
+
+FIDO2 funciona mediante un protocolo de **challenge-response** con criografía de clave pública:
+
+<div class="compact-diagram" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px 18px;margin:14px 0;">
+<svg viewBox="0 0 440 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:440px;">
+<text x="220" y="14" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="bold">FIDO2 / WebAuthn — Protocol Stack</text>
+<!-- Client -->
+<rect x="10" y="24" width="420" height="40" rx="6" fill="#3b82f6"/><text x="220" y="40" text-anchor="middle" fill="white" font-size="10" font-weight="bold">CLIENT</text><text x="220" y="55" text-anchor="middle" fill="#dbeafe" font-size="9">WebAuthn API (JS) + CTAP2 (Client → Authenticator)</text>
+<!-- Arrow -->
+<line x1="220" y1="64" x2="220" y2="78" stroke="#94a3b8" stroke-width="2"/>
+<text x="230" y="76" fill="#64748b" font-size="8">Challenge-Response</text>
+<!-- Relying Party -->
+<rect x="10" y="82" width="420" height="40" rx="6" fill="#8b5cf6"/><text x="220" y="98" text-anchor="middle" fill="white" font-size="10" font-weight="bold">RELYING PARTY</text><text x="220" y="113" text-anchor="middle" fill="#ede9fe" font-size="9">Registration + Authentication</text>
+<!-- Arrow -->
+<line x1="220" y1="122" x2="220" y2="136" stroke="#94a3b8" stroke-width="2"/>
+<text x="230" y="134" fill="#64748b" font-size="8">Public Key Credential</text>
+<!-- Authenticator -->
+<rect x="10" y="140" width="420" height="30" rx="6" fill="#10b981"/><text x="220" y="160" text-anchor="middle" fill="white" font-size="10" font-weight="bold">AUTHENTICATOR — Private Key (secure hardware)</text>
+</svg>
+</div>
+
+**Flujo de autenticación** (escríbelo con tus propias palabras):
+
+1. El usuario intenta acceder al servicio (Relying Party)
+2. El servidor genera un **challenge** aleatorio y lo envía al cliente
+3. El navegador usa la **WebAuthn API** para pedir al authenticator que firme el challenge
+4. El authenticator (YubiKey, Touch ID, etc.) firma con su **clave privada** (que nunca sale del dispositivo)
+5. El cliente envía la firma al servidor
+6. El servidor verifica la firma con la **clave pública** registrada
+7. Si la verificación es exitosa → acceso concedido
+
+**¿Por qué es phishing-resistant?** Porque el challenge incluye el **dominio del sitio**. Si el usuario está en un sitio falso (`evil-login.com` en lugar de `login.techcorp.com`), el authenticator rechaza firmar porque el dominio no coincide.
+
+---
+
+## 🧪 Laboratorio
+
+### Lab 2: Diseño de Matriz de Acceso IAM para TechCorp
+
+**Objetivo**: Diseñar una matriz de acceso basada en roles (RBAC) para TechCorp, aplicando el principio de mínimo privilegio.
+
+**Requisitos Previos**:
+- Haber completado la Práctica Guiada (clasificación de autenticación)
+- Comprender los conceptos de RBAC, MFA y mínimo privilegio
+
+**Entorno Necesario**:
+- Terminal con acceso a internet
+- Editor de texto
+
+**Duración estimada**: 45 minutos
+
+#### Paso 1: Crear el directorio de trabajo
+
+```bash
+mkdir -p ~/cybersecurity-labs/iam
+cd ~/cybersecurity-labs/iam
+```
+
+#### Paso 2: Crear el archivo de matriz de acceso
+
+```bash
+touch iam-access-matrix.md
+```
+
+#### Paso 3: Definir los recursos de TechCorp
+
+TechCorp tiene los siguientes recursos que necesitan control de acceso. Escribe esta lista en tu archivo:
+
+**Recursos a Proteger**
+
+| ID | Recurso | Tipo | Sensibilidad |
+|----|---------|------|-------------|
+| R1 | Repositorios de código (GitHub) | Desarrollo | Alta |
+| R2 | AWS - Entorno de desarrollo | Cloud | Media |
+| R3 | AWS - Entorno de producción | Cloud | Crítica |
+| R4 | SIEM y logs de seguridad | Seguridad | Alta |
+| R5 | CRM de ventas (HubSpot) | Negocio | Media |
+| R6 | Email corporativo (Google Workspace) | Comunicación | Media |
+| R7 | Servidores de infraestructura | Infraestructura | Crítica |
+| R8 | Backups y disaster recovery | Infraestructura | Crítica |
+
+#### Paso 4: Definir los roles
+
+**Roles de la Organización**
+
+| ID | Rol | Cantidad | Descripción |
+|----|-----|----------|-------------|
+| RL1 | Desarrollador | 15 | Escribe y despliega código |
+| RL2 | Administrador | 3 | Gestiona infraestructura cloud |
+| RL3 | Analista de seguridad | 5 | Monitorea y responde incidentes |
+| RL4 | Ventas/Marketing | 12 | Gestiona clientes y campañas |
+| RL5 | Dirección | 5 | Toma decisiones estratégicas |
+| RL6 | Contratista | 10 | Acceso temporal a proyectos |
+
+#### Paso 5: Construir la matriz de acceso
+
+Para cada combinación Rol × Recurso, asigna un nivel de acceso:
+
+| Código | Nivel | Descripción |
+|--------|-------|-------------|
+| **N** | Ninguno | Sin acceso |
+| **R** | Read | Solo lectura |
+| **W** | Write | Lectura y escritura |
+| **A** | Admin | Control total (con MFA obligatorio) |
+
+Escribe la matriz en tu archivo:
+
+**Matriz de Acceso**
+
+| Rol \ Recurso | R1 GitHub | R2 AWS Dev | R3 AWS Prod | R4 SIEM | R5 CRM | R6 Email | R7 Servidores | R8 Backups |
+|---------------|-----------|------------|-------------|---------|--------|----------|---------------|------------|
+| Desarrollador | W | W | N | R | N | W | N | N |
+| Administrador | R | A | A | R | N | W | A | A |
+| Analista Seg. | R | R | R | W | N | W | R | R |
+| Ventas/Mktg | N | N | N | N | W | W | N | N |
+| Direccion | R | R | R | R | R | W | R | R |
+| Contratista | W* | W* | N | N | N | W | N | N |
+
+(*) Acceso limitado al repositorio/proyecto asignado, con expiracion automatica.
+
+#### Paso 6: Definir politicas de autenticacion por rol
+
+**Politicas de Autenticacion por Rol**
+
+| Rol | MFA requerido | Tipo de MFA | Sesion maxima | JIT requerido |
+|-----|--------------|-------------|---------------|---------------|
+| Desarrollador | Si | Passkey | 8 horas | No |
+| Administrador | Si | FIDO2 Security Key | 4 horas | Si (para prod) |
+| Analista Seg. | Si | Passkey | 8 horas | No |
+| Ventas/Mktg | Si | Passkey | 8 horas | No |
+| Direccion | Si | Passkey | 4 horas | No |
+| Contratista | Si | FIDO2 o Passkey | 2 horas | Si |
+
+#### Paso 7: Disenar el flujo de offboarding
+
+Escribe el procedimiento para revocar accesos cuando un empleado sale:
+
+**Procedimiento de Offboarding**
+
+**Cuando un empleado sale de TechCorp:**
+
+1. **Hora 0**: Notificacion de RRHH al equipo de IT
+2. **Hora 0-1**: Desactivar cuenta de Google Workspace
+3. **Hora 1-2**: Revocar acceso a GitHub
+4. **Hora 2-4**: Revocar credenciales de AWS
+5. **Hora 4-8**: Revocar acceso a SIEM y CRM
+6. **Hora 8-24**: Auditar logs de actividad reciente
+7. **Dia 2**: Confirmar que todos los accesos fueron revocados
+8. **Dia 7**: Eliminar cuenta permanentemente (no solo desactivar)
+
+**Resultados Esperados**:
+- Archivo `iam-access-matrix.md` con matriz completa de 6 roles × 8 recursos
+- Políticas de autenticación diferenciadas por rol
+- Procedimiento de offboarding documentado
+
+**Troubleshooting**:
+
+| Problema | Solución |
+|----------|----------|
+| No sé qué acceso dar a un rol | Aplica mínimo privilegio: empieza con N y solo añade lo esencial |
+| Contratistas con mucho acceso | Recuerda: acceso temporal, limitado al proyecto, con expiración |
+| Dirección con acceso total | Dirección necesita visibilidad (R), no control (A) |
+
+::: {.callout-warning}
+## Regla Obligatoria
+DEBES teclear todos los comandos y contenido manualmente. NO uses copy-paste. La memoria muscular es parte del aprendizaje.
+:::
+
+---
+
+## 📝 Tarea (Project-Based Learning)
+
+### Proyecto: Diseño de Política IAM para TechCorp
+
+**Contexto del Proyecto General**: Este entregable es el **segundo pilar** del Security Assessment de TechCorp. En el Módulo 1, evaluaste la madurez NIST CSF 2.0 e identificaste gaps en Identify y Protect. Ahora diseñas la solución IAM que aborda esos gaps.
+
+**Tu rol**: Consultor de ciberseguridad diseñando la política de identidad y acceso para TechCorp.
+
+#### Entregable
+
+Crea un documento profesional llamado `techcorp-iam-policy.md` que incluya:
+
+1. **Contexto y Justificación** (1 párrafo): Explica por qué IAM es la prioridad #1 para TechCorp, usando estadísticas del módulo (68% factor humano, 81% credenciales comprometidas).
+
+2. **Matriz de Acceso RBAC**: Tabla completa con al menos 4 roles y 6 recursos, con niveles de acceso (N/R/W/A).
+
+3. **Políticas de Autenticación**:
+   - Método de autenticación por rol (especifica si es FIDO2, passkey, etc.)
+   - Justificación de por qué ese método para ese rol
+   - Política de contraseñas (longitud mínima, rotación, historial)
+
+4. **Política de Acceso Privilegiado (PAM)**:
+   - Cómo se gestiona el acceso admin a producción
+   - Mecanismo JIT implementado
+   - Rotación de credenciales privilegiadas
+
+5. **Ciclo de Vida de Identidades**:
+   - Procedimiento de onboarding (paso a paso)
+   - Procedimiento de offboarding (con tiempos)
+   - Revisión periódica de accesos (frecuencia y método)
+
+6. **ITDR — Detección de Amenazas de Identidad**:
+   - Al menos 3 reglas de detección de anomalías
+   - Respuesta automatizada para cada regla
+
+7. **Diagrama de Flujo de Autenticación**: Un diagrama SVG que muestre el flujo completo desde que un usuario intenta acceder hasta que se le concede o deniega el acceso.
+
+<div class="compact-diagram" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px 18px;margin:14px 0;">
+<svg viewBox="0 0 440 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:440px;">
+<text x="220" y="14" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="bold">ITDR Lifecycle — Identity Threat Detection &amp; Response</text>
+<rect x="10" y="24" width="130" height="40" rx="6" fill="#3b82f6"/><text x="75" y="40" text-anchor="middle" fill="white" font-size="9" font-weight="bold">PROTECT</text><text x="75" y="55" text-anchor="middle" fill="#dbeafe" font-size="8">MFA+SSO · JIT · Conditional</text>
+<polygon points="140,44 155,44 152,41 155,47" fill="#94a3b8"/>
+<rect x="155" y="24" width="130" height="40" rx="6" fill="#f59e0b"/><text x="220" y="40" text-anchor="middle" fill="white" font-size="9" font-weight="bold">DETECT</text><text x="220" y="55" text-anchor="middle" fill="#fef3c7" font-size="8">Detección anomalías identidad</text>
+<polygon points="285,44 300,44 297,41 300,47" fill="#94a3b8"/>
+<rect x="300" y="24" width="130" height="40" rx="6" fill="#ef4444"/><text x="365" y="40" text-anchor="middle" fill="white" font-size="9" font-weight="bold">RESPOND</text><text x="365" y="55" text-anchor="middle" fill="#fecaca" font-size="8">Containment · Isolación</text>
+<rect x="10" y="76" width="420" height="28" rx="6" fill="#1e293b"/><text x="220" y="94" text-anchor="middle" fill="#94a3b8" font-size="9">Prevenir → Detectar → Responder — ciclo continuo de protección de identidad</text>
+</svg>
+</div>
+
+#### Criterios de Evaluación
+
+| Criterio | Peso | Excelente (100%) | Aceptable (70%) | Insuficiente (<50%) |
+|----------|------|------------------|-----------------|---------------------|
+| Matriz de acceso completa | 25% | 4+ roles, 6+ recursos, niveles claros | 3 roles, 4 recursos | Incompleta o sin niveles |
+| Políticas de autenticación | 20% | Diferenciadas por rol con justificación | Mismo MFA para todos | Sin políticas definidas |
+| PAM y JIT | 20% | Mecanismo JIT documentado con tiempos | PAM mencionado sin detalle | Sin PAM |
+| Ciclo de vida | 15% | Onboarding + offboarding + revisión | Solo offboarding | Sin ciclo de vida |
+| Reglas ITDR | 10% | 3+ reglas con respuesta automatizada | 1-2 reglas | Sin detección |
+| Diagrama de flujo | 10% | SVG claro con todos los pasos | Diagrama básico | Sin diagrama |
+
+#### Conexión con el Módulo 1
+
+Tu politica IAM debe abordar directamente los gaps identificados en el Modulo 1. Si en tu evaluacion NIST CSF 2.0 identificaste que `PR.AA` (Access Management) estaba en nivel 1, tu politica IAM debe elevarlo al menos a nivel 2 o 3. Incluye una tabla de mapping:
+
+**Mapping IAM → NIST CSF 2.0**
+
+| Politica IAM | Funcion CSF | Categoria CSF | Gap que aborda |
+|-------------|-------------|---------------|----------------|
+| MFA obligatorio | Protect | PR.AA | Nivel 1 → Nivel 3 |
+| Matriz RBAC | Identify | ID.IM | Sin roles definidos |
+| Offboarding 24h | Govern | GV.RR | Sin procedimiento |
+
+#### Fecha de Entrega
+
+Al finalizar el Módulo 2. Este entregable se integra con la evaluación NIST CSF 2.0 del Módulo 1 para formar el reporte parcial del Security Assessment.
+
+---
+
+## 📊 Resumen
+
+### Puntos Clave
+
+- ✅ **81% de brechas** usan credenciales comprometidas — IAM es la primera línea de defensa
+- ✅ **FIDO2/Passkeys** son los únicos métodos verdaderamente resistentes a phishing
+- ✅ **SMS OTP y TOTP NO son phishing-resistant** — un atacante puede interceptarlos en tiempo real
+- ✅ **Mínimo privilegio** es el principio fundamental: cada identidad solo accede a lo estrictamente necesario
+- ✅ **JIT (Just-in-Time)** reemplaza el acceso permanente con acceso temporal bajo demanda
+- ✅ **ITDR** es la categoría emergente que combina detección y respuesta a amenazas de identidad
+- ✅ **Offboarding en <24h** es crítico — los accesos de ex-empleados son un vector de ataque frecuente
+
+### Conexión con el Proyecto
+
+Tu política IAM de TechCorp es el **segundo pilar** del Security Assessment. En el Módulo 3, integrarás IAM con **Arquitectura Zero Trust**, donde cada acceso se verifica continuamente, no solo al inicio de sesión.
+
+### Conexión con NIST CSF 2.0 (Módulo 1)
+
+| Función CSF | Categorías abordadas por IAM |
+|-------------|------------------------------|
+| **Govern** | `GV.RR` (Roles y responsabilidades), `GV.PS` (Política de seguridad) |
+| **Identify** | `ID.IM` (Gestión de identidad), `ID.AM` (Gestión de activos) |
+| **Protect** | `PR.AA` (Gestión de acceso), `PR.PS` (Protección de usuarios) |
+| **Detect** | `DE.AE` (Eventos anómalos — ITDR) |
+| **Respond** | `RS.MA` (Gestión de incidentes — revocación de accesos) |
+
+---
+
+*📖 Tiempo estimado: 6 horas • 🎯 4 objetivos SMART • 🧪 1 laboratorio • 📝 1 tarea PBL*

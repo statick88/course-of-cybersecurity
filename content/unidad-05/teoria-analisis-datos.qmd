@@ -1,0 +1,266 @@
+---
+title: "Análisis de Datos y Forensia"
+unit: "unidad-05"
+module: "unidad-05"
+type: "theory"
+description: "Fundamentos de análisis de datos de seguridad, SIEM y forensia digital"
+---
+
+## 🎯 Objetivos de Aprendizaje
+
+Al completar esta sección, podrás:
+
+- Explicar el ciclo de vida del análisis de datos de seguridad
+- Configurar reglas básicas de correlación en SIEM
+- Realizar análisis forense básico de discos y memoria
+- Identificar patrones de ataque en logs
+- Documentar hallazgos para reportes ejecutivos y técnicos
+
+## 📋 Conceptos Clave
+
+| Concepto | Definición |
+|----------|------------|
+| **SIEM** | Sistema de gestión de eventos e información de seguridad (Security Information and Event Management) |
+| **Correlación** | Técnica que relaciona múltiples eventos para detectar patrones de ataque |
+| **Forensia Digital** | Disciplina que investiga incidentes mediante análisis de evidencia digital |
+| **Cadena de Custodia** | Documentación del manejo de evidencia desde su recolección hasta su presentación |
+| **IoCs** | Indicadores de Compromiso — evidencia forense de una intrusión |
+| **MITRE ATT&CK** | Base de conocimientos de tácticas y técnicas de adversarios |
+
+## 🔄 Ciclo de Vida del Análisis de Datos
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│              CICLO DE ANÁLISIS DE DATOS DE SEGURIDAD          │
+├─────────────────────────────────────────────────────────────┤
+│                                                               │
+│  1. RECOLECCIÓN    2. PREPARACIÓN    3. ANÁLISIS              │
+│  ┌──────────┐      ┌──────────┐      ┌──────────┐            │
+│  │• Logs    │ ───→ │• Parseo  │ ───→ │• Búsqueda│            │
+│  │• Netflow │      │• Filtrado│      │• Patrones│            │
+│  │• PCAP    │      │• ETL     │      │• Línea   │            │
+│  │• Sysmon  │      │• Indexado│      │  tiempo  │            │
+│  └──────────┘      └──────────┘      └──────────┘            │
+│       │                │                │                    │
+│       ▼                ▼                ▼                    │
+│  ┌────────────────────────────────────────────────┐          │
+│  │  4. CORRELACIÓN    5. ESCALADA    6. REPORTE   │          │
+│  │  • Reglas SIEM     • Incidente    • Ejecutivo  │          │
+│  │  • Umbrales        • Ticket       • Técnico    │          │
+│  │  • ML/IA           • Playbook     • Lecciones  │          │
+│  └────────────────────────────────────────────────┘          │
+└─────────────────────────────────────────────────────────────┘
+```
+
+## 📊 SIEM: Correlación de Eventos
+
+### Arquitectura Básica de un SIEM
+
+```
+Fuentes de Datos          SIEM                      Output
+┌─────────────┐    ┌──────────────────┐    ┌──────────────────┐
+│ Firewall    │    │                  │    │ Dashboard        │
+│ Servidores  │───→│  Motor de        │───→│ Alertas          │
+│ Endpoints   │    │  Correlación     │    │ Reportes         │
+│ DNS         │    │                  │    │ Forensia         │
+│ Cloud       │    │  Almacenamiento  │    │                  │
+└─────────────┘    └──────────────────┘    └──────────────────┘
+```
+
+### Reglas de Correlación Clásicas
+
+```sql
+-- Ejemplo: Múltiples fallos de autenticación → Ataque de fuerza bruta
+-- Lenguaje: SQL-like (varía según SIEM)
+SELECT source_ip, COUNT(*) as failures
+FROM authentication_logs
+WHERE status = 'FAILED'
+  AND timestamp > NOW() - INTERVAL 5 MINUTE
+GROUP BY source_ip
+HAVING COUNT(*) > 10
+```
+
+### Ejemplo con Wazuh (SIEM Open Source)
+
+```bash
+# Regla de correlación en /var/ossec/rules/local_rules.xml
+<rule id="100001" level="10">
+  <if_sid>5710</if_sid>
+  <match>authentication failure</match>
+  <description>Múltiples fallos de autenticación SSH desde misma IP</description>
+  <group>authentication_failure,ssh,</group>
+  <frequency>5</frequency>
+  <timeframe>60</timeframe>
+  <same_source_ip />
+</rule>
+```
+
+## 🔬 Forensia Digital
+
+### Principios Forenses
+
+1. **No alterar la evidencia** — Trabajar siempre sobre copias
+2. **Documentar todo** — Cadena de custodia desde el primer acceso
+3. **Orden de volatilidad** — Lo más volátil primero (memoria → discos)
+4. **Admisibilidad** — La evidencia debe ser obtenida legalmente
+
+### Adquisición de Memoria (Volátil)
+
+```bash
+# Linux: Capturar memoria con LiME
+sudo insmod lime.ko "path=/tmp/mem.dump format=lime"
+
+# Usando avml (más moderno)
+./avml /tmp/memory.img
+
+# Extraer procesos de la imagen
+strings /tmp/memory.img | grep -E 'process|pid'
+```
+
+### Adquisición de Disco
+
+```bash
+# Crear imagen forense con dd (Linux)
+sudo dd if=/dev/sda of=/mnt/evidencia/disco.dd bs=4M status=progress
+
+# Verificar integridad con hash
+sudo sha256sum /mnt/evidencia/disco.dd > /mnt/evidencia/disco.sha256
+
+# Usando Guymager (interfaz gráfica)
+sudo guymager
+```
+
+### Análisis de Logs del Sistema
+
+```bash
+# Linux: Últimos inicios de sesión
+last -10
+
+# Intentos de autenticación SSH fallidos
+sudo journalctl -u ssh --since "24 hours ago" | grep "Failed password"
+
+# Ver comandos ejecutados por usuarios
+cat /home/*/.bash_history | sort | uniq -c | sort -rn | head -20
+
+# Eventos de auditoría
+sudo ausearch --start today --interpret
+```
+
+### Análisis de Archivos
+
+```bash
+# Ver metadatos de archivo (Linux)
+stat documento.pdf
+
+# Extraer metadatos EXIF de imágenes
+exiftool foto.jpg
+
+# Buscar strings en un binario
+strings malware.bin | grep -E 'http|https|C2|command'
+
+# Calcular hash de archivo
+sha256sum archivo-sospechoso.exe
+```
+
+## 🧩 MITRE ATT&CK para Análisis
+
+Tácticas comunes que buscar en logs:
+
+| Táctica | Técnica | IoCs en Logs |
+|---------|---------|--------------|
+| TA0001: Initial Access | T1566: Phishing | Adjuntos extraños, URLs acortadas |
+| TA0002: Execution | T1059: Command & Scripting | PowerShell, bash, cmd.exe inusual |
+| TA0005: Defense Evasion | T1070: Indicator Removal | Limpieza de logs, `wevtutil cl` |
+| TA0007: Discovery | T1057: Process Discovery | `tasklist`, `ps aux` desde cuentas no admin |
+| TA0010: Exfiltration | T1048: Exfiltration Over C2 | Tráfico saliente en horas no laborales |
+
+## 📋 Ejemplo: Analizando un Posible Incidente
+
+### Paso 1: Recibir alerta del SIEM
+```
+Alerta: Conexión saliente a IP sospechosa desde servidor web
+Severidad: ALTA
+Source: 10.0.1.50:443 → 203.0.113.55:8443
+Timestamp: 2026-05-28 03:15:22 UTC
+```
+
+### Paso 2: Recolectar evidencia
+```bash
+# Ver conexiones activas en el servidor
+ss -tnp | grep 203.0.113.55
+
+# Buscar en logs del firewall
+sudo grep "203.0.113.55" /var/log/firewall.log
+
+# Ver conexiones recientes desde ese servidor
+sudo ausearch --start 05/28/2026 --interpret | grep 10.0.1.50
+```
+
+### Paso 3: Analizar
+```bash
+# Buscar procesos inusuales
+ps aux | grep -v "\[" | grep -v "systemd\|kworker"
+
+# Buscar conexiones establecidas
+lsof -i :8443
+
+# Ver archivos modificados recientemente
+find /etc -mmin -60 -type f
+```
+
+### Paso 4: Documentar hallazgos
+
+```markdown
+## Reporte de Incidente IR-2026-001
+**Fecha**: 2026-05-28
+**Analista**: [Nombre]
+**Severidad**: Alta (CVSS 8.2)
+
+### Hallazgos
+- Conexión saliente a 203.0.113.55:8443 desde proceso httpd
+- Proceso inyectado en memoria de Apache (PID 3241)
+- Archivo /tmp/.systemd malicioso creado 03:14 AM
+- No hay indicios de exfiltración de datos
+
+### Acciones Tomadas
+1. Aislado servidor de la red
+2. Capturada memoria volátil
+3. Iniciada cadena de custodia
+
+### Recomendaciones
+- Actualizar WAF con regla para IP 203.0.113.55
+- Revisar logs de autenticación de las últimas 72h
+- Escalar a equipo de respuesta a incidentes
+```
+
+## 🛠️ Herramientas de Análisis
+
+```bash
+# Instalar suite de herramientas forenses (Kali)
+sudo apt install -y forensics-extra
+
+# Herramientas clave:
+# - Autopsy: Análisis forense de disco (GUI)
+# - Volatility: Análisis de memoria
+# - Wireshark: Análisis de tráfico
+# - Plaso: Línea de tiempo super timeline
+# - YARA: Identificación de malware por patrones
+```
+
+## ✅ Checkpoint
+
+Antes de continuar, verifica que puedes:
+
+- [ ] Explicar la diferencia entre SIEM, SOAR y EDR
+- [ ] Escribir una regla de correlación simple
+- [ ] Capturar un log de autenticación fallida
+- [ ] Explicar la cadena de custodia
+- [ ] Identificar 3 IoCs comunes en logs
+
+## 📚 Recursos
+
+- Wazuh SIEM: https://wazuh.com
+- Volatility Framework: https://www.volatilityfoundation.org
+- SANS SIFT: https://www.sans.org/tools/sift
+- MITRE ATT&CK: https://attack.mitre.org
+- NIST SP 800-86: Guide to Integrating Forensic Techniques

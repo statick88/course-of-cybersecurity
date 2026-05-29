@@ -13,7 +13,7 @@ book:
   title: "Fundamentos de Ciberseguridad"
   subtitle: "Protege tu vida digital — Aprende ciberseguridad desde cero"
   author: "Diego Saavedra"
-  date: "2026-05-06"
+  date: "2026-05-29"
   description: "Curso profesional de ciberseguridad con NIST CSF 2.0, VPN, ZTNA, MFA, CVSS"
   favicon: images/favicon.png
   cover-image: images/cover.png
@@ -52,56 +52,121 @@ book:
     right: |
       Built with [Quarto](https://quarto.org/)
 
-  # Chapters - Curso Original (Avanzado)
+  # ─── PARTE I: CURSO PRINCIPAL (5 Unidades) ───
   chapters:
     - index.qmd
-    - content/modulo-01/index.qmd
-    - content/modulo-02/index.qmd
-    - content/modulo-03/index.qmd
-    - content/modulo-04/index.qmd
-    - content/modulo-05/index.qmd
-    - content/modulo-06/index.qmd
-    - content/modulo-07/index.qmd
+    
+    # UNIDAD I: Introducción a la Ciberseguridad
+    - part: "UNIDAD I: Introducción a la Ciberseguridad"
+      chapters:
+        - content/unidad-01/index.qmd
+        - content/unidad-01/minicurso-git-github.qmd
+        - content/unidad-01/lab-01-nist-csf.qmd
+        - content/unidad-01/quiz-01.qmd
+    
+    # UNIDAD II: Seguridad en SO y Gestión de Identidad
+    - part: "UNIDAD II: Seguridad en Sistemas Operativos y Gestión de Identidad"
+      chapters:
+        - content/unidad-02/teoria-os-hardening.qmd
+        - content/unidad-02/teoria-iam.qmd
+        - content/unidad-02/minicurso-bash.qmd
+        - content/unidad-02/minicurso-ssh.qmd
+        - content/unidad-02/minicurso-tmux.qmd
+        - content/unidad-02/minicurso-nvim.qmd
+        - content/unidad-02/lab-03-iam-matrix.qmd
+        - content/unidad-02/quiz-02.qmd
+    
+    # UNIDAD III: Protocolos e Infraestructura de Red
+    - part: "UNIDAD III: Protocolos e Infraestructura de Red"
+      chapters:
+        - content/unidad-03/teoria-protocolos.qmd
+        - content/unidad-03/teoria-zerotrust.qmd
+        - content/unidad-03/minicurso-nmap.qmd
+        - content/unidad-03/minicurso-wireshark.qmd
+        - content/unidad-03/minicurso-tcpdump.qmd
+        - content/unidad-03/minicurso-netcat.qmd
+        - content/unidad-03/minicurso-curl.qmd
+        - content/unidad-03/minicurso-openssl.qmd
+        - content/unidad-03/lab-04-ztna-setup.qmd
+        - content/unidad-03/quiz-03.qmd
+    
+    # UNIDAD IV: Principios de Seguridad
+    - part: "UNIDAD IV: Principios de Seguridad — Amenazas, Vulnerabilidades y Criptografía"
+      chapters:
+        - content/unidad-04/teoria-vulnerabilidades.qmd
+        - content/unidad-04/teoria-criptografia.qmd
+        - content/unidad-04/teoria-ia-threats.qmd
+        - content/unidad-04/minicurso-hashcat.qmd
+        - content/unidad-04/minicurso-hydra.qmd
+        - content/unidad-04/minicurso-gobuster.qmd
+        - content/unidad-04/minicurso-burp-suite.qmd
+        - content/unidad-04/minicurso-sqlmap.qmd
+        - content/unidad-04/minicurso-metasploit.qmd
+        - content/unidad-04/lab-06-vuln-assessment.qmd
+        - content/unidad-04/lab-07-pqc-migration.qmd
+        - content/unidad-04/lab-08-prompt-injection.qmd
+        - content/unidad-04/quiz-04.qmd
+    
+    # UNIDAD V: Análisis de Datos y Respuesta a Incidentes
+    - part: "UNIDAD V: Análisis de Datos y Respuesta a Incidentes"
+      chapters:
+        - content/unidad-05/teoria-analisis-datos.qmd
+        - content/unidad-05/teoria-ir.qmd
+        - content/unidad-05/lab-09-ir-tabletop.qmd
+        - content/unidad-05/quiz-05.qmd
+    
+    # Anexos Contextuales
+    - content/anexo-contexto-latam.qmd
+    - content/anexo-etica.qmd
+    
+    # Labs Avanzados (IA + Ethical Hacking)
     - labs/lab-anexo-openclaw-security.qmd
     - labs/lab-anexo-llm-security.qmd
     - labs/lab-anexo-ethical-hacking.qmd
     - labs/lab-anexo-herramientas-base.qmd
     
-  # Appendices - Labs Avanzados + Minicursos + Curso Simplificado
+  # ─── PARTE II: APÉNDICES ───
   appendices:
-    # Labs de Explotación Web
-    - labs/lab-anexo-juice-shop.qmd
-    - labs/lab-anexo-dvwa.qmd
-    - labs/lab-anexo-webgoat.qmd
-    # Minicursos de Herramientas
-    - minicursos/minicurso-git-github.qmd
-    - minicursos/minicurso-docker.qmd
-    - minicursos/minicurso-nvim.qmd
-    - minicursos/minicurso-tmux.qmd
-    - minicursos/minicurso-bash.qmd
-    - minicursos/minicurso-curl.qmd
-    - minicursos/minicurso-ssh.qmd
-    - minicursos/minicurso-openssl.qmd
-    - minicursos/minicurso-nmap.qmd
-    - minicursos/minicurso-burp-suite.qmd
-    - minicursos/minicurso-metasploit.qmd
-    - minicursos/minicurso-wireshark.qmd
-    - minicursos/minicurso-sqlmap.qmd
-    - minicursos/minicurso-hashcat.qmd
-    - minicursos/minicurso-hydra.qmd
-    - minicursos/minicurso-gobuster.qmd
-    - minicursos/minicurso-netcat.qmd
-    - minicursos/minicurso-tcpdump.qmd
-    # Labs de IA en Ciberseguridad
-    - labs/lab-anexo-ai-vps.qmd
-    - labs/lab-anexo-kali-mcp.qmd
-    # Curso Simplificado (Fundamentos)
-    - content-simplified/index.qmd
-    - content-simplified/modulo-01-seguridad-basica.qmd
-    - content-simplified/modulo-02-redes.qmd
-    - content-simplified/modulo-03-identidades.qmd
-    - content-simplified/modulo-04-vulnerabilidades.qmd
-    - content-simplified/modulo-05-incidentes.qmd
+    - part: "Laboratorios Avanzados de Explotación Web"
+      chapters:
+        - labs/lab-anexo-juice-shop.qmd
+        - labs/lab-anexo-dvwa.qmd
+        - labs/lab-anexo-webgoat.qmd
+    
+    - part: "IA Aplicada a Ciberseguridad"
+      chapters:
+        - labs/lab-anexo-ai-vps.qmd
+        - labs/lab-anexo-kali-mcp.qmd
+    
+    - part: "Minicursos de Herramientas (Referencia)"
+      chapters:
+        - minicursos/minicurso-git-github.qmd
+        - minicursos/minicurso-docker.qmd
+        - minicursos/minicurso-nvim.qmd
+        - minicursos/minicurso-tmux.qmd
+        - minicursos/minicurso-bash.qmd
+        - minicursos/minicurso-curl.qmd
+        - minicursos/minicurso-ssh.qmd
+        - minicursos/minicurso-openssl.qmd
+        - minicursos/minicurso-nmap.qmd
+        - minicursos/minicurso-burp-suite.qmd
+        - minicursos/minicurso-metasploit.qmd
+        - minicursos/minicurso-wireshark.qmd
+        - minicursos/minicurso-sqlmap.qmd
+        - minicursos/minicurso-hashcat.qmd
+        - minicursos/minicurso-hydra.qmd
+        - minicursos/minicurso-gobuster.qmd
+        - minicursos/minicurso-netcat.qmd
+        - minicursos/minicurso-tcpdump.qmd
+    
+    - part: "Curso Simplificado (Para Principiantes)"
+      chapters:
+        - content-simplified/index.qmd
+        - content-simplified/modulo-01-seguridad-basica.qmd
+        - content-simplified/modulo-02-redes.qmd
+        - content-simplified/modulo-03-identidades.qmd
+        - content-simplified/modulo-04-vulnerabilidades.qmd
+        - content-simplified/modulo-05-incidentes.qmd
 
   # Sharing
   sharing:

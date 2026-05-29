@@ -1,0 +1,342 @@
+---
+title: "Lab 3: Implementacion Zero Trust con WireGuard"
+module: "lab-03"
+type: "lab"
+description: "Practica de implementacion de microsegmentacion y VPN basada en Zero Trust"
+---
+
+
+## Objetivo del Laboratorio
+
+En este laboratorio, vas a implementar una **red privadaZero Trust** usando WireGuard. Este ejercicio te permitira:
+
+- Configurar WireGuard como alternativa a VPN tradicional
+- Implementar segmentation de red entre servicios
+- Aplicar politicas de acceso basadas en identidad
+- Probar el modelo "never trust, always verify"
+
+::: {.callout-warning}
+## ADVERTENCIA DE SEGURIDAD
+
+- NO ejecutar comandos en sistemas de produccion
+- Usar exclusivamente entornos aislados (VM, Docker)
+- Los comandos deben probarse primero en desarrollo
+- Este laboratorio es educativos - no para sistemas reales
+:::
+
+## Duracion
+
+- Tiempo estimado: 90 minutos
+- Tipo: Individual
+- IMPORTANTE: DEBES teclear todos los comandos manualmente
+
+---
+
+## Paso 1: Preparar el Entorno
+
+### 1.1 Crear directorio de trabajo
+
+```{.bash filename="terminal"}
+# Crear directorio para el lab
+mkdir -p ~/cybersec-lab/ztn-setup
+cd ~/cybersec-lab/ztn-setup
+
+# Inicializar Git
+git init
+
+# Crear estructura de directorios
+mkdir -p config scripts keys server client
+```
+
+### 1.2 Instalar WireGuard (Ubuntu 22.04+)
+
+```{.bash filename="terminal"}
+# Actualizar paquetes
+sudo apt update
+
+# Instalar WireGuard
+sudo apt install -y wireguard wireguard-tools
+
+# Verificar instalacion
+wg --version
+sudo wg show
+```
+
+---
+
+## Paso 2: Generar Claves
+
+### 2.1 Generar clave del servidor
+
+```{.bash filename="terminal"}
+# Generar clave privada del servidor
+wg genkey > server/private.key
+
+# Generar clave publica del servidor
+wg pubkey < server/private.key > server/public.key
+
+# Mostrar claves
+echo "Clave privada (NO compartir):"
+cat server/private.key
+
+echo "Clave publica:"
+cat server/public.key
+```
+
+### 2.2 Generar clave del cliente
+
+```{.bash filename="terminal"}
+# Generar clave privada del cliente
+wg genkey > client/private.key
+
+# Generar clave publica del cliente
+wg pubkey < client/private.key > client/public.key
+
+# Mostrar claves
+echo "Clave privada cliente:"
+cat client/private.key
+
+echo "Clave publica cliente:"
+cat client/public.key
+```
+
+---
+
+## Paso 3: Configurar Servidor WireGuard
+
+### 3.1 Crear configuracion del servidor
+
+```{.bash filename="terminal"}
+cat > config/wg0-server.conf << 'EOF'
+[Interface]
+Address = 10.0.0.1/24
+PrivateKey = $(cat server/private.key)
+ListenPort = 51820
+SaveConfig = false
+
+# PostUp: enable forwarding and NAT
+PostUp = iptables -A FORWARD -i wg0 -j ACCEPT
+PostUp = iptables -A FORWARD -o wg0 -j ACCEPT
+PostUp = iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+# PostDown: disable forwarding and NAT
+PostDown = iptables -D FORWARD -i wg0 -j ACCEPT
+PostDown = iptables -D FORWARD -o wg0 -j ACCEPT
+PostDown = iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
+
+# Cliente 1 - solo acceso email
+[Peer]
+PublicKey = $(cat client/public.key)
+AllowedIPs = 10.0.0.10/32
+PersistentKeepalive = 25
+EOF
+```
+
+### 3.2 Aplicar configuracion (simulada)
+
+```{.bash filename="terminal"}
+# Copiar configuracion (sin privilegios de root)
+sudo cp config/wg0-server.conf /etc/wireguard/wg0.conf
+
+echo "Configuracion del servidor creada en /etc/wireguard/wg0.conf"
+echo ""
+echo "Contenido:"
+cat /etc/wireguard/wg0.conf
+```
+
+---
+
+## Paso 4: Configurar Cliente WireGuard
+
+### 4.1 Crear configuracion del cliente
+
+```{.bash filename="terminal"}
+cat > client/wg0-client.conf << 'EOF'
+[Interface]
+Address = 10.0.0.10/24
+PrivateKey = $(cat client/private.key)
+
+[Peer]
+PublicKey = $(cat server/public.key)
+Endpoint = 10.0.0.1:51820
+AllowedIPs = 10.0.0.0/24
+PersistentKeepalive = 25
+EOF
+```
+
+### 4.2 Explicacion de segmentation
+
+```{.bash filename="terminal"}
+cat > scripts/explicar-segmentation.sh << 'EOF'
+#!/bin/bash
+
+echo "=== Explicacion de la Segmentacion ==="
+echo ""
+echo "En este setup:"
+echo "- Servidor: 10.0.0.1 (servicios)"
+echo "- Cliente: 10.0.0.10 (acceso limitado)"
+echo ""
+echo "El cliente SOLO puede acceder a la subred 10.0.0.0/24"
+echo "NO tiene acceso a otras redes"
+echo ""
+echo "Esto es Zero Trust - acceso minima necesidad"
+echo ""
+echo "Comparacion con VPN:"
+echo "- VPN tradicional: acceso a toda la red"
+echo "- WireGuard: acceso solo a lo autorizado"
+echo ""
+echo "Politica aplicada:"
+echo "  - Cliente 1: solo email (10.0.0.10)"
+echo "  - Futuro: solo lo que se configure especificamente"
+EOF
+
+chmod +x scripts/explicar-segmentation.sh
+```
+
+---
+
+## Paso 5: Implementar Politica Zero Trust
+
+### 5.1 Crear politica de acceso
+
+```{.bash filename="terminal"}
+cat > config/politica-ztn.json << 'EOF'
+{
+  "policy": {
+    "name": "Zero_Trust_Email_Access",
+    "description": "Politica de acceso Zero Trust para email",
+    "rules": [
+      {
+        "name": "email-access",
+        "match": {
+          "source_ip": "10.0.0.10",
+          "destination_ip": "10.0.0.1",
+          "port": 443,
+          "protocol": "tcp"
+        },
+        "action": "ALLOW"
+      },
+      {
+        "name": "block-all-other",
+        "match": {
+          "source_ip": "10.0.0.10"
+        },
+        "action": "DENY"
+      }
+    ]
+  }
+}
+EOF
+
+echo "Politica Zero Trust creada:"
+cat config/politica-ztn.json | python3 -m json.tool
+```
+
+---
+
+## Paso 6: Testing
+
+### 6.1 Verificar configuracion
+
+```{.bash filename="terminal"}
+cat > scripts/verificar-ztn.sh << 'EOF'
+#!/bin/bash
+
+echo "=== Verificador de Configuracion Zero Trust ==="
+echo ""
+
+echo "1. Verificando claves..."
+if [ -f "server/private.key" ] && [ -f "client/private.key" ]; then
+    echo "   [OK] Claves creadas"
+else
+    echo "   [ERROR] Faltan claves"
+fi
+
+echo ""
+echo "2. Verificando configuracion..."
+if [ -f "config/wg0-server.conf" ] && [ -f "config/politica-ztn.json" ]; then
+    echo "   [OK] Archivos de configuracion listos"
+else
+    echo "   [ERROR] Faltan archivos"
+fi
+
+echo ""
+echo "3. Verificando politica..."
+if grep -q '"ALLOW"' config/politica-ztn.json; then
+    echo "   [OK] Politica Zero Trust aplicada"
+else
+    echo "   [ERROR] Problema con politica"
+fi
+
+echo ""
+echo "=== Resumen ==="
+ls -la server/
+ls -la client/
+ls -la config/
+EOF
+
+chmod +x scripts/verificar-ztn.sh
+./scripts/verificar-ztn.sh
+```
+
+---
+
+## Desafio Final: Completar Implementacion
+
+### Objetivo
+
+1. Generar claves para 2 clientes adicionales
+2. Crear politica que permita acceso limitado diferente para cada uno
+3. Documentar la arquitectura
+
+### Entregables
+
+1. Claves en `keys/` para 3 clientes
+2. Archivo `config/politica-completa.json` con politicas separadas
+3. Diagrama de arquitectura en texto
+
+### Criterios de Evaluacion
+
+| Criterio | Puntos |
+|---------|--------|
+| Completitud (3+ clientes) | 30 pts |
+| Politicas distintas por cliente | 30 pts |
+| Documentacion clara | 25 pts |
+| Comandos ejecutados | 15 pts |
+
+---
+
+## Comandos Clave del Lab
+
+```{.bash filename="resumen"}
+# Preparacion
+mkdir -p ~/cybersec-lab/ztn-setup
+cd ~/cybersec-lab/ztn-setup
+
+# Claves
+wg genkey > private.key
+wg pubkey < private.key > public.key
+
+# Configuracion
+sudo wg-quick up wg0
+sudo wg show
+
+# Verification
+wg
+```
+
+---
+
+## Recursos Adicionales
+
+- [WireGuard Documentation](https://www.wireguard.com/)
+- [NIST SP 800-207](https://csrc.nist.gov/publications/detail/sp/800/207/final)
+- [Zero Trust Summitary](https://www.cisa.gov/zero-trust-maturity-model)
+
+---
+
+::: {.callout-tip}
+Duracion: 90 minutos — NO copies/pegues los comandos — escribelos manualmente
+:::
+
+*Lab 3/7 del curso Fundamentos de Ciberseguridad*

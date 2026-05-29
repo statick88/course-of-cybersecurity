@@ -11,3 +11,6 @@
 .playwright-mcp/
 
 .antigravitycli/
+
+# Generated reports (multi-agent analysis artifacts)
+/reports/

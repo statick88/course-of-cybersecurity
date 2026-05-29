@@ -1,0 +1,710 @@
+---
+title: "Minicurso: Git y GitHub — Control de Versiones"
+module: "minicurso-01"
+type: "minicurso"
+description: "Aprende los fundamentos de Git y GitHub para control de versiones"
+unit: "unidad-01"
+position: "before-lab"
+prerequisite: "Inicio del curso"
+---
+
+## 🔗 Conexión con la Unidad I
+
+Este minicurso te da las bases de **Git y GitHub**, herramientas esenciales para gestionar tus proyectos de ciberseguridad. A lo largo del curso, usarás Git para:
+- Versionar tus reportes de evaluación de seguridad
+- Colaborar en los laboratorios grupales
+- Publicar tu proyecto final de TechCorp en GitHub
+
+Completalo **antes** de iniciar el Lab 1 (NIST CSF 2.0 Assessment).
+
+
+## ¿Qué es Git?
+
+Git es un sistema de control de versiones distribuido creado por Linus Torvalds en 2005. Permite rastrear cambios en archivos, colaborar con otros desarrolladores y mantener un historial completo de cada modificación. A diferencia de sistemas centralizados como SVN, cada copia de un repositorio Git es un repositorio completo con todo el historial.
+
+GitHub es una plataforma de alojamiento de repositorios Git que añade herramientas de colaboración como pull requests, issues, acciones automatizadas (GitHub Actions), y funciones de seguridad como Dependabot y secret scanning.
+
+En ciberseguridad, Git es esencial para versionar scripts de pentesting, documentar hallazgos, colaborar en equipos de respuesta a incidentes, y mantener configuraciones de seguridad de forma auditable.
+
+## ¿Por qué aprenderlo?
+
+- **Auditoría completa**: Cada cambio queda registrado con autor, fecha y descripción
+- **Colaboración segura**: Múltiples analysts pueden trabajar en el mismo proyecto sin conflictos
+- **Recuperación ante errores**: Puedes revertir cualquier cambio que rompa algo
+- **Integración con herramientas**: GitHub Actions automatiza escaneos de seguridad
+- **Estándar de la industria**: Todo equipo de security usa Git para versionar su trabajo
+
+## Instalación
+
+### macOS
+
+```bash
+# Con Homebrew (recomendado)
+brew install git
+
+# Verificar instalación
+git --version
+# Esperado: git version 2.45.x o superior
+```
+
+### Linux (Ubuntu/Debian)
+
+```bash
+# Actualizar repositorios e instalar
+sudo apt update
+sudo apt install git -y
+
+# Verificar instalación
+git --version
+# Esperado: git version 2.43.x o superior
+```
+
+### Windows
+
+```powershell
+# Descargar desde https://git-scm.com/download/win
+# O usar winget:
+winget install Git.Git
+
+# Verificar en PowerShell o Git Bash
+git --version
+```
+
+### Configuración inicial (todos los sistemas)
+
+```bash
+# Configurar identidad (obligatorio para commits)
+git config --global user.name "Tu Nombre"
+git config --global user.email "tu@email.com"
+
+# Configurar editor por defecto
+git config --global core.editor "nvim"
+
+# Verificar configuración
+git config --list
+```
+
+::: {.callout-tip}
+## Tip Profesional
+Usa `git config --global init.defaultBranch main` para que todos los repos nuevos usen `main` en lugar de `master`.
+:::
+
+## Nivel Básico
+
+### Conceptos Fundamentales
+
+Git trabaja con tres áreas principales:
+
+1. **Working Directory**: Donde editas archivos
+2. **Staging Area (Index)**: Donde preparas cambios para el commit
+3. **Repository (HEAD)**: Donde se guardan los commits permanentemente
+
+El flujo básico es: editar → `add` → `commit` → `push`.
+
+### Comandos Esenciales
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `git init` | Inicializa un repositorio nuevo | `git init mi-proyecto` |
+| `git clone <url>` | Clona un repositorio remoto | `git clone https://github.com/user/repo.git` |
+| `git status` | Muestra el estado actual | `git status` |
+| `git add <archivo>` | Añade al staging area | `git add script.py` |
+| `git add .` | Añade todos los cambios | `git add .` |
+| `git commit -m "msg"` | Crea un commit con mensaje | `git commit -m "fix: auth bug"` |
+| `git log` | Muestra historial de commits | `git log --oneline` |
+| `git diff` | Muestra cambios no staged | `git diff` |
+| `git branch` | Lista ramas locales | `git branch -a` |
+| `git checkout <rama>` | Cambia de rama | `git checkout main` |
+| `git switch <rama>` | Cambia de rama (moderno) | `git switch develop` |
+| `git restore <archivo>` | Descarta cambios en archivo | `git restore script.py` |
+| `git push` | Envía commits al remoto | `git push origin main` |
+| `git pull` | Trae y fusiona cambios remotos | `git pull origin main` |
+
+### Ejercicio 1: Tu primer repositorio seguro
+
+**Objetivo:** Crear un repositorio con `.gitignore` apropiado para seguridad.
+
+**Paso 1:** Crear directorio e inicializar
+
+```bash
+mkdir security-scripts
+cd security-scripts
+git init
+```
+
+**Paso 2:** Crear un `.gitignore` para proyectos de seguridad
+
+```bash
+cat > .gitignore << 'EOF'
+# Secrets y credenciales
+*.key
+*.pem
+*.p12
+*.pfx
+.env
+.env.local
+credentials.json
+secrets.yml
+*.secret
+
+# Passwords y wordlists
+wordlists/
+rockyou.txt
+*.pwd
+*.pass
+
+# Output de escaneos sensibles
+nmap-results/
+*.nessus
+*.xml
+reports/raw/
+
+# OS específico
+.DS_Store
+Thumbs.db
+*.swp
+*~
+EOF
+```
+
+::: {.callout-warning}
+## Regla de Oro
+NUNCA commitees claves, passwords, tokens o datos sensibles. El historial de Git es PERMANENTE y borrar un archivo no lo elimina del historial.
+:::
+
+**Paso 3:** Crear tu primer script
+
+```bash
+cat > port-scan.sh << 'SCRIPT'
+#!/bin/bash
+# Escaneo básico de puertos
+# USO ÉTICO SOLAMENTE
+
+set -euo pipefail
+
+if [ $# -lt 1 ]; then
+    echo "Uso: $0 <target>"
+    exit 1
+fi
+
+TARGET="$1"
+echo "Escaneando $TARGET..."
+nmap -sV -T4 "$TARGET"
+SCRIPT
+
+chmod +x port-scan.sh
+```
+
+**Paso 4:** Hacer tu primer commit
+
+```bash
+git add .gitignore port-scan.sh
+git commit -m "feat: add port scanner with secure gitignore"
+```
+
+**Paso 5:** Verificar el historial
+
+```bash
+git log --oneline
+# Esperado: un commit con tu mensaje
+
+git status
+# Esperado: nothing to commit, working tree clean
+```
+
+## Nivel Intermedio
+
+### Ramas (Branches)
+
+Las ramas permiten trabajar en features o fixes sin afectar el código principal.
+
+```bash
+# Crear una nueva rama
+git branch feature/nmap-automation
+
+# Cambiar a la nueva rama
+git switch feature/nmap-automation
+
+# O crear y cambiar en un solo paso
+git switch -c feature/improved-scanner
+
+# Ver todas las ramas
+git branch -a
+# Esperado: lista con * marcando la rama actual
+```
+
+### Merge y Conflictos
+
+```bash
+# Volver a main
+git switch main
+
+# Fusionar la rama feature
+git merge feature/improved-scanner
+
+# Si hay conflicto, Git lo marcará:
+# CONFLICT (content): Merge conflict in script.py
+# Resolver editando el archivo, luego:
+git add script.py
+git commit -m "fix: resolve merge conflict in scanner"
+```
+
+**Estructura de un conflicto:**
+
+```
+<<<<<<< HEAD
+# Tu versión actual
+nmap -sV "$TARGET"
+=======
+# Versión de la rama fusionada
+nmap -sV -sC "$TARGET"
+>>>>>>> feature/improved-scanner
+```
+
+### Stash: Guardar cambios temporalmente
+
+```bash
+# Guardar cambios sin hacer commit
+git stash save "WIP: adding output formatting"
+
+# Ver stashes guardados
+git stash list
+# Esperado: stash@{0}: On main: WIP: adding output formatting
+
+# Recuperar el último stash
+git stash pop
+
+# Aplicar sin eliminar de la lista
+git stash apply stash@{0}
+```
+
+### Remote: Trabajar con repositorios remotos
+
+```bash
+# Añadir un remoto
+git remote add origin https://github.com/tu-user/security-scripts.git
+
+# Ver remotos configurados
+git remote -v
+# Esperado:
+# origin  https://github.com/tu-user/security-scripts.git (fetch)
+# origin  https://github.com/tu-user/security-scripts.git (push)
+
+# Push a remoto
+git push -u origin main
+
+# Fetch sin merge (solo descargar)
+git fetch origin
+
+# Pull = fetch + merge
+git pull origin main
+```
+
+### Ejercicio 2: Workflow de colaboración
+
+**Objetivo:** Simular un flujo de trabajo con ramas y resolución de conflictos.
+
+**Paso 1:** Crear rama de feature
+
+```bash
+git switch -c feature/add-vuln-scanner
+```
+
+**Paso 2:** Crear un nuevo script
+
+```bash
+cat > vuln-check.sh << 'SCRIPT'
+#!/bin/bash
+# Verificación básica de vulnerabilidades
+set -euo pipefail
+
+TARGET="${1:?Uso: $0 <target>}"
+
+echo "=== Verificación de vulnerabilidades: $TARGET ==="
+echo "[*] Escaneando puertos comunes..."
+nmap -sV --script vuln "$TARGET" -oN vuln-report.txt
+echo "[+] Reporte guardado en vuln-report.txt"
+SCRIPT
+
+chmod +x vuln-check.sh
+git add vuln-check.sh
+git commit -m "feat: add vulnerability scanner script"
+```
+
+**Paso 3:** Volver a main y hacer un cambio conflictivo
+
+```bash
+git switch main
+
+# Modificar port-scan.sh
+cat > port-scan.sh << 'SCRIPT'
+#!/bin/bash
+# Escaneo avanzado de puertos con detección de OS
+# USO ÉTICO SOLAMENTE - Autorización requerida
+
+set -euo pipefail
+
+if [ $# -lt 1 ]; then
+    echo "Uso: $0 <target> [output-file]"
+    exit 1
+fi
+
+TARGET="$1"
+OUTPUT="${2:-scan-results.txt}"
+
+echo "Escaneando $TARGET..."
+echo "Output: $OUTPUT"
+nmap -sV -O -T4 "$TARGET" -oN "$OUTPUT"
+SCRIPT
+
+git add port-scan.sh
+git commit -m "feat: add OS detection and output file to port scanner"
+```
+
+**Paso 4:** Fusionar y resolver conflicto
+
+```bash
+git merge feature/add-vuln-scanner
+# Si hay conflicto en port-scan.sh, editarlo para combinar ambos cambios
+git add port-scan.sh
+git commit -m "merge: combine OS detection with vuln scanner"
+```
+
+## Nivel Avanzado
+
+### Cherry-pick: Aplicar commits específicos
+
+```bash
+# Ver commits de otra rama
+git log feature/branch --oneline
+
+# Aplicar un commit específico a tu rama actual
+git cherry-pick abc1234
+
+# Si hay conflicto durante cherry-pick:
+# Resolver, luego:
+git add .
+git cherry-pick --continue
+
+# Cancelar cherry-pick
+git cherry-pick --abort
+```
+
+### Bisect: Encontrar el commit que introdujo un bug
+
+```bash
+# Iniciar búsqueda binaria
+git bisect start
+
+# Marcar commit actual como malo
+git bisect bad
+
+# Marcar un commit antiguo conocido como bueno
+git bisect good v1.0.0
+
+# Git te llevará a un commit intermedio
+# Probar si el bug existe aquí:
+./run-tests.sh
+
+# Si falla:
+git bisect bad
+# Si funciona:
+git bisect good
+
+# Repetir hasta encontrar el commit culpable
+# Git mostrará: abc1234 is the first bad commit
+
+# Terminar búsqueda
+git bisect reset
+```
+
+### Reflog: Recuperar commits perdidos
+
+```bash
+# Ver historial de todas las acciones (incluidas las destruidas)
+git reflog
+# Esperado: lista de acciones con hashes
+
+# Ejemplo de salida:
+# abc1234 HEAD@{0}: commit: fix auth bug
+# def5678 HEAD@{1}: reset: moving to HEAD~1
+# ghi9012 HEAD@{2}: commit: add feature
+
+# Recuperar un commit perdido
+git checkout -b recovered-branch def5678
+```
+
+::: {.callout-tip}
+## Lifesaver
+El reflog es tu red de seguridad. Si accidentalmente haces `git reset --hard` o borras una rama, el reflog te permite recuperar TODO. Los entries expiran después de 90 días por defecto.
+:::
+
+### Git Hooks: Automatizar validaciones
+
+```bash
+# Los hooks están en .git/hooks/
+# Crear un hook pre-commit
+
+cat > .git/hooks/pre-commit << 'HOOK'
+#!/bin/bash
+# Pre-commit hook: verificar que no haya secrets
+
+# Buscar patrones de secrets
+if git diff --cached | grep -qE '(password|secret|api_key)\s*=\s*["\x27][^"\x27]+'; then
+    echo "ERROR: Possible secret detected in staged changes!"
+    echo "Remove secrets before committing."
+    exit 1
+fi
+
+# Verificar que los scripts sean ejecutables
+if git diff --cached --name-only | grep -q '\.sh$'; then
+    for f in $(git diff --cached --name-only -- '*.sh'); do
+        if [ ! -x "$f" ]; then
+            echo "WARNING: $f is not executable"
+        fi
+    done
+fi
+HOOK
+
+chmod +x .git/hooks/pre-commit
+```
+
+### Commits firmados (Signed Commits)
+
+```bash
+# Generar clave GPG (si no tienes una)
+gpg --full-generate-key
+# Seguir las instrucciones (RSA 4096, sin expiración)
+
+# Listar claves
+gpg --list-secret-keys --keyid-format=long
+# Copiar el ID de la clave (ej: ABC123DEF456)
+
+# Configurar Git para firmar commits
+git config --global user.signingkey ABC123DEF456
+git config --global commit.gpgsign true
+
+# Hacer un commit firmado
+git commit -S -m "signed: critical security fix"
+
+# Verificar firma
+git log --show-signature -1
+```
+
+### Submodules: Incluir otros repositorios
+
+```bash
+# Añadir un submodulo
+git submodule add https://github.com/author/security-tools.git tools/security
+
+# Clonar un repo con submodulos
+git clone --recurse-submodules https://github.com/user/project.git
+
+# O si ya clonaste:
+git submodule init
+git submodule update
+
+# Actualizar submodulos
+git submodule update --remote
+```
+
+### Ejercicio 3: Recuperación de emergencia
+
+**Objetivo:** Simular y resolver un desastre con Git.
+
+**Paso 1:** Crear un desastre (borrar rama accidentalmente)
+
+```bash
+# Crear rama con trabajo importante
+git switch -c important-work
+echo "critical security fix" > fix.txt
+git add fix.txt
+git commit -m "fix: critical vulnerability patch"
+
+# Volver a main y borrar la rama por error
+git switch main
+git branch -D important-work
+# ¡Oh no! El trabajo parece perdido
+```
+
+**Paso 2:** Recuperar con reflog
+
+```bash
+# Buscar el commit en reflog
+git reflog | grep "critical vulnerability"
+# Copiar el hash del commit
+
+# Recuperar la rama
+git branch important-work <hash-del-commit>
+git switch important-work
+
+# Verificar que el archivo está
+cat fix.txt
+# Esperado: critical security fix
+```
+
+## Uso en Ciberseguridad
+
+### Escenario 1: Documentación de incidentes
+
+Git es ideal para documentar incidentes de seguridad de forma versionada:
+
+```bash
+# Estructura de repo de incidentes
+mkdir incident-response
+cd incident-response
+git init
+
+mkdir -p incidents/{2024,2025,2026}
+mkdir -p iocs  # Indicators of Compromise
+mkdir -p playbooks
+mkdir -p tools
+
+# Crear reporte de incidente
+cat > incidents/2026/INC-2026-001.md << 'EOF'
+# Incidente INC-2026-001
+
+## Fecha de detección: 2026-05-15
+## Severidad: Alta
+## Estado: Contained
+
+## Descripción
+[Detalle del incidente]
+
+## IOCs
+- IP: 192.168.1.100
+- Hash MD5: d41d8cd98f00b204e9800998ecf8427e
+- Dominio: malicious.example.com
+
+## Acciones tomadas
+1. Aislamiento del host afectado
+2. Captura de memoria RAM
+3. Análisis forense de disco
+EOF
+
+git add .
+git commit -m "doc: add incident report INC-2026-001"
+```
+
+### Escenario 2: Secret scanning con GitHub
+
+GitHub ofrece detección automática de secrets:
+
+1. **Secret Scanning**: Detecta patrones de API keys, tokens, passwords
+2. **Push Protection**: Bloquea pushes que contienen secrets
+3. **Dependabot**: Alerta sobre vulnerabilidades en dependencias
+
+```bash
+# Configurar .gitignore robusto para seguridad
+cat > .gitignore << 'EOF'
+# Credential files
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.keystore.*
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Cloud credentials
+.aws/credentials
+.gcloud/credentials.json
+azure-credentials.json
+
+# Database dumps
+*.sql
+*.dump
+*.bak
+
+# Memory dumps
+*.mem
+*.dmp
+core.*
+
+# Forensic images
+*.dd
+*.e01
+*.aff
+
+# Password files
+*.kdbx
+*.kdb
+passwords.txt
+*.pwd
+EOF
+```
+
+### Escenario 3: Versionado de reglas de seguridad
+
+```bash
+# Repo de reglas Snort/Suricata
+mkdir security-rules
+cd security-rules
+git init
+
+mkdir -p rules/{snort,suricata,yara}
+mkdir -p tests
+
+# Crear regla YARA
+cat > rules/yara/malware-detection.yar << 'YARA'
+rule Suspicious_PE_Packer {
+    meta:
+        description = "Detecta PE empaquetado sospechoso"
+        author = "Security Team"
+        date = "2026-05-20"
+        version = "1.0"
+    strings:
+        $mz = "MZ"
+        $pe = "PE\0\0"
+        $upx = "UPX"
+    condition:
+        $mz at 0 and $pe and $upx
+}
+YARA
+
+git add .
+git commit -m "rules: add YARA rule for PE packer detection"
+```
+
+## Referencia Rápida
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `git init` | Inicializar repo | `git init project` |
+| `git clone <url>` | Clonar repo | `git clone git@github.com:user/repo.git` |
+| `git status` | Estado actual | `git status -s` |
+| `git add <file>` | Stage archivo | `git add -p` (interactive) |
+| `git commit -m "msg"` | Crear commit | `git commit -S -m "msg"` (signed) |
+| `git log --oneline` | Historial compacto | `git log --oneline -10` |
+| `git diff` | Cambios no staged | `git diff --staged` (staged) |
+| `git branch` | Listar ramas | `git branch -vv` (verbose) |
+| `git switch <branch>` | Cambiar rama | `git switch -c new-branch` |
+| `git merge <branch>` | Fusionar rama | `git merge --no-ff feature` |
+| `git rebase <branch>` | Rebase sobre rama | `git rebase -i HEAD~3` |
+| `git stash` | Guardar cambios | `git stash -u` (incl. untracked) |
+| `git push` | Push al remoto | `git push -u origin main` |
+| `git pull` | Pull del remoto | `git pull --rebase` |
+| `git cherry-pick <hash>` | Aplicar commit | `git cherry-pick abc1234` |
+| `git bisect start` | Buscar bug | `git bisect bad/good` |
+| `git reflog` | Historial completo | `git reflog show --all` |
+| `git reset --hard` | Descartar todo | `git reset --hard HEAD~1` |
+| `git revert <hash>` | Revertir commit | `git revert abc1234` |
+
+## Recursos Adicionales
+
+- **Documentación oficial**: https://git-scm.com/doc
+- **Git Book (gratuito)**: https://git-scm.com/book/en/v2
+- **GitHub Skills (interactivo)**: https://skills.github.com/
+- **Pro Git Book**: https://git-scm.com/book/en/v2
+- **Git Cheat Sheet**: https://education.github.com/git-cheat-sheet-education.pdf
+- **GitHub Security Features**: https://docs.github.com/en/code-security
+- **Práctica**: https://learngitbranching.js.org/
+
+---
+
+*Minicurso Git y GitHub — Curso Fundamentos de Ciberseguridad — CC BY-SA 4.0*

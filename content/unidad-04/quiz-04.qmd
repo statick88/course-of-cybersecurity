@@ -1,0 +1,183 @@
+---
+title: "Quiz 5: Gestion de Vulnerabilidades"
+module: "quiz-05"
+type: "quiz"
+description: "Evaluacion del modulo 5: Gestion de vulnerabilidades"
+---
+
+
+## Instrucciones
+
+- Tiempo: 25 minutos
+- Preguntas: 15 preguntas
+- Aprobacion: 70% o superior
+
+---
+
+## Seccion A: Fundamentos CVSS
+
+### Pregunta 1
+
+CVSS mide:
+
+- [ ] Probabilidad de exploit
+- [ ] Severidad tecnica
+- [ ] Impacto financiero
+- [ ] Tiempo de remediacion
+
+### Pregunta 2
+
+Un CVSS de 9.8 equivale a:
+
+- [ ] LOW
+- [ ] MEDIUM
+- [ ] HIGH
+- [ ] CRITICAL
+
+### Pregunta 3
+
+El componente Attack Vector evalua:
+
+- [ ] Complexity del ataque
+- [ ] Ubicacion del atacante
+- [ ] Privilegios requeridos
+- [ ] Interaccion del usuario
+
+---
+
+## Seccion B: EPSS
+
+### Pregunta 4
+
+EPSS predice:
+
+- [ ] Severidad tecnica
+- [ ] Probabilidad de exploit en 30 dias
+- [ ] Impacto en negocio
+- [ ] Costo de remediacion
+
+### Pregunta 5
+
+Si un CVE tiene EPSS 95+, significa:
+
+- [ ] Poco probable de explotar
+- [ ] Medianamente probable
+- [ ] Altamente probable
+- [ ] Ya fue explotado
+
+### Pregunta 6
+
+EPSS + CVSS permiten:
+
+- [ ] Priorizacion por riesgo
+- [ ] Automatizacion completa
+- [ ] Eliminacion de falsos positivos
+- [ ] Prediccion exacta
+
+---
+
+## Seccion C: Ciclode Vida
+
+### Pregunta 7
+
+El orden correcto es:
+
+- [ ] Discovery -> Parche -> Mitigar -> Verificar
+- [ ] Mitigar -> Discovery -> Verificar -> Parche
+- [ ] Discovery -> Mitigar -> Verificar -> Parche
+- [ ] Parche -> Discovery -> Mitigar -> Verificar
+
+### Pregunta 8
+
+El KEV catalog es mantenga por:
+
+- [ ] NIST
+- [ ] CISA
+- [ ] NSA
+- [ ] FBI
+
+### Pregunta 9
+
+Una vulnerabilidad en KEV debe parchearse:
+
+- [ ] En 30 dias
+- [ ] En 14 dias
+- [ ] Lo antes posible
+- [ ] En 90 dias
+
+---
+
+## Seccion D: Priorizacion
+
+### Pregunta 10
+
+Prioridad critica indica:
+
+- [ ] CVSS >= 7 Y EPSS >= 50
+- [ ] CVSS >= 9 Y EPSS >= 80
+- [ ] Solo CVSS alto
+- [ ] Solo EPSS alto
+
+### Pregunta 11
+
+Un vulnerability scan debe ejecutarse:
+
+- [ ] Solo annually
+- [ ] Continuamente
+- [ ] Solo dopo breach
+- [ ] Solo cuando hay nuevo CVE
+
+### Pregunta 12
+
+False positive rate acceptable es:
+
+- [ ] < 50%
+- [ ] < 30%
+- [ ] < 20%
+- [ ] < 10%
+
+---
+
+## Practica
+
+### Pregunta 13
+
+Si un CVE tiene CVSS 10.0 y EPSS 99, priorizas:
+
+- [ ] 90 dias
+- [ ] 30 dias
+- [ ] 7 dias
+- [ ] 24-48 horas
+
+### Pregunta 14
+
+Para confirmar una vulnerabilidad usas:
+
+- [ ] Solo scan
+- [ ] Solo PoC
+- [ ] Validacion manual
+- [ ] Metasploit o PoC
+
+### Pregunta 15
+
+Despues de aplicar parche verificas con:
+
+- [ ] Scan original
+- [ ] Re-scan
+- [ ] Usuario
+- [ ] Ninguna verificacion
+
+---
+
+## Resultado
+
+| Score | Estado |
+|-------|--------|
+| 11/15 (73%) o superior | Aprobado |
+| Menos de 11/15 | Reprobado |
+
+Puntuacion: ____/15 = ____%
+
+---
+
+*Quiz 5/7 - Curso Fundamentos de Ciberseguridad*

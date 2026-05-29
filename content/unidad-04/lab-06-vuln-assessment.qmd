@@ -1,0 +1,386 @@
+---
+title: "Lab 5: Vulnerability Assessment con CVSS y EPSS"
+module: "lab-05"
+type: "lab"
+description: "Practica de priorizacion de vulnerabilidades usando CVSS y EPSS"
+---
+
+
+## Objetivo del Laboratorio
+
+En este laboratorio, vas a **evaluar y priorizar vulnerabilidades** usando CVSS y EPSS. Este ejercicio te permitira:
+
+- Calcular scores CVSS
+- Usar EPSS para priorizacion
+- Crear plan de remediacion
+- Integrar threat intelligence
+
+{{< include ../../_shared/_warn-seguridad.qmd >}}
+
+## Duracion
+
+- Tiempo estimado: 60 minutos
+- Tipo: Individual
+- IMPORTANTE: DEBES teclear todos los comandos manualmente
+
+---
+
+## Paso 1: Preparar el Entorno
+
+### 1.1 Crear directorio
+
+```bash
+mkdir -p ~/cybersec-lab/vuln-assessment
+cd ~/cybersec-lab/vuln-assessment
+
+git init
+mkdir -p results reports
+```
+
+### 1.2 Instalar herramientas
+
+```bash
+# Instalar Python
+sudo apt update
+sudo apt install -y python3 python3-pip
+
+# Instalar librerias
+pip3 install requests pandas
+
+# Verificar
+python3 --version
+```
+
+---
+
+## Paso 2: Entender CVSS
+
+### 2.1 Conceptos clave
+
+```
+COMPONENTES CVSS v3.1
+====================
+
+Base Metrics (0-10):
+- AV: Attack Vector (N/A/P/L)
+- AC: Attack Complexity (L/H)
+- PR: Privileges Required (N/L/H)
+- UI: User Interaction (N/R)
+- S: Scope (U/C)
+- C: Confidentiality (N/L/H)
+- I: Integrity (N/L/H)
+- A: Availability (N/L/H)
+
+Temporal (0-10):
+- E: Exploit Code Maturity (X/P/F/H)
+- RL: Remediation Level (X/O/T/W/U)
+- RC: Report Confidence (X/C/R/F)
+
+Environmental:
+- Modify base metrics
+- Add MTCP weights
+```
+
+### 2.2 Calculadora CVSS
+
+```bash
+cat > cvss_calculator.py << 'EOF'
+#!/usr/bin/env python3
+"""
+Calculadora CVSS v3.1 - Educativo
+"""
+
+def calculate_cvss():
+    """Calcula score CVSS"""
+    
+    # Pesos base
+    weights = {
+        'AV': {'N': 0.85, 'A': 0.62, 'L': 0.55, 'P': 0.2},
+        'AC': {'L': 0.77, 'H': 0.44},
+        'PR': {
+            'U': {'N': 0.85, 'L': 0.62, 'H': 0.27},
+            'C': {'N': 0.85, 'L': 0.68, 'H': 0.5}
+        },
+        'UI': {'N': 0.85, 'R': 0.62},
+        'S': {'U': 0, 'C': 0},
+        'C': {'H': 0.56, 'L': 0.22, 'N': 0},
+        'I': {'H': 0.56, 'L': 0.22, 'N': 0},
+        'A': {'H': 0.56, 'L': 0.22, 'N': 0}
+    }
+    
+    print("=== Calculadora CVSS v3.1 ===")
+    print()
+    print("Attack Vector (AV):")
+    print("  N = Network")
+    print("  A = Adjacent")
+    print("  L = Local")
+    print("  P = Physical")
+    av = input("> ").upper() or 'N'
+    
+    print("Attack Complexity (AC):")
+    print("  L = Low")
+    print("  H = High")
+    ac = input("> ").upper() or 'L'
+    
+    print("Privileges Required (PR):")
+    print("  N = None")
+    print("  L = Low")
+    print("  H = High")
+    pr = input("> ").upper() or 'N'
+    
+    print("User Interaction (UI):")
+    print("  N = None")
+    print("  R = Required")
+    ui = input("> ").upper() or 'N'
+    
+    # Calcular impacto
+    c_val = weights['C'].get(av[0], 0.56)
+    i_val = weights['I'].get(av[0], 0.56)
+    a_val = weights['A'].get(av[0], 0.56)
+    
+    ia_impact = min(1 - (1 - c_val) * (1 - i_val) * (1 - a_val), 1)
+    
+    # Calcular exploitability
+    exploitability = 8.22 * weights['AV'].get(av[0], 0.85) * \
+                   weights['AC'].get(ac[0], 0.77) * \
+                   weights['PR'].get(pr[0], 0.85) * \
+                   weights['UI'].get(ui[0], 0.85)
+    
+    # ISS (ImpactSubSystem)
+    iss = 1 - (1 - c_val * 0.56) * (1 - i_val * 0.56) * (1 - a_val * 0.56)
+    
+    # Calcular score base
+    if ia_impact <= 0:
+        impact = 0
+    elif pr == 'C':
+        impact = 1.08 * ia_impact
+    else:
+        impact = ia_impact
+    
+    if impact <= 0:
+        base_score = 0
+    elif exploitability <= 0:
+        base_score = impact
+    else:
+        base_score = min(impact + exploitability, 10)
+    
+    print()
+    print(f" CVSS Base Score: {base_score:.1f}")
+    print(f" Severity: ", end="")
+    
+    if base_score >= 9.0:
+        print("CRITICAL")
+    elif base_score >= 7.0:
+        print("HIGH")
+    elif base_score >= 4.0:
+        print("MEDIUM")
+    elif base_score > 0:
+        print("LOW")
+    else:
+        print("NONE")
+    
+    return base_score
+
+if __name__ == "__main__":
+    calculate_cvss()
+EOF
+
+chmod +x cvss_calculator.py
+```
+
+---
+
+## Paso 3: Usar EPSS
+
+### 3.1 API EPSS
+
+```bash
+cat > epss_lookup.py << 'EOF'
+#!/usr/bin/env python3
+"""
+Consultar EPSS via API
+"""
+
+import requests
+import json
+
+def lookup_epss(cve_id):
+    """Busca CVE en EPSS"""
+    
+    url = f"https://api.first.org/data/v1/epss"
+    params = {
+        'cve': cve_id,
+        'scope': 'extended'
+    }
+    
+    try:
+        resp = requests.get(url, params=params, timeout=10)
+        data = resp.json()
+        
+        if 'data' in data and len(data['data']) > 0:
+            entry = data['data'][0]
+            return {
+                'cve': entry.get('cve', ''),
+                'epss': float(entry.get('epss_score', 0)),
+                'percentile': float(entry.get('percentile', 0)),
+                'date': entry.get('date', '')
+            }
+    except Exception as e:
+        print(f"Error: {e}")
+    
+    return None
+
+def main():
+    print("=== EPSS Lookup ===")
+    print("Ingresa CVE (o 'salir'):")
+    print()
+    
+    while True:
+        cve = input("CVE> ").strip()
+        
+        if cve.lower() == 'salir':
+            break
+        
+        if not cve.startswith('CVE-'):
+            cve = f"CVE-{cve}"
+        
+        result = lookup_epss(cve)
+        
+        if result:
+            print(f"  EPSS Score: {result['epss']:.2f}")
+            print(f"  Percentile: {result['percentile']:.2f}")
+            print(f"  Date: {result['date']}")
+            
+            if result['epss'] > 80:
+                print("  -> CRITICO: Alta probabilidad de exploit")
+            elif result['epss'] > 50:
+                print("  -> ALTO: Monitorear activamente")
+            else:
+                print("  -> BAJO: Prioridad menor")
+        else:
+            print("  No encontrado")
+        
+        print()
+
+if __name__ == "__main__":
+    main()
+EOF
+
+chmod +x epss_lookup.py
+```
+
+---
+
+## Paso 4: Priorizacion
+
+### 4.1 Dashboard de vulnerabilidades
+
+```bash
+cat > vuln_dashboard.py << 'EOF'
+#!/usr/bin/env python3
+"""
+Dashboard de priorizacion de vulnerabilidades
+"""
+
+import json
+
+def prioritize(vulns):
+    """Prioriza vulnerabilidades"""
+    
+    results = []
+    
+    for vuln in vulns:
+        cvss = vuln.get('cvss', 0)
+        epss = vuln.get('epss', 0)
+        
+        # Calcular prioridad
+        risk_score = (cvss * 0.6) + (epss * 0.4)
+        
+        if cvss >= 9 and epss >= 80:
+            priority = "CRITICA"
+        elif cvss >= 7 and epss >= 50:
+            priority = "ALTA"
+        elif cvss >= 4:
+            priority = "MEDIA"
+        else:
+            priority = "BAJA"
+        
+        results.append({
+            'cve': vuln['cve'],
+            'cvss': cvss,
+            'epss': epss,
+            'risk_score': risk_score,
+            'priority': priority
+        })
+    
+    # Ordenar por riesgo
+    results.sort(key=lambda x: x['risk_score'], reverse=True)
+    return results
+
+def main():
+    # Ejemplo de vulns
+    vulns = [
+        {'cve': 'CVE-2024-1708', 'cvss': 10.0, 'epss': 96.45},
+        {'cve': 'CVE-2024-23897', 'cvss': 9.8, 'epss': 91.23},
+        {'cve': 'CVE-2023-46850', 'cvss': 8.2, 'epss': 82.15},
+        {'cve': 'CVE-2023-22515', 'cvss': 10.0, 'epss': 99.12},
+        {'cve': 'CVE-2024-21412', 'cvss': 8.1, 'epss': 72.34}
+    ]
+    
+    results = prioritize(vulns)
+    
+    print("=== Priority Dashboard ===")
+    print()
+    print(f"{'CVE':<20} {'CVSS':>6} {'EPSS':>6} {'Score':>6} {'Priority'}")
+    print("-" * 60)
+    
+    for r in results:
+        print(f"{r['cve']:<20} {r['cvss']:>6.1f} {r['epss']:>6.2f} {r['risk_score']:>6.2f} {r['priority']}")
+    
+    print()
+    print("Recomendaciones:")
+    print("1. CRITICAL: Remediation en 24-48 horas")
+    print("2. HIGH: Remediation en 7 dias")
+    print("3. MEDIUM: Remediation en 30 dias")
+    print("4. LOW: Planeacion trimestral")
+
+if __name__ == "__main__":
+    main()
+EOF
+
+chmod +x vuln_dashboard.py
+```
+
+---
+
+## Ejercicio: Crear Plan de Remediacion
+
+### Objetivo
+
+1. Usar CVSS calculator para 3 escenarios
+2. Consultar EPSS de 5 CVEs reales
+3. Crear report de priorizacion
+
+### Entregables
+
+1. Reporte en `reports/remediation_plan.md`
+
+---
+
+## Comandos
+
+```bash
+# CVSS
+python3 cvss_calculator.py
+
+# EPSS
+python3 epss_lookup.py
+
+# Dashboard
+python3 vuln_dashboard.py
+```
+
+---
+
+*Lab 5/7 - Curso Fundamentos de Ciberseguridad*
+*Duration: 60 minutes*

