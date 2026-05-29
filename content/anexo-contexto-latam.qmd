@@ -1,7 +1,7 @@
 ---
 title: "Anexo: Contexto Ecuador y LATAM"
-module: "annexo-01"
-type: "annexo"
+module: "anexo-01"
+type: "anexo"
 description: "Contexto regulatorio y de ciberseguridad para Ecuador y Latinoamerica"
 ---
 

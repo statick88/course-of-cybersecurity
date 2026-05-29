@@ -115,28 +115,27 @@ book:
         - content/unidad-05/lab-09-ir-tabletop.qmd
         - content/unidad-05/quiz-05.qmd
     
-    # Anexos Contextuales
-    - content/anexo-contexto-latam.qmd
-    - content/anexo-etica.qmd
-    
-    # Labs Avanzados (IA + Ethical Hacking)
-    - labs/lab-anexo-openclaw-security.qmd
-    - labs/lab-anexo-llm-security.qmd
-    - labs/lab-anexo-ethical-hacking.qmd
-    - labs/lab-anexo-herramientas-base.qmd
-    
   # ─── PARTE II: APÉNDICES ───
   appendices:
-    - part: "Laboratorios Avanzados de Explotación Web"
+    - part: "Apéndices Contextuales"
+      chapters:
+        - content/anexo-contexto-latam.qmd
+        - content/anexo-etica.qmd
+    
+    - part: "Laboratorios Avanzados — Explotación Web"
       chapters:
         - labs/lab-anexo-juice-shop.qmd
         - labs/lab-anexo-dvwa.qmd
         - labs/lab-anexo-webgoat.qmd
     
-    - part: "IA Aplicada a Ciberseguridad"
+    - part: "Laboratorios Avanzados — IA y Ethical Hacking"
       chapters:
         - labs/lab-anexo-ai-vps.qmd
         - labs/lab-anexo-kali-mcp.qmd
+        - labs/lab-anexo-openclaw-security.qmd
+        - labs/lab-anexo-llm-security.qmd
+        - labs/lab-anexo-ethical-hacking.qmd
+        - labs/lab-anexo-herramientas-base.qmd
     
     - part: "Minicursos de Herramientas (Referencia)"
       chapters:
