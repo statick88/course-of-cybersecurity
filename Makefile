@@ -41,13 +41,13 @@ validate-frontmatter:
 validate-links:
 	@echo "🔍 Verificando referencias a imágenes existentes..."
 	@errors=0; \
-	while IFS= read -r line; do \
-		img=$$(echo "$$line" | sed -n 's/.*!\[.*\](\([^)]*\)).*/\1/p'); \
+	for f in $$(find . -name "*.qmd" -not -path "./_*" -not -path "./.git/*"); do \
+		img=$$(head -100 "$$f" | grep -oE '!\[.*\]\([^)]+\.(png|jpg|svg)\)' | sed -n 's/.*!\[.*\](\([^)]*\)).*/\1/p'); \
 		if [ -n "$$img" ] && [ ! -f "$$img" ]; then \
-			echo "  ❌ Imagen faltante: $$img"; \
+			echo "  ❌ Imagen faltante: $$img (en $$f)"; \
 			errors=$$((errors + 1)); \
 		fi; \
-	done < <(find . -name "*.qmd" -not -path "./_*" -not -path "./.git/*" -exec grep -l '!\[\](.*\.\(png\|jpg\|svg\))' {} \;); \
+	done; \
 	if [ $$errors -eq 0 ]; then echo "  ✅ Todas las imágenes existen"; fi
 
 validate-spelling:
@@ -74,11 +74,12 @@ stats:
 	@echo "─────────────────────────"
 	@echo ""
 	@echo "Archivos por tipo:"
-	@echo "  Módulos:    $$(find content/modulo-* -name '*.qmd' | wc -l | tr -d ' ')"
+	@echo "  Unidades:   $$(find content/unidad-* -name '*.qmd' | wc -l | tr -d ' ')"
 	@echo "  Labs:       $$(find labs -name '*.qmd' | wc -l | tr -d ' ')"
 	@echo "  Minicursos: $$(find minicursos -name '*.qmd' | wc -l | tr -d ' ')"
 	@echo "  Quizzes:    $$(find quizzes -name '*.qmd' | wc -l | tr -d ' ')"
 	@echo "  Simplified: $$(find content-simplified -name '*.qmd' | wc -l | tr -d ' ')"
+	@echo "  Anexos:     $$(find content/anexo*.qmd labs/lab-anexo*.qmd 2>/dev/null | wc -l | tr -d ' ')"
 	@echo ""
 	@echo "Total líneas de contenido:"
 	@find . -name "*.qmd" -not -path "./_*" -not -path "./.git/*" -exec cat {} + | wc -l | tr -d ' ' | xargs echo "  ~"
