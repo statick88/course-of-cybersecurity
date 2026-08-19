@@ -309,6 +309,68 @@ openssl rsa -pubout -in private.pem -out public.pem
 
 ## 3. Evaluaciones de Cierre
 
+### 3.1 Estructura de evaluación
+
+El curso ABC-CYB-101 combina **evaluación formativa** (durante el curso) y **evaluación sumativa** (al cierre de cada módulo y al final del curso). Los instrumentos principales son:
+
+| Instrumento | Tipo | Duración | Peso aproximado |
+|-------------|------|----------|-----------------|
+| Retos CORE (60) | Formativa + Sumativa | Distribuida en 18 unidades | 50 % |
+| Retos OPT (115) | Formativa exploratoria | Distribuida en 18 unidades | 0 % (sin penalización) |
+| Checkpoints formativos | Formativa | 1 h cada uno | 20 % |
+| Examen final teórico | Sumativa | 2 h | 30 % |
+
+### 3.2 Retos CORE vs OPT
+
+- **Retos CORE (60):** Obligatorios para la certificación. Deben completarse con una calificación mínima de 70/100 cada uno. Se distribuyen en las unidades fundamentales: `unit-I`, `unit-II`, `unit-III/iii-iam-mfa`, `unit-IV`, `unit-V` y los tres checkpoints.
+- **Retos OPT (115):** Exploratorios, sin penalización si no se completan. Refuerzan competencias transversales en scripting, hardening, Docker, Nginx y criptografía aplicada.
+
+### 3.3 Criterios de calificación
+
+| Rango | Calificación | Descripción |
+|-------|-------------|-------------|
+| 90–100 | **Sobresaliente** | Domina todos los retos CORE y OPT; aplica conocimientos en escenarios nuevos. |
+| 70–89 | **Satisfactorio** | Completa todos los retos CORE con precisión; puede omitir OPT sin penalización. |
+| 60–69 | **Mínimo aprobatorio** | Completa al menos el 80 % de retos CORE; requiere reforzar áreas específicas. |
+| < 60 | **Reprobatorio** | No alcanza el estándar mínimo; requiere repetición de contenidos y reevaluación. |
+
+### 3.4 Política de reevaluación
+
+1. **Retos CORE:** El estudiante puede reintentar cualquier reto CORE hasta alcanzar la calificación mínima de 70/100. No hay límite de intentos, pero se recomienda máximo 3 por reto.
+2. **Checkpoints formativos:** Quien no alcance el 60 % en un checkpoint tiene derecho a una reevaluación antes del examen final.
+3. **Examen final:** Una sola aplicación. En caso de reprobar, el estudiante debe esperar al periodo de reexamen oficial.
+
+### 3.5 Proyecto integrador
+
+Al final del Módulo V, el estudiante debe entregar un **proyecto integrador** en documento Markdown que incluya:
+
+- Análisis de logs y detección de al menos 3 eventos de seguridad.
+- Configuración de regla de correlación en SIEM.
+- Playbook de respuesta a incidentes (mínimo 5 fases).
+- Estrategia de respaldos con RTO/RPO definidos.
+- Despliegue de stack Docker Compose con Nginx y base de datos.
+
+**Criterios de evaluación del proyecto:**
+
+| Criterio | Peso |
+|----------|------|
+| Corrección técnica | 40 % |
+| Completitud de playbook | 25 % |
+| Calidad de documentación | 20 % |
+| Creatividad / escenarios adicionales | 15 % |
+
+### 3.6 Mapa de alineación OA–evaluación
+
+| Objetivo de aprendizaje | Instrumento de evaluación |
+|-------------------------|---------------------------|
+| Identificar vectores de ataque y clasificar malware | Retos CORE Módulo I + Examen final |
+| Configurar firewalls y arquitectura DMZ | Retos CORE Módulo II + Checkpoint II |
+| Aplicar hardening y controles IAM/MFA | Retos CORE Módulo III + Checkpoint III |
+| Calcular CVSS y gestionar parches | Retos CORE Módulo IV + Checkpoint IV |
+| Diseñar respuesta a incidentes y BCP/DRP | Retos CORE Módulo V + Checkpoint V + Proyecto integrador |
+
+---
+
 ## 4. Troubleshooting del entorno Docker
 
 ### 4.1 Problemas comunes y soluciones
