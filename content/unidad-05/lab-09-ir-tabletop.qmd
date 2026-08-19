@@ -357,3 +357,13 @@ chmod +x exercise/postmortem.sh
 
 *Lab 7/7 - Curso Fundamentos de Ciberseguridad*
 *Duration: 90 minutes*
+
+::: {.callout-note title="Alineación Práctica — Sesiones 21/23: Lab 7 — Tabletop Exercise Ransomware Response"}
+**Contenido teórico relacionado:** Ciclo de vida de respuesta a incidentes, NIST SP 800-61 Rev. 3, playbooks de ransomware, métricas IR (MTTD, MTTC, MTTR), tabla de escalación.
+
+**Laboratorio correspondiente:** Sesiones 21/23 — Respuesta a Incidentes (`instructor/guia-docente-laboratorio.qmd`).
+
+**Actividad práctica:** Ejecutar tabletop exercise simulando ransomware, coordinar equipo de respuesta (IC, Security Analyst, IT Ops, Communications), documentar lecciones aprendidas y action items del post-mortem.
+
+**Recurso de apoyo:** Ver `labs/manual-despliegue-docker.qmd` para el entorno de laboratorio.
+:::

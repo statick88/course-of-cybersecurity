@@ -50,6 +50,14 @@ El entorno se despliega sobre una **red bridge personalizada** con las siguiente
 | | | 4285 | 23 | Telnet |
 | | | 4286 | 445 | SMB |
 | | | 4287 | 3306 | MySQL |
+| **Loki** | `grafana/loki:3.2.0` | 4317 | 4317 | Almacenamiento de logs (perfil `siem`) |
+| **Promtail** | `grafana/promtail:3.2.0` | — | — | Recolección de logs (perfil `siem`) |
+| **Grafana** | `grafana/grafana:11.1.0` | 4300 | 3000 | Visualización de logs (perfil `siem`) |
+
+> **Nota:** Los servicios de logging (Loki, Promtail, Grafana) se activan con el perfil `siem`:
+> ```bash
+> docker compose --profile siem up -d
+> ```
 
 ---
 
