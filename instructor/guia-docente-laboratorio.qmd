@@ -2,7 +2,7 @@
 title: "Guía Docente — Laboratorios y Soluciones"
 module: "guia-docente-laboratorio"
 type: "instructor"
-description: "Guía de soluciones modelo, troubleshooting y procedimientos de reset para los laboratorios del curso ABC-CYB-101. Incluye respuestas esperadas por reto y diagnóstico de entorno Docker."
+description: "Guía de soluciones modelo, troubleshooting y procedimientos de reset para los laboratorios del curso ABC-CYB-101. Incluye respuestas esperadas por reto y diagnóstico de entorno Docker. Mapa curricular: 18 unidades, 175 retos (60 CORE + 115 OPT)."
 version: "2.1"
 date: "Agosto 2026"
 institution: "Abacom Capacitación y Servicios Informáticos"
@@ -22,6 +22,8 @@ code: "ABC-CYB-101"
 ## 1. Propósito
 
 Esta guía proporciona al instructor las **soluciones modelo** para los laboratorios prácticos del curso, procedimientos de **troubleshooting** del entorno Docker y comandos de **reset** para restaurar el ambiente a su estado inicial. Su uso garantiza uniformidad en la calificación y agilidad en la resolución de incidencias técnicas durante las sesiones de laboratorio.
+
+El curso incluye **18 unidades** con **175 retos** totales: **60 retos CORE** obligatorios para certificación y **115 retos OPTATIVOS** exploratorios sin penalización, alineados con una carga de 24 h prácticas.
 
 ---
 
@@ -76,6 +78,14 @@ Esta guía proporciona al instructor las **soluciones modelo** para los laborato
 
 ---
 
+::: {.callout-note title="Alineación Práctica — Sesiones 1/3: Principios y Gestión de Riesgo"}
+- **Subtema teórico:** Tríada CIA, gestión de riesgo ISO 31000/NIST SP 800-30, clasificación de activos, NIST CSF 2.0.
+- **Retos CORE asociados:** 10 retos en `unit-I` (10 CORE).
+- **Sesiones:** 1 (Tríada CIA), 2 (Gestión de Riesgo), 3 (Clasificación de Activos), 4 (NIST CSF 2.0).
+:::
+
+---
+
 ### 2.2 Módulo II — Seguridad en Redes y Controles Perimetrales
 
 #### Sesión 6 — Modelo OSI y TCP-IP
@@ -119,6 +129,14 @@ ufw allow 443/tcp
 
 ---
 
+::: {.callout-note title="Alineación Práctica — Sesiones 5/9: Redes y Controles Perimetrales"}
+- **Subtema teórico:** Modelo OSI/TCP-IP, firewalls UFW/iptables, IDS/IPS, arquitectura DMZ.
+- **Retos CORE asociados:** 10 retos en `unit-II` (10 CORE) + 5 retos en `checkpoint-ii` (5 CORE) = 15 CORE.
+- **Sesiones:** 5 (Redes y Protocolos), 6 (OSI/TCP-IP), 7 (Firewalls), 8 (IDS/IPS), 9 (Taller Módulo II).
+:::
+
+---
+
 ### 2.3 Módulo III — Hardening e Identidades
 
 #### Sesión 11 — Hardening Básico
@@ -157,6 +175,14 @@ ufw allow 443/tcp
 - Hardening: CIS Benchmarks nivel 1, actualizaciones automáticas, logging centralizado.
 - IAM: RBAC con roles mínimos, revisión trimestral.
 - MFA: FIDO2/WebAuthn obligatorio para roles privilegiados.
+
+---
+
+::: {.callout-note title="Alineación Práctica — Sesiones 10/14: Hardening e Identidades"}
+- **Subtema teórico:** Hardening CIS, IAM/MFA, scripting Bash, Docker básico.
+- **Retos CORE asociados:** 5 retos en `unit-III/iii-iam-mfa` (5 CORE) + 15 retos en `unit-iii` (15 OPT) + 15 retos en `unit-VII` (15 OPT) + 10 retos en `unit-VIII` (10 OPT).
+- **Sesiones:** 10 (Hardening Básico), 11 (IAM), 12 (MFA), 13 (Scripting Bash), 14 (Taller Módulo III).
+:::
 
 ---
 
@@ -202,6 +228,14 @@ openssl rsa -pubout -in private.pem -out public.pem
 
 ---
 
+::: {.callout-note title="Alineación Práctica — Sesiones 15/20: Amenazas, Criptografía y CVSS"}
+- **Subtema teórico:** Vectores de ataque, clasificación de malware, criptografía aplicada (OpenSSL), CVSS, gestión de parches.
+- **Retos CORE asociados:** 10 retos en `unit-IV` (10 CORE) + 10 retos en `unit-iv` (10 OPT) + 10 retos en `unit-V` (10 CORE) + 10 retos en `unit-V-crypto` (10 OPT) + 5 retos en `checkpoint-iv` (5 CORE).
+- **Sesiones:** 15 (Vectores de Ataque), 16 (Clasificación de Malware), 17 (Criptografía Aplicada), 18 (CVSS), 19 (Gestión de Parches), 20 (Checkpoint Módulo IV).
+:::
+
+---
+
 ### 2.5 Módulo V — Logging, SIEM y Respuesta a Incidentes
 
 #### Sesión 21 — Monitoreo y Logging
@@ -240,11 +274,44 @@ openssl rsa -pubout -in private.pem -out public.pem
 - RTO: 4 h. RPO: 1 h.
 - Estrategia: backup completo diario, incremental cada 4 h, réplica offsite, prueba de restauración mensual.
 
+#### Sesión 25 — Nginx y Reverse Proxy
+
+**Reto práctico:** Configurar Nginx como reverse proxy.
+
+- Redirigir HTTP a HTTPS.
+- Configurar SSL/TLS con certificados autofirmados.
+- Analizar access logs para detectar patrones de ataque.
+
+#### Sesión 26 — Docker Compose y Orquestación
+
+**Reto práctico:** Desplegar stack multi-servicio.
+
+- Servicios: Nginx, aplicación web, base de datos.
+- Configurar redes internas y volúmenes persistentes.
+- Validar conectividad y logs de cada servicio.
+
+#### Sesión 27 — Checkpoint Módulo V
+
+**Reto práctico:** Evaluación sintética.
+
+- Integrar análisis de logs, configuración TLS y despliegue de servicios Docker Compose.
+- Presentar playbook de incidente y estrategia de respaldos en documento Markdown.
+
 ---
 
-## 3. Troubleshooting del entorno Docker
+::: {.callout-note title="Alineación Práctica — Sesiones 21/27: Logging, SIEM, Incidentes y BCP"}
+- **Subtema teórico:** Monitoreo de logs, SOC/SIEM, respuesta a incidentes (NIST SP 800-61), BCP/DRP, Nginx, Docker Compose.
+- **Retos CORE asociados:** 10 retos en `unit-V` (10 CORE) + 10 retos en `unit-IX` (10 OPT) + 15 retos en `unit-X` (15 OPT) + 10 retos en `unit-XI` (10 OPT) + 10 retos en `checkpoint-v` (5 CORE).
+- **Sesiones:** 21 (Monitoreo), 22 (SOC/SIEM), 23 (Incidentes), 24 (BCP/DRP), 25 (Nginx), 26 (Docker Compose), 27 (Checkpoint Módulo V).
+:::
 
-### 3.1 Problemas comunes y soluciones
+---
+
+## 3. Evaluaciones de Cierre
+
+## 4. Troubleshooting del entorno Docker
+
+### 4.1 Problemas comunes y soluciones
 
 | Síntoma | Causa probable | Solución |
 |---------|---------------|----------|
@@ -255,7 +322,7 @@ openssl rsa -pubout -in private.pem -out public.pem
 | Metasploitable2 no responde | Imagen corrupta | `docker compose pull vuln-target && docker compose up -d vuln-target` |
 | noVNC no carga | Puerto 4281 bloqueado | Verificar firewall local: `sudo ufw allow 4281/tcp` |
 
-### 3.2 Comandos de diagnóstico
+### 4.2 Comandos de diagnóstico
 
 ```bash
 # Estado de contenedores
@@ -274,30 +341,30 @@ ss -tlnp | grep -E '428[0-7]'
 
 ---
 
-## 4. Procedimientos de reset
+## 5. Procedimientos de reset
 
-### 4.1 Reset rápido (sin perder datos)
+### 5.1 Reset rápido (sin perder datos)
 
 ```bash
 docker compose down
 docker compose up -d
 ```
 
-### 4.2 Reset completo (elimina volúmenes)
+### 5.2 Reset completo (elimina volúmenes)
 
 ```bash
 docker compose down -v
 docker compose up -d
 ```
 
-### 4.3 Reset profundo (elimina imágenes)
+### 5.3 Reset profundo (elimina imágenes)
 
 ```bash
 docker compose down -v --rmi all
 docker compose up -d
 ```
 
-### 4.4 Script de reset automatizado
+### 5.4 Script de reset automatizado
 
 Guardar como `labs/scripts/reset_lab.sh`:
 
@@ -330,11 +397,11 @@ chmod +x labs/scripts/reset_lab.sh
 
 ---
 
-## 5. Referencias cruzadas
+## 6. Referencias cruzadas
 
 | Recurso | Archivo | Descripción |
 |---------|---------|-------------|
-| Especificación de laboratorios | `labs/especificacion-laboratorios.qmd` | Mapa de 14 unidades / 140 retos |
+| Especificación de laboratorios | `labs/especificacion-laboratorios.qmd` | Mapa de 18 unidades / 175 retos (60 CORE + 115 OPT) |
 | Manual de despliegue Docker | `labs/manual-despliegue-docker.qmd` | Arquitectura, servicios y comandos |
 | Guía docente general | `instructor/guia-docente.qmd` | Plan de clases y guiones didácticos |
 | Rubricas de evaluación | `instructor/rubricas-evaluacion.qmd` | Criterios de calificación |
