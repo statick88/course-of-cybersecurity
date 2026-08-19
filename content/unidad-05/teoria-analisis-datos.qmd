@@ -264,3 +264,13 @@ Antes de continuar, verifica que puedes:
 - SANS SIFT: https://www.sans.org/tools/sift
 - MITRE ATT&CK: https://attack.mitre.org
 - NIST SP 800-86: Guide to Integrating Forensic Techniques
+
+::: {.callout-note title="Alineación Práctica — Sesiones 21/23: Análisis de Datos y Respuesta a Incidentes"}
+**Contenido teórico relacionado:** Ciclo de vida de análisis de datos, SIEM, correlación de eventos, forensia digital, MITRE ATT&CK, respuesta a incidentes y cadena de custodia.
+
+**Laboratorio correspondiente:** Sesiones 21/23 — Análisis de Datos y Respuesta a Incidentes (`instructor/guia-docente-laboratorio.qmd`).
+
+**Actividad práctica:** Configurar reglas de correlación en SIEM, analizar logs de seguridad, realizar forensia digital con herramientas como Wireshark y Volatility, y documentar una investigación de incidentes siguiendo la cadena de custodia.
+
+**Recurso de apoyo:** Ver `labs/manual-despliegue-docker.qmd` para el entorno de laboratorio.
+:::
