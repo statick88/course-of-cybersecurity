@@ -1,0 +1,297 @@
+---
+title: "Plan de Acreditación y Mejora Continua — Curso ABC-CYB-101"
+module: "acreditacion"
+type: "instructor"
+description: "Mapa de alineación con estándares internacionales (CompTIA Security+, NICE Framework, ISO 27001), indicadores de gestión del curso, cronograma de revisión anual, itinerario formativo posterior y proceso de acreditación institucional para el curso ABC-CYB-101."
+version: "2.1"
+date: "Agosto 2026"
+institution: "Abacom Capacitación y Servicios Informáticos"
+code: "ABC-CYB-101"
+---
+
+# Plan de Acreditación y Mejora Continua — Curso ABC-CYB-101
+
+**Institución:** Abacom Capacitación y Servicios Informáticos  
+**Código:** ABC-CYB-101  
+**Nombre:** Fundamentos de Ciberseguridad  
+**Versión:** 2.1  
+**Fecha:** Agosto 2026  
+**Responsable:** Diseño Curricular Abacom  
+**Área:** Desarrollo Curricular y Acreditación Institucional  
+
+---
+
+## Historial de Versiones
+
+| Versión | Fecha | Cambios |
+|---------|-------|---------|
+| 2.1 | Agosto 2026 | Actualización de alineación estándar con NIST CSF 2.0 oficial, CVSS v3.1 e indicadores de gestión. |
+| 2.0 | Agosto 2026 | Versión base validada con estructura de 5 módulos / 18 subtemas / 40 h. |
+
+---
+
+## 1. Mapa de Alineación con Estándares Internacionales
+
+### 1.1 Propósito y Alcance
+
+El curso ABC-CYB-101 se ha diseñado para garantizar alineación explícita con marcos de referencia globales, facilitando la portabilidad de competencias y la elegibilidad para certificaciones sectoriales. El presente mapa documenta, para cada subtema, los objetivos de aprendizaje, dominios y competencias específicas cubiertas en tres estándares de referencia:
+
+- **CompTIA Security+ (versión SY0-701)** — Certificación fundamental de seguridad informática.
+- **NICE Framework (NIST SP 800-181 Rev. 1)** — Marco nacional de capacidades en ciberseguridad de EE. UU.
+- **ISO/IEC 27001:2022** — Estándar internacional para Sistemas de Gestión de Seguridad de la Información (SGSI).
+
+### 1.2 Leyenda de Niveles de Cobertura
+
+| Símbolo | Nivel de Cobertura | Descripción |
+|---------|-------------------|-------------|
+| **C** | Cubierto | El subtema aborda de forma directa y completa el objetivo estándar. |
+| **P** | Parcial | El subtema aborda el objetivo estándar de forma introductoria o parcial. |
+| **R** | Referenciado | El subtema menciona el concepto estándar pero no lo desarrolla como objetivo principal. |
+
+### 1.3 Matriz de Alineación por Subtema
+
+#### Módulo I: Principios de Ciberseguridad y Gestión de Riesgo
+
+| Subtema | CompTIA Security+ SY0-701 | NICE Framework (NIST SP 800-181) | ISO/IEC 27001:2022 |
+|---------|---------------------------|----------------------------------|---------------------|
+| **1.1. Tríada de la Seguridad de la Información** | Objetivo 1.1: Explicar los conceptos de seguridad de la información (confidencialidad, integridad, disponibilidad). | SP-005-001: Gestión de riesgos; SP-025-001: Protección de información. | Control 5.1: Políticas de seguridad de la información; Control 5.2: Funciones y responsabilidades. |
+| **1.2. Gestión de Riesgo según ISO 31000 / NIST SP 800-30** | Objetivo 1.2: Explicar los procesos de gestión de riesgos. | SP-005-001: Gestión de riesgos; SP-005-002: Evaluación de riesgos. | Control 6.1: Evaluación de riesgos de seguridad de la información; Control 6.2: Tratamiento de riesgos. |
+| **1.3. Clasificación de Activos y Datos** | Objetivo 1.3: Explicar la gestión de activos de datos. | SP-025-001: Protección de información; SP-025-002: Clasificación de datos. | Control 5.9: Inventario de activos; Control 5.10: Clasificación de información. |
+| **1.4. Marco NIST Cybersecurity Framework (CSF) 2.0** | Objetivo 1.4: Explicar los marcos y estándares de seguridad. | SP-005-001: Gestión de riesgos; SP-041-001: Concienciación y formación. | Control 5.1: Políticas; Control 6.1: Evaluación de riesgos (alineación con marcos internacionales). |
+
+#### Módulo II: Seguridad en Redes y Controles Perimetrales
+
+| Subtema | CompTIA Security+ SY0-701 | NICE Framework (NIST SP 800-181) | ISO/IEC 27001:2022 |
+|---------|---------------------------|----------------------------------|---------------------|
+| **2.1. Modelo OSI y TCP-IP Aplicado a la Seguridad** | Objetivo 3.1: Explicar los conceptos de arquitectura de red. | SP-041-001: Arquitectura de redes; SP-041-002: Seguridad de redes. | Control 8.1: Gestión de redes; Control 8.2: Seguridad de las comunicaciones. |
+| **2.2. Firewalls: Conceptos y Clasificación** | Objetivo 3.2: Explicar los controles de red y dispositivos de seguridad. | SP-041-002: Seguridad de redes; SP-041-003: Gestión de firewalls. | Control 8.12: Dispositivos de seguridad de red; Control 8.15: Segmentación de red. |
+| **2.3. Sistemas de Detección y Prevención de Intrusos (IDS / IPS)** | Objetivo 3.3: Explicar los sistemas de detección de intrusiones. | SP-041-004: Detección de intrusiones; SP-041-005: Respuesta a incidentes de red. | Control 8.16: Monitoreo de red; Control 8.17: Detección de intrusiones. |
+
+#### Módulo III: Hardening de Sistemas e Identidades (IAM/MFA)
+
+| Subtema | CompTIA Security+ SY0-701 | NICE Framework (NIST SP 800-181) | ISO/IEC 27001:2022 |
+|---------|---------------------------|----------------------------------|---------------------|
+| **3.1. Hardening Básico de Sistemas Operativos** | Objetivo 4.1: Explicar la seguridad de hosts y dispositivos. | SP-025-003: endurecimiento de sistemas; SP-025-004: Configuración segura. | Control 8.9: Gestión de vulnerabilidades técnicas; Control 8.10: Configuración segura. |
+| **3.2. Gestión de Identidades y Accesos (IAM)** | Objetivo 5.1: Explicar los conceptos de gestión de identidades y accesos. | SP-010-001: Gestión de identidades; SP-010-002: Control de acceso. | Control 5.18: Gestión de identidades; Control 5.19: Registro y eliminación de acceso. |
+| **3.3. Autenticación Multifactor (MFA) Resistente a Phishing** | Objetivo 5.2: Explicar los métodos de autenticación. | SP-010-003: Autenticación multifactor; SP-010-004: Autenticación resistente a phishing. | Control 5.20: Autenticación multifactor; Control 5.21: Contraseñas y gestión de credenciales. |
+
+#### Módulo IV: Amenazas, Criptografía Aplicada y Análisis de Vulnerabilidades
+
+| Subtema | CompTIA Security+ SY0-701 | NICE Framework (NIST SP 800-181) | ISO/IEC 27001:2022 |
+|---------|---------------------------|----------------------------------|---------------------|
+| **4.1. Vectores de Ataque y Superficie de Ataque** | Objetivo 2.1: Explicar los vectores de ataque. | SP-015-001: Análisis de amenazas; SP-015-002: Superficie de ataque. | Control 5.23: Evaluación de amenazas; Control 5.24: Reducción de superficie de ataque. |
+| **4.2. Clasificación de Malware** | Objetivo 2.2: Explicar los tipos de malware. | SP-015-003: Análisis de malware; SP-015-004: Clasificación de amenazas. | Control 5.25: Protección contra malware; Control 5.26: Análisis de código malicioso. |
+| **4.3. Criptografía Aplicada** | Objetivo 6.1: Explicar los conceptos criptográficos básicos. | SP-025-005: Criptografía aplicada; SP-025-006: Gestión de claves. | Control 8.24: Criptografía; Control 8.25: Gestión de claves criptográficas. |
+| **4.4. Puntuación CVSS y Gestión de Parches** | Objetivo 5.3: Explicar la gestión de vulnerabilidades y parches. | SP-005-003: Gestión de vulnerabilidades; SP-005-004: Parcheo de sistemas. | Control 6.3: Gestión de vulnerabilidades técnicas; Control 6.4: Gestión de parches. |
+
+#### Módulo V: Logging, SIEM, Respuesta a Incidentes y Continuidad
+
+| Subtema | CompTIA Security+ SY0-701 | NICE Framework (NIST SP 800-181) | ISO/IEC 27001:2022 |
+|---------|---------------------------|----------------------------------|---------------------|
+| **5.1. Monitoreo y Logging** | Objetivo 3.4: Explicar el monitoreo de red y logs. | SP-041-006: Monitoreo de seguridad; SP-041-007: Gestión de logs. | Control 8.18: Registro (logging); Control 8.19: Monitoreo continuo. |
+| **5.2. Fundamentos de SOC y SIEM** | Objetivo 3.5: Explicar los conceptos de SOC y SIEM. | SP-041-008: Operaciones de seguridad; SP-041-009: SIEM y análisis de eventos. | Control 5.28: Detección de eventos de seguridad; Control 5.29: Gestión de incidentes. |
+| **5.3. Ciclo de Vida de Respuesta a Incidentes (NIST SP 800-61 r2/r3)** | Objetivo 4.2: Explicar la respuesta a incidentes. | SP-041-005: Respuesta a incidentes de red; SP-041-010: Gestión de incidentes de seguridad. | Control 5.27: Respuesta a incidentes de seguridad de la información; Control 5.28: Lecciones aprendidas. |
+| **5.4. Respaldos y Continuidad del Negocio (BCP/DRP)** | Objetivo 4.3: Explicar la continuidad del negocio y recuperación ante desastres. | SP-041-011: Continuidad del negocio; SP-041-012: Recuperación ante desastres. | Control 5.30: Continuidad del negocio; Control 5.31: Respaldos de información. |
+
+---
+
+## 2. Indicadores de Gestión del Curso
+
+### 2.1 Definición y Propósito
+
+Los indicadores de gestión permiten evaluar el desempeño del curso ABC-CYB-101 en tres dimensiones clave: resultados académicos, satisfacción estudiantil y empleabilidad. Su cálculo es automatizado mediante el LMS institucional y validado trimestralmente por el Comité de Acreditación Académica.
+
+### 2.2 Indicadores, Metas y Fórmulas de Cálculo
+
+| # | Indicador | Definición | Meta | Fórmula de Cálculo | Frecuencia de Medición |
+|---|-----------|------------|------|-------------------|------------------------|
+| **IG-01** | Tasa de Aprobación | Porcentaje de estudiantes que aprueban el curso respecto del total de inscritos. | ≥ 75 % | (Número de estudiantes que aprueban / Total de estudiantes inscritos) × 100 | Trimestral |
+| **IG-02** | Tasa de Reprobación | Porcentaje de estudiantes que reprueban el curso. | ≤ 15 % | (Número de estudiantes que reprueban / Total de estudiantes inscritos) × 100 | Trimestral |
+| **IG-03** | Tasa de Deserción | Porcentaje de estudiantes que abandonan el curso antes de su finalización. | ≤ 10 % | (Número de desertores / Total de estudiantes inscritos) × 100 | Trimestral |
+| **IG-04** | Satisfacción Estudiantil | Promedio de la encuesta de satisfacción aplicada al finalizar el curso (escala 1 a 5). | ≥ 4.2 / 5.0 | Σ (Puntajes de satisfacción) / (Número de respuestas) | Por cohorte |
+| **IG-05** | Índice de Recomendación (NPS) | Porcentaje neto de estudiantes que recomiendan el curso a colegas. | ≥ 50 % | (% Promotores) − (% Detractores) | Por cohorte |
+| **IG-06** | Empleabilidad a 90 Días | Porcentaje de egresados que acceden a un puesto relacionado con ciberseguridad dentro de los 90 días posteriores a la finalización. | ≥ 60 % | (Egresados empleados en roles de ciberseguridad a 90 días / Total de egresados) × 100 | Semestral |
+| **IG-07** | Tasa de Certificación | Porcentaje de egresados que obtienen al menos una certificación de nivel entry en ciberseguridad en los 12 meses posteriores. | ≥ 40 % | (Egresados certificados / Total de egresados encuestados) × 100 | Anual |
+| **IG-08** | Cumplimiento de Objetivos de Aprendizaje | Porcentaje de estudiantes que alcanzan el nivel mínimo de competencia en cada objetivo de aprendizaje evaluado. | ≥ 80 % | (Estudiantes que cumplen el OA / Total de estudiantes evaluados) × 100 | Por evaluación |
+| **IG-09** | Tasa de Asistencia | Porcentaje promedio de asistencia a sesiones sincrónicas. | ≥ 85 % | (Total de asistencias registradas / Total de sesiones programadas × Número de estudiantes) × 100 | Trimestral |
+| **IG-10** | Tiempo de Finalización | Promedio de días hábiles requeridos por el estudiante para completar el curso desde su inscripción. | ≤ 90 días | Σ (Días hábiles de finalización por estudiante) / Número de egresados | Por cohorte |
+
+### 2.3 Parámetros de Alerta y Acciones Correctivas
+
+| Indicador | Zona de Alerta | Acción Correctiva |
+|-----------|----------------|-------------------|
+| IG-01 (Tasa de Aprobación) | < 70 % | Revisión de prerrequisitos, refuerzo de tutorías y actualización de rúbricas. |
+| IG-04 (Satisfacción) | < 3.8 / 5.0 | Encuesta cualitativa a estudiantes, revisión de guía docente y contenidos desactualizados. |
+| IG-06 (Empleabilidad) | < 50 % | Actualización de perfil de egreso, alineación con requerimientos del mercado y fortalecimiento de prácticas profesionales. |
+| IG-07 (Certificación) | < 30 % | Inclusión de simulacros de examen oficial y descuentos en voucher de certificación. |
+
+---
+
+## 3. Cronograma de Revisión Anual del Temario
+
+### 3.1 Filosofía de Mejora Continua
+
+El temario del curso ABC-CYB-101 se somete a un ciclo anual de revisión estructurada, garantizando su vigencia frente a la rápida evolución del panorama de amenazas y marcos normativos. El cronograma distribuye las actividades de mantenimiento, actualización y validación a lo largo de 12 meses, evitando concentración de esfuerzos en periodos de dictado.
+
+### 3.2 Calendario de Actividades
+
+| Mes | Actividad Principal | Subtareas Específicas | Responsable | Entregable |
+|-----|---------------------|-----------------------|-------------|------------|
+| **Enero** | Revisión de normativa y estándares | - Verificar nuevas versiones de NIST CSF, ISO 27001, NIST SP 800-30.<br>- Actualizar matriz de alineación si existen cambios normativos. | Diseño Curricular | Informe de vigencia normativa. |
+| **Febrero** | Evaluación de indicadores del año anterior | - Analizar IG-01 a IG-10 del año cerrado.<br>- Identificar desviaciones respecto a metas.<br>- Generar informe de desempeño. | Comité de Acreditación | Informe de Indicadores Anuales. |
+| **Marzo** | Revisión de contenido técnico por módulo | - Módulos I y II: Actualizar ejemplos, casos de estudio y estadísticas de incidentes.<br>- Verificar vigencia de herramientas de laboratorio. | Equipo Docente | Informe de actualización técnica. |
+| **Abril** | Revisión de contenido técnico por módulo (continuación) | - Módulos III y IV: Evaluar inclusión de nuevas técnicas de hardening, MFA y CVSS.<br>- Actualizar clasificación de malware y vectores de ataque. | Equipo Docente | Informe de actualización técnica (continuación). |
+| **Mayo** | Revisión de contenido técnico por módulo (continuación) | - Módulo V: Actualizar herramientas de SIEM, plataformas de SOC y procedimientos de respuesta.<br>- Incluir lecciones aprendidas de incidentes recientes. | Equipo Docente | Informe de actualización técnica (final). |
+| **Junio** | Evaluación de laboratorios y materiales prácticos | - Revisar funcionamiento de los 16 laboratorios.<br>- Actualizar imágenes de máquinas virtuales y entornos de práctica.<br>- Verificar vigencia de CTF y plataformas (DVWA, Juice Shop, etc.). | Coordinación de Labs | Informe de vigencia de laboratorios. |
+| **Julio** | Validación externa y benchmarking | - Comparar temario con programas de universidades y certificadoras líderes.<br>- Consultar con entes de acreditación (CERT, ISO, CompTIA).<br>- Recopilar feedback de egresados y empleadores. | Diseño Curricular | Informe de benchmarking externo. |
+| **Agosto** | Consolidación de cambios y propuesta de versión | - Integrar todas las modificaciones propuestas.<br>- Redactar propuesta de versión curricular (incremento de versión).<br>- Presentar propuesta al Comité de Acreditación. | Diseño Curricular | Propuesta de Versión Curricular. |
+| **Septiembre** | Aprobación y publicación | - Aprobación formal por Comité de Acreditación.<br>- Actualización de índice maestro y documentos derivados (guía docente, rúbricas, manual del estudiante).<br>- Publicación en LMS. | Comité de Acreditación | Versión curricular aprobada y publicada. |
+| **Octubre** | Período de transición | - Dictado paralelo de versión anterior y nueva (si aplica).<br>- Capacitación de docentes en cambios curriculares. | Coordinación Académica | Informe de transición curricular. |
+| **Noviembre** | Seguimiento de cohorte en curso | - Aplicación de encuestas de satisfacción parciales.<br>- Revisión de resultados de evaluaciones formativas.<br>- Ajustes menores de ritmo y carga académica. | Equipo Docente | Informe de seguimiento parcial. |
+| **Diciembre** | Planificación del año siguiente | - Definir metas de indicadores para el próximo año.<br>- Programar capacitación docente.<br>- Establecer agenda de actualizaciones técnicas prioritarias. | Diseño Curricular | Plan de Mejora Anual. |
+
+---
+
+## 4. Itinerario Formativo Posterior
+
+### 4.1 Visión de la Trayectoria Formativa
+
+Abacom estructura su oferta en ciberseguridad como una trayectoria progresiva de tres niveles, garantizando una base sólida antes de la especialización. El curso ABC-CYB-101 constituye el **Nivel 1: Fundamentos**, proporcionando las competencias básicas requeridas para acceder a los niveles intermedio y avanzado.
+
+```
+Nivel 1 (ABC-CYB-101) → Nivel 2 (Detección y Respuesta) → Nivel 3 (Hardening y Arquitectura Zero Trust)
+```
+
+### 4.2 Curso Intermedio: Detección y Respuesta
+
+| Atributo | Detalle |
+|----------|---------|
+| **Código** | ABC-CYB-201 |
+| **Nombre** | Detección y Respuesta en Ciberseguridad |
+| **Duración** | 60 horas (24 h teoría / 36 h práctica-evaluación) |
+| **Prerrequisitos** | ABC-CYB-101 aprobado con calificación mínima de 70/100. |
+| **Objetivo General** | Formar profesionales capaces de diseñar, operar y mejorar capacidades de detección, análisis y respuesta a incidentes de seguridad en entornos empresariales. |
+| **Objetivos Específicos** | 1. Diseñar arquitecturas de monitoreo y logging centralizado.<br>2. Configurar y operar plataformas SIEM en entornos simulados.<br>3. Ejecutar el ciclo de vida de respuesta a incidentes según NIST SP 800-61 r2/r3.<br>4. Desarrollar reglas de detección, playbooks de respuesta y planes de comunicación.<br>5. Integrar inteligencia de amenazas (CTI) en procesos de detección. |
+| **Módulos Principales** | 1. Logging y Monitoreo Centralizado (12 h)<br>2. SIEM: Arquitectura, Despliegue y Operación (16 h)<br>3. Respuesta a Incidentes y Forense Básico (16 h)<br>4. Inteligencia de Amenazas y Enriquecimiento (8 h)<br>5. Proyecto Integrador: SOC en Laboratorio (8 h) |
+| **Certificación Relacionada** | CompTIA CySA+; Certificado Profesional de Ciberseguridad de Google (Coursera). |
+
+### 4.3 Curso Avanzado: Hardening y Arquitectura Zero Trust
+
+| Atributo | Detalle |
+|----------|---------|
+| **Código** | ABC-CYB-301 |
+| **Nombre** | Hardening de Sistemas y Arquitectura Zero Trust |
+| **Duración** | 80 horas (32 h teoría / 48 h práctica-evaluación) |
+| **Prerrequisitos** | ABC-CYB-101 aprobado (≥ 70/100) + ABC-CYB-201 aprobado (≥ 75/100).<br>Conocimientos básicos de redes (modelo OSI, TCP/IP) y sistemas operativos (Windows Server / Linux). |
+| **Objetivo General** | Formar profesionales capaces de diseñar, implementar y auditar arquitecturas de seguridad basadas en Zero Trust, con hardening avanzado de sistemas, identidades y redes. |
+| **Objetivos Específicos** | 1. Aplicar técnicas avanzadas de hardening a sistemas operativos, servidores y dispositivos de red.<br>2. Diseñar arquitecturas Zero Trust alineadas con NIST SP 800-207 y NIST CSF 2.0.<br>3. Implementar controles de confianza cero en redes, identidades, aplicaciones y datos.<br>4. Gestionar vulnerabilidades y parches en entornos complejos.<br>5. Desarrollar políticas de seguridad, playbooks de hardening y planes de continuidad. |
+| **Módulos Principales** | 1. Hardening Avanzado de Sistemas Operativos (20 h)<br>2. Gestión de Identidades y Accesos Avanzada (20 h)<br>3. Arquitectura Zero Trust: Fundamentos e Implementación (24 h)<br>4. Seguridad en Redes y Microsegmentación (10 h)<br>5. Proyecto Integrador: Diseño de Arquitectura Zero Trust (6 h) |
+| **Certificación Relacionada** | CompTIA Security+ (si no se obtuvo en nivel 1); Certificado Profesional de Arquitectura Zero Trust (Coursera / edX). |
+
+### 4.4 Mapa de Transición desde ABC-CYB-101
+
+El siguiente diagrama describe la progresión de competencias desde el curso base hacia los niveles intermedio y avanzado:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                  TRAYECTORIA FORMATIVA EN CIBERSEGURIDAD — ABACOM            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  NIVEL 1: FUNDAMENTOS                    NIVEL 2: DETECCIÓN Y RESPUESTA     │
+│  ▸ ABC-CYB-101 (40 h)                   ▸ ABC-CYB-201 (60 h)               │
+│  ▸ Conocimientos básicos de seguridad    ▸ Monitoreo, SIEM, IR, CTI        │
+│  ▸ Marcos normativos (NIST, ISO)         ▸ Prerreq: ABC-CYB-101 (≥ 70)    │
+│  ▸ Hardening, criptografía, riesgo       ▸ Certificación: CySA+             │
+│                                                                             │
+│                              ▼                                              │
+│                                                                             │
+│  NIVEL 3: HARDENING Y ARQUITECTURA ZERO TRUST                               │
+│  ▸ ABC-CYB-301 (80 h)                                                     │
+│  ▸ Zero Trust, hardening avanzado, IAM                                     │
+│  ▸ Prerreq: ABC-CYB-101 + ABC-CYB-201                                     │
+│  ▸ Certificación: Zero Trust Architect                                      │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 4.5 Créditos y Reconocimiento Académico
+
+| Curso | Horas | Créditos Académicos* | Certificación Relacionada |
+|-------|-------|----------------------|---------------------------|
+| ABC-CYB-101 | 40 h | 3 créditos | CompTIA Security+ |
+| ABC-CYB-201 | 60 h | 4 créditos | CompTIA CySA+ |
+| ABC-CYB-301 | 80 h | 5 créditos | Certificado Zero Trust Architect |
+
+\*Según normativa de equivalencia de créditos académicos (1 crédito = 10 h de trabajo estudiantil total).
+
+---
+
+## 5. Cumplimiento Normativo y Proceso de Acreditación Institucional
+
+### 5.1 Marco Normativo de Referencia
+
+El curso ABC-CYB-101 opera bajo el cumplimiento de los siguientes marcos normativos y estándares:
+
+| Norma / Estándar | Organismo | Ámbito de Aplicación en el Curso |
+|------------------|-----------|----------------------------------|
+| **ISO/IEC 31000:2018** | International Organization for Standardization (ISO) | Gestión de riesgo según subtema 1.2. |
+| **NIST SP 800-30 Rev. 1** | National Institute of Standards and Technology (NIST) | Evaluación de riesgo según subtema 1.2. |
+| **NIST Cybersecurity Framework 2.0** | NIST | Marco de ciberseguridad según subtema 1.4. |
+| **ISO/IEC 27001:2022** | ISO | Controles de seguridad de la información transversal a todos los módulos. |
+| **NIST SP 800-61 Rev. 2 / Rev. 3** | NIST | Respuesta a incidentes según subtema 5.3. |
+| **CVSS v3.1** | FIRST / NVD | Puntuación de vulnerabilidades según subtema 4.4. |
+| **CompTIA Security+ SY0-701** | CompTIA | Alineación de objetivos de aprendizaje. |
+| **NICE Framework (NIST SP 800-181 Rev. 1)** | NIST | Mapeo de capacidades profesionales. |
+
+### 5.2 Proceso de Acreditación Institucional
+
+Abacom Capacitación y Servicios Informáticos sigue un proceso estructurado de acreditación interna y externa, garantizando la calidad y vigencia de sus programas formativos.
+
+#### 5.2.1 Fases del Proceso
+
+| Fase | Actividad | Responsable | Duración Estimada |
+|------|-----------|-------------|-------------------|
+| **Fase 1: Autoevaluación** | - Revisión interna del cumplimiento de indicadores.<br>- Actualización de documentos curriculares.<br>- Verificación de alineación con estándares. | Diseño Curricular + Comité de Acreditación | 4 semanas |
+| **Fase 2: Evaluación por Pares** | - Revisión del plan de estudios por expertos externos.<br>- Validación de rúbricas y metodologías de evaluación.<br>- Verificación de infraestructura y recursos. | Evaluadores Externos (acreditación) | 3 semanas |
+| **Fase 3: Informe de Acreditación** | - Elaboración de informe de hallazgos.<br>- Plan de acción para recomendaciones.<br>- Presentación ante ente acreditador. | Comité de Acreditación | 2 semanas |
+| **Fase 4: Certificación / Renovación** | - Obtención de resolución de acreditación.<br>- Publicación de certificación oficial.<br>- Plan de mejora continua basado en observaciones. | Dirección Académica | 1 semana |
+
+#### 5.2.2 Requisitos de Acreditación
+
+1. **Documentación Curricular Completa:** Plan de curso, guía docente, rúbricas, especificación de laboratorios y plan de acreditación (este documento).
+2. **Cuerpo Docente Calificado:** Instructores con certificaciones vigentes en ciberseguridad (CompTIA Security+, CySA+, CEH, o equivalentes) y experiencia profesional mínima de 3 años en áreas de seguridad.
+3. **Infraestructura y Laboratorios:** Entornos de práctica seguros, aislados y documentados, con protocolos de seguridad para la ejecución de código malicioso en laboratorios controlados.
+4. **Sistema de Evaluación Transparente:** Rúbricas validadas, calificaciones retroalimentadas y sistema de apelaciones académicas.
+5. **Mecanismo de Mejora Continua:** Cronograma de revisión anual (Sección 3), seguimiento de indicadores (Sección 2) y actualización normativa semestral.
+
+### 5.3 Entes de Acreditación Vinculados
+
+| Ente | Tipo de Acreditación | Periodicidad |
+|------|----------------------|--------------|
+| **Abacom — Comité de Acreditación Interno** | Acreditación curricular interna | Anual |
+| **CompTIA** | Alineación curricular para certificaciones | Cada 3 años (renovación de objetivos) |
+| **ISO / Ente Certificador** | Acreditación de proveedor de formación en SGSI | Cada 3 años |
+| **NICE / NIST** | Reconocimiento de alineación con marco nacional de ciberseguridad | Según actualización de NIST SP 800-181 |
+
+### 5.4 Compromiso de Actualización Continua
+
+Abacom se compromete a:
+
+1. Mantener la vigencia terminológica y normativa del curso, alineándose con las versiones oficiales de NIST CSF 2.0, ISO 31000, NIST SP 800-30, CVSS v3.1 y demás estándares citados.
+2. Revisar y actualizar el contenido técnico de forma anual, incorporando nuevas amenazas, técnicas de ataque y defensa relevantes para el panorama de ciberseguridad global.
+3. Evaluar la empleabilidad de egresados y la satisfacción estudiantil como métricas de éxito primarias.
+4. Publicar informes semestrales de desempeño del curso, disponibles para entes evaluadores, estudiantes y empleadores asociados.
+
+---
+
+## Aprobación del Documento
+
+| Rol | Nombre | Firma | Fecha |
+|-----|--------|-------|-------|
+| Diseño Curricular | [Responsable de Diseño Curricular Abacom] | _________________ | Agosto 2026 |
+| Comité de Acreditación | [Presidente del Comité] | _________________ | Agosto 2026 |
+| Dirección Académica | [Director Académico Abacom] | _________________ | Agosto 2026 |
+
+---
+
+*Documento generado en el marco del Plan de Acreditación y Mejora Continua del curso ABC-CYB-101, Fundamentos de Ciberseguridad. Versión 2.1 — Agosto 2026 — Abacom Capacitación y Servicios Informáticos.*

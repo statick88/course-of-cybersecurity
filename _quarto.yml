@@ -158,6 +158,17 @@ book:
         - minicursos/minicurso-netcat.qmd
         - minicursos/minicurso-tcpdump.qmd
     
+    - part: "Recursos para Instructores"
+      chapters:
+        - instructor/guia-docente.qmd
+        - instructor/manual-estudiante.qmd
+        - instructor/rubricas-evaluacion.qmd
+        - instructor/acreditacion.qmd
+
+    - part: "Especificación de Laboratorios"
+      chapters:
+        - labs/especificacion-laboratorios.qmd
+
     - part: "Curso Simplificado (Para Principiantes)"
       chapters:
         - content-simplified/index.qmd
