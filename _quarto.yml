@@ -165,9 +165,11 @@ book:
         - instructor/rubricas-evaluacion.qmd
         - instructor/acreditacion.qmd
 
-    - part: "Especificación de Laboratorios"
+    - part: "Entorno Práctico y Laboratorios"
       chapters:
         - labs/especificacion-laboratorios.qmd
+        - labs/manual-despliegue-docker.qmd
+        - instructor/guia-docente-laboratorio.qmd
 
     - part: "Curso Simplificado (Para Principiantes)"
       chapters:

@@ -1,0 +1,305 @@
+---
+title: "Manual de Despliegue — Entorno Docker para Laboratorios"
+module: "manual-despliegue-docker"
+type: "labs"
+description: "Guía de despliegue del entorno Docker de laboratorios para el curso ABC-CYB-101. Incluye arquitectura de red (subnet 172.20.0.0/24), servicios, menú interactivo y comandos de administración."
+version: "2.1"
+date: "Agosto 2026"
+institution: "Abacom Capacitación y Servicios Informáticos"
+code: "ABC-CYB-101"
+---
+
+# Manual de Despliegue — Entorno Docker para Laboratorios
+
+**Institución:** Abacom Capacitación y Servicios Informáticos  
+**Código:** ABC-CYB-101  
+**Versión:** 2.1  
+**Fecha:** Agosto 2026  
+**Responsable:** Diseño Curricular Abacom  
+
+---
+
+## 1. Propósito
+
+Este manual describe el procedimiento completo para desplegar el **entorno de laboratorios Docker** del curso **Fundamentos de Ciberseguridad (ABC-CYB-101)**. El entorno proporciona máquinas vulnerables, herramientas de análisis y servicios objetivo para que los estudiantes practiquen en un entorno aislado y controlado.
+
+---
+
+## 2. Arquitectura del entorno
+
+### 2.1 Topología de red
+
+El entorno se despliega sobre una **red bridge personalizada** con las siguientes características:
+
+| Parámetro | Valor |
+|-----------|-------|
+| **Subnet** | `172.20.0.0/24` |
+| **Gateway** | `172.20.0.1` |
+| **Rango DHCP** | `172.20.0.10` — `172.20.0.250` |
+| **Aislamiento** | Red interna sin acceso directo a Internet (excepto Kali para actualizaciones) |
+
+### 2.2 Servicios incluidos
+
+| Servicio | Imagen | Puerto Host | Puerto Contenedor | Función |
+|----------|--------|-------------|-------------------|---------|
+| **Kali Linux** | `kalilinux/kali-rolling:latest` | 4281 | 8080 (noVNC) | Terminal de ataque y análisis |
+| **DVWA** | `vulnerables/web-dvwa:latest` | 4280 | 80 | Aplicación web vulnerable |
+| **Metasploitable2** | `tleemcjr/metasploitable2:latest` | 4282 | 80 | Target vulnerable (web) |
+| | | 4283 | 21 | FTP |
+| | | 4284 | 22 | SSH |
+| | | 4285 | 23 | Telnet |
+| | | 4286 | 445 | SMB |
+| | | 4287 | 3306 | MySQL |
+
+---
+
+## 3. Requisitos previos
+
+### 3.1 Hardware mínimo
+
+- **RAM:** 8 GB recomendados (4 GB mínimos)
+- **CPU:** 4 núcleos recomendados (2 núcleos mínimos)
+- **Almacenamiento:** 20 GB libres para imágenes y volúmenes
+
+### 3.2 Software requerido
+
+| Software | Versión mínima | Verificación |
+|----------|---------------|--------------|
+| Docker Engine | 24.0+ | `docker --version` |
+| Docker Compose | 2.20+ | `docker compose version` |
+| Git | 2.30+ | `git --version` |
+
+### 3.3 Sistema operativo soportado
+
+- Ubuntu 22.04 / 24.04 LTS
+- Debian 12 / 13
+- Fedora 40+
+- Windows 10/11 con WSL2
+- macOS 13+ (con Docker Desktop)
+
+---
+
+## 4. Procedimiento de despliegue
+
+### 4.1 Clonar el repositorio
+
+```bash
+git clone https://github.com/statick88/course-of-cybersecurity.git
+cd course-of-cybersecurity
+```
+
+### 4.2 Iniciar el entorno
+
+```bash
+# Iniciar todos los servicios
+docker compose up -d
+
+# Verificar estado
+docker compose ps
+```
+
+### 4.3 Verificar conectividad
+
+```bash
+# Probar conectividad entre contenedores
+docker compose exec kali ping -c 3 172.20.0.20
+
+# Verificar DVWA desde Kali
+docker compose exec kali curl -s http://172.20.0.20 | head -20
+```
+
+### 4.4 Acceder a los servicios
+
+| Servicio | URL de acceso | Credenciales por defecto |
+|----------|--------------|-------------------------|
+| DVWA | http://localhost:4280 | `admin` / `password` |
+| Kali noVNC | http://localhost:4281 | (sin credenciales — acceso directo) |
+| Metasploitable2 Web | http://localhost:4282 | (sin credenciales) |
+
+---
+
+## 5. Menú interactivo del contenedor
+
+El contenedor **Kali Linux** incluye un **menú interactivo** que facilita la ejecución de evaluaciones y retos sin necesidad de recordar comandos complejos.
+
+### 5.1 Acceso al menú
+
+```bash
+docker compose exec kali bash
+menu_labs
+```
+
+### 5.2 Estructura del menú
+
+```
+╔══════════════════════════════════════════════════════════════╗
+║          LABORATORIOS — FUNDAMENTOS DE CIBERSEGURIDAD        ║
+╠══════════════════════════════════════════════════════════════╣
+║  1. Módulo I — Introducción a la Ciberseguridad              ║
+║     1.1 Análisis de incidentes                               ║
+║     1.2 Evaluación de riesgos (ISO 31000)                    ║
+║     1.3 Clasificación de activos (NIST CSF 2.0)              ║
+║                                                              ║
+║  2. Módulo II — Seguridad en Redes                           ║
+║     2.1 Análisis de tráfico (Wireshark)                      ║
+║     2.2 Configuración de firewall                            ║
+║     2.3 Detección de intrusiones (Suricata/Snort)            ║
+║     2.4 Arquitectura de defensa perimetral                   ║
+║                                                              ║
+║  3. Módulo III — Hardening e Identidades                     ║
+║     3.1 Hardening de SO (CIS Benchmarks)                     ║
+║     3.2 IAM y RBAC                                           ║
+║     3.3 MFA y políticas de passwords                         ║
+║     3.4 Cumplimiento ISO 27001                              ║
+║                                                              ║
+║  4. Módulo IV — Amenazas y Criptografía                      ║
+║     4.1 Análisis de malware en sandbox                       ║
+║     4.2 Prácticas de criptografía (OpenSSL)                  ║
+║     4.3 CVSS v3.1 y Nessus Essentials                        ║
+║     4.4 Laboratorio integrador                               ║
+║                                                              ║
+║  5. Módulo V — Respuesta a Incidentes                        ║
+║     5.1 Respuesta a incidentes simulados                     ║
+║     5.2 Elaboración de informe forense                       ║
+║                                                              ║
+║  0. Salir                                                    ║
+╚══════════════════════════════════════════════════════════════╝
+```
+
+### 5.3 Flujo recomendado de uso
+
+1. **Iniciar el entorno:** `docker compose up -d`
+2. **Acceder a Kali:** `docker compose exec kali bash`
+3. **Ejecutar el menú:** `menu_labs`
+4. **Seleccionar el reto:** Navegar por el menú usando números
+5. **Resolver en DVWA/Metasploitable:** Acceder desde Kali hacia `172.20.0.20` (DVWA) o `172.20.0.30` (Metasploitable)
+6. **Documentar hallazgos:** Usar las plantillas en `/home/kali/labs/plantillas/`
+7. **Salir y apagar:** `exit` → `docker compose down`
+
+---
+
+## 6. Comandos de administración
+
+### 6.1 Ciclo de vida del entorno
+
+```bash
+# Iniciar todos los servicios
+docker compose up -d
+
+# Iniciar solo un servicio específico
+docker compose up -d dvwa
+
+# Detener todos los servicios
+docker compose down
+
+# Detener y eliminar volúmenes (reset completo)
+docker compose down -v
+```
+
+### 6.2 Logs y diagnóstico
+
+```bash
+# Ver logs de un servicio
+docker compose logs kali
+docker compose logs dvwa
+
+# Ver logs en tiempo real
+docker compose logs -f kali
+
+# Verificar salud de contenedores
+docker compose ps
+```
+
+### 6.3 Acceso a shells
+
+```bash
+# Acceso a Kali Linux
+docker compose exec kali bash
+
+# Acceso a DVWA (si es necesario depurar)
+docker compose exec dvwa bash
+
+# Acceso a Metasploitable2
+docker compose exec vuln-target bash
+```
+
+### 6.4 Backup y restauración de volúmenes
+
+```bash
+# Backup de volumen Kali
+docker run --rm -v curso-kali-data:/data -v $(pwd):/backup alpine tar czf /backup/kali-backup.tar.gz /data
+
+# Restaurar volumen Kali
+docker run --rm -v curso-kali-data:/data -v $(pwd):/backup alpine tar xzf /backup/kali-backup.tar.gz
+```
+
+---
+
+## 7. Solución de problemas (Troubleshooting)
+
+### 7.1 Problemas comunes
+
+| Síntoma | Causa probable | Solución |
+|---------|---------------|----------|
+| `Connection refused` en puerto 4280 | DVWA no inició correctamente | `docker compose logs dvwa` y `docker compose restart dvwa` |
+| Kali no tiene herramientas instaladas | Healthcheck falló | `docker compose exec kali apt-get update && apt-get install -y kali-tools-top10` |
+| No hay conectividad entre contenedores | Red bridge corrupta | `docker compose down && docker compose up -d` |
+| Puerto ocupado | Otro servicio usa el puerto | Cambiar puerto en `docker-compose.yml` o detener el servicio conflictivo |
+| Metasploitable2 no responde | Imagen corrupta | `docker compose pull vuln-target && docker compose up -d vuln-target` |
+| noVNC no carga | Puerto 4281 bloqueado | Verificar firewall local: `sudo ufw allow 4281/tcp` |
+
+### 7.2 Reset del entorno
+
+Para restaurar el entorno a su estado inicial:
+
+```bash
+# Detener y eliminar contenedores y volúmenes
+docker compose down -v
+
+# Reconstruir y levantar
+docker compose up -d
+
+# Verificar
+docker compose ps
+```
+
+### 7.3 Comandos de limpieza profunda
+
+```bash
+# Eliminar todas las imágenes no utilizadas
+docker image prune -a
+
+# Eliminar volúmenes huérfanos
+docker volume prune
+
+# Limpiar todo el entorno de laboratorio
+docker compose down -v --rmi all
+```
+
+---
+
+## 8. Seguridad del entorno
+
+### 8.1 Aislamiento
+
+- **NO exponer los contenedores a Internet** excepto el puerto 4281 (noVNC) si se requiere acceso remoto.
+- **Firewall local:** Bloquear salida desde `172.20.0.0/24` hacia redes internas del instructor.
+- **VPN:** Si se accede remotamente, usar VPN con split tunneling para aislar el rango `172.20.0.0/24`.
+
+### 8.2 Buenas prácticas
+
+1. **Snapshots:** Tomar snapshot del entorno antes de cada sesión de laboratorio.
+2. **Limpieza post-sesión:** Ejecutar `docker compose down -v` al finalizar cada clase.
+3. **Actualizaciones:** Actualizar imágenes semanalmente: `docker compose pull`.
+4. **Monitoreo:** Revisar logs de DVWA y Metasploitable para detectar abusos.
+
+---
+
+## 9. Referencias cruzadas
+
+| Recurso | Archivo | Descripción |
+|---------|---------|-------------|
+| Especificación de laboratorios | `labs/especificacion-laboratorios.qmd` | Mapa de 14 unidades / 140 retos |
+| Guía docente general | `instructor/guia-docente.qmd` | Plan de clases y guiones didácticos |
+| Guía de soluciones | `instructor/guia-docente-laboratorio.qmd` | Soluciones modelo y troubleshooting |
+| Docker Compose | `docker-compose.yml` | Definición de servicios y red |

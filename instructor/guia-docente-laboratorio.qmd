@@ -1,0 +1,340 @@
+---
+title: "Guía Docente — Laboratorios y Soluciones"
+module: "guia-docente-laboratorio"
+type: "instructor"
+description: "Guía de soluciones modelo, troubleshooting y procedimientos de reset para los laboratorios del curso ABC-CYB-101. Incluye respuestas esperadas por reto y diagnóstico de entorno Docker."
+version: "2.1"
+date: "Agosto 2026"
+institution: "Abacom Capacitación y Servicios Informáticos"
+code: "ABC-CYB-101"
+---
+
+# Guía Docente — Laboratorios y Soluciones
+
+**Institución:** Abacom Capacitación y Servicios Informáticos  
+**Código:** ABC-CYB-101  
+**Versión:** 2.1  
+**Fecha:** Agosto 2026  
+**Responsable:** Diseño Curricular Abacom  
+
+---
+
+## 1. Propósito
+
+Esta guía proporciona al instructor las **soluciones modelo** para los laboratorios prácticos del curso, procedimientos de **troubleshooting** del entorno Docker y comandos de **reset** para restaurar el ambiente a su estado inicial. Su uso garantiza uniformidad en la calificación y agilidad en la resolución de incidencias técnicas durante las sesiones de laboratorio.
+
+---
+
+## 2. Soluciones modelo por módulo
+
+### 2.1 Módulo I — Principios de Ciberseguridad y Gestión de Riesgo
+
+#### Sesión 1 — Tríada CIA
+
+**Reto práctico:** Identificar la afectación a cada pilar en un caso de violación de datos.
+
+| Pilar | Afectación | Impacto esperado |
+|-------|-----------|------------------|
+| **Confidencialidad** | Fuga de base de datos de clientes | Multas RGPD/LGPD, pérdida de confianza |
+| **Integridad** | Alteración de registros médicos | Error clínico, responsabilidad legal |
+| **Disponibilidad** | Ataque DDoS a portal web | Ingresos perdidos, reputación |
+
+#### Sesión 2 — Gestión de Riesgo (ISO 31000 / NIST SP 800-30)
+
+**Reto práctico:** Calcular riesgo inherente y residual.
+
+- **Activo:** servidor de base de datos
+- **Amenaza:** ransomware
+- **Probabilidad:** Alta (4)
+- **Impacto:** Crítico (5)
+- **Riesgo inherente:** 4 × 5 = 20
+- **Control:** backups offline + EDR
+- **Riesgo residual:** Bajo (2 × 2 = 4)
+- **Tratamiento:** Aceptar el riesgo residual; monitorear
+
+#### Sesión 3 — Clasificación de Activos
+
+**Reto práctico:** Diseñar esquema de clasificación para una pyme.
+
+| Nivel | Ejemplos |
+|-------|----------|
+| Público | Página web, comunicados de prensa |
+| Interno | Manuales de procedimiento, organigrama |
+| Confidencial | Datos de clientes, contratos |
+| Restringido | Claves criptográficas, propiedad intelectual crítica |
+
+#### Sesión 4 — NIST CSF 2.0
+
+**Reto práctico:** Mapear controles a las 6 funciones del CSF 2.0.
+
+| Control | Función CSF 2.0 |
+|---------|----------------|
+| Política de passwords | Proteger (PR.AA-01) |
+| Monitoreo de red | Detectar (DE.CM-01) |
+| Plan de respuesta a incidentes | Responder (RS.RP-01) |
+| Copias de seguridad | Recuperar (RC.RP-01) |
+
+---
+
+### 2.2 Módulo II — Seguridad en Redes y Controles Perimetrales
+
+#### Sesión 6 — Modelo OSI y TCP-IP
+
+**Reto práctico:** Analizar captura .pcapng.
+
+- Identificar tráfico HTTP no cifrado en puerto 80.
+- Detectar consultas DNS sospechosas (longitud de subdominio alta).
+- Correlacionar IP destino con reputación.
+
+#### Sesión 7 — Firewalls
+
+**Reto práctico:** Configurar reglas básicas.
+
+```bash
+# Permitir SSH solo desde IP de administración
+ufw allow from 192.168.1.100 to any port 22
+
+# Denegar tráfico entrante a RDP desde Internet
+ufw deny 3389/tcp
+
+# Permitir HTTP/HTTPS hacia servidor web en DMZ
+ufw allow 80/tcp
+ufw allow 443/tcp
+```
+
+#### Sesión 8 — IDS/IPS
+
+**Reto práctico:** Analizar alertas de IDS.
+
+- Identificar alerta de escaneo Nmap (SYN scan).
+- Clasificar alerta como verdadero positivo o falso positivo.
+- Proponer ajuste de regla para reducir falsos positivos.
+
+#### Sesión 9 — Taller Módulo II
+
+**Reto práctico:** Diseñar arquitectura de defensa perimetral.
+
+- Arquitectura: Internet → Firewall → DMZ (web) → Firewall interno → LAN.
+- Reglas: filtrar puertos no esenciales, segmentar por VLAN, IDS en modo detección en segmento DMZ.
+
+---
+
+### 2.3 Módulo III — Hardening e Identidades
+
+#### Sesión 11 — Hardening Básico
+
+**Reto práctico:** Aplicar checklist de hardening.
+
+- Deshabilitar servicios innecesarios (Telnet, FTP).
+- Aplicar política de passwords (longitud, complejidad, antigüedad).
+- Configurar actualizaciones automáticas.
+- Habilitar logging de eventos de seguridad.
+
+#### Sesión 12 — IAM
+
+**Reto práctico:** Modelar roles y permisos.
+
+| Rol | Permisos RBAC |
+|-----|--------------|
+| Administrador | Acceso total |
+| Analista | Lectura de logs, reportes |
+| Operador | Operación de servicios |
+| Auditor | Solo lectura |
+
+#### Sesión 13 — MFA Phishing-Resistant
+
+**Reto práctico:** Comparar factores de autenticación.
+
+| Factor | Resistencia a phishing |
+|--------|----------------------|
+| SMS/OTP | Vulnerable (proxy inverso, SIM swapping) |
+| FIDO2/WebAuthn | Resistente (secreto nunca sale del dispositivo) |
+
+#### Sesión 14 — Taller Módulo III
+
+**Reto práctico:** Diseño integral de controles.
+
+- Hardening: CIS Benchmarks nivel 1, actualizaciones automáticas, logging centralizado.
+- IAM: RBAC con roles mínimos, revisión trimestral.
+- MFA: FIDO2/WebAuthn obligatorio para roles privilegiados.
+
+---
+
+### 2.4 Módulo IV — Amenazas, Criptografía y CVSS
+
+#### Sesión 16 — Vectores de Ataque
+
+**Reto práctico:** Analizar correo de phishing.
+
+- Indicadores: dominio similar al legítimo, solicitud urgente, enlaces sospechosos, errores gramaticales.
+- Mitigación: filtros de correo, concientización, verificación out-of-band.
+
+#### Sesión 17 — Clasificación de Malware
+
+**Reto práctico:** Identificar ransomware.
+
+- Indicadores: cifrado de archivos, extensión modificada, nota de rescate.
+- Persistencia: clave de registro Run, tarea programada.
+
+#### Sesión 18 — Criptografía Aplicada
+
+**Reto práctico:** Operaciones OpenSSL.
+
+```bash
+# Cifrado simétrico AES-256-GCM
+openssl enc -aes-256-gcm -in archivo.txt -out archivo.enc
+
+# Hash SHA-256
+openssl dgst -sha256 archivo.iso
+
+# Generar par de claves RSA 2048 bits
+openssl genpkey -algorithm RSA -out private.pem -pkeyopt rsa_keygen_bits:2048
+openssl rsa -pubout -in private.pem -out public.pem
+```
+
+#### Sesión 19 — CVSS y Gestión de Parches
+
+**Reto práctico:** Calcular CVSS y elaborar plan de parcheo.
+
+- Escenario: RCE en servidor web accesible desde Internet.
+- CVSS Base: 9.8 (Crítico)
+- Plan de parcheo: ventana de mantenimiento de 72 h, mitigación temporal con WAF, verificación post-parche.
+
+---
+
+### 2.5 Módulo V — Logging, SIEM y Respuesta a Incidentes
+
+#### Sesión 21 — Monitoreo y Logging
+
+**Reto práctico:** Analizar logs de acceso.
+
+- Identificar intentos de autenticación fallidos recurrentes.
+- Detectar accesos en horarios no habituales.
+- Correlacionar eventos de login con cambios de configuración.
+
+#### Sesión 22 — SOC y SIEM
+
+**Reto práctico:** Configurar regla de correlación.
+
+- Regla: 5 intentos de login fallidos desde misma IP en 5 minutos → alerta de fuerza bruta.
+- Configuración: índice de logs, campo de IP origen, campo de evento de autenticación.
+
+#### Sesión 23 — Respuesta a Incidentes
+
+**Reto práctico:** Playbook de ransomware.
+
+| Fase | Acciones |
+|------|----------|
+| Preparación | Playbooks, contactos, backups probados |
+| Detección | Alerta de cifrado masivo de archivos |
+| Contención | Aislamiento de endpoints, bloqueo de IP |
+| Erradicación | Eliminación de malware, restauración desde backup limpio |
+| Recuperación | Validación, monitoreo post-incidente |
+| Post-incidente | Informe de lecciones aprendidas |
+
+#### Sesión 24 — Respaldos y BCP/DRP
+
+**Reto práctico:** Diseñar estrategia de respaldos.
+
+- Proceso crítico: sistema de facturación.
+- RTO: 4 h. RPO: 1 h.
+- Estrategia: backup completo diario, incremental cada 4 h, réplica offsite, prueba de restauración mensual.
+
+---
+
+## 3. Troubleshooting del entorno Docker
+
+### 3.1 Problemas comunes y soluciones
+
+| Síntoma | Causa probable | Solución |
+|---------|---------------|----------|
+| `Connection refused` en puerto 4280 | DVWA no inició correctamente | `docker compose logs dvwa` y `docker compose restart dvwa` |
+| Kali no tiene herramientas instaladas | Healthcheck falló | `docker compose exec kali apt-get update && apt-get install -y kali-tools-top10` |
+| No hay conectividad entre contenedores | Red bridge corrupta | `docker compose down && docker compose up -d` |
+| Puerto ocupado | Otro servicio usa el puerto | Cambiar puerto en `docker-compose.yml` o detener el servicio conflictivo |
+| Metasploitable2 no responde | Imagen corrupta | `docker compose pull vuln-target && docker compose up -d vuln-target` |
+| noVNC no carga | Puerto 4281 bloqueado | Verificar firewall local: `sudo ufw allow 4281/tcp` |
+
+### 3.2 Comandos de diagnóstico
+
+```bash
+# Estado de contenedores
+docker compose ps
+
+# Logs en tiempo real
+docker compose logs -f kali
+
+# Verificar red Docker
+docker network ls
+docker network inspect curso-lab-net
+
+# Verificar puertos expuestos
+ss -tlnp | grep -E '428[0-7]'
+```
+
+---
+
+## 4. Procedimientos de reset
+
+### 4.1 Reset rápido (sin perder datos)
+
+```bash
+docker compose down
+docker compose up -d
+```
+
+### 4.2 Reset completo (elimina volúmenes)
+
+```bash
+docker compose down -v
+docker compose up -d
+```
+
+### 4.3 Reset profundo (elimina imágenes)
+
+```bash
+docker compose down -v --rmi all
+docker compose up -d
+```
+
+### 4.4 Script de reset automatizado
+
+Guardar como `labs/scripts/reset_lab.sh`:
+
+```bash
+#!/bin/bash
+set -e
+
+echo "=== Reset del entorno de laboratorios ABC-CYB-101 ==="
+echo "Esto detendrá todos los servicios y eliminará los volúmenes."
+read -p "¿Desea continuar? (s/N): " confirm
+
+if [[ $confirm != [sS] ]]; then
+  echo "Operación cancelada."
+  exit 0
+fi
+
+docker compose down -v
+docker compose pull
+docker compose up -d
+
+echo "=== Entorno restaurado ==="
+docker compose ps
+```
+
+Hacer ejecutable:
+
+```bash
+chmod +x labs/scripts/reset_lab.sh
+```
+
+---
+
+## 5. Referencias cruzadas
+
+| Recurso | Archivo | Descripción |
+|---------|---------|-------------|
+| Especificación de laboratorios | `labs/especificacion-laboratorios.qmd` | Mapa de 14 unidades / 140 retos |
+| Manual de despliegue Docker | `labs/manual-despliegue-docker.qmd` | Arquitectura, servicios y comandos |
+| Guía docente general | `instructor/guia-docente.qmd` | Plan de clases y guiones didácticos |
+| Rubricas de evaluación | `instructor/rubricas-evaluacion.qmd` | Criterios de calificación |
