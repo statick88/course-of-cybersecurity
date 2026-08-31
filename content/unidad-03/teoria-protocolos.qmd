@@ -183,11 +183,5 @@ Antes de continuar a la siguiente sección, verifica que puedes:
 - NIST SP 800-77: Guide to IPsec VPNs
 
 ::: {.callout-note title="Alineación Práctica — Sesiones 21/22: Monitoreo de Red y Protocolos"}
-**Contenido teórico relacionado:** Modelo TCP/IP, protocolos HTTP/HTTPS, DNS, TLS, segmentación de red y detección de anomalías en tráfico.
-
-**Laboratorio correspondiente:** Sesiones 21/22 — Monitoreo de Red y Protocolos (`instructor/guia-docente-laboratorio.qmd`).
-
-**Actividad práctica:** Capturar y analizar tráfico de red con Wireshark/tcpdump, identificar protocolos y puertos, detectar escaneos y tráfico anómalo, y aplicar reglas de segmentación de red.
-
-**Recurso de apoyo:** Ver `labs/manual-despliegue-docker.qmd` para el entorno de laboratorio.
+Ver **Reto 5.1** en la [Guía Docente del Instructor](instructor/guia-docente-laboratorio.qmd) y desplegar entorno vía `labs/manual-despliegue-docker.qmd`.
 :::

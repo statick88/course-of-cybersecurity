@@ -2,7 +2,7 @@
 
 **Institución:** Abacom Capacitación y Servicios Informáticos  
 **Código:** ABC-CYB-101  
-**Versión:** 2.1  
+**Versión:** 3.0  
 **Fecha:** Agosto 2026  
 **Responsable:** Diseño Curricular Abacom
 
@@ -10,7 +10,7 @@
 
 ## 1. Propósito de esta guía
 
-Esta guía proporciona al instructor el plan de clases sesión por sesión, guiones didácticos detallados, soluciones modelo, material de apoyo y recomendaciones de gestión del aula para el curso **Fundamentos de Ciberseguridad**. Su estructura garantiza la aplicación uniforme de la metodología, el cumplimiento de los objetivos de aprendizaje y la alineación con los estándares internacionales referenciados (NIST CSF 2.0, ISO 31000, NIST SP 800-30, CVSS v3.1).
+Esta guía proporciona al instructor el plan de clases sesión por sesión, guiones didácticos detallados, soluciones modelo, material de apoyo y recomendaciones de gestión del aula para el curso **Fundamentos de Ciberseguridad**. Su estructura garantiza la aplicación uniforme de la metodología, el cumplimiento de los objetivos de aprendizaje y la alineación con los estándares internacionales referenciados (NIST CSF 2.0, ISO 31000, NIST SP 800-30, CVSS v3.1, NIST SP 800-61).
 
 ---
 
@@ -24,7 +24,11 @@ Esta guía proporciona al instructor el plan de clases sesión por sesión, guio
 | IV | Amenazas, Criptografía Aplicada y Análisis de Vulnerabilidades | 3 h | 2 h | 5 h |
 | V | Logging, SIEM, Respuesta a Incidentes y Continuidad | 4 h | 3 h | 7 h |
 | — | Evaluaciones y Cierre | 0 h | 3 h | 3 h |
-| **Total** | | **16 h** | **24 h** | **40 h** |
+| **Total** | | **30 h** | **10 h** | **43 h** |
+
+> **Nota:** La estructura se alinea al brochure oficial de Abacom (5 unidades, 18 subtemas).
+> Los temas de IA Security, PQC y Gestión de Vulnerabilidades se integran como **contenido transversal**
+> en los módulos correspondientes para enriquecer el perfil operativo sin romper la acreditación.
 
 ---
 
@@ -159,20 +163,21 @@ Esta guía proporciona al instructor el plan de clases sesión por sesión, guio
 
 ---
 
-### Sesión 5 — Integración Módulo I
+### Sesión 5 — Laboratorio Módulo I: Análisis de Incidentes y Mapeo NIST CSF
 
-**Tiempo total:** 2 h (1 h integración teórica / 1 h práctica)
+**Tiempo total:** 2 h (1 h taller / 1 h defensa)
 
 **Objetivos de aprendizaje:**
 - Integrar Tríada CIA, gestión de riesgo, clasificación de activos y NIST CSF 2.0.
 - Aplicar los conceptos en un caso integral.
 
 **Guión de clase:**
-1. Repaso general (30 min): mapa conceptual del módulo.
-2. Ejercicio integrador (40 min): caso práctico completo.
-3. Cierre y retroalimentación (10 min): autoevaluación grupal.
+1. Introducción al laboratorio (10 min): planteamiento del caso.
+2. Desarrollo en equipos (70 min): análisis de incidentes y mapeo de controles.
+3. Defensa oral (20 min): presentación de propuestas.
+4. Retroalimentación (10 min): cierre docente.
 
-**Solución modelo (práctica):**
+**Solución modelo (laboratorio):**
 - Caso: startup fintech. Identificar activos, clasificar, evaluar riesgo, mapear controles a CSF 2.0.
 
 ---
@@ -276,7 +281,38 @@ Esta guía proporciona al instructor el plan de clases sesión por sesión, guio
 
 ---
 
-### Sesión 9 — Taller Práctico Módulo II
+### Sesión 9 — 2.4. Arquitectura de Defensa Perimetral
+
+**Tiempo total:** 2 h (1 h teoría / 1 h práctica)
+
+**Objetivos de aprendizaje:**
+- Diseñar arquitectura de defensa perimetral con segmentación.
+- Aplicar principios de defensa en profundidad.
+- Documentar topologías comunes de red segura.
+
+**Guión de clase:**
+1. Activación (10 min): solicite ejemplos de arquitecturas de red que hayan visto.
+2. Exposición teórica (30 min): segmentación de red (zonas, VLANs, DMZ), defensa en profundidad, topologías comunes.
+3. Demostración (10 min): diagrama de arquitectura de referencia.
+4. Transición (10 min): asigne taller de diseño de arquitectura.
+
+**Preguntas de reflexión:**
+- ¿Por qué la segmentación reduce el radio de explosión?
+- ¿Qué principio de diseño debe prevalecer en una arquitectura perimetral?
+
+**Material didáctico:**
+- Diapositiva 1: Topologías de defensa perimetral.
+- Diapositiva 2: Ejemplo de arquitectura en capas.
+- Plantilla de diseño de red.
+
+**Solución modelo (práctica):**
+- Arquitectura: Internet → Firewall → DMZ (web) → Firewall interno → LAN.
+- Segmentación: VLANs por función (servidores, usuarios, invitados).
+- Defensa en profundidad: múltiples capas de control.
+
+---
+
+### Sesión 10 — Laboratorio Módulo II: Diseño de Arquitectura de Defensa Perimetral
 
 **Tiempo total:** 2 h (1 h taller / 1 h defensa)
 
@@ -285,28 +321,14 @@ Esta guía proporciona al instructor el plan de clases sesión por sesión, guio
 - Diseñar una arquitectura de defensa perimetral básica.
 
 **Guión de clase:**
-1. Introducción al taller (10 min): planteamiento del caso.
+1. Introducción al laboratorio (10 min): planteamiento del caso.
 2. Desarrollo en equipos (70 min): diseño de arquitectura y reglas.
 3. Defensa oral (20 min): presentación de propuestas.
 4. Retroalimentación (10 min): cierre docente.
 
-**Solución modelo (taller):**
+**Solución modelo (laboratorio):**
 - Arquitectura: Internet → Firewall → DMZ (web) → Firewall interno → LAN.
 - Reglas: filtrar puertos no esenciales, segmentar por VLAN, IDS en modo detección en segmento DMZ.
-
----
-
-### Sesión 10 — Checkpoint Formativo Módulo II
-
-**Tiempo total:** 2 h (1 h evaluación / 1 h retroalimentación)
-
-**Objetivos de aprendizaje:**
-- Demostrar competencia en análisis de redes y configuración de controles perimetrales.
-- Recibir feedback docente para mejora continua.
-
-**Formato:**
-- Práctico: análisis de captura .pcapng, configuración de reglas de firewall, interpretación de alertas IDS.
-- Reevaluación disponible antes de la nota sumativa final.
 
 ---
 
@@ -409,351 +431,29 @@ Esta guía proporciona al instructor el plan de clases sesión por sesión, guio
 
 ---
 
-### Sesión 14 — Taller Práctico Módulo III
-
-**Tiempo total:** 2 h (1 h taller / 1 h defensa)
-
-**Objetivos de aprendizaje:**
-- Integrar hardening, IAM y MFA phishing-resistant.
-- Proponer un esquema de controles de identidad para una organización.
-
-**Guión de clase:**
-1. Introducción (10 min): caso de organización.
-2. Desarrollo (70 min): diseño de política de hardening y MFA.
-3. Defensa oral (20 min): presentación de propuestas.
-4. Retroalimentación (10 min): cierre.
-
-**Solución modelo (taller):**
-- Hardening: CIS Benchmarks nivel 1, actualizaciones automáticas, logging centralizado.
-- IAM: RBAC con roles mínimos, revisión trimestral de accesos.
-- MFA: FIDO2/WebAuthn obligatorio para roles privilegiados, MFA tradicional para usuario estándar.
-
----
-
-### Sesión 15 — Integración Módulo III
-
-**Tiempo total:** 2 h (1 h integración teórica / 1 h práctica)
-
-**Objetivos de aprendizaje:**
-- Consolidar conocimientos de hardening, IAM y MFA.
-- Aplicar en un caso integral con defensa oral breve.
-
-**Guión de clase:**
-1. Repaso (30 min): mapa conceptual del módulo.
-2. Caso integral (40 min): ejercicio práctico combinado.
-3. Cierre (10 min): autoevaluación y retroalimentación.
-
----
-
-## 6. Módulo IV: Amenazas, Criptografía Aplicada y Análisis de Vulnerabilidades
-
-**Objetivo del módulo:** Identificar vectores de ataque comunes y categorías de malware, comprender los fundamentos de la criptografía aplicada, evaluar la severidad de vulnerabilidades mediante CVSS y aplicar medidas de parcheo y configuraciones seguras.
-
----
-
-### Sesión 16 — 4.1. Vectores de Ataque y Superficie de Ataque
+### Sesión 14 — 3.4. Cumplimiento y Auditoría de Identidades
 
 **Tiempo total:** 2 h (1 h teoría / 1 h práctica)
 
 **Objetivos de aprendizaje:**
-- Identificar vectores de ataque: ingeniería social, phishing, spear phishing, vishing, smishing.
-- Comprender ataques a la cadena de suministro.
-- Analizar correos de phishing (muestras reales anonimizadas).
+- Comprender el marco de cumplimiento ISO 27001:2022 aplicado a controles de acceso.
+- Diseñar un plan de remediación para hallazgos de auditoría.
+- Evaluar la madurez de un programa de identidades.
 
 **Guión de clase:**
-1. Activación (10 min): solicite ejemplos de ingeniería social.
-2. Exposición teórica (30 min): vectores de ataque, superficie de ataque, cadena de suministro.
-3. Demostración (10 min): análisis guiado de correo de phishing.
-4. Transición (10 min): asigne análisis individual.
+1. Activación (10 min): solicite ejemplos de hallazgos comunes en auditorías de identidad.
+2. Exposición teórica (30 min): ISO 27001:2022 controles de acceso, hardening, auditoría.
+3. Demostración (10 min): análisis de un reporte de auditoría anonimizado.
+4. Transición (10 min): asigne diseño de plan de remediación.
 
 **Preguntas de reflexión:**
-- ¿Por qué la ingeniería social es el vector más efectivo?
-- ¿Qué controles técnicos y humanos mitigan el phishing?
+- ¿Cómo se relaciona la auditoría de identidades con la detección de amenazas internas?
+- ¿Por qué la remediación debe ser priorizada por riesgo y no por orden de aparición?
 
 **Material didáctico:**
-- Diapositiva 1: Mapa de vectores de ataque.
-- Diapositiva 2: Ejemplo de correo de phishing anonimizado.
-- Lista de verificación de indicadores de phishing.
+- Diapositiva 1: ISO 27001:2022 - Control de acceso.
+- Diapositiva 2: Ejemplo de plan de remediación.
+- Reporte de auditoría anonimizado.
 
 **Solución modelo (práctica):**
-- Indicadores: dominio similar al legítimo, solicitud urgente de datos, enlaces sospechosos, errores gramaticales.
-- Mitigación: filtros de correo, concientización, verificación out-of-band.
-
----
-
-### Sesión 17 — 4.2. Clasificación de Malware
-
-**Tiempo total:** 2 h (1 h teoría / 1 h práctica)
-
-**Objetivos de aprendizaje:**
-- Diferenciar categorías de malware: virus, gusanos, troyanos, ransomware, spyware, adware, rootkits, botnets.
-- Analizar mecanismos de propagación y persistencia.
-
-**Guión de clase:**
-1. Activación (10 min): solicite ejemplos de malware conocidos.
-2. Exposición teórica (30 min): clasificación, propagación, persistencia.
-3. Demostración (10 min): análisis en sandbox web aislada (VirusTotal / Hybrid Analysis).
-4. Transición (10 min): asigne análisis guiado.
-
-**Preguntas de reflexión:**
-- ¿Qué diferencia un gusano de un virus?
-- ¿Por qué el ransomware es una amenaza crítica para la continuidad del negocio?
-
-**Material didáctico:**
-- Diapositiva 1: Clasificación de malware.
-- Diapositiva 2: Ciclo de vida de propagación.
-- Entorno aislado con muestras de malware seguro.
-
-**Solución modelo (práctica):**
-- Muestra: ransomware. Indicadores: cifrado de archivos, extensión modificada, nota de rescate.
-- Persistencia: clave de registro Run, tarea programada.
-
----
-
-### Sesión 18 — 4.3. Criptografía Aplicada
-
-**Tiempo total:** 2 h (1 h teoría / 1 h práctica)
-
-**Objetivos de aprendizaje:**
-- Comprender criptografía simétrica (AES, modos ECB/CBC/GCM).
-- Aplicar funciones de hash (SHA-2, SHA-3) para verificación de integridad.
-- Generar pares de claves RSA mediante CLI guiado.
-
-**Guión de clase:**
-1. Activación (10 min): solicite usos de criptografía en la vida cotidiana.
-2. Exposición teórica (30 min): simétrica, asimétrica, hashing, certificados digitales.
-3. Demostración (10 min): uso de OpenSSL para cifrado, hashes y generación de claves.
-4. Transición (10 min): asigne laboratorio guiado.
-
-**Preguntas de reflexión:**
-- ¿Por qué ECB es considerado inseguro para datos sensibles?
-- ¿Qué es un "nonce" y por qué es importante en GCM?
-
-**Material didáctico:**
-- Diapositiva 1: Criptografía simétrica vs. asimétrica.
-- Diapositiva 2: Modos de operación AES.
-- Scripts OpenSSL guiados.
-
-**Solución modelo (práctica):**
-- Cifrado simétrico: `openssl enc -aes-256-gcm -in archivo.txt -out archivo.enc`.
-- Hash: `openssl dgst -sha256 archivo.iso`.
-- Claves RSA: `openssl genpkey -algorithm RSA -out private.pem -pkeyopt rsa_keygen_bits:2048`.
-
----
-
-### Sesión 19 — 4.4. Puntuación CVSS y Gestión de Parches
-
-**Tiempo total:** 2 h (1 h teoría / 1 h práctica)
-
-**Objetivos de aprendizaje:**
-- Comprender los componentes CVSS (Base, Temporal, Environmental).
-- Calcular puntuación CVSS para vulnerabilidades hipotéticas.
-- Elaborar un plan de parcheo mensual.
-
-**Guión de clase:**
-1. Activación (10 min): solicite ejemplos de vulnerabilidades críticas recientes.
-2. Exposición teórica (30 min): CVSS v3.1, métricas, escala 0-10, ciclo de vida de parches.
-3. Demostración (10 min): cálculo de CVSS en pizarra para un escenario.
-4. Transición (10 min): asigne taller de cálculo y plan de parcheo.
-
-**Preguntas de reflexión:**
-- ¿Por qué CVSS Base no es suficiente para priorizar sin contexto organizacional?
-- ¿Qué es el "parching desincronizado" y cómo se mitiga?
-
-**Material didáctico:**
-- Diapositiva 1: Métricas CVSS v3.1.
-- Diapositiva 2: Plantilla de plan de parcheo.
-- Calculadora CVSS en línea (referencia).
-
-**Solución modelo (práctica):**
-- Escenario: RCE en servidor web accesible desde Internet. CVSS Base: 9.8 (Crítico).
-- Plan de parcheo: parcheo en ventana de mantenimiento de 72 h, mitigación temporal con WAF, verificación post-parche.
-
----
-
-### Sesión 20 — Checkpoint Formativo Módulo IV
-
-**Tiempo total:** 2 h (1 h evaluación / 1 h retroalimentación)
-
-**Objetivos de aprendizaje:**
-- Demostrar competencia en identificación de amenazas, criptografía básica y CVSS.
-- Recibir feedback docente para mejora continua.
-
-**Formato:**
-- Análisis de muestra de malware.
-- Cálculo de CVSS.
-- Ejercicio de criptografía CLI.
-- Reevaluación disponible.
-
----
-
-## 7. Módulo V: Logging, SIEM, Respuesta a Incidentes y Continuidad
-
-**Objetivo del módulo:** Comprender la importancia del logging y monitoreo, los fundamentos de SOC y SIEM, el ciclo de vida de respuesta a incidentes según NIST SP 800-61, y aplicar conceptos de respaldo y continuidad del negocio.
-
----
-
-### Sesión 21 — 5.1. Monitoreo y Logging
-
-**Tiempo total:** 2 h (1 h teoría / 1 h práctica)
-
-**Objetivos de aprendizaje:**
-- Identificar tipologías de logs: sistema, red, aplicación, autenticación.
-- Comprender retención y cumplimiento normativo.
-- Visualizar y analizar logs en sistema operativo preconfigurado.
-
-**Guión de clase:**
-1. Activación (10 min): solicite ejemplos de logs que hayan revisado.
-2. Exposición teórica (30 min): importancia de los logs, formatos, retención, cumplimiento.
-3. Demostración (10 min): análisis de logs de acceso y eventos en Linux/Windows.
-4. Transición (10 min): asigne laboratorio de análisis de logs.
-
-**Preguntas de reflexión:**
-- ¿Qué riesgos implica no tener logs de autenticación?
-- ¿Cómo afecta la retención de logs a la capacidad de respuesta a incidentes?
-
-**Material didáctico:**
-- Diapositiva 1: Tipologías de logs.
-- Diapositiva 2: Retención y cumplimiento.
-- Sistema preconfigurado con logs de muestra.
-
-**Solución modelo (práctica):**
-- Identificar intentos de autenticación fallidos recurrentes.
-- Detectar accesos en horarios no habituales.
-- Correlacionar eventos de login con cambios de configuración.
-
----
-
-### Sesión 22 — 5.2. Fundamentos de SOC y SIEM
-
-**Tiempo total:** 2 h (1 h teoría / 1 h práctica)
-
-**Objetivos de aprendizaje:**
-- Diferenciar tipologías de SOC: interno, virtual, híbrido.
-- Comprender el stack tecnológico común (Splunk, Elastic, Wazuh).
-- Configurar regla de correlación simple en entorno de prueba.
-
-**Guión de clase:**
-1. Activación (10 min): pregunte qué entienden por SOC y SIEM.
-2. Exposición teórica (30 min): SOC (tipologías, roles), SIEM (recolección, normalización, correlación, alertas).
-3. Demostración (10 min): tablero SIEM con logs precargados.
-4. Transición (10 min): asigne taller de regla de correlación.
-
-**Preguntas de reflexión:**
-- ¿Qué diferencia un SOC interno de uno virtual?
-- ¿Por qué la normalización de logs es crítica para la correlación?
-
-**Material didáctico:**
-- Diapositiva 1: Arquitectura SOC/SIEM.
-- Diapositiva 2: Ejemplo de regla de correlación.
-- Tablero SIEM de prueba con logs precargados.
-
-**Solución modelo (práctica):**
-- Regla: 5 intentos de login fallidos desde misma IP en 5 minutos → alerta de fuerza bruta.
-- Configuración: índice de logs, campo de IP origen, campo de evento de autenticación.
-
----
-
-### Sesión 23 — 5.3. Ciclo de Vida de Respuesta a Incidentes (NIST SP 800-61 r2/r3)
-
-**Tiempo total:** 2 h (1 h teoría / 1 h práctica)
-
-**Objetivos de aprendizaje:**
-- Memorizar las fases: Preparación, Detección y Análisis, Contención / Erradicación / Recuperación, Post-Incidente.
-- Identificar roles y coordinación en respuesta a incidentes.
-- Aplicar playbook básico de ransomware.
-
-**Guión de clase:**
-1. Activación (10 min): solicite ejemplos de incidentes de seguridad.
-2. Exposición teórica (30 min): fases NIST SP 800-61, roles (IRL, IRP), playbooks.
-3. Demostración (10 min): simulacro guiado de ransomware.
-4. Transición (10 min): asigne role-playing de respuesta.
-
-**Preguntas de reflexión:**
-- ¿Por qué la fase de preparación es la más crítica?
-- ¿Qué información es indispensable para una contención efectiva?
-
-**Material didáctico:**
-- Diapositiva 1: Ciclo de vida NIST SP 800-61.
-- Diapositiva 2: Playbook básico de ransomware.
-- Caso de incidente anonimizado.
-
-**Solución modelo (práctica):**
-- Preparación: playbooks, contactos, backups probados.
-- Detección: alerta de cifrado masivo de archivos.
-- Contención: aislamiento de endpoints, bloqueo de IP.
-- Erradicación: eliminación de malware, restauración desde backup limpio.
-- Recuperación: validación, monitoreo post-incidente.
-- Post-incidente: informe de lecciones aprendidas.
-
----
-
-### Sesión 24 — 5.4. Respaldos y Continuidad del Negocio (BCP/DRP)
-
-**Tiempo total:** 2 h (1 h teoría / 1 h práctica)
-
-**Objetivos de aprendizaje:**
-- Diferenciar tipos de respaldo: completo, incremental, diferencial.
-- Aplicar la regla 3-2-1.
-- Diseñar matriz BIA, definir RTO/RPO y estrategia de respaldos.
-
-**Guión de clase:**
-1. Activación (10 min): solicite ejemplos de fallas de respaldo en organizaciones.
-2. Exposición teórica (30 min): tipos de backup, regla 3-2-1, BCP vs DRP, BIA, RTO, RPO.
-3. Demostración (10 min): diseño de matriz BIA en pizarra.
-4. Transición (10 min): asigne taller de diseño de estrategia.
-
-**Preguntas de reflexión:**
-- ¿Por qué un backup sin pruebas de restauración es un riesgo?
-- ¿Qué diferencia hay entre BCP y DRP?
-
-**Material didáctico:**
-- Diapositiva 1: Regla 3-2-1 de respaldos.
-- Diapositiva 2: Matriz BIA y definición de RTO/RPO.
-- Plantilla de estrategia de respaldos.
-
-**Solución modelo (práctica):**
-- Proceso crítico: sistema de facturación. RTO: 4 h. RPO: 1 h.
-- Estrategia: backup completo diario, incremental cada 4 h, réplica offsite, prueba de restauración mensual.
-
----
-
-### Sesión 25 — Proyecto Integrador y Cierre
-
-**Tiempo total:** 2 h (1 h presentación / 1 h cierre)
-
-**Objetivos de aprendizaje:**
-- Integrar los cinco módulos en un plan de seguridad básico.
-- Comunicar hallazgos y recomendaciones de manera formal.
-
-**Guión de clase:**
-1. Presentación de proyectos (50 min): defensa oral de proyectos integradores.
-2. Retroalimentación grupal (30 min): cierre de conceptos clave.
-3. Evaluación final (20 min): aplicación de examen final teórico-práctico.
-4. Cierre institucional (20 min): entrega de calificaciones, recomendaciones de continuidad.
-
-**Material didáctico:**
-- Rúbrica de evaluación del proyecto integrador.
-- Plantilla de informe técnico.
-
----
-
-## 8. Recomendaciones de gestión del aula
-
-| Aspecto | Recomendación |
-|---------|---------------|
-| Transiciones teoría→práctica | Mantener máximo 10 minutos entre el cierre teórico y el inicio práctico. |
-| Manejo de grupos | Equipos de 2-3 estudiantes para laboratorios; máximo 4 para talleres. |
-| Tiempos de práctica | Supervisar activamente los primeros 15 minutos de cada práctica; luego pasar a rol de consultor. |
-| Laboratorios de malware | Usar exclusivamente entornos aislados (Host-Only, sin acceso a Internet). Forzar snapshot previo y limpieza post-laboratorio. |
-| Material de apoyo | Proporcionar diapositivas 24 h antes de cada sesión. Usar diagramas y capturas de pantalla de referencia en lugar de demostraciones en vivo cuando el riesgo de falla sea alto. |
-| Retroalimentación | Entregar feedback de checkpoints en máximo 48 h. Permitir re-entrega antes de la nota sumativa. |
-
----
-
-## 9. Historial de versiones
-
-| Versión | Fecha | Cambios |
-|---------|-------|---------|
-| 2.1 | Agosto 2026 | Generación del paquete completo de acreditación con terminología v2 corregida. |
-| 2.0 | Agosto 2026 | Versión base validada con estructura de 5 módulos / 18 subtemas / 40 h. |
+- Hallazgo: cuentas privilegiadas sin MFA. Riesgo: Alto. Remediac

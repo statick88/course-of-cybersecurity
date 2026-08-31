@@ -3,7 +3,7 @@
 **Institución:** Abacom Capacitación y Servicios Informáticos  
 **Código:** ABC-CYB-101  
 **Nombre:** Fundamentos de Ciberseguridad  
-**Versión:** 2.1  
+**Versión:** 3.0  
 **Fecha:** Agosto 2026  
 **Responsable:** Diseño Curricular Abacom  
 **Área:** Desarrollo Curricular y Acreditación Institucional  
@@ -14,6 +14,7 @@
 
 | Versión | Fecha | Cambios |
 |---------|-------|---------|
+| 3.0 | Agosto 2026 | Actualización a estructura de 5 módulos / 18 subtemas / 43 horas. Se incorporan 5 laboratorios integradores, contenido transversal (IA Security, PQC, Gestión de Vulnerabilidades) y se actualiza la matriz de alineación por subtema. |
 | 2.1 | Agosto 2026 | Actualización de alineación estándar con NIST CSF 2.0 oficial, CVSS v3.1 e indicadores de gestión. |
 | 2.0 | Agosto 2026 | Versión base validada con estructura de 5 módulos / 18 subtemas / 40 h. |
 
@@ -26,7 +27,7 @@
 El curso ABC-CYB-101 se ha diseñado para garantizar alineación explícita con marcos de referencia globales, facilitando la portabilidad de competencias y la elegibilidad para certificaciones sectoriales. El presente mapa documenta, para cada subtema, los objetivos de aprendizaje, dominios y competencias específicas cubiertas en tres estándares de referencia:
 
 - **CompTIA Security+ (versión SY0-701)** — Certificación fundamental de seguridad informática.
-- **NICE Framework (NIST SP 800-181 Rev. 1)** — Marco nacional de capacidades en ciberseguridad de EE. UU.
+- **NICE Framework (NIST SP 800-181 Rev. 3)** — Marco nacional de capacidades en ciberseguridad.
 - **ISO/IEC 27001:2022** — Estándar internacional para Sistemas de Gestión de Seguridad de la Información (SGSI).
 
 ### 1.2 Leyenda de Niveles de Cobertura
@@ -39,48 +40,52 @@ El curso ABC-CYB-101 se ha diseñado para garantizar alineación explícita con 
 
 ### 1.3 Matriz de Alineación por Subtema
 
-#### Módulo I: Principios de Ciberseguridad y Gestión de Riesgo
+#### Módulo I: Introducción a la Ciberseguridad
 
 | Subtema | CompTIA Security+ SY0-701 | NICE Framework (NIST SP 800-181) | ISO/IEC 27001:2022 |
 |---------|---------------------------|----------------------------------|---------------------|
-| **1.1. Tríada de la Seguridad de la Información** | Objetivo 1.1: Explicar los conceptos de seguridad de la información (confidencialidad, integridad, disponibilidad). | SP-005-001: Gestión de riesgos; SP-025-001: Protección de información. | Control 5.1: Políticas de seguridad de la información; Control 5.2: Funciones y responsabilidades. |
-| **1.2. Gestión de Riesgo según ISO 31000 / NIST SP 800-30** | Objetivo 1.2: Explicar los procesos de gestión de riesgos. | SP-005-001: Gestión de riesgos; SP-005-002: Evaluación de riesgos. | Control 6.1: Evaluación de riesgos de seguridad de la información; Control 6.2: Tratamiento de riesgos. |
-| **1.3. Clasificación de Activos y Datos** | Objetivo 1.3: Explicar la gestión de activos de datos. | SP-025-001: Protección de información; SP-025-002: Clasificación de datos. | Control 5.9: Inventario de activos; Control 5.10: Clasificación de información. |
-| **1.4. Marco NIST Cybersecurity Framework (CSF) 2.0** | Objetivo 1.4: Explicar los marcos y estándares de seguridad. | SP-005-001: Gestión de riesgos; SP-041-001: Concienciación y formación. | Control 5.1: Políticas; Control 6.1: Evaluación de riesgos (alineación con marcos internacionales). |
+| **1.1. Conceptos básicos, evolución de la ciberseguridad y tendencias 2026** | Objetivo 1.1: Explicar los conceptos de seguridad de la información. | SP-005-001: Gestión de riesgos; SP-025-001: Protección de información. | Control 5.1: Políticas de seguridad de la información; Control 5.2: Funciones y responsabilidades. |
+| **1.2. Tríada CIA (Confidencialidad, Integridad, Disponibilidad)** | Objetivo 1.1: Explicar los conceptos de seguridad de la información. | SP-025-001: Protección de información. | Control 5.1: Políticas de seguridad; Control 5.3: Seguridad de la información. |
+| **1.3. Gestión de riesgos de seguridad (ISO 31000 / NIST SP 800-30)** | Objetivo 1.2: Explicar los procesos de gestión de riesgos. | SP-005-001: Gestión de riesgos; SP-005-002: Evaluación de riesgos. | Control 6.1: Evaluación de riesgos de seguridad de la información; Control 6.2: Tratamiento de riesgos. |
+| **1.4. Clasificación de activos de información** | Objetivo 1.3: Explicar la gestión de activos de datos. | SP-025-001: Protección de información; SP-025-002: Clasificación de datos. | Control 5.9: Inventario de activos; Control 5.10: Clasificación de información. |
+| **1.5. NIST Cybersecurity Framework 2.0 (CSF 2.0) y NICE SP 800-181** | Objetivo 1.4: Explicar los marcos y estándares de seguridad. | SP-005-001: Gestión de riesgos; SP-041-001: Concienciación y formación. | Control 5.1: Políticas; Control 6.1: Evaluación de riesgos (alineación con marcos internacionales). |
 
 #### Módulo II: Seguridad en Redes y Controles Perimetrales
 
 | Subtema | CompTIA Security+ SY0-701 | NICE Framework (NIST SP 800-181) | ISO/IEC 27001:2022 |
 |---------|---------------------------|----------------------------------|---------------------|
-| **2.1. Modelo OSI y TCP-IP Aplicado a la Seguridad** | Objetivo 3.1: Explicar los conceptos de arquitectura de red. | SP-041-001: Arquitectura de redes; SP-041-002: Seguridad de redes. | Control 8.1: Gestión de redes; Control 8.2: Seguridad de las comunicaciones. |
-| **2.2. Firewalls: Conceptos y Clasificación** | Objetivo 3.2: Explicar los controles de red y dispositivos de seguridad. | SP-041-002: Seguridad de redes; SP-041-003: Gestión de firewalls. | Control 8.12: Dispositivos de seguridad de red; Control 8.15: Segmentación de red. |
-| **2.3. Sistemas de Detección y Prevención de Intrusos (IDS / IPS)** | Objetivo 3.3: Explicar los sistemas de detección de intrusiones. | SP-041-004: Detección de intrusiones; SP-041-005: Respuesta a incidentes de red. | Control 8.16: Monitoreo de red; Control 8.17: Detección de intrusiones. |
+| **2.1. Modelo OSI y TCP/IP en seguridad; arquitectura de defensa perimetral** | Objetivo 3.1: Explicar los conceptos de arquitectura de red. | SP-041-001: Arquitectura de redes; SP-041-002: Seguridad de redes. | Control 8.1: Gestión de redes; Control 8.2: Seguridad de las comunicaciones. |
+| **2.2. Firewalls, segmentación de redes y VPNs** | Objetivo 3.2: Explicar los controles de red y dispositivos de seguridad. | SP-041-002: Seguridad de redes; SP-041-003: Gestión de firewalls. | Control 8.12: Dispositivos de seguridad de red; Control 8.15: Segmentación de red. |
+| **2.3. IDS/IPS, SIEM y detección de intrusiones** | Objetivo 3.3: Explicar los sistemas de detección de intrusiones. | SP-041-004: Detección de intrusiones; SP-041-005: Respuesta a incidentes de red. | Control 8.16: Monitoreo de red; Control 8.17: Detección de intrusiones. |
+| **2.4. Análisis de tráfico con Wireshark y Zeek** | Objetivo 3.4: Explicar el monitoreo de red y logs. | SP-041-006: Monitoreo de seguridad; SP-041-007: Gestión de logs. | Control 8.18: Registro (logging); Control 8.19: Monitoreo continuo. |
 
-#### Módulo III: Hardening de Sistemas e Identidades (IAM/MFA)
-
-| Subtema | CompTIA Security+ SY0-701 | NICE Framework (NIST SP 800-181) | ISO/IEC 27001:2022 |
-|---------|---------------------------|----------------------------------|---------------------|
-| **3.1. Hardening Básico de Sistemas Operativos** | Objetivo 4.1: Explicar la seguridad de hosts y dispositivos. | SP-025-003: endurecimiento de sistemas; SP-025-004: Configuración segura. | Control 8.9: Gestión de vulnerabilidades técnicas; Control 8.10: Configuración segura. |
-| **3.2. Gestión de Identidades y Accesos (IAM)** | Objetivo 5.1: Explicar los conceptos de gestión de identidades y accesos. | SP-010-001: Gestión de identidades; SP-010-002: Control de acceso. | Control 5.18: Gestión de identidades; Control 5.19: Registro y eliminación de acceso. |
-| **3.3. Autenticación Multifactor (MFA) Resistente a Phishing** | Objetivo 5.2: Explicar los métodos de autenticación. | SP-010-003: Autenticación multifactor; SP-010-004: Autenticación resistente a phishing. | Control 5.20: Autenticación multifactor; Control 5.21: Contraseñas y gestión de credenciales. |
-
-#### Módulo IV: Amenazas, Criptografía Aplicada y Análisis de Vulnerabilidades
+#### Módulo III: Gestión de Identidades y Hardening
 
 | Subtema | CompTIA Security+ SY0-701 | NICE Framework (NIST SP 800-181) | ISO/IEC 27001:2022 |
 |---------|---------------------------|----------------------------------|---------------------|
-| **4.1. Vectores de Ataque y Superficie de Ataque** | Objetivo 2.1: Explicar los vectores de ataque. | SP-015-001: Análisis de amenazas; SP-015-002: Superficie de ataque. | Control 5.23: Evaluación de amenazas; Control 5.24: Reducción de superficie de ataque. |
-| **4.2. Clasificación de Malware** | Objetivo 2.2: Explicar los tipos de malware. | SP-015-003: Análisis de malware; SP-015-004: Clasificación de amenazas. | Control 5.25: Protección contra malware; Control 5.26: Análisis de código malicioso. |
-| **4.3. Criptografía Aplicada** | Objetivo 6.1: Explicar los conceptos criptográficos básicos. | SP-025-005: Criptografía aplicada; SP-025-006: Gestión de claves. | Control 8.24: Criptografía; Control 8.25: Gestión de claves criptográficas. |
-| **4.4. Puntuación CVSS y Gestión de Parches** | Objetivo 5.3: Explicar la gestión de vulnerabilidades y parches. | SP-005-003: Gestión de vulnerabilidades; SP-005-004: Parcheo de sistemas. | Control 6.3: Gestión de vulnerabilidades técnicas; Control 6.4: Gestión de parches. |
+| **3.1. Principios de hardening de sistemas (CIS Benchmarks)** | Objetivo 4.1: Explicar la seguridad de hosts y dispositivos. | SP-025-003: Endurecimiento de sistemas; SP-025-004: Configuración segura. | Control 8.9: Gestión de vulnerabilidades técnicas; Control 8.10: Configuración segura. |
+| **3.2. Gestión de identidades y accesos (IAM / RBAC)** | Objetivo 5.1: Explicar los conceptos de gestión de identidades y accesos. | SP-010-001: Gestión de identidades; SP-010-002: Control de acceso. | Control 5.18: Gestión de identidades; Control 5.19: Registro y eliminación de acceso. |
+| **3.3. Autenticación multifactor (MFA) y acceso condicional** | Objetivo 5.2: Explicar los métodos de autenticación. | SP-010-003: Autenticación multifactor; SP-010-004: Autenticación resistente a phishing. | Control 5.20: Autenticación multifactor; Control 5.21: Contraseñas y gestión de credenciales. |
+| **3.4. Políticas de seguridad, cumplimiento normativo y auditoría** | Objetivo 1.4: Explicar los marcos y estándares de seguridad. | SP-005-001: Gestión de riesgos; SP-041-001: Concienciación y formación. | Control 5.1: Políticas; Control 5.28: Lecciones aprendidas. |
 
-#### Módulo V: Logging, SIEM, Respuesta a Incidentes y Continuidad
+#### Módulo IV: Amenazas, Criptografía y Gestión de Vulnerabilidades
 
 | Subtema | CompTIA Security+ SY0-701 | NICE Framework (NIST SP 800-181) | ISO/IEC 27001:2022 |
 |---------|---------------------------|----------------------------------|---------------------|
-| **5.1. Monitoreo y Logging** | Objetivo 3.4: Explicar el monitoreo de red y logs. | SP-041-006: Monitoreo de seguridad; SP-041-007: Gestión de logs. | Control 8.18: Registro (logging); Control 8.19: Monitoreo continuo. |
-| **5.2. Fundamentos de SOC y SIEM** | Objetivo 3.5: Explicar los conceptos de SOC y SIEM. | SP-041-008: Operaciones de seguridad; SP-041-009: SIEM y análisis de eventos. | Control 5.28: Detección de eventos de seguridad; Control 5.29: Gestión de incidentes. |
-| **5.3. Ciclo de Vida de Respuesta a Incidentes (NIST SP 800-61 r2/r3)** | Objetivo 4.2: Explicar la respuesta a incidentes. | SP-041-005: Respuesta a incidentes de red; SP-041-010: Gestión de incidentes de seguridad. | Control 5.27: Respuesta a incidentes de seguridad de la información; Control 5.28: Lecciones aprendidas. |
-| **5.4. Respaldos y Continuidad del Negocio (BCP/DRP)** | Objetivo 4.3: Explicar la continuidad del negocio y recuperación ante desastres. | SP-041-011: Continuidad del negocio; SP-041-012: Recuperación ante desastres. | Control 5.30: Continuidad del negocio; Control 5.31: Respaldos de información. |
+| **4.1. Vectores de ataque comunes y malware (tipos, comportamiento, propagación)** | Objetivo 2.1: Explicar los vectores de ataque. | SP-015-001: Análisis de amenazas; SP-015-002: Superficie de ataque. | Control 5.23: Evaluación de amenazas; Control 5.24: Reducción de superficie de ataque. |
+| **4.2. Criptografía básica (simétrica, asimétrica, hash) y buenas prácticas** | Objetivo 6.1: Explicar los conceptos criptográficos básicos. | SP-025-005: Criptografía aplicada; SP-025-006: Gestión de claves. | Control 8.24: Criptografía; Control 8.25: Gestión de claves criptográficas. |
+| **4.3. CVSS v3.1, gestión de parches y evaluación de vulnerabilidades** | Objetivo 5.3: Explicar la gestión de vulnerabilidades y parches. | SP-005-003: Gestión de vulnerabilidades; SP-005-004: Parcheo de sistemas. | Control 6.3: Gestión de vulnerabilidades técnicas; Control 6.4: Gestión de parches. |
+| **4.4. IA Security: amenazas emergentes con IA/ML y defensa** | Objetivo 2.1: Explicar los vectores de ataque (IA-enhanced attacks). | SP-015-005: Análisis de amenazas emergentes; SP-025-007: Seguridad de IA/ML. | Control 5.25: Protección contra malware; Control 5.26: Análisis de código malicioso. |
+| **4.5. Post-Quantum Cryptography (PQC) y migración post-cuántica** | Objetivo 6.2: Explicar conceptos criptográficos avanzados. | SP-025-008: Criptografía post-cuántica; SP-025-009: Migración criptográfica. | Control 8.26: Criptografía avanzada; Control 8.27: Gestión de claves post-cuánticas. |
+
+#### Módulo V: Respuesta a Incidentes y Recuperación
+
+| Subtema | CompTIA Security+ SY0-701 | NICE Framework (NIST SP 800-181) | ISO/IEC 27001:2022 |
+|---------|---------------------------|----------------------------------|---------------------|
+| **5.1. Logging, monitoreo de seguridad y SOC** | Objetivo 3.4: Explicar el monitoreo de red y logs. | SP-041-006: Monitoreo de seguridad; SP-041-007: Gestión de logs. | Control 8.18: Registro (logging); Control 8.19: Monitoreo continuo. |
+| **5.2. SIEM, análisis de logs y detección de anomalías** | Objetivo 3.5: Explicar los conceptos de SOC y SIEM. | SP-041-008: Operaciones de seguridad; SP-041-009: SIEM y análisis de eventos. | Control 5.28: Detección de eventos de seguridad; Control 5.29: Gestión de incidentes. |
+| **5.3. Respuesta a incidentes (NIST SP 800-61)** | Objetivo 4.2: Explicar la respuesta a incidentes. | SP-041-005: Respuesta a incidentes de red; SP-041-010: Gestión de incidentes de seguridad. | Control 5.27: Respuesta a incidentes de seguridad de la información; Control 5.28: Lecciones aprendidas. |
+| **5.4. Planes de continuidad y recuperación (BCP/DRP)** | Objetivo 4.3: Explicar la continuidad del negocio y recuperación ante desastres. | SP-041-011: Continuidad del negocio; SP-041-012: Recuperación ante desastres. | Control 5.30: Continuidad del negocio; Control 5.31: Respaldos de información. |
 
 ---
 
@@ -129,12 +134,12 @@ El temario del curso ABC-CYB-101 se somete a un ciclo anual de revisión estruct
 | **Enero** | Revisión de normativa y estándares | - Verificar nuevas versiones de NIST CSF, ISO 27001, NIST SP 800-30.<br>- Actualizar matriz de alineación si existen cambios normativos. | Diseño Curricular | Informe de vigencia normativa. |
 | **Febrero** | Evaluación de indicadores del año anterior | - Analizar IG-01 a IG-10 del año cerrado.<br>- Identificar desviaciones respecto a metas.<br>- Generar informe de desempeño. | Comité de Acreditación | Informe de Indicadores Anuales. |
 | **Marzo** | Revisión de contenido técnico por módulo | - Módulos I y II: Actualizar ejemplos, casos de estudio y estadísticas de incidentes.<br>- Verificar vigencia de herramientas de laboratorio. | Equipo Docente | Informe de actualización técnica. |
-| **Abril** | Revisión de contenido técnico por módulo (continuación) | - Módulos III y IV: Evaluar inclusión de nuevas técnicas de hardening, MFA y CVSS.<br>- Actualizar clasificación de malware y vectores de ataque. | Equipo Docente | Informe de actualización técnica (continuación). |
+| **Abril** | Revisión de contenido técnico por módulo (continuación) | - Módulos III y IV: Evaluar inclusión de nuevas técnicas de hardening, MFA, IA Security y PQC.<br>- Actualizar clasificación de malware y vectores de ataque. | Equipo Docente | Informe de actualización técnica (continuación). |
 | **Mayo** | Revisión de contenido técnico por módulo (continuación) | - Módulo V: Actualizar herramientas de SIEM, plataformas de SOC y procedimientos de respuesta.<br>- Incluir lecciones aprendidas de incidentes recientes. | Equipo Docente | Informe de actualización técnica (final). |
-| **Junio** | Evaluación de laboratorios y materiales prácticos | - Revisar funcionamiento de los 16 laboratorios.<br>- Actualizar imágenes de máquinas virtuales y entornos de práctica.<br>- Verificar vigencia de CTF y plataformas (DVWA, Juice Shop, etc.). | Coordinación de Labs | Informe de vigencia de laboratorios. |
+| **Junio** | Evaluación de laboratorios y materiales prácticos | - Revisar funcionamiento de los 5 laboratorios integradores.<br>- Actualizar imágenes de máquinas virtuales y entornos de práctica.<br>- Verificar vigencia de herramientas (Wireshark, Zeek, OpenSSL, Nessus, Metasploitable). | Coordinación de Labs | Informe de vigencia de laboratorios. |
 | **Julio** | Validación externa y benchmarking | - Comparar temario con programas de universidades y certificadoras líderes.<br>- Consultar con entes de acreditación (CERT, ISO, CompTIA).<br>- Recopilar feedback de egresados y empleadores. | Diseño Curricular | Informe de benchmarking externo. |
 | **Agosto** | Consolidación de cambios y propuesta de versión | - Integrar todas las modificaciones propuestas.<br>- Redactar propuesta de versión curricular (incremento de versión).<br>- Presentar propuesta al Comité de Acreditación. | Diseño Curricular | Propuesta de Versión Curricular. |
-| **Septiembre** | Aprobación y publicación | - Aprobación formal por Comité de Acreditación.<br>- Actualización de índice maestro y documentos derivados (guía docente, rúbricas, manual del estudiante).<br>- Publicación en LMS. | Comité de Acreditación | Versión curricular aprobada y publicada. |
+| **Septiembre** | Aprobación y publicación | - Aprobación formal por Comité de Acreditación.<br>- Actualización de índice maestro y documentos derivados (guía docente, rúbricas, manual del estudiante, plan de acreditación).<br>- Publicación en LMS. | Comité de Acreditación | Versión curricular aprobada y publicada. |
 | **Octubre** | Período de transición | - Dictado paralelo de versión anterior y nueva (si aplica).<br>- Capacitación de docentes en cambios curriculares. | Coordinación Académica | Informe de transición curricular. |
 | **Noviembre** | Seguimiento de cohorte en curso | - Aplicación de encuestas de satisfacción parciales.<br>- Revisión de resultados de evaluaciones formativas.<br>- Ajustes menores de ritmo y carga académica. | Equipo Docente | Informe de seguimiento parcial. |
 | **Diciembre** | Planificación del año siguiente | - Definir metas de indicadores para el próximo año.<br>- Programar capacitación docente.<br>- Establecer agenda de actualizaciones técnicas prioritarias. | Diseño Curricular | Plan de Mejora Anual. |
@@ -187,7 +192,7 @@ El siguiente diagrama describe la progresión de competencias desde el curso bas
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
 │  NIVEL 1: FUNDAMENTOS                    NIVEL 2: DETECCIÓN Y RESPUESTA     │
-│  ▸ ABC-CYB-101 (40 h)                   ▸ ABC-CYB-201 (60 h)               │
+│  ▸ ABC-CYB-101 (43 h)                   ▸ ABC-CYB-201 (60 h)               │
 │  ▸ Conocimientos básicos de seguridad    ▸ Monitoreo, SIEM, IR, CTI        │
 │  ▸ Marcos normativos (NIST, ISO)         ▸ Prerreq: ABC-CYB-101 (≥ 70)    │
 │  ▸ Hardening, criptografía, riesgo       ▸ Certificación: CySA+             │
@@ -207,9 +212,9 @@ El siguiente diagrama describe la progresión de competencias desde el curso bas
 
 | Curso | Horas | Créditos Académicos* | Certificación Relacionada |
 |-------|-------|----------------------|---------------------------|
-| ABC-CYB-101 | 40 h | 3 créditos | CompTIA Security+ |
-| ABC-CYB-201 | 60 h | 4 créditos | CompTIA CySA+ |
-| ABC-CYB-301 | 80 h | 5 créditos | Certificado Zero Trust Architect |
+| ABC-CYB-101 | 43 h | 4 créditos | CompTIA Security+ |
+| ABC-CYB-201 | 60 h | 6 créditos | CompTIA CySA+ |
+| ABC-CYB-301 | 80 h | 8 créditos | Certificado Zero Trust Architect |
 
 \*Según normativa de equivalencia de créditos académicos (1 crédito = 10 h de trabajo estudiantil total).
 
@@ -223,14 +228,14 @@ El curso ABC-CYB-101 opera bajo el cumplimiento de los siguientes marcos normati
 
 | Norma / Estándar | Organismo | Ámbito de Aplicación en el Curso |
 |------------------|-----------|----------------------------------|
-| **ISO/IEC 31000:2018** | International Organization for Standardization (ISO) | Gestión de riesgo según subtema 1.2. |
-| **NIST SP 800-30 Rev. 1** | National Institute of Standards and Technology (NIST) | Evaluación de riesgo según subtema 1.2. |
-| **NIST Cybersecurity Framework 2.0** | NIST | Marco de ciberseguridad según subtema 1.4. |
+| **ISO/IEC 31000:2018** | International Organization for Standardization (ISO) | Gestión de riesgo según subtema 1.3. |
+| **NIST SP 800-30 Rev. 1** | National Institute of Standards and Technology (NIST) | Evaluación de riesgo según subtema 1.3. |
+| **NIST Cybersecurity Framework 2.0** | NIST | Marco de ciberseguridad según subtema 1.5. |
 | **ISO/IEC 27001:2022** | ISO | Controles de seguridad de la información transversal a todos los módulos. |
 | **NIST SP 800-61 Rev. 2 / Rev. 3** | NIST | Respuesta a incidentes según subtema 5.3. |
-| **CVSS v3.1** | FIRST / NVD | Puntuación de vulnerabilidades según subtema 4.4. |
+| **CVSS v3.1** | FIRST / NVD | Puntuación de vulnerabilidades según subtema 4.3. |
 | **CompTIA Security+ SY0-701** | CompTIA | Alineación de objetivos de aprendizaje. |
-| **NICE Framework (NIST SP 800-181 Rev. 1)** | NIST | Mapeo de capacidades profesionales. |
+| **NICE Framework (NIST SP 800-181 Rev. 3)** | NIST | Mapeo de capacidades profesionales. |
 
 ### 5.2 Proceso de Acreditación Institucional
 
@@ -267,7 +272,7 @@ Abacom Capacitación y Servicios Informáticos sigue un proceso estructurado de 
 Abacom se compromete a:
 
 1. Mantener la vigencia terminológica y normativa del curso, alineándose con las versiones oficiales de NIST CSF 2.0, ISO 31000, NIST SP 800-30, CVSS v3.1 y demás estándares citados.
-2. Revisar y actualizar el contenido técnico de forma anual, incorporando nuevas amenazas, técnicas de ataque y defensa relevantes para el panorama de ciberseguridad global.
+2. Revisar y actualizar el contenido técnico de forma anual, incorporando nuevas amenazas, técnicas de ataque y defensa relevantes para el panorama de ciberseguridad global, incluyendo IA Security y PQC.
 3. Evaluar la empleabilidad de egresados y la satisfacción estudiantil como métricas de éxito primarias.
 4. Publicar informes semestrales de desempeño del curso, disponibles para entes evaluadores, estudiantes y empleadores asociados.
 
@@ -283,4 +288,4 @@ Abacom se compromete a:
 
 ---
 
-*Documento generado en el marco del Plan de Acreditación y Mejora Continua del curso ABC-CYB-101, Fundamentos de Ciberseguridad. Versión 2.1 — Agosto 2026 — Abacom Capacitación y Servicios Informáticos.*
+*Documento generado en el marco del Plan de Acreditación y Mejora Continua del curso ABC-CYB-101, Fundamentos de Ciberseguridad. Versión 3.0 — Agosto 2026 — Abacom Capacitación y Servicios Informáticos.*

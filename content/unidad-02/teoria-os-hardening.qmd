@@ -172,11 +172,5 @@ sudo apt install -y cis-cat  # Si está disponible
 - Linux Hardening Guide: https://linux-audit.com/linux-security-hardening/
 
 ::: {.callout-note title="Alineación Práctica — Sesión 21: Monitoreo y Gestión de Logs"}
-**Contenido teórico relacionado:** Hardening de sistemas operativos (Windows/Linux), gestión de parches, auditoría y monitoreo de eventos.
-
-**Laboratorio correspondiente:** Sesión 21 — Monitoreo y Gestión de Logs (`instructor/guia-docente-laboratorio.qmd`).
-
-**Actividad práctica:** Configurar y analizar logs de sistema en entornos Linux (rsyslog/journald) y Windows (Event Viewer), correlacionar eventos de seguridad y aplicar técnicas de hardening para la gestión de registros.
-
-**Recurso de apoyo:** Ver `labs/manual-despliegue-docker.qmd` para el entorno de laboratorio.
+Ver **Reto 5.1** en la [Guía Docente del Instructor](instructor/guia-docente-laboratorio.qmd) y desplegar entorno vía `labs/manual-despliegue-docker.qmd`.
 :::

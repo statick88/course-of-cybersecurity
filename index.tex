@@ -65329,6 +65329,175 @@ V}\label{sesiuxf3n-27-checkpoint-muxf3dulo-v}
 
 \section{3. Evaluaciones de Cierre}\label{evaluaciones-de-cierre}
 
+\subsection{3.1 Estructura de
+evaluación}\label{estructura-de-evaluaciuxf3n}
+
+El curso ABC-CYB-101 combina \textbf{evaluación formativa} (durante el
+curso) y \textbf{evaluación sumativa} (al cierre de cada módulo y al
+final del curso). Los instrumentos principales son:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2826}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1304}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2174}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3696}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Instrumento
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Tipo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Duración
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Peso aproximado
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Retos CORE (60) & Formativa + Sumativa & Distribuida en 18 unidades & 50
+\% \\
+Retos OPT (115) & Formativa exploratoria & Distribuida en 18 unidades &
+0 \% (sin penalización) \\
+Checkpoints formativos & Formativa & 1 h cada uno & 20 \% \\
+Examen final teórico & Sumativa & 2 h & 30 \% \\
+\end{longtable}
+}
+
+\subsection{3.2 Retos CORE vs OPT}\label{retos-core-vs-opt}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Retos CORE (60):} Obligatorios para la certificación. Deben
+  completarse con una calificación mínima de 70/100 cada uno. Se
+  distribuyen en las unidades fundamentales: \texttt{unit-I},
+  \texttt{unit-II}, \texttt{unit-III/iii-iam-mfa}, \texttt{unit-IV},
+  \texttt{unit-V} y los tres checkpoints.
+\item
+  \textbf{Retos OPT (115):} Exploratorios, sin penalización si no se
+  completan. Refuerzan competencias transversales en scripting,
+  hardening, Docker, Nginx y criptografía aplicada.
+\end{itemize}
+
+\subsection{3.3 Criterios de
+calificación}\label{criterios-de-calificaciuxf3n}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2121}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3939}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3939}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Rango
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Calificación
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Descripción
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+90--100 & \textbf{Sobresaliente} & Domina todos los retos CORE y OPT;
+aplica conocimientos en escenarios nuevos. \\
+70--89 & \textbf{Satisfactorio} & Completa todos los retos CORE con
+precisión; puede omitir OPT sin penalización. \\
+60--69 & \textbf{Mínimo aprobatorio} & Completa al menos el 80 \% de
+retos CORE; requiere reforzar áreas específicas. \\
+\textless{} 60 & \textbf{Reprobatorio} & No alcanza el estándar mínimo;
+requiere repetición de contenidos y reevaluación. \\
+\end{longtable}
+}
+
+\subsection{3.4 Política de
+reevaluación}\label{poluxedtica-de-reevaluaciuxf3n-2}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Retos CORE:} El estudiante puede reintentar cualquier reto
+  CORE hasta alcanzar la calificación mínima de 70/100. No hay límite de
+  intentos, pero se recomienda máximo 3 por reto.
+\item
+  \textbf{Checkpoints formativos:} Quien no alcance el 60 \% en un
+  checkpoint tiene derecho a una reevaluación antes del examen final.
+\item
+  \textbf{Examen final:} Una sola aplicación. En caso de reprobar, el
+  estudiante debe esperar al periodo de reexamen oficial.
+\end{enumerate}
+
+\subsection{3.5 Proyecto integrador}\label{proyecto-integrador-1}
+
+Al final del Módulo V, el estudiante debe entregar un \textbf{proyecto
+integrador} en documento Markdown que incluya:
+
+\begin{itemize}
+\tightlist
+\item
+  Análisis de logs y detección de al menos 3 eventos de seguridad.
+\item
+  Configuración de regla de correlación en SIEM.
+\item
+  Playbook de respuesta a incidentes (mínimo 5 fases).
+\item
+  Estrategia de respaldos con RTO/RPO definidos.
+\item
+  Despliegue de stack Docker Compose con Nginx y base de datos.
+\end{itemize}
+
+\textbf{Criterios de evaluación del proyecto:}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Criterio & Peso \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Corrección técnica & 40 \% \\
+Completitud de playbook & 25 \% \\
+Calidad de documentación & 20 \% \\
+Creatividad / escenarios adicionales & 15 \% \\
+\end{longtable}
+}
+
+\subsection{3.6 Mapa de alineación
+OA--evaluación}\label{mapa-de-alineaciuxf3n-oaevaluaciuxf3n}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.4808}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5192}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Objetivo de aprendizaje
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Instrumento de evaluación
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Identificar vectores de ataque y clasificar malware & Retos CORE Módulo
+I + Examen final \\
+Configurar firewalls y arquitectura DMZ & Retos CORE Módulo II +
+Checkpoint II \\
+Aplicar hardening y controles IAM/MFA & Retos CORE Módulo III +
+Checkpoint III \\
+Calcular CVSS y gestionar parches & Retos CORE Módulo IV + Checkpoint
+IV \\
+Diseñar respuesta a incidentes y BCP/DRP & Retos CORE Módulo V +
+Checkpoint V + Proyecto integrador \\
+\end{longtable}
+}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
 \section{4. Troubleshooting del entorno
 Docker}\label{troubleshooting-del-entorno-docker}
 

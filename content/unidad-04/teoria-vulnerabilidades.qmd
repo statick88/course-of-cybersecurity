@@ -338,13 +338,7 @@ Investiga si alguna de estas vulnerabilidades tiene un exploit disponible en Met
 </div>
 
 ::: {.callout-note title="Alineación Práctica — Sesión 22: SOC/SIEM y Gestión de Vulnerabilidades"}
-**Contenido teórico relacionado:** Ciclo de vida de vulnerabilidades (Discover → Publish → Exploit → Patch → Mitigate), CVSS v3.1, EPSS, CISA KEV, priorización y gestión de parches.
-
-**Laboratorio correspondiente:** Sesión 22 — SOC/SIEM y Gestión de Vulnerabilidades (`instructor/guia-docente-laboratorio.qmd`).
-
-**Actividad práctica:** Analizar el catálogo CISA KEV, calcular prioridades con CVSS + EPSS, simular un pipeline de gestión de vulnerabilidades y correlacionar alertas en un SIEM.
-
-**Recurso de apoyo:** Ver `labs/manual-despliegue-docker.qmd` para el entorno de laboratorio.
+Ver **Reto 4.4** en la [Guía Docente del Instructor](instructor/guia-docente-laboratorio.qmd) y desplegar entorno vía `labs/manual-despliegue-docker.qmd`.
 :::
 
 ---
