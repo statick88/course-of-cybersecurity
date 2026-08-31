@@ -55,12 +55,17 @@ cybersecurity-fundamentos/
 | 6 | Criptografía Post-Cuántica | 5 |
 | 7 | Respuesta a Incidentes | 4 |
 
-## 🧪 Requisitos para Labs
+## 🧪 Laboratorios
 
-- Linux (Ubuntu 22.04+) o Windows 11
-- 8 GB RAM mínimo
-- VirtualBox o VMware
-- Git instalado
+Los laboratorios prácticos se gestionan en un repositorio independiente:
+
+```bash
+git clone https://github.com/statick88/abc-cyb-101-labs.git
+cd abc-cyb-101-labs
+docker compose up -d
+```
+
+Documentación de despliegue: `labs/manual-despliegue-docker.qmd` (en este repositorio).
 
 ## 📜 Licencia
 
