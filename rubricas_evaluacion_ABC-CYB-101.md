@@ -96,55 +96,51 @@ Los 5 laboratorios integradores evalúan la aplicación práctica de los conocim
 
 #### Laboratorio 1 — Análisis de Incidentes y Mapeo NIST CSF (Módulo I)
 
-| Criterio | Sobresaliente (90–100) | Satisfactorio (75–89) | Mínimo Aprobatorio (60–74) | Insatisfactorio (< 60) |
-|-----------|------------------------|------------------------|----------------------------|------------------------|
-| **Análisis de incidente** | Identifica actor, vector, activos y impacto CIA completamente; clasifica activos correctamente. | Identifica elementos principales; clasifica activos con errores menores. | Identifica elementos con guía; clasifica activos superficialmente. | No identifica elementos; no clasifica activos. |
-| **Cálculo de riesgo** | Aplica ISO 31000 / NIST SP 800-30; calcula riesgo inherente y residual correctamente. | Aplica estándares parcialmente; calcula riesgo con errores menores. | Aplica estándares superficialmente; calcula riesgo con errores. | No aplica estándares; no calcula riesgo. |
-| **Mapeo NIST CSF 2.0** | Mapea controles a las 6 funciones del CSF 2.0 correctamente; justifica cada mapeo. | Mapea controles con errores menores; justifica mayoría. | Mapea controles superficialmente; justifica parcialmente. | No mapea controles; no justifica. |
+| Criterio | Peso | Descripción |
+|----------|------|-------------|
+| **Descripción y fundamentación** | 30 % | Reporte técnico en Markdown: identificación de pilares CIA, cálculo de riesgo inherente/residual, clasificación de activos y mapeo de controles a NIST CSF 2.0. |
+| **Capturas y firma de estado** | 40 % | Archivos entregados en `/home/kali/cybersec-lab/module-01/` y registro de progreso en `/var/lab-state/progress/<student_id>/CORE-MOD1-*.json` con firma HMAC-SHA256 válida. |
+| **Criterio final** | 30 % | Cumplimiento de los 6 retos CORE (CORE-MOD1-01 a CORE-MOD1-06) validados por `labs/scripts/validators/module-01/validate-CORE-MOD1-*.sh`. |
 
 **Ponderación:** Conocimiento técnico 35 %, Aplicación práctica 35 %, Análisis y razonamiento 20 %, Comunicación técnica 10 %.
 
 #### Laboratorio 2 — Diseño de Arquitectura de Defensa Perimetral (Módulo II)
 
-| Criterio | Sobresaliente (90–100) | Satisfactorio (75–89) | Mínimo Aprobatorio (60–74) | Insatisfactorio (< 60) |
-|-----------|------------------------|------------------------|----------------------------|------------------------|
-| **Diseño de arquitectura** | Propone arquitectura completa (Internet → FW → DMZ → LAN); incluye segmentación, IDS/IPS, zonas de seguridad. | Propone arquitectura básica; incluye firewall y DMZ; menciona segmentación. | Propone arquitectura simplificada; incluye firewall; menciona DMZ con errores. | No propone arquitectura; no incluye controles perimetrales. |
-| **Configuración de reglas** | Diseña reglas detalladas por zona; justifica cada permiso/denegación; aplica principio de menor privilegio. | Diseña reglas básicas; justifica mayoría; aplica menor privilegio con errores menores. | Diseña reglas simples; justifica parcialmente; aplica menor privilegio con errores. | No diseña reglas; no justifica; no aplica menor privilegio. |
-| **Análisis de tráfico** | Analiza capturas .pcapng correctamente; identifica protocolos y patrones sospechosos. | Analiza capturas con errores menores; identifica protocolos principales. | Analiza capturas superficialmente; identifica protocolos básicos. | No analiza capturas; no identifica protocolos. |
-| **Defensa oral** | Presentación estructurada; responde preguntas técnicas con profundidad. | Presentación ordenada; responde preguntas; comunica riesgos y mitigaciones. | Presentación básica; responde con guía; comunica mitigaciones superficialmente. | Presentación desorganizada; no responde preguntas. |
+| Criterio | Peso | Descripción |
+|----------|------|-------------|
+| **Descripción y fundamentación** | 30 % | Reporte técnico en Markdown: diseño de arquitectura DMZ 3 zonas, reglas UFW/iptables, análisis de tráfico .pcapng y detección de escaneo Nmap SYN. |
+| **Capturas y firma de estado** | 40 % | Archivos entregados en `/home/kali/cybersec-lab/module-02/` y registro de progreso en `/var/lab-state/progress/<student_id>/CORE-MOD2-*.json` con firma HMAC-SHA256 válida. |
+| **Criterio final** | 30 % | Cumplimiento de los 12 retos CORE (CORE-MOD2-01 a CORE-MOD2-12) validados por `labs/scripts/validators/module-02/validate-CORE-MOD2-*.sh`. |
 
 **Ponderación:** Conocimiento técnico 30 %, Aplicación práctica 40 %, Análisis y razonamiento 20 %, Comunicación técnica 10 %.
 
 #### Laboratorio 3 — Hardening de Sistemas, IAM y MFA (Módulo III)
 
-| Criterio | Sobresaliente (90–100) | Satisfactorio (75–89) | Mínimo Aprobatorio (60–74) | Insatisfactorio (< 60) |
-|-----------|------------------------|------------------------|----------------------------|------------------------|
-| **Hardening de sistemas** | Aplica ≥ 10 controles CIS Benchmark; documenta proceso completo; verifica cumplimiento. | Aplica controles básicos; documenta proceso; verifica parcialmente. | Aplica controles con asistencia; documenta superficialmente. | No aplica controles; no documenta. |
-| **Modelo IAM** | Diseña RBAC con roles detallados; define ciclo de vida de identidad; justifica elección. | Diseña RBAC básico; define ciclo de vida; justifica con errores menores. | Diseña roles simples; define ciclo de vida parcialmente. | No diseña modelo; no define ciclo de vida. |
-| **Configuración MFA** | Configura MFA phishing-resistant; analiza resistencia ante phishing; explica limitaciones. | Configura MFA básico; analiza resistencia básica; explica limitaciones con errores. | Configura MFA con asistencia; analiza resistencia superficialmente. | No configura MFA; no analiza resistencia. |
-| **Documentación** | Informe completo con capturas, modelo RBAC y análisis MFA; redacción técnica precisa. | Informe ordenado; incluye secciones principales; redacción adecuada. | Informe básico; incluye algunas secciones; redacción limitada. | Informe incompleto; no incluye secciones. |
+| Criterio | Peso | Descripción |
+|----------|------|-------------|
+| **Descripción y fundamentación** | 30 % | Reporte técnico en Markdown: hardening CIS (deshabilitar Telnet, políticas de contraseña, actualizaciones automáticas, SUID), modelo RBAC 5 roles, configuración MFA TOTP y verificación de cumplimiento ISO 27001 / CIS Benchmark. |
+| **Capturas y firma de estado** | 40 % | Archivos entregados en `/home/kali/cybersec-lab/module-03/` y registro de progreso en `/var/lab-state/progress/<student_id>/CORE-MOD3-*.json` con firma HMAC-SHA256 válida. |
+| **Criterio final** | 30 % | Cumplimiento de los 13 retos CORE (CORE-MOD3-01 a CORE-MOD3-13) validados por `labs/scripts/validators/module-03/validate-CORE-MOD3-*.sh`. |
 
 **Ponderación:** Conocimiento técnico 30 %, Aplicación práctica 40 %, Análisis y razonamiento 20 %, Comunicación técnica 10 %.
 
 #### Laboratorio 4 — Análisis de Malware, Criptografía y CVSS (Módulo IV)
 
-| Criterio | Sobresaliente (90–100) | Satisfactorio (75–89) | Mínimo Aprobatorio (60–74) | Insatisfactorio (< 60) |
-|-----------|------------------------|------------------------|----------------------------|------------------------|
-| **Análisis de malware** | Identifica familia y comportamiento; explica persistencia y propagación; propone mitigación completa. | Identifica categoría; explica comportamiento básico; propone mitigación estándar. | Identifica tipo; explica comportamiento con guía; propone mitigación genérica. | No identifica tipo; no explica comportamiento; no propone mitigación. |
-| **Criptografía aplicada** | Implementa AES-256-CBC, RSA-2048 y SHA-256 correctamente; explica modos de operación; aplica buenas prácticas de gestión de claves. | Implementa algoritmos con errores menores; explica modos básicos; aplica gestión de claves con errores. | Implementa con asistencia; explica modos con errores; aplica gestión de claves incorrectamente. | No implementa; no explica modos; no aplica gestión de claves. |
-| **Cálculo de CVSS** | Calcula CVSS Base correctamente; interpreta métricas; contextualiza con ambiente organizacional. | Calcula CVSS Base con errores menores; interpreta métricas básicas; contextualiza parcialmente. | Calcula CVSS Base con errores; interpreta métricas con guía; contextualiza superficialmente. | No calcula CVSS; no interpreta métricas; no contextualiza. |
-| **Plan de remediación** | Propone plan priorizado por CVSS; incluye controles preventivos, detectivos y correctivos. | Propone plan básico; incluye controles estándar; prioriza parcialmente. | Propone plan genérico; incluye controles básicos; no prioriza claramente. | No propone plan; no incluye controles. |
+| Criterio | Peso | Descripción |
+|----------|------|-------------|
+| **Descripción y fundamentación** | 30 % | Reporte técnico en Markdown: análisis de phishing/ransomware, cifrado AES-256-GCM y RSA-2048, cálculo CVSS Base (RCE/XSS), interpretación de métricas ambientales, análisis de reporte Nessus Essentials y plan de remediación priorizado. |
+| **Capturas y firma de estado** | 40 % | Archivos entregados en `/home/kali/cybersec-lab/module-04/` y registro de progreso en `/var/lab-state/progress/<student_id>/CORE-MOD4-*.json` con firma HMAC-SHA256 válida. |
+| **Criterio final** | 30 % | Cumplimiento de los 14 retos CORE (CORE-MOD4-01 a CORE-MOD4-14) validados por `labs/scripts/validators/module-04/validate-CORE-MOD4-*.sh`. |
 
 **Ponderación:** Conocimiento técnico 30 %, Aplicación práctica 40 %, Análisis y razonamiento 20 %, Comunicación técnica 10 %.
 
 #### Laboratorio 5 — Respuesta a Incidentes e Informe Forense (Módulo V)
 
-| Criterio | Sobresaliente (90–100) | Satisfactorio (75–89) | Mínimo Aprobatorio (60–74) | Insatisfactorio (< 60) |
-|-----------|------------------------|------------------------|----------------------------|------------------------|
-| **Aplicación NIST SP 800-61** | Aplica las 6 fases correctamente; identifica hitos de detección, contención y recuperación. | Aplica fases principales; identifica hitos básicos. | Aplica fases superficialmente; identifica algunos hitos con guía. | No aplica fases; no identifica hitos. |
-| **Análisis de logs** | Analiza logs de sistema y red correctamente; identifica artefactos de ataque; reconstruye timeline. | Analiza logs con errores menores; identifica artefactos básicos; reconstruye timeline parcialmente. | Analiza logs superficialmente; identifica artefactos con guía; no reconstruye timeline. | No analiza logs; no identifica artefactos. |
-| **Informe forense** | Informe estructurado (hallazgos, análisis, controles, lecciones aprendidas); incluye gráficos y referencias. | Informe ordenado; incluye secciones principales; referencias básicas. | Informe básico; incluye algunas secciones; referencias superficiales. | Informe incompleto; no incluye secciones. |
-| **Controles propuestos** | Propone controles correctivos y preventivos integrando todos los módulos; justifica técnicamente. | Propone controles básicos; justifica parcialmente. | Propone controles genéricos; justifica superficialmente. | No propone controles; no justifica. |
+| Criterio | Peso | Descripción |
+|----------|------|-------------|
+| **Descripción y fundamentación** | 30 % | Reporte técnico en Markdown: análisis de logs de acceso, detección de acceso en horario no habitual, correlación de eventos, regla de correlación brute force, playbook de ransomware, métricas MTTD/MTTC/MTTR, tabla de escalación, plan de respaldos RTO/RPO, configuración Nginx reverse proxy HTTP→HTTPS, análisis de access logs Nginx, despliegue de stack Docker Compose y validación de conectividad. |
+| **Capturas y firma de estado** | 40 % | Archivos entregados en `/home/kali/cybersec-lab/module-05/` y registro de progreso en `/var/lab-state/progress/<student_id>/CORE-MOD5-*.json` con firma HMAC-SHA256 válida. |
+| **Criterio final** | 30 % | Cumplimiento de los 15 retos CORE (CORE-MOD5-01 a CORE-MOD5-15) validados por `labs/scripts/validators/module-05/validate-CORE-MOD5-*.sh`. |
 
 **Ponderación:** Conocimiento técnico 30 %, Aplicación práctica 40 %, Análisis y razonamiento 20 %, Comunicación técnica 10 %.
 
@@ -211,6 +207,7 @@ La participación evalúa la asistencia, intervenciones en clase, actividades fo
 
 | Versión | Fecha | Cambios |
 |---------|-------|---------|
+| 3.1 | Agosto 2026 | Alineación de rúbricas de laboratorios a esquema 30/40/30 (Descripción / Capturas-Firma / Criterio Final). Integración de referencias a `/var/lab-state/progress` y validares automáticos. |
 | 3.0 | Agosto 2026 | Actualización de rúbricas alineadas a estructura de 5 módulos / 5 laboratorios / 10 sesiones. Se actualizó distribución de calificación: Quizzes 25 %, Labs 25 %, Examen 25 %, Participación 10 %, Proyecto Integrador 15 %. Se incorporaron rúbricas específicas por módulo para laboratorios y quizzes. |
 | 2.1 | Agosto 2026 | Actualización de entornos de laboratorio y especificaciones técnicas. |
 | 2.0 | Agosto 2026 | Versión base validada con estructura de 5 módulos / 16 laboratorios / 32 h. |

@@ -19,7 +19,9 @@
 services:
   # ─── Kali Linux con herramientas de seguridad ───
   kali:
-    image: kalilinux/kali-rolling:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: curso-kali
     hostname: kali
     privileged: true
@@ -30,16 +32,13 @@ services:
     ports:
       - "4281:8080"   # noVNC web (opcional)
     volumes:
-      - ./labs:/home/kali/labs:ro
-      - ./content:/home/kali/content:ro
-      - kali-data:/home/kali
+      - ./labs:/home/kali/cybersec-lab:rw
+      - lab-state:/var/lab-state
     command: >
       bash -c "
-        apt-get update -qq &&
-        apt-get install -y -qq kali-tools-top10 nmap netcat-openbsd gobuster dirb
-          hydra john sqlmap metasploit-framework wireshark tcpdump
-          openssh-client python3-pip curl wget dnsutils 2>/dev/null | tail -5 &&
-        echo '=== KALI LISTA ===' &&
+        echo '=== INICIANDO ENTORNO ABC-CYB-101 ===' &&
+        echo 'Menu interactivo: menu_labs' &&
+        echo 'Estado de retos: /var/lab-state/progress' &&
         tail -f /dev/null
       "
     healthcheck:
@@ -143,21 +142,6 @@ services:
       retries: 5
       start_period: 30s
 
-  # ─── DVWA Logstash — para laboratorio de monitoreo (Unidad V) ───
-  # Activar solo para labs de SIEM/monitoreo
-  # Perfil: siem
-  # dvwa-logstash:
-  #   image: docker.elastic.co/logstash/logstash:8.12.0
-  #   container_name: curso-logstash
-  #   volumes:
-  #     - ./labs/scripts/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
-  #   networks:
-  #     - lab-net
-  #   profiles:
-  #     - siem
-  #   depends_on:
-  #     - dvwa
-
 networks:
   lab-net:
     driver: bridge
@@ -170,3 +154,4 @@ volumes:
   kali-data:
   loki-data:
   grafana-data:
+  lab-state:
