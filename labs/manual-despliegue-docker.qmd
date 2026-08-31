@@ -89,12 +89,15 @@ El entorno se despliega sobre una **red bridge personalizada** con las siguiente
 
 ## 4. Procedimiento de despliegue
 
-### 4.1 Clonar el repositorio
+### 4.1 Clonar el repositorio de laboratorios
 
 ```bash
-git clone https://github.com/statick88/course-of-cybersecurity.git
-cd course-of-cybersecurity
+# Repositorio independiente de laboratorios CORE
+git clone https://github.com/statick88/abc-cyb-101-labs.git
+cd abc-cyb-101-labs
 ```
+
+> **Nota:** La infraestructura de laboratorios se encuentra en un repositorio independiente para facilitar su mantenimiento y despliegue. El repositorio principal del curso contiene únicamente la documentación teórica.
 
 ### 4.2 Iniciar el entorno
 
@@ -181,7 +184,7 @@ menu_labs
 3. **Ejecutar el menú:** `menu_labs`
 4. **Seleccionar el reto:** Navegar por el menú usando números
 5. **Resolver en DVWA/Metasploitable:** Acceder desde Kali hacia `172.20.0.20` (DVWA) o `172.20.0.30` (Metasploitable)
-6. **Documentar hallazgos:** Usar las plantillas en `/home/kali/labs/plantillas/`
+6. **Documentar hallazgos:** Usar las plantillas en `labs/scripts/plantillas/` del repositorio de laboratorios
 7. **Salir y apagar:** `exit` → `docker compose down`
 
 ---
