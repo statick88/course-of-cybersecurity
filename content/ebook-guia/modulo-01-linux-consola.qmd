@@ -1,0 +1,471 @@
+---
+title: "Módulo 1: Fundamentos de Sistemas Operativos y Consola"
+module: "ebook-guia-mod01"
+type: "ebook-section"
+description: "Introducción amigable a la terminal de Linux, permisos y estructura de directorios"
+---
+
+# Módulo 1: Fundamentos de Sistemas Operativos y Consola
+
+![Tux — La mascota oficial de Linux](images/tux.svg){width=35% fig-alt="Tux mascota Linux" fig-align="center"}
+
+*Imagen: Tux, mascota de Linux. Dominio público vía Wikimedia Commons.*
+
+## Objetivos de Aprendizaje
+
+Al finalizar este módulo, serás capaz de:
+
+1. **Navegar** por el sistema de archivos de Linux usando la terminal
+2. **Explicar** la estructura jerárquica de directorios en sistemas Unix/Linux
+3. **Gestionar** permisos básicos de archivos y directorios
+4. **Resolver** errores comunes como "Permission denied" y "Command not found"
+
+---
+
+> **🔗 Conexión con NIST CSF 2.0**
+> | Función | Categoría | Aplicación |
+> |---------|-----------|------------|
+> | **PROTECT** | PR.AC (Identity Management) | Gestión de usuarios, permisos y control de acceso |
+> | **PROTECT** | PR.PT (Protective Technology) | Uso de sudo, principio de menor privilegio |
+>
+> *Este módulo desarrolla capacidades fundamentales para PROTECT: aprenderás a controlar quién accede a qué recursos del sistema.*
+
+---
+
+> **🔗 Conexión con NIST CSF 2.0 — GOVERN (NUEVO en 2.0)**
+> | Función | Categoría | Aplicación |
+> |---------|-----------|------------|
+> | **GOVERN** | GV.OC (Organizational Context) | Comprender el contexto organizacional de la seguridad |
+>
+> *GOVERN es la función más nueva de NIST CSF 2.0. Establece que la ciberseguridad no es solo técnica — es parte de la gobernanza organizacional. Cuando gestionas usuarios y permisos, estás implementando políticas de seguridad que protegen los activos de la organización.*
+
+## 1.0 — Gobernanza de Usuarios y Permisos (GOVERN)
+
+### ¿Por qué la Gobernanza Importa en Ciberseguridad?
+
+Antes de tocar comandos, entiende esto: **cada usuario y permiso en un sistema es una decisión de gobernanza**. Cuando creas un usuario, le asignas permisos o usas `sudo`, estás implementando políticas que definen quién puede hacer qué en un sistema.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              GOBERNANZA DE SEGURIDAD (NIST CSF 2.0)             │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  La gobernanza de seguridad define:                             │
+│                                                                 │
+│  • POLÍTICAS: Reglas sobre quién accede a qué                  │
+│  • ROLES: Responsabilidades de cada usuario                     │
+│  • CUMPLIMIENTO: Verificar que se siguen las reglas             │
+│  • RIESGO: Decisiones informadas sobre qué proteger             │
+│                                                                 │
+│  En este módulo, cuando aprendas permisos y sudo,              │
+│  estarás implementando GOBERNANZA a nivel técnico.              │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+#### Principios de Gobernanza que Aplicarás
+
+| Principio | Descripción | Comando Relacionado |
+|-----------|-------------|---------------------|
+| **Menor privilegio** | Dar solo los permisos necesarios | `chmod`, `chown` |
+| **Separación de funciones** | No todos deben ser administradores | `sudo` vs usuario normal |
+| **Rendición de cuentas** | Cada acción debe ser rastreable | Logs de `sudo` |
+| **Revisión periódica** | Auditar quién tiene acceso | `ls -la`, `cat /etc/passwd` |
+
+> **Nota de Seguridad:** La gobernanza no es solo para empresas grandes. Incluso en un laboratorio personal, aplicar estos principios te prepara para entornos profesionales donde un permiso mal configurado puede causar brechas millonarias.
+
+---
+
+## 1.1 — Bienvenido a la Terminal (No Muerde)
+
+### El Mito del "Hacker de Película"
+
+Si tu imagen de la terminal es una pantalla negra con texto verde cayendo como en Matrix, es hora de actualizar esa percepción. La terminal de Linux es simplemente una **interfaz de texto** que te permite comunicarse directamente con el sistema operativo.
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  GRÁFICO (GUI)          vs.         TEXTO (CLI)             │
+├─────────────────────────────────────────────────────────────┤
+│  • Usas el mouse                    • Usas el teclado       │
+│  • Clic en botones                  • Escribes comandos     │
+│  • Intuitivo al inicio              • Preciso siempre       │
+│  • Consume más recursos             • Liviano y rápido      │
+│  • Limitado por la interfaz         • Acceso total al SO    │
+└─────────────────────────────────────────────────────────────┘
+```
+
+> **Nota de Seguridad:** En ciberseguridad, la terminal es tu herramienta principal. Los servidores Linux no tienen interfaz gráfica por defecto — aprender a usar la CLI (Command Line Interface) es obligatorio.
+
+### ¿Por qué la Consola es Precisa?
+
+Cuando escribes un comando, el sistema lo ejecuta **exactamente** como lo escribiste. No hay ambigüedad. Esto es crítico en seguridad: un comando mal escrito puede tener consecuencias graves, pero un comando bien escrito hace exactamente lo que esperas.
+
+---
+
+## 1.2 — La Estructura de Directorios en Linux
+
+### El Árbol Invertido
+
+A diferencia de Windows (que usa letras de unidad como `C:\`, `D:\`), Linux tiene una **estructura jerárquica única** que comienza en la raíz `/`.
+
+```
+                        / (raíz)
+                        │
+        ┌───────┬───────┼───────┬───────┐
+        │       │       │       │       │
+       /bin   /home   /etc   /var   /tmp
+        │       │       │       │
+        │    /home/   /etc/   /var/
+        │    usuario  ssh/    log/
+        │    /docs
+        │
+       /bin/
+       ├── ls
+       ├── cat
+       ├── mkdir
+       └── ...
+```
+
+### Directorios Principales que Debes Conocer
+
+| Directorio | Contenido | Propósito |
+|------------|-----------|-----------|
+| `/` | Raíz del sistema | Punto de partida de todo |
+| `/home` | Carpetas personales | Aquí vive tu usuario (`/home/tu_usuario`) |
+| `/bin` | Comandos esenciales | `ls`, `cat`, `mkdir`, `cp`, `mv` |
+| `/etc` | Configuraciones | Archivos de configuración del sistema |
+| `/var` | Datos variables | Logs, bases de datos, colas de impresión |
+| `/tmp` | Archivos temporales | Se borran al reiniciar |
+| `/usr` | Programas de usuario | Aplicaciones y utilidades |
+| `/root` | Carpeta del superusuario | Solo accesible con `sudo` |
+
+> **Buenas Prácticas:** Nunca trabajes directamente como `root` (superusuario) para tareas cotidianas. Usa tu usuario normal y eleva privilegios solo cuando sea necesario con `sudo`.
+
+---
+
+## 1.3 — Permisos: Quién Puede Hacer Qué
+
+### El Sistema de Permisos de Linux
+
+En Linux, cada archivo y directorio tiene permisos para tres tipos de usuarios:
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│  -rw-r--r-- 1 usuario usuario 1234 Jun  1 12:00 archivo.txt  │
+│  ─┬─ ─┬─ ─┬─                                               │
+│   │   │   │                                                 │
+│   │   │   └── Otros (r--): solo lectura                    │
+│   │   └────── Grupo (r--): solo lectura                    │
+│   └────────── Propietario (rw-): lectura y escritura       │
+└──────────────────────────────────────────────────────────────┘
+```
+
+### Tipos de Permisos
+
+| Permiso | Símbolo | En archivos | En directorios |
+|---------|---------|-------------|----------------|
+| Lectura | `r` | Permite ver el contenido | Permite listar archivos |
+| Escritura | `w` | Permite modificar | Permite crear/borrar archivos |
+| Ejecución | `x` | Permite ejecutar como programa | Permite entrar al directorio |
+
+### Representación Numérica (Octal)
+
+| Valor | Permiso | Significado |
+|-------|---------|-------------|
+| 7 | `rwx` | Lectura + Escritura + Ejecución |
+| 6 | `rw-` | Lectura + Escritura |
+| 5 | `r-x` | Lectura + Ejecución |
+| 4 | `r--` | Solo lectura |
+| 0 | `---` | Sin permisos |
+
+### Tabla Comparativa: Permisos Octales Comunes
+
+| Permiso | Octal | Uso típico |
+|---------|-------|------------|
+| `rwx------` | 700 | Scripts privados del usuario |
+| `rwxr-xr-x` | 755 | Programas ejecutables |
+| `rw-r--r--` | 644 | Archivos de datos normales |
+| `rw-------` | 600 | Archivos con información sensible |
+| `rwxrwxrwx` | 777 | ⚠️ **NUNCA usar** — riesgo de seguridad |
+
+> **Nota de Seguridad:** Un archivo con permisos `777` (todos los permisos para todos) es un riesgo de seguridad grave. Nunca uses `chmod 777` como solución rápida.
+
+::: {.callout-note}
+**ISO 31000 — Gestión de Riesgos en Permisos de Archivos**
+
+La norma **ISO 31000** establece principios para la gestión sistemática de riesgos. En el contexto de permisos de Linux:
+
+- **Identificación de riesgos:** Un archivo con permisos `777` representa un riesgo de acceso no autorizado
+- **Evaluación de riesgos:** ¿Qué pasaría si alguien modifica o elimina este archivo?
+- **Tratamiento del riesgo:** Aplicar el principio de menor privilegio (`chmod 600` o `644` según el caso)
+- **Monitoreo:** Revisar periódicamente permisos con `ls -la` y `find / -perm 777`
+
+> **Principio clave:** La gestión de riesgos no es eliminar todo riesgo (imposible), sino **reducirlo a niveles aceptables** mediante controles apropiados.
+:::
+
+### Comandos Esenciales de Permisos
+
+```bash
+# Ver permisos de archivos
+ls -la
+
+# Cambiar permisos (modo simbólico)
+chmod u+x script.sh    # Da ejecución al propietario
+chmod g-w archivo.txt  # Quita escritura al grupo
+chmod o=r archivo.txt  # Otros: solo lectura
+
+# Cambiar permisos (modo octal)
+chmod 755 script.sh    # rwxr-xr-x
+chmod 644 archivo.txt  # rw-r--r--
+
+# Cambiar propietario
+sudo chown usuario:grupo archivo.txt
+```
+
+---
+
+## 1.4 — El Superusuario (`sudo`)
+
+### ¿Qué es `sudo`?
+
+`sudo` (SuperUser DO) te permite ejecutar comandos con privilegios de administrador **temporalmente**, sin necesidad de iniciar sesión como `root`.
+
+```bash
+# Instalar un programa (requiere sudo)
+sudo apt update
+sudo apt install nmap
+
+# Editar un archivo de sistema
+sudo nano /etc/hosts
+
+# Ver un archivo protegido
+sudo cat /etc/shadow
+```
+
+### La Filosofía de `sudo`
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    PRINCIPIO DE MENOR PRIVILEGIO            │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  • Usa tu usuario normal para tareas cotidianas             │
+│  • Eleva privilegios SOLO cuando es necesario               │
+│  • Cada acción con sudo queda registrada en logs            │
+│  • Si cometes un error, el daño está limitado               │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+> **Nota de Seguridad:** `sudo` no es un escudo mágico. Un comando mal escrito con `sudo` puede dañar el sistema. Siempre verifica lo que escribes antes de presionar Enter.
+
+---
+
+## 1.5 — Errores Comunes y Cómo Solucionarlos
+
+### Error: "Permission denied"
+
+```
+bash: ./script.sh: Permission denied
+```
+
+**Causa:** No tienes permiso de ejecución en el archivo.
+
+**Solución:**
+```bash
+# Verificar permisos actuales
+ls -l script.sh
+
+# Dar permiso de ejecución
+chmod +x script.sh
+
+# Ahora puedes ejecutar
+./script.sh
+```
+
+### Error: "Command not found"
+
+```
+bash: nmap: command not found
+```
+
+**Causa:** El programa no está instalado o no está en tu PATH.
+
+**Solución:**
+```bash
+# Verificar si está instalado
+which nmap
+
+# Si no está instalado, instalarlo
+sudo apt update
+sudo apt install nmap
+
+# Verificar que está en el PATH
+echo $PATH
+```
+
+### Error: "No such file or directory"
+
+```
+bash: cd /carpeta: No such file or directory
+```
+
+**Causa:** La ruta no existe o está mal escrita.
+
+**Solución:**
+```bash
+# Verificar que existe
+ls -la /carpeta
+
+# Verificar mayúsculas/minúsculas (Linux es case-sensitive)
+ls -la /Carpeta    # ¡Es diferente a /carpeta!
+
+# Verificar tu ubicación actual
+pwd
+```
+
+### Error: "Operation not permitted"
+
+```
+mkdir: cannot create directory '/opt/test': Operation not permitted
+```
+
+**Causa:** Estás intentando escribir en un directorio del sistema sin privilegios.
+
+**Solución:**
+```bash
+# Usar sudo si es necesario
+sudo mkdir /opt/test
+
+# O trabajar en tu directorio personal
+mkdir ~/mi-carpeta
+```
+
+---
+
+## 1.6 — Comandos Esenciales de Navegación
+
+### Tu Kit de Supervivencia en la Terminal
+
+| Comando | Función | Ejemplo |
+|---------|---------|---------|
+| `pwd` | Mostrar directorio actual | `pwd` → `/home/usuario` |
+| `ls` | Listar archivos | `ls -la` |
+| `cd` | Cambiar de directorio | `cd /home/usuario` |
+| `mkdir` | Crear directorio | `mkdir proyectos` |
+| `touch` | Crear archivo vacío | `touch notas.txt` |
+| `cat` | Mostrar contenido de archivo | `cat archivo.txt` |
+| `cp` | Copiar archivo | `cp origen destino` |
+| `mv` | Mover/renombrar archivo | `mv viejo nuevo` |
+| `rm` | Eliminar archivo | `rm archivo.txt` |
+| `clear` | Limpiar pantalla | `clear` o `Ctrl+L` |
+
+### Atajos de Teclado Esenciales
+
+| Atajo | Función |
+|-------|---------|
+| `Ctrl + C` | Cancelar comando actual |
+| `Ctrl + L` | Limpiar pantalla |
+| `Ctrl + D` | Cerrar terminal (EOF) |
+| `Tab` | Autocompletar comando/archivo |
+| `↑` / `↓` | Navegar historial de comandos |
+| `Ctrl + R` | Buscar en historial |
+
+---
+
+## Ejercicios Prácticos — Módulo 1
+
+### Ejercicio 1: Navegación Básica
+
+```bash
+# 1. Abre tu terminal
+# 2. Verifica en qué directorio estás
+pwd
+
+# 3. Lista los archivos (incluyendo ocultos)
+ls -la
+
+# 4. Crea un directorio llamado "ciberseguridad"
+mkdir ciberseguridad
+
+# 5. Entra al directorio
+cd ciberseguridad
+
+# 6. Crea un archivo de texto con tu nombre
+echo "Mi nombre es [tu nombre]" > presentacion.txt
+
+# 7. Verifica que el archivo se creó
+ls -la
+
+# 8. Lee el contenido del archivo
+cat presentacion.txt
+```
+
+### Ejercicio 2: Permisos
+
+```bash
+# 1. Crea un script de prueba
+echo '#!/bin/bash' > script.sh
+echo 'echo "Hola desde el script"' >> script.sh
+
+# 2. Intenta ejecutarlo (debería dar error)
+./script.sh
+
+# 3. Verifica los permisos
+ls -l script.sh
+
+# 4. Dale permisos de ejecución
+chmod +x script.sh
+
+# 5. Ejecuta el script
+./script.sh
+
+# 6. Cambia los permisos a 755
+chmod 755 script.sh
+
+# 7. Verifica el cambio
+ls -l script.sh
+```
+
+### Ejercicio 3: Solución de Problemas
+
+```bash
+# 1. Intenta entrar a un directorio que no existe
+cd /directorio-falso
+# ¿Qué error aparece? ¿Cómo lo solucionas?
+
+# 2. Intenta ejecutar un comando que no existe
+comando-falso
+# ¿Qué error aparece? ¿Qué significa?
+
+# 3. Crea un archivo y quítale todos los permisos
+touch secreto.txt
+chmod 000 secreto.txt
+# Intenta leerlo con cat. ¿Qué pasa?
+# Restaura los permisos: chmod 644 secreto.txt
+```
+
+---
+
+## Checklist de Autoevaluación — Módulo 1
+
+Antes de continuar al Módulo 2, asegúrate de poder:
+
+- [ ] Abrir una terminal sin pánico
+- [ ] Navegar entre directorios con `cd`
+- [ ] Listar archivos con `ls -la`
+- [ ] Crear archivos y directorios
+- [ ] Explicar qué es `/home`, `/etc`, `/bin`
+- [ ] Entender los permisos `rwx`
+- [ ] Usar `chmod` para cambiar permisos
+- [ ] Usar `sudo` cuando es necesario
+- [ ] Resolver "Permission denied"
+- [ ] Resolver "Command not found"
+
+---
+
+> **"La terminal no es el enemigo. Es el instrumento más preciso que tendrás en tu carrera de ciberseguridad."**
+
+---
+
+← [Inicio](./index.qmd) | [Módulo 2: Kali Linux](./modulo-02-kali-linux.qmd) →
