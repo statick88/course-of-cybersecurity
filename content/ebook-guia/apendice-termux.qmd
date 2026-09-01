@@ -277,7 +277,7 @@ nmap -sn 192.168.1.0/24
 nmap -sV 192.168.1.1
 
 # 4. Documentar los hallazgos
-echo "=== Auditoría de Red - $(date) >> ~/auditoria-red.txt
+echo "=== Auditoría de Red - $(date)" >> ~/auditoria-red.txt
 echo "Mi IP: $(hostname -I)" >> ~/auditoria-red.txt
 echo "Dispositivos encontrados:" >> ~/auditoria-red.txt
 nmap -sn 192.168.1.0/24 | grep "Nmap scan" >> ~/auditoria-red.txt

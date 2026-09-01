@@ -241,7 +241,7 @@ evidencia/clientes/
 # Crear el archivo .gitignore
 nano .gitignore
 
-# Pega el contenido anterior, guarda (Ctrl+O) y salí (Ctrl+X)
+# Pega el contenido anterior, guarda (Ctrl+O) y sal (Ctrl+X)
 ```
 
 > **Nota de Seguridad:** Si accidentalmente subiste una contraseña a Git, **cambia la contraseña inmediatamente**. Eliminar el archivo del historial de Git no es suficiente — el dato puede seguir accesible en commits anteriores.
