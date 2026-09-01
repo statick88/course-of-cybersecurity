@@ -1,0 +1,304 @@
+---
+title: "Módulo 2: Introducción a Kali Linux"
+module: "ebook-guia-mod02"
+type: "ebook-section"
+description: "Qué es Kali Linux, su interfaz, herramientas y gestión de entornos"
+---
+
+# Módulo 2: Introducción a Kali Linux
+
+![Kali Linux — Distribución de seguridad](images/kali-linux.svg){width=50% fig-alt="Logo Kali Linux" fig-align="center"}
+
+*Imagen: Logo de Kali Linux 2.0. Dominio público vía Wikimedia Commons.*
+
+## Objetivos de Aprendizaje
+
+Al finalizar este módulo, serás capaz de:
+
+1. **Explicar** qué es Kali Linux y por qué es el estándar en auditorías de seguridad
+2. **Navegar** por la interfaz gráfica y el menú de herramientas
+3. **Gestionar** sesiones y resolver incidencias comunes de contraseñas
+4. **Identificar** las categorías principales de herramientas incluidas
+
+---
+
+> **🔗 Conexión con NIST CSF 2.0**
+> | Función | Categoría | Aplicación |
+> |---------|-----------|------------|
+> | **IDENTIFY** | ID.RA (Risk Assessment) | Herramientas de reconocimiento y análisis de vulnerabilidades |
+> | **IDENTIFY** | ID.SC (Supply Chain Risk) | Evaluación de herramientas y su procedencia |
+>
+> *Este módulo desarrolla capacidades de IDENTIFY: conocerás las herramientas que te permiten evaluar riesgos y vulnerabilidades en sistemas.*
+
+---
+
+## 2.1 — ¿Qué es Kali Linux?
+
+### No es un Sistema Operativo "Normal"
+
+Kali Linux es una distribución de Linux basada en Debian, desarrollada y mantenida por **Offensive Security**. Está diseñada específicamente para **pruebas de penetración (pentesting)**, **auditorías de seguridad** y **investigación de ciberseguridad**.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    ¿QUÉ ES KALI LINUX?                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ✓ Una distribución Linux especializada                        │
+│  ✓ Pre-instalada con 600+ herramientas de seguridad            │
+│  ✓ Desarrollada por Offensive Security                         │
+│  ✓ Basada en Debian (estabilidad + repositorios)                │
+│  ✓ Usada por profesionales de seguridad en todo el mundo        │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│                    ¿QUÉ NO ES KALI LINUX?                       │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ✗ Un sistema operativo para uso diario de oficina              │
+│  ✗ Un juguete para "hackers"                                    │
+│  ✗ Un sistema para atacar redes sin autorización                │
+│  ✗ Un reemplazo para tu Windows/Mac principal                  │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+> **Nota de Seguridad:** Kali Linux es una herramienta profesional. Usarla contra sistemas sin autorización es **ilegal** en la mayoría de los países. Siempre practica en entornos controlados: laboratorios propios, máquinas virtuales o plataformas como HackTheBox y TryHackMe.
+
+### ¿Por qué Kali y no Otra Distribución?
+
+| Característica | Kali Linux | Ubuntu/Debian Genérico |
+|----------------|------------|------------------------|
+| Herramientas de seguridad pre-instaladas | 600+ | Ninguna |
+| Kernel personalizado para inyección de paquetes | Sí | No |
+| Modo forense (no modifica disco) | Sí | No |
+| Comunidad enfocada en seguridad | Sí | General |
+| Actualizaciones frecuentes de herramientas | Sí | Depende |
+| Diseñada para auditorías | Sí | No específicamente |
+
+---
+
+## 2.2 — Interfaz Gráfica y Entorno de Trabajo
+
+### El Escritorio de Kali
+
+Kali Linux usa **XFCE** como entorno de escritorio por defecto (versión 2024.x). Es liviano, rápido y funcional.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  [Menú]  [Archivos]  [Terminal]  [Firefox]  [Editor]    [🔋 ⚙] │  ← Barra superior
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│                         ESCRITORIO                              │
+│                                                                 │
+│    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐       │
+│    │  Terminal   │    │  Archivos   │    │  Firefox    │       │
+│    │             │    │             │    │             │       │
+│    └─────────────┘    └─────────────┘    └─────────────┘       │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  Menú de Aplicaciones → Categorías de Seguridad                 │  ← Barra inferior
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Acceso Rápido a Herramientas
+
+La forma más rápida de acceder a las herramientas de Kali es desde el **menú de aplicaciones**, organizado por categorías:
+
+```
+Menú de Aplicaciones → 01 - Information Gathering
+                     → 02 - Vulnerability Analysis
+                     → 03 - Web Application Analysis
+                     → 04 - Database Assessment
+                     → 05 - Password Attacks
+                     → 06 - Wireless Attacks
+                     → 07 - Reverse Engineering
+                     → 08 - Exploitation Tools
+                     → 09 - Sniffing & Spoofing
+                     → 10 - Post Exploitation
+                     → 11 - Forensics
+                     → 12 - Reporting Tools
+                     → 13 - Social Engineering Tools
+```
+
+> **Buenas Prácticas:** No necesitas conocer las 600+ herramientas. Un pentester profesional domina unas 20-30 herramientas que cubren el 80% de los escenarios.
+
+---
+
+## 2.3 — Categorías Principales de Herramientas
+
+### Tu Arsenal de Seguridad
+
+| Categoría | Herramienta | Función |
+|-----------|-------------|---------|
+| **Recopilación de información** | `nmap` | Escaneo de redes y puertos |
+| | `recon-ng` | Reconocimiento OSINT |
+| **Análisis de vulnerabilidades** | `nikto` | Escáner de vulnerabilidades web |
+| | `openvas` | Escáner de vulnerabilidades de red |
+| **Ataques de contraseñas** | `john` | Cracking de hashes |
+| | `hydra` | Fuerza bruta de servicios |
+| **Análisis web** | `burpsuite` | Interceptación de tráfico HTTP |
+| | `sqlmap` | Inyección SQL automatizada |
+| **Explotación** | `metasploit` | Framework de explotación |
+| **Forense** | `autopsy` | Análisis forense de discos |
+| | `volatility` | Análisis de memoria RAM |
+
+---
+
+## 2.4 — Gestión de Sesiones y Contraseñas
+
+### Bloqueo de Pantalla
+
+Cuando bloqueas la pantalla de Kali, necesitas tu contraseña de usuario para desbloquearla.
+
+```bash
+# Bloquear pantalla manualmente
+xflock4
+
+# O desde el menú: Bloquear pantalla
+```
+
+### ¿Olvidaste tu Contraseña en un Contenedor/VM?
+
+Si estás usando Kali en un contenedor Docker o máquina virtual y olvidaste la contraseña, puedes restablecerla:
+
+#### En Docker:
+
+```bash
+# Ver tus contenedores activos (anota el nombre o CONTAINER ID)
+docker ps
+
+# Entrar al contenedor (reemplaza "nombre_con_tu_contenedor" por el real)
+docker exec -it nombre_con_tu_contenedor bash
+
+# Una vez dentro, cambiar contraseña
+passwd tu_usuario
+```
+
+#### En Máquina Virtual (Modo Recovery):
+
+```bash
+# 1. Reinicia la VM
+# 2. En el menú GRUB, selecciona "Advanced options"
+# 3. Selecciona "Recovery mode"
+# 4. Selecciona "root" para acceso a root shell
+# 5. Monta el sistema en modo lectura/escritura
+mount -o remount,rw /
+
+# 6. Cambia la contraseña
+passwd tu_usuario
+
+# 7. Reinicia
+reboot
+```
+
+#### Script de Validación Interno
+
+Si tu entorno incluye el script de validación `validate_all.sh`, primero verifica que existe en tu directorio:
+
+```bash
+# Verificar que el script existe
+ls -la validate_all.sh
+
+# Si existe, ejecútalo
+./validate_all.sh
+
+# Si no existe o tienes errores, consulta con tu facilitador.
+# Este script verifica la configuración del laboratorio.
+```
+
+> **Nota de Seguridad:** Nunca uses contraseñas débiles en entornos de seguridad. Una contraseña como "123456" o "password" puede comprometer todo el laboratorio. Usa alfanuméricos + símbolos (ej: `K@l1_L4b_2024!`).
+
+---
+
+## 2.5 — Primeros Pasos Prácticos
+
+### Tu Primer Comando en Kali
+
+```bash
+# 1. Abre una terminal (Ctrl+Alt+T o clic en icono de terminal)
+
+# 2. Verifica quién eres
+whoami
+
+# 3. Verifica tu versión de Kali
+cat /etc/os-release
+
+# 4. Verifica que nmap está instalado
+nmap --version
+
+# 5. Verifica que metasploit está disponible
+msfconsole --version
+
+# 6. Actualiza la lista de paquetes
+sudo apt update
+```
+
+### Configuración Inicial Recomendada
+
+```bash
+# 1. Actualizar el sistema completo
+sudo apt update && sudo apt upgrade -y
+
+# 2. Instalar herramientas adicionales si es necesario
+sudo apt install -y git curl wget
+
+# 3. Configurar alias útiles
+echo "alias ll='ls -la'" >> ~/.bashrc
+source ~/.bashrc
+```
+
+---
+
+## Ejercicios Prácticos — Módulo 2
+
+### Ejercicio 1: Explorar el Menú de Herramientas
+
+```
+1. Abre el menú de aplicaciones
+2. Navega por cada categoría (01 a 13)
+3. Identifica al menos 3 herramientas por categoría
+4. Anota las que te llamen la atención
+```
+
+### Ejercicio 2: Verificar Herramientas Instaladas
+
+```bash
+# Verifica que estas herramientas están disponibles:
+which nmap
+which msfconsole
+which john
+which hydra
+which burpsuite
+which sqlmap
+```
+
+### Ejercicio 3: Primer Escaneo con Nmap
+
+```bash
+# Escanea tu propia máquina (localhost)
+nmap -sV localhost
+
+# Observa qué puertos están abiertos
+# Investiga qué servicios corresponden a cada puerto
+```
+
+---
+
+## Checklist de Autoevaluación — Módulo 2
+
+Antes de continuar al Módulo 3, asegúrate de poder:
+
+- [ ] Explicar qué es Kali Linux y qué NO es
+- [ ] Navegar por el menú de herramientas
+- [ ] Abrir una terminal en Kali
+- [ ] Verificar herramientas instaladas con `which`
+- [ ] Entender por qué no es un sistema de uso diario
+- [ ] Saber cómo restablecer una contraseña en contenedor/VM
+- [ ] Haber ejecutado tu primer `nmap`
+
+---
+
+> **"Kali Linux es tu laboratorio de química. Las herramientas son tus reactivos. Aprende a usarlas con responsabilidad."**
+
+---
+
+← [Módulo 1: Linux y Consola](./modulo-01-linux-consola.qmd) | [Módulo 3: Git](./modulo-03-git.qmd) →

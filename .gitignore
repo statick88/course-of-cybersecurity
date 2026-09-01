@@ -1,16 +1,65 @@
-/.quarto/
-**/*.quarto_ipynb
+# ═══════════════════════════════════════════════════════════════════════════════
+# .GITIGNORE — introduccion_cyberseguridad
+# Repositorio: Ebook Guía Fundamentos de Ciberseguridad (Agosto 2026)
+# ═══════════════════════════════════════════════════════════════════════════════
 
-# Generated output
-/_site/
-/_freeze/
+# ─── Quarto / Bookdown ───────────────────────────────────────────────────────
+_book/
+_freeze/
+_site/
+.quarto/
+*.quarto_ipynb
 
-# Temp files
+# ─── LaTeX / PDF (generados en compilación local) ────────────────────────────
+*.tex
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.pdf
+
+# ─── Imágenes generadas / screenshots ────────────────────────────────────────
 *.png
-.atl/
-.playwright-mcp/
+*.jpg
+*.jpeg
+*.gif
+*.svg
+!images/**/*.png
+!images/**/*.svg
+!content/ebook-guia/images/**
 
+# ─── Temporales del sistema ──────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+*.bak
+*~
+
+# ─── Directorios de trabajo de agentes ───────────────────────────────────────
 .antigravitycli/
+.playwright-mcp/
+.atl/
 
-# Generated reports (multi-agent analysis artifacts)
+# ─── Reportes generados (análisis multi-agente) ─────────────────────────────
 /reports/
+
+# ─── Node / Build tools ──────────────────────────────────────────────────────
+node_modules/
+package-lock.json
+
+# ─── Python ──────────────────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# ─── IDE / Editor ────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.iml

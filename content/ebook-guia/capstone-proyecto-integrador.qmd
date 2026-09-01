@@ -1,0 +1,616 @@
+---
+title: "Proyecto Integrador — Capstone: El Incidente en Abacom S.A."
+module: "ebook-guia-capstone"
+type: "proyecto-integrador"
+description: "Proyecto final que integra los 6 módulos del Ebook Guía en un escenario realista de respuesta a incidentes, alineado con NIST CSF 2.0 y competencias SETEC/Abacom"
+author: "Diego Saavedra — Abacom"
+fecha: "2026-09-01"
+---
+
+# Proyecto Integrador — Capstone: "El Incidente en Abacom S.A."
+
+## 🎓 Bienvenida al Proyecto Integrador
+
+¡Felicitaciones! Has completado los 6 módulos del Ebook Guía y has demostrado competencias fundamentales en Linux, Kali, Git, Docker y Wargames. Ahora es momento de **integrar todo lo aprendido** en un escenario profesional simulado.
+
+Este proyecto es tu **portafolio de evidencias** ante Abacom y el mundo profesional. Demuestra que no solo conoces comandos, sino que puedes **pensar como un analista de ciberseguridad**.
+
+---
+
+## 📋 Presentación del Caso de Estudio
+
+### "El Incidente en Abacom S.A."
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    🚨 CASO DE ESTUDIO 🚨                         │
+│                    Abacom S.A. — Simulación                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  EMPRESA: Abacom S.A. (empresa simulada de consultoría)         │
+│  FECHA DEL INCIDENTE: 15 de agosto de 2026                       │
+│  TIPO DE INCIDENTE: Brecha de seguridad menor                   │
+│                                                                 │
+│  SÍNTOMAS REPORTADOS:                                           │
+│  • Usuarios no autorizados en el sistema                        │
+│  • Permisos mal configurados en directorios sensibles           │
+│  • Un script sospechoso ejecutándose en un contenedor           │
+│  • Logs del sistema muestran acceso fuera de horario            │
+│                                                                 │
+│  TU ROL: Junior Security Analyst                                │
+│  TU MISIÓN: Investigar, documentar y reportar el incidente      │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Contexto Detallado
+
+**Abacom S.A.** es una empresa simulada de consultoría en ciberseguridad con 50 empleados. El equipo de TI ha detectado anomalías en el servidor principal durante el fin de semana:
+
+1. **Usuarios sospechosos:** Se crearon 3 cuentas de usuario sin autorización: `temp_user`, `backup_svc` y `admin2`
+2. **Permisos incorrectos:** El directorio `/opt/confidencial/` tiene permisos `777` en lugar de `750`
+3. **Contenedor comprometido:** Un contenedor Docker llamado `web-app` está ejecutando un script no documentado
+4. **Logs alterados:** Hay entradas eliminadas en `/var/log/auth.log` entre las 2 AM y 4 AM del domingo
+
+### Objetivos del Proyecto
+
+| Objetivo | Competencia |
+|----------|-------------|
+| Auditar accesos y permisos | Linux, find, grep (Módulos 1, 6) |
+| Inspeccionar contenedores y red | Docker, Kali (Módulos 2, 4) |
+| Documentar evidencias en Git | Control de versiones (Módulo 3) |
+| Elaborar reporte alineado a NIST | Marco CSF 2.0 (Todos los módulos) |
+
+---
+
+## 🔄 Fases del Proyecto Integrador
+
+### Flujo de Trabajo del Analista
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              FLUJO DE TRABAJO DEL ANALISTA                      │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  FASE 1          FASE 2          FASE 3          FASE 4        │
+│  ┌─────┐        ┌─────┐        ┌─────┐        ┌─────┐        │
+│  │AUDI-│   →    │INSP-│   →    │DOCU-│   →    │REPOR│        │
+│  │TORÍA│        │ECCIÓN│       │MENTA│        │TE   │        │
+│  └─────┘        └─────┘        └─────┘        └─────┘        │
+│                                                                 │
+│  • find/grep    • Docker/Kali   • Git branches  • NIST CSF    │
+│  • Permisos     • Contenedores  • Evidencias    • Detect      │
+│  • Usuarios     • Red           • Hashes        • Respond    │
+│  • Logs         • Forense      • Informe       • Protect     │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### Fase 1: Auditoría de Accesos y Permisos
+
+**Duración estimada:** 45 minutos
+**Módulos aplicados:** 1 (Linux) y 6 (Búsqueda avanzada)
+**Función NIST:** DETECT (DE.CM — Continuous Monitoring)
+
+#### Escenario
+
+El equipo de TI sospecha que alguien creó cuentas no autorizadas y modificó permisos en directorios sensibles. Tu primera tarea es auditar el sistema.
+
+#### Tareas a Ejecutar
+
+**1.1 — Auditoría de Usuarios**
+
+```bash
+# Ver todos los usuarios del sistema
+cat /etc/passwd
+
+# Identificar usuarios con shell válida (posibles accesos)
+grep -E "/bin/bash|/bin/sh" /etc/passwd
+
+# Ver usuarios creados recientemente (últimos 7 días)
+# Pista: usa find sobre /home o revisa /etc/passwd con ls -la
+
+# Verificar último login de usuarios sospechosos
+last -n 20
+
+# Ver intentos de login fallidos
+sudo grep "Failed password" /var/log/auth.log
+```
+
+**1.2 — Auditoría de Permisos**
+
+```bash
+# Buscar archivos con permisos 777 (riesgo crítico)
+find /opt -perm 777 -type f 2>/dev/null
+
+# Buscar archivos con permisos 666 (escritura para todos)
+find /opt -perm 666 -type f 2>/dev/null
+
+# Verificar permisos del directorio confidencial
+ls -la /opt/confidencial/
+
+# Buscar archivos SUID (potencial escalada de privilegios)
+find / -perm -4000 -type f 2>/dev/null
+
+# Buscar archivos sin propietario
+find / -nouser -o -nogroup 2>/dev/null
+```
+
+**1.3 — Análisis de Logs**
+
+```bash
+# Ver accesos en horario no laboral (2 AM - 6 AM)
+grep -E "2:[0-5][0-9]|3:[0-5][0-9]|4:[0-5][0-9]|5:[0-5][0-9]" /var/log/auth.log
+
+# Buscar creación de usuarios
+grep "useradd\|adduser" /var/log/auth.log
+
+# Buscar modificaciones de permisos
+grep "chmod\|chown" /var/log/auth.log
+
+# Buscar eliminaciones en logs (líneas faltantes)
+# Compara el log actual con un backup si existe
+```
+
+#### Entregables Fase 1
+
+| Entregable | Descripción |
+|------------|-------------|
+| `usuarios-sospechosos.txt` | Lista de usuarios no autorizados encontrados |
+| `permisos-criticos.txt` | Archivos con permisos inadecuados |
+| `logs-anomalos.txt` | Evidencia de actividad fuera de horario |
+| `comandos-fase1.md` | Comandos ejecutados con explicación |
+
+---
+
+### Fase 2: Inspección del Entorno de Contenedores y Red
+
+**Duración estimada:** 45 minutos
+**Módulos aplicados:** 2 (Kali) y 4 (Docker)
+**Función NIST:** DETECT (DE.AE — Adverse Event Analysis)
+
+#### Escenario
+
+Se reportó un contenedor Docker ejecutando un script sospechoso. Debes inspeccionar el entorno contenerizado y la red para identificar el alcance del incidente.
+
+#### Tareas a Ejecutar
+
+**2.1 — Auditoría de Docker**
+
+```bash
+# Ver todos los contenedores (activos y detenidos)
+docker ps -a
+
+# Inspeccionar el contenedor sospechoso
+docker inspect web-app
+
+# Ver logs del contenedor
+docker logs web-app
+
+# Ver procesos corriendo dentro del contenedor
+docker top web-app
+
+# Entrar al contenedor para investigar
+docker exec -it web-app bash
+
+# Dentro del contenedor, buscar scripts sospechosos
+find / -name "*.sh" -mtime -7 2>/dev/null
+find / -name "*.py" -mtime -7 2>/dev/null
+```
+
+**2.2 — Análisis de Red**
+
+```bash
+# Ver puertos expuestos por contenedores
+docker port web-app
+
+# Escaneo de red local con nmap
+nmap -sV localhost
+
+# Ver conexiones activas
+netstat -tulpn
+# o
+ss -tulpn
+
+# Verificar si hay puertos inusuales abiertos
+nmap -sT -O localhost
+```
+
+**2.3 — Análisis Forense del Script**
+
+```bash
+# Una vez localizado el script sospechoso
+file script-sospechoso.sh
+
+# Ver su contenido
+cat script-sospechoso.sh
+
+# Verificar hashes para evidencia
+md5sum script-sospechoso.sh
+sha256sum script-sospechoso.sh
+
+# Verificar cuándo fue modificado
+stat script-sospechoso.sh
+```
+
+#### Entregables Fase 2
+
+| Entregable | Descripción |
+|------------|-------------|
+| `docker-audit.txt` | Estado de contenedores y hallazgos |
+| `red-scan.txt` | Resultado de escaneo de red |
+| `script-analysis.txt` | Análisis del script sospechoso + hashes |
+| `comandos-fase2.md` | Comandos ejecutados con explicación |
+
+---
+
+### Fase 3: Control de Versiones y Evidencia Forense
+
+**Duración estimada:** 30 minutos
+**Módulo aplicado:** 3 (Git)
+**Función NIST:** PROTECT (PR.IP — Information Protection)
+
+#### Escenario
+
+Como analista, debes documentar todo tu investigación en un repositorio Git profesional. Este repositorio servirá como **cadena de custodia digital** y portafolio de tu trabajo.
+
+#### Tareas a Ejecutar
+
+**3.1 — Configuración del Repositorio de Investigación**
+
+```bash
+# Crear repositorio para el incidente
+mkdir incidente-abacom-2026
+cd incidente-abacom-2026
+git init
+
+# Configurar identidad (si no lo has hecho)
+git config user.name "Tu Nombre"
+git config user.email "tu@email.com"
+```
+
+**3.2 — Estructura del Repositorio**
+
+```bash
+# Crear estructura de investigación
+mkdir -p evidencia/{fase1-auditoria,fase2-contenedores,fase3-forense}
+mkdir -p informes
+mkdir -p scripts
+
+# Crear .gitignore para seguridad
+cat > .gitignore << 'EOF'
+# No subir datos sensibles reales
+*.key
+*.pem
+*.secret
+.env
+
+# No subir archivos binarios grandes
+*.iso
+*.img
+*.tar.gz
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+EOF
+```
+
+**3.3 — Documentación con Commits Atómicos**
+
+```bash
+# Commit 1: Estructura inicial
+git add .
+git commit -m "Inicio de investigación: estructura del repositorio"
+
+# Commit 2: Evidencias Fase 1
+git add evidencia/fase1-auditoria/
+git commit -m "Fase 1: Auditoría de accesos y permisos completada"
+
+# Commit 3: Evidencias Fase 2
+git add evidencia/fase2-contenedores/
+git commit -m "Fase 2: Inspección de contenedores completada"
+
+# Commit 4: Análisis forense
+git add evidencia/fase3-forense/
+git commit -m "Fase 3: Análisis forense y hashes de verificación"
+
+# Commit 5: Informe final
+git add informes/
+git commit -m "Informe de incidente: hallazgos y recomendaciones"
+```
+
+**3.4 — Ramas de Investigación (Opcional Avanzado)**
+
+```bash
+# Crear rama para investigación profunda
+git checkout -b investigacion-profunda
+
+# Si encuentras algo crítico, documenta en esta rama
+# Luego fusiona con main cuando termines
+git checkout main
+git merge investigacion-profunda
+```
+
+#### Entregables Fase 3
+
+| Entregable | Descripción |
+|------------|-------------|
+| Repositorio Git completo | Con estructura y commits atómicos |
+| `.gitignore` funcional | Excluye datos sensibles |
+| `git log --oneline` | Historial de la investigación |
+| `README.md` | Descripción del repositorio |
+
+---
+
+### Fase 4: Reporte de Incidentes Alineado al NIST CSF 2.0
+
+**Duración estimada:** 30 minutos
+**Módulos aplicados:** Todos (integración)
+**Funciones NIST:** DETECT, RESPOND, PROTECT
+
+#### Escenario
+
+Tu última tarea es elaborar el **Informe de Incidente** que presentarás al equipo de seguridad de Abacom. Este documento debe estar alineado con el NIST Cybersecurity Framework 2.0.
+
+#### Estructura del Informe (`informe-incidente.md`)
+
+```markdown
+# Informe de Incidente — Abacom S.A.
+**Fecha:** [fecha de entrega]
+**Analista:** [Tu nombre]
+**Clasificación:** Confidencial
+
+---
+
+## 1. Resumen Ejecutivo
+- ¿Qué sucedió?
+- ¿Cuándo se detectó?
+- ¿Cuál es el impacto?
+- ¿Cuál es el estado actual?
+
+## 2. Hallazgos Técnicos
+
+### 2.1 Auditoría de Accesos
+- Usuarios no autorizados encontrados
+- Permisos mal configurados
+- Evidencia de actividad sospechosa
+
+### 2.2 Entorno de Contenedores
+- Estado de contenedores
+- Hallazgos en el contenedor comprometido
+- Análisis de red
+
+### 2.3 Análisis Forense
+- Hashes de archivos sospechosos
+- Timeline del incidente
+- Indicadores de compromiso (IOCs)
+
+## 3. Mapeo con NIST CSF 2.0
+
+| Función NIST | Categoría | Aplicación en este Incidente |
+|--------------|-----------|------------------------------|
+| DETECT | DE.CM | Monitoreo de logs y permisos |
+| DETECT | DE.AE | Análisis de eventos anómalos |
+| RESPOND | RS.MA | Gestión del incidente |
+| RESPOND | RS.AN | Análisis del incidente |
+| PROTECT | PR.AC | Control de accesos |
+| PROTECT | PR.PT | Tecnología protectora |
+
+## 4. Recomendaciones Inmediatas
+1. [Recomendación 1]
+2. [Recomendación 2]
+3. [Recomendación 3]
+
+## 5. Recomendaciones a Mediano Plazo
+1. [Recomendación 1]
+2. [Recomendación 2]
+
+## 6. Conclusión
+- Lecciones aprendidas
+- Mejoras implementadas
+- Preparación para el curso principal
+
+## Anexos
+- A: Comandos ejecutados
+- B: Capturas de pantalla
+- C: Hashes de verificación
+```
+
+#### Entregables Fase 4
+
+| Entregable | Descripción |
+|------------|-------------|
+| `informe-incidente.md` | Informe completo alineado a NIST |
+| Mapeo NIST CSF 2.0 | Tabla de funciones aplicadas |
+| Recomendaciones | Acciones inmediatas y a mediano plazo |
+
+---
+
+## 📦 Entregables Finales del Estudiante
+
+### Portafolio de Evidencias
+
+```
+incidente-abacom-2026/
+├── README.md                    # Descripción del proyecto
+├── .gitignore                   # Reglas de seguridad
+├── informe-incidente.md         # Informe final NIST CSF 2.0
+├── evidencia/
+│   ├── fase1-auditoria/
+│   │   ├── usuarios-sospechosos.txt
+│   │   ├── permisos-criticos.txt
+│   │   ├── logs-anomalos.txt
+│   │   └── comandos-fase1.md
+│   ├── fase2-contenedores/
+│   │   ├── docker-audit.txt
+│   │   ├── red-scan.txt
+│   │   ├── script-analysis.txt
+│   │   └── comandos-fase2.md
+│   └── fase3-forense/
+│       ├── hashes-verificacion.txt
+│       └── timeline-incidente.txt
+├── informes/
+│   └── informe-incidente.md
+└── scripts/
+    └── [scripts de investigación si aplica]
+```
+
+### Lista de Verificación (Checklist Final)
+
+Antes de entregar, verifica que tienes:
+
+- [ ] Repositorio Git inicializado y estructurado
+- [ ] `.gitignore` configurado para seguridad
+- [ ] Commits atómicos con mensajes descriptivos
+- [ ] Evidencia de Fase 1 (auditoría de accesos)
+- [ ] Evidencia de Fase 2 (inspección de contenedores)
+- [ ] Evidencia de Fase 3 (análisis forense y hashes)
+- [ ] Informe de incidente completo
+- [ ] Mapeo con NIST CSF 2.0 incluido
+- [ ] Recomendaciones inmediatas y a mediano plazo
+- [ ] Autoevaluación con rúbrica completada
+
+---
+
+## 📊 Autoevaluación con Rúbrica SETEC/Abacom
+
+### Instrucciones
+
+Califica tu trabajo usando la siguiente rúbrica. Sé honesto/a — la autoevaluación es parte del aprendizaje.
+
+### A. Dominio Técnico (40 puntos)
+
+| Criterio | Puntos | Mi Puntuación |
+|----------|--------|---------------|
+| Auditoría de usuarios y permisos correcta | 10 | ___ |
+| Uso efectivo de find/grep para búsqueda | 8 | ___ |
+| Inspección de contenedores Docker | 8 | ___ |
+| Análisis de red con nmap | 7 | ___ |
+| Análisis forense con hashes | 7 | ___ |
+| **Subtotal** | **40** | **___** |
+
+### B. Rigor Documental en Git (30 puntos)
+
+| Criterio | Puntos | Mi Puntuación |
+|----------|--------|---------------|
+| Estructura del repositorio profesional | 8 | ___ |
+| Commits atómicos con mensajes claros | 8 | ___ |
+| `.gitignore` funcional para seguridad | 6 | ___ |
+| README.md descriptivo | 4 | ___ |
+| Historial Git limpio y comprensible | 4 | ___ |
+| **Subtotal** | **30** | **___** |
+
+### C. Buenas Prácticas de Seguridad/NIST (30 puntos)
+
+| Criterio | Puntos | Mi Puntuación |
+|----------|--------|---------------|
+| Mapeo correcto con NIST CSF 2.0 | 10 | ___ |
+| Recomendaciones alineadas a PROTECT | 8 | ___ |
+| Recomendaciones alineadas a RESPOND | 7 | ___ |
+| Ética profesional en la investigación | 5 | ___ |
+| **Subtotal** | **30** | **___** |
+
+### Puntuación Total
+
+| Criterio | Puntuación Máxima | Mi Puntuación |
+|----------|-------------------|---------------|
+| Dominio Técnico | 40 | ___ |
+| Rigor Documental | 30 | ___ |
+| Seguridad/NIST | 30 | ___ |
+| **TOTAL** | **100** | **___** |
+
+### Escala de Desempeño
+
+| Rango | Nivel | Significado |
+|-------|-------|-------------|
+| 90-100 | 🏆 Distinción | Listo para curso principal con excelencia |
+| 70-89 | ✅ Aprobado | Competencias fundamentales demostradas |
+| 50-69 | ⚠️ En Desarrollo | Necesita refuerzo en áreas específicas |
+| 0-49 | ❌ No Aprobado | Recomendable repetir módulos |
+
+---
+
+## 🎓 Cierre y Transición al Curso Principal
+
+### Mensaje del Facilitador
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                                                                 │
+│                    🎓 MENSAJE FINAL 🎓                           │
+│                                                                 │
+│  Querido/a estudiante:                                          │
+│                                                                 │
+│  Si has llegado hasta aquí, has hecho algo más que aprender     │
+│  comandos. Has demostrado PERSEVERANCIA, CURIOSIDAD y           │
+│  COMPROMISO con tu desarrollo profesional.                      │
+│                                                                 │
+│  En las últimas semanas, pasaste de "no saber qué es la        │
+│  terminal" a investigar un incidente de seguridad simulado      │
+│  usando las mismas herramientas que profesionales en la         │
+│  industria. ESO es crecimiento real.                            │
+│                                                                 │
+│  Recuerda:                                                      │
+│  • El síndrome del impostor es temporal, la competencia es      │
+│    permanente.                                                  │
+│  • Cada error que cometiste y corregiste te hizo más fuerte.    │
+│  • La ciberseguridad no se trata de saberlo todo, sino de       │
+│    saber buscar, documentar y responder.                        │
+│                                                                 │
+│  Has construido las bases. Ahora viene la construcción          │
+│  principal.                                                     │
+│                                                                 │
+│  Te doy la bienvenida formal al curso de Fundamentos de         │
+│  Ciberseguridad de Abacom. El camino apenas comienza.           │
+│                                                                 │
+│  — Diego Medardo Saavedra García                                │
+│    Facilitador — Abacom                                         │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Tu Viaje Hasta Aquí
+
+| Etapa | Logro | Insignia |
+|-------|-------|----------|
+| Módulo 1 | Linux y consola dominados | 🛡️ Guardián de Permisos |
+| Módulo 2 | Kali Linux explorado | 🔍 Centinela de Reconocimiento |
+| Módulo 3 | Git como profesional | 📦 Guardián de Versiones |
+| Módulo 4 | Docker gestionado | 🐳 Centinela de Contenedores |
+| Módulo 5 | Bandit nivel 5 superado | 🔐 Cazador de Hashes |
+| Módulo 6 | Búsqueda avanzada dominada | 🎯 Analista de Indicios |
+| **Capstone** | **Incidente investigado** | 🏆 **Fundamentos Listo** |
+
+### Próximos Pasos
+
+1. **Entrega tu repositorio** al facilitador para revisión
+2. **Recibe feedback** usando la rúbrica formativa
+3. **Celebra tu logro** — has completado la preparación fundamental
+4. **Prepara tu mente** para el curso principal de Abacom
+
+---
+
+## 📚 Referencias y Recursos
+
+| Recurso | Enlace | Uso en el Proyecto |
+|---------|--------|---------------------|
+| NIST CSF 2.0 | https://www.nist.gov/cyberframework | Marco para el informe |
+| OverTheWire Bandit | https://overthewire.org/wargames/bandit/ | Práctica de comandos |
+| Docker Docs | https://docs.docker.com | Referencia de comandos |
+| Pro Git Book | https://git-scm.com/book | Referencia de Git |
+| Estrategia Didáctica | [estrategia-didactica-retos.md](./estrategia-didactica-retos.md) | Metodología de retos |
+
+---
+
+> **"La ciberseguridad no es un destino, es un viaje de aprendizaje continuo. Has dado el primer paso con determinación. Ahora, el camino se abre ante ti."**
+
+---
+
+← [Módulo 6: Wargames Avanzados](./modulo-06-wargames-avanzados.qmd) | [Inicio](./index.qmd) → | [Apéndice Termux: Android](./apendice-termux.qmd) 📱 →
+
+---
+
+*Documento generado para el curso Fundamentos de Ciberseguridad — Agosto 2026 — Abacom*

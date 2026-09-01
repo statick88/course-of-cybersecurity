@@ -1,0 +1,499 @@
+---
+title: "Módulo 5: Wargames — OverTheWire Bandit"
+module: "ebook-guia-mod05"
+type: "ebook-section"
+description: "Guía práctica de los niveles 0-5 de Bandit en español latinoamericano"
+---
+
+# Módulo 5: Wargames — OverTheWire Bandit
+
+![Terminal de hacking ético](images/hacker-terminal.jpg){width=55% fig-alt="Terminal hacking" fig-align="center"}
+
+*Imagen: Representación de terminal de hacking ético. CC0 (Pixabay) vía Wikimedia Commons.*
+
+## Objetivos de Aprendizaje
+
+Al finalizar este módulo, serás capaz de:
+
+1. **Explicar** qué son los wargames y su utilidad en ciberseguridad
+2. **Conectarte** por SSH a servidores remotos de práctica
+3. **Aplicar** comandos esenciales de Linux en retos prácticos
+4. **Resolver** los niveles 0-5 de Bandit entendiendo la lógica
+5. **Documentar** los comandos y hallazgos de cada nivel
+
+---
+
+> **🔗 Conexión con NIST CSF 2.0**
+> | Función | Categoría | Aplicación |
+> |---------|-----------|------------|
+> | **IDENTIFY** | ID.AM (Asset Management) | Reconocimiento del sistema, identificación de archivos |
+> | **IDENTIFY** | ID.RA (Risk Assessment) | Evaluación de exposición de datos sensibles |
+>
+> *Este módulo desarrolla capacidades de IDENTIFY: practicarás el reconocimiento de sistemas y la identificación de información crítica.*
+
+---
+
+## 5.1 — ¿Qué son los Wargames?
+
+### Simuladores de Entrenamiento en Seguridad
+
+Los **wargames** son retos prácticos de ciberseguridad donde debes encontrar "flags" (contraseñas o tokens) explorando sistemas, explotando vulnerabilidades o resolviendo acertijos técnicos.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    ¿POR QUÉ WARGAMES?                           │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  🎯 Aprendes HACIENDO, no solo leyendo                          │
+│  🎯 Cada nivel enseña uno o dos conceptos nuevos                │
+│  🎯 Es seguro: entornos diseñados para práctica                 │
+│  🎯 Progresión gradual de dificultad                            │
+│  🎯 Desarrollas memoria muscular con comandos                   │
+│  🎯 Te prepara para certificaciones como OSCP                   │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Plataformas Populares de Wargames
+
+| Plataforma | Enfoque | Nivel |
+|------------|---------|-------|
+| **OverTheWire** | Linux y scripting | Principiante → Intermedio |
+| **HackTheBox** | Pentesting completo | Intermedio → Avanzado |
+| **TryHackMe** | Aprendizaje guiado | Principiante → Avanzado |
+| **PicoCTF** | CTF para estudiantes | Principiante |
+| **VulnHub** | Máquinas vulnerables | Intermedio → Avanzado |
+
+> **Nota de Seguridad:** Los wargames son entornos LEGALES diseñados para practicar. Esto contrasta con hackear sistemas reales sin autorización, que es un delito.
+
+---
+
+## 5.2 — Conexión a Bandit por SSH
+
+### Tu Primera Conexión Remota
+
+Bandit es el wargame de OverTheWire diseñado para **absolutamente principiantes**. Cada nivel te da la contraseña para el siguiente.
+
+```bash
+# Conectarse al Nivel 0
+ssh bandit0@bandit.labs.overthewire.org -p 2220
+
+# Cuando pregunte por la contraseña, escribe: bandit0
+```
+
+### Explicación del Comando SSH
+
+```
+ssh bandit0@bandit.labs.overthewire.org -p 2220
+│    │                           │               
+│    │                           └── Puerto 2220 (el estándar es 22)      
+│    └── Usuario: bandit0 + servidor            
+└── Protocolo: Secure Shell                    
+```
+
+### Primera Conexión: Aceptar Huella Digital
+
+```
+The authenticity of host 'bandit.labs.overthewire.org (127.0.0.1):2220' can't be established.
+ECDSA key fingerprint is SHA256:462b...
+Are you sure you want to continue connecting (yes/no)?
+```
+
+Escribe `yes` y presiona Enter. Esto guarda la huella del servidor para futuras conexiones.
+
+> **Buenas Prácticas:** Cuando te conectas por primera vez a un servidor SSH, el sistema te muestra su huella digital (fingerprint). En entornos de producción, deberías verificar esta huella con el administrador del servidor. En wargames, es normal aceptarla directamente.
+
+---
+
+## 5.3 — Comandos Esenciales para Bandit
+
+### Tu Arsenal de Comandos
+
+Antes de comenzar los niveles, asegúrate de entender estos comandos:
+
+| Comando | Función | Ejemplo |
+|---------|---------|---------|
+| `ls` | Listar archivos | `ls -la` |
+| `cat` | Mostrar contenido de archivo | `cat archivo.txt` |
+| `file` | Identificar tipo de archivo | `file misterio` |
+| `find` | Buscar archivos | `find / -name "*.txt"` |
+| `grep` | Buscar patrones en texto | `grep "password" archivo` |
+| `base64` | Codificar/decodificar | `base64 -d archivo` |
+| `du` | Ver tamaño de archivos | `du -h archivo` |
+| `wc` | Contar líneas/caracteres | `wc -l archivo` |
+
+### Ejemplos Prácticos de Cada Comando
+
+```bash
+# ls - listar archivos
+ls              # Lista básica
+ls -la          # Lista con permisos y archivos ocultos
+ls -lh          # Tamaños legibles (KB, MB)
+
+# cat - mostrar contenido
+cat archivo.txt          # Todo el contenido
+cat -n archivo.txt       # Con números de línea
+cat archivo1 archivo2    # Múltiples archivos
+
+# file - identificar tipo de archivo
+file imagen.png          # imagen.png: PNG image data
+file script.sh           # script.sh: Bourne-Again shell script
+file datos               # datos: ASCII text
+
+# find - buscar archivos
+find . -name "*.txt"     # Buscar por nombre
+find . -size 103c        # Buscar por tamaño (103 bytes)
+find . -type f           # Solo archivos (no directorios)
+
+# grep - buscar patrones
+grep "flag" archivo.txt  # Buscar "flag" en el archivo
+grep -i "Flag" archivo   # Sin distinguir mayúsculas/minúsculas
+grep -r "password" .     # Buscar recursivamente en subdirectorios
+
+# base64 - decodificar
+echo "SGVsbG8=" | base64 -d    # Decodifica a "Hello"
+cat codificado.txt | base64 -d  # Decodifica archivo
+```
+
+---
+
+## 5.4 — Resolución de Niveles (0 al 5)
+
+### NIVEL 0 → NIVEL 1
+
+**Objetivo:** Encontrar la contraseña para el nivel 1.
+
+**Pista:** La contraseña está en un archivo llamado `readme` en el directorio home.
+
+```bash
+# 1. Conectarse
+ssh bandit0@bandit.labs.overthewire.org -p 2220
+
+# 2. Listar archivos en el directorio actual
+ls
+
+# 3. Mostrar contenido del archivo readme
+cat readme
+
+# 4. La salida es tu contraseña para el nivel 1
+# Copia esa contraseña (no se muestra aquí a propósito)
+```
+
+**¿Qué aprendiste?**
+- `ls` para ver qué archivos hay
+- `cat` para leer archivos de texto
+
+---
+
+### NIVEL 1 → NIVEL 2
+
+**Objetivo:** Encontrar la contraseña para el nivel 2.
+
+**Pista:** La contraseña está en un archivo llamado `-` (guión).
+
+```bash
+# 1. Conectarse con la contraseña del nivel anterior
+ssh bandit1@bandit.labs.overthewire.org -p 2220
+
+# 2. Listar archivos
+ls
+# Verás un archivo llamado "-"
+
+# 3. Para leer un archivo que empieza con guión, usa ./
+cat ./-
+```
+
+**¿Qué aprendiste?**
+- Los archivos que empiezan con `-` se confunden con opciones de comandos
+- `./` indica "en el directorio actual" y resuelve la ambigüedad
+- Esto es importante: `./script.sh` ejecuta un script en el directorio actual
+
+---
+
+### NIVEL 2 → NIVEL 3
+
+**Objetivo:** Encontrar la contraseña para el nivel 3.
+
+**Pista:** La contraseña está en un archivo con espacios en el nombre.
+
+```bash
+# 1. Conectarse
+ssh bandit2@bandit.labs.overthewire.org -p 2220
+
+# 2. Listar archivos
+ls
+# Verás: "spaces in this filename"
+
+# 3. Para leer un archivo con espacios, usa comillas o escape
+cat "spaces in this filename"
+# O también:
+cat spaces\ in\ this\ filename
+```
+
+**¿Qué aprendiste?**
+- Los espacios en nombres de archivo requieren comillas o escape `\`
+- Esto es fundamental en scripts y automatización
+- En seguridad, a veces se usan nombres con espacios para confundir
+
+---
+
+### NIVEL 3 → NIVEL 4
+
+**Objetivo:** Encontrar la contraseña para el nivel 4.
+
+**Pista:** La contraseña está en un archivo oculto dentro del directorio `inhere`.
+
+```bash
+# 1. Conectarse
+ssh bandit3@bandit.labs.overthewire.org -p 2220
+
+# 2. Listar archivos
+ls
+# Verás el directorio "inhere"
+
+# 3. Entrar al directorio
+cd inhere
+
+# 4. Listar archivos (incluyendo ocultos)
+ls -la
+# Verás un archivo oculto (empieza con punto): ".hidden"
+
+# 5. Mostrar contenido del archivo oculto
+cat .hidden
+```
+
+**¿Qué aprendiste?**
+- Los archivos ocultos en Linux empiezan con `.`
+- `ls -la` muestra archivos ocultos
+- En seguridad, a veces se ocultan archivos así (aunque no es seguridad real)
+
+---
+
+### NIVEL 4 → NIVEL 5
+
+**Objetivo:** Encontrar la contraseña para el nivel 5.
+
+**Pista:** La contraseña está en el único archivo de texto legible (ASCII) dentro del directorio `inhere`.
+
+```bash
+# 1. Conectarse
+ssh bandit4@bandit.labs.overthewire.org -p 2220
+
+# 2. Entrar al directorio
+cd inhere
+
+# 3. Listar archivos
+ls
+# Verás varios archivos: -file00, -file01, ..., -file09
+
+# 4. Usar 'file' para identificar el tipo de cada archivo
+file ./-file00
+file ./-file01
+# ... continuar hasta encontrar el que diga "ASCII text"
+
+# 5. Alternativa: usar file con todos a la vez
+file ./*
+
+# 6. Leer el archivo que es "ASCII text"
+cat ./-file0X    # donde X es el número correcto
+```
+
+**¿Qué aprendiste?**
+- `file` identifica el tipo real de un archivo (independiente de la extensión)
+- Esto es crítico en ciberseguridad: un archivo llamado `imagen.png` podría ser un ejecutable
+- Puedes aplicar un comando a múltiples archivos con wildcards (`*`)
+
+---
+
+### NIVEL 5 → NIVEL 6 (Bonus)
+
+**Objetivo:** Encontrar la contraseña para el nivel 6.
+
+**Pista:** La contraseña está en un archivo con características específicas: humano-legible, 1033 bytes, no ejecutable.
+
+```bash
+# 1. Conectarse
+ssh bandit5@bandit.labs.overthewire.org -p 2220
+
+# 2. Entrar al directorio
+cd inhere
+
+# 3. Usar find con múltiples criterios
+find . -type f -size 1033c ! -executable
+
+# Explicación:
+# - find . : buscar desde el directorio actual
+# - -type f : solo archivos (no directorios)
+# - -size 1033c : exactamente 1033 bytes
+# - ! -executable : que NO sea ejecutable
+
+# 4. Mostrar contenido del archivo encontrado
+# Primero ejecuta el find y copia la ruta que obtengas:
+find . -type f -size 1033c ! -executable
+
+# Luego usa cat con la ruta que obtuviste (ejemplo):
+cat ./maybeinhere07/.file2
+# NOTA: La ruta exacta puede variar. Usa la salida de tu comando find.
+```
+
+**¿Qué aprendiste?**
+- `find` es extremadamente potente para buscar archivos por múltiples criterios
+- `-size` busca por tamaño (c = bytes, k = kilobytes, M = megabytes)
+- `! -executable` excluye archivos ejecutables
+- Este comando se usa diario en administración de sistemas y forense
+
+---
+
+## 5.5 — Resumen de Comandos por Nivel
+
+| Nivel | Comando Clave | Concepto |
+|-------|---------------|----------|
+| 0 → 1 | `cat readme` | Lectura básica de archivos |
+| 1 → 2 | `cat ./-` | Archivos con nombres especiales |
+| 2 → 3 | `cat "archivo con espacios"` | Espacios en nombres |
+| 3 → 4 | `ls -la` + `cat .hidden` | Archivos ocultos |
+| 4 → 5 | `file ./*` | Identificación de tipos |
+| 5 → 6 | `find . -type f -size 1033c ! -executable` | Búsqueda avanzada |
+
+---
+
+## 5.6 — Consejos para Wargames
+
+### Metodología de Resolución
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                CADA VEZ QUE RESUELVAS UN NIVEL:                 │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  1. LEE la descripción del nivel completo                       │
+│  2. IDENTIFICA qué comando(s) necesitas                         │
+│  3. EJECUTA los comandos paso a paso                            │
+│  4. DOCUMENTA qué hiciste y por qué                             │
+│  5. ENTIENDE la lógica antes de pasar al siguiente              │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Errores Comunes de Principiantes
+
+| Error | Solución |
+|-------|----------|
+| Copiar respuestas sin entender | Lee la pista, intenta, y solo entonces busca ayuda |
+| No leer la descripción completa | La descripción contiene las pistas necesarias |
+| Frustrarse rápido | Tomate un descanso de 5 minutos (Pomodoro) |
+| No documentar los hallazgos | Lleva un archivo de notas con cada comando |
+
+> **Buenas Prácticas:** Lleva un "diario de wargames" donde anotes cada nivel, los comandos que usaste y qué aprendiste. Esto te servirá como referencia futura y como evidencia de tu progreso.
+
+---
+
+## Ejercicios Prácticos — Módulo 5
+
+### Ejercicio 1: Conexión y Exploración
+
+```bash
+# 1. Conectarse al nivel 0
+ssh bandit0@bandit.labs.overthewire.org -p 2220
+
+# 2. Explorar el directorio home
+ls -la
+
+# 3. Ver tu usuario actual
+whoami
+
+# 4. Ver en qué directorio estás
+pwd
+
+# 5. Leer el archivo readme
+cat readme
+
+# 6. Guardar la contraseña en un archivo local (seguro)
+echo "Contraseña Nivel 1: [tu contraseña]" >> ~/wargames-notas.txt
+```
+
+### Ejercicio 2: Resolver hasta el Nivel 3
+
+```bash
+# Resolver nivel 0 → 1 → 2 → 3
+# Documentar cada paso en tu archivo de notas
+# No avanzar al siguiente nivel hasta entender el actual
+```
+
+### Ejercicio 3: Crear tu Diario de Wargames
+
+```bash
+# Crear archivo de notas
+touch ~/wargames-notas.txt
+
+# Agregar encabezado
+cat << EOF >> ~/wargames-notas.txt
+═══════════════════════════════════════════════════
+  DIARIO DE WARGAMES — OverTheWire Bandit
+  Estudiante: [tu nombre]
+  Fecha de inicio: [fecha]
+═══════════════════════════════════════════════════
+
+NIVEL 0 → 1:
+- Comando usado: cat readme
+- Aprendí: Leer archivos con cat
+- Contraseña: [guardar aquí]
+
+EOF
+```
+
+---
+
+## Checklist de Autoevaluación — Módulo 5
+
+Antes de considerar completo este ebook, asegúrate de poder:
+
+- [ ] Conectarte por SSH a Bandit sin ayuda
+- [ ] Resolver los niveles 0-3 de forma independiente
+- [ ] Entender por qué funciona cada comando
+- [ ] Usar `file` para identificar tipos de archivo
+- [ ] Usar `find` con criterios de búsqueda
+- [ ] Llevar un diario de tus hallazgos
+- [ ] No copiar respuestas sin entender la lógica
+
+---
+
+## Conclusión del Ebook
+
+¡Felicitaciones! Si llegaste hasta aquí, ahora tienes:
+
+- ✅ Fundamentos de Linux y terminal
+- ✅ Conocimiento básico de Kali Linux
+- ✅ Habilidades de control de versiones con Git
+- ✅ Comprensión de Docker y contenedores
+- ✅ Experiencia práctica con wargames
+
+**Estás listo para comenzar el curso principal de Fundamentos de Ciberseguridad.**
+
+> **"El mejor momento para empezar a aprender ciberseguridad fue ayer. El segundo mejor momento es ahora."**
+
+---
+
+## Recursos Adicionales
+
+| Recurso | Enlace | Descripción |
+|---------|--------|-------------|
+| OverTheWire | https://overthewire.org | Wargames progresivos |
+| Linux Journey | https://linuxjourney.com | Tutoriales interactivos de Linux |
+| Explain Shell | https://explainshell.com | Explica comandos complejos |
+| Docker Docs | https://docs.docker.com | Documentación oficial de Docker |
+| Pro Git Book | https://git-scm.com/book | Libro oficial de Git (gratis) |
+
+---
+
+> **🎯 ¿Quieres dominar Bandit a nivel profesional?**
+> Consulta el **[Apéndice: Bandit Masterclass](./apendice-bandit-masterclass.qmd)** donde encontrarás:
+> - Guía de conexión desde Linux, Kali, Termux y Windows
+> - Estrategias de resolución por categoría de habilidad
+> - Plantilla de documentación forense con cadena de custodia
+> - Troubleshooting de errores comunes
+> - Mapeo completo con NIST CSF 2.0
+
+---
+
+← [Módulo 4: Docker](./modulo-04-docker.qmd) | [Módulo 6: Wargames Avanzados](./modulo-06-wargames-avanzados.qmd) → | [Bandit Masterclass](./apendice-bandit-masterclass.qmd) 🎯 →

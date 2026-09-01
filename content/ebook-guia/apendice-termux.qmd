@@ -1,0 +1,472 @@
+---
+title: "Apéndice: Termux — Linux y Ciberseguridad en la Palma de tu Mano"
+module: "ebook-guia-termux"
+type: "apendice"
+description: "Guía completa de Termux para estudiantes de ciberseguridad que practican desde dispositivos Android sin PC tradicional"
+author: "Diego Saavedra — Abacom"
+fecha: "2026-09-01"
+---
+
+# Apéndice: Termux — Linux y Ciberseguridad en Android
+
+![Tux — Linux en tu dispositivo Android](images/tux.svg){width=35% fig-alt="Tux mascota Linux" fig-align="center"}
+
+*Imagen: Tux, mascota de Linux. Dominio público vía Wikimedia Commons.*
+
+## 🎯 ¿Para quién es este apéndice?
+
+Este apéndice es para ti si:
+- No tienes acceso a una computadora tradicional (PC/ laptop)
+- Quieres practicar ciberseguridad desde tu dispositivo Android
+- Necesitas un entorno portátil para estudiar en cualquier lugar
+- Quieres aprovechar al máximo el Ebook Guía desde tu móvil
+
+**Termux convierte tu teléfono Android en una terminal Linux completa** — sin necesidad de root.
+
+---
+
+## 1. Introducción a Termux
+
+### ¿Qué es Termux?
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    TERMUX EN POCAS PALABRAS                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Termux es un emulador de terminal Android y entorno Linux      │
+│  que funciona SIN root.                                         │
+│                                                                 │
+│  • Emula una terminal Debian/Ubuntu-like                        │
+│  • Incluye su propio gestor de paquetes (pkg/apt)               │
+│  • Permite instalar herramientas de desarrollo y seguridad      │
+│  • Funciona en Android 7+ (recomendado 10+)                     │
+│  • Tamaño: ~200 MB (con herramientas básicas)                   │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### ¿Por qué Termux para Ciberseguridad?
+
+| Ventaja | Descripción |
+|---------|-------------|
+| **Portabilidad** | Practica en cualquier lugar — bus, café, casa |
+| **Bajo costo** | No necesitas una PC costosa, solo tu teléfono |
+| **Entorno real** | Linux real, no una app simulada |
+| **Herramientas reales** | nmap, hydra, john, git, python — las mismas del curso |
+| **Preparación profesional** | Muchos pentesters usan Termux como kit de campo |
+
+### Limitaciones Importantes
+
+| Limitación | Impacto | Solución |
+|------------|---------|----------|
+| **Sin acceso a hardware de red** | No puedes hacer packet injection directa | Usa adaptadores USB-OTG compatibles |
+| **Rendimiento limitado** | Procesos pesados pueden ser lentos | Usa proot-distro para distribuciones ligeras |
+| **Almacenamiento restringido** | Android limita acceso a archivos | Usa `termux-setup-storage` |
+| **Sin GUI nativa** | Todo es por terminal | Opcional: Termux:X11 para escritorio |
+| **Batería** | Uso intensivo drena batería | Usa el teléfono conectado al cargador |
+
+---
+
+## 2. Instalación y Configuración Básica
+
+### 2.1 — Instalación
+
+**⚠️ IMPORTANTE:** NO instales Termux desde Google Play Store. La versión de Play Store está desactualizada y tiene bugs.
+
+#### Opción Recomendada: F-Droid
+
+1. Descarga F-Droid desde [f-droid.org](https://f-droid.org/)
+2. Busca "Termux" en F-Droid
+3. Instala la versión más reciente
+4. Abre Termux para inicializar
+
+#### Opción Alternativa: GitHub Releases
+
+1. Ve a [github.com/termux/termux-app/releases](https://github.com/termux/termux-app/releases)
+2. Descarga el APK para tu arquitectura (arm64-v8a para la mayoría)
+3. Instala el APK (habilita "Instalar desde fuentes desconocidas")
+
+### 2.2 — Configuración Inicial
+
+```bash
+# 1. Actualizar paquetes (SIEMPRE lo primero)
+pkg update && pkg upgrade -y
+
+# 2. Configurar acceso a almacenamiento
+termux-setup-storage
+
+# 3. Instalar herramientas esenciales
+pkg install -y git curl wget openssh python
+
+# 4. Verificar instalación
+git --version
+python --version
+curl --version
+```
+
+### 2.3 — Paquetes Esenciales para Ciberseguridad
+
+```bash
+# Herramientas de red y seguridad
+pkg install -y nmap hydra john ripgrep
+
+# Desarrollo y scripting
+pkg install -y python nodejs php ruby
+
+# Utilidades de sistema
+pkg install -y tmux neovim htop tree
+
+# Compiladores (para herramientas que requieren build)
+pkg install -y clang make cmake
+
+# SSH y conectividad
+pkg install -y openssh sshfs
+
+# Herramientas forenses básicas
+pkg install -y binutils hexdump
+```
+
+### 2.4 — Configuración del Entorno
+
+```bash
+# Configurar tu identidad Git
+git config --global user.name "Tu Nombre"
+git config --global user.email "tu@email.com"
+
+# Configurar alias útiles
+echo "alias ll='ls -la'" >> ~/.bashrc
+echo "alias cls='clear'" >> ~/.bashrc
+echo "alias ..='cd ..'" >> ~/.bashrc
+source ~/.bashrc
+
+# Configurar el teclado extra de Termux
+mkdir -p ~/.termux
+cat > ~/.termux/termux.properties << 'EOF'
+extra-keys = [
+  ['ESC','/','-','HOME','UP','END','PGUP'],
+  ['TAB','CTRL','ALT','LEFT','DOWN','RIGHT','PGDN']
+]
+EOF
+termux-reload-settings
+```
+
+### 2.5 — Almacenamiento y Archivos
+
+```bash
+# Después de ejecutar termux-setup-storage, tendrás acceso a:
+~/storage/
+├── downloads/    → /sdcard/Download
+├── dcim/         → /sdcard/DCIM
+├── pictures/     → /sdcard/Pictures
+├── music/        → /sdcard/Music
+├── movies/       → /sdcard/Movies
+└── shared/       → /sdcard (almacenamiento completo)
+
+# Tu directorio de trabajo en Termux
+~/               → /data/data/com.termux/files/home
+```
+
+---
+
+## 3. Entornos Distribuidos con PRoot-Distro
+
+### 3.1 — ¿Qué es PRoot-Distro?
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    PROOT-DISTRO                                 │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  PRoot-Distro permite instalar distribuciones Linux COMPLETAS   │
+│  dentro de Termux, sin root.                                    │
+│                                                                 │
+│  • Debian, Ubuntu, Arch Linux, Kali Linux, Alpine               │
+│  • Funciona como un "chroot" en espacio de usuario              │
+│  • Puedes usar apt, pacman, etc. normalmente                    │
+│  • Ideal para herramientas que no están en pkg de Termux        │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 3.2 — Instalación de PRoot-Distro
+
+```bash
+# Instalar proot-distro
+pkg install proot-distro
+
+# Ver distribuciones disponibles
+proot-distro list
+
+# Instalar Debian (recomendado para principiantes)
+proot-distro install debian
+
+# Instalar Ubuntu (alternativa popular)
+proot-distro install ubuntu
+```
+
+### 3.3 — Uso de Distribuciones
+
+```bash
+# Iniciar sesión en Debian
+proot-distro login debian
+
+# Iniciar sesión como usuario específico
+proot-distro login debian --user tu_usuario
+
+# Ejecutar un comando sin iniciar sesión interactiva
+proot-distro login debian -- apt update
+
+# Eliminar una distribución
+proot-distro remove debian
+```
+
+### 3.4 — Configuración Post-Instalación (Debian/Ubuntu)
+
+```bash
+# Dentro de proot-distro Debian:
+
+# 1. Actualizar paquetes
+apt update && apt upgrade -y
+
+# 2. Instalar herramientas de seguridad
+apt install -y nmap hydra john git curl wget python3
+
+# 3. Crear usuario normal (no trabajar como root)
+adduser estudiante
+usermod -aG sudo estudiante
+
+# 4. Cambiar a tu usuario
+su - estudiante
+```
+
+### 3.5 — Comparativa: Termux nativo vs PRoot-Distro
+
+| Característica | Termux Nativo | PRoot-Distro |
+|----------------|---------------|--------------|
+| **Rendimiento** | Más rápido | Más lento (emulación) |
+| **Compatibilidad** | Paquetes limitados | Paquetes completos de la distro |
+| **Facilidad** | Más fácil | Requiere configuración |
+| **Herramientas** | Las disponibles en pkg | Todas las de la distro |
+| **Uso recomendado** | Uso diario, scripts | Herramientas específicas, Kali |
+
+---
+
+## 4. Mini-Reto Termux: "Auditoría Móvil"
+
+### 🎯 Escenario
+
+Eres un analista de seguridad que solo tiene su dispositivo Android disponible. Debes realizar una auditoría básica de tu red local y documentar los hallazgos.
+
+### ⏱️ Duración: 20 minutos
+
+### Tareas
+
+#### Parte 1: Reconocimiento de Red (5 min)
+
+```bash
+# 1. Verificar tu IP local
+ifconfig wlan0
+# o
+ip addr show wlan0
+
+# 2. Escanear tu red local (descubrir dispositivos)
+nmap -sn 192.168.1.0/24
+
+# 3. Escanear puertos de tu router
+nmap -sV 192.168.1.1
+
+# 4. Documentar los hallazgos
+echo "=== Auditoría de Red - $(date) >> ~/auditoria-red.txt
+echo "Mi IP: $(hostname -I)" >> ~/auditoria-red.txt
+echo "Dispositivos encontrados:" >> ~/auditoria-red.txt
+nmap -sn 192.168.1.0/24 | grep "Nmap scan" >> ~/auditoria-red.txt
+```
+
+#### Parte 2: Inspección de tu Propio Dispositivo (5 min)
+
+```bash
+# 1. Verificar puertos abiertos en tu teléfono
+netstat -tulpn 2>/dev/null || ss -tulpn
+
+# 2. Verificar conexiones activas
+netstat -an 2>/dev/null || ss -an
+
+# 3. Verificar permisos de archivos sensibles en Termux
+ls -la ~/storage/shared/Downloads/ | head -20
+
+# 4. Buscar archivos con contraseñas (en tu propio almacenamiento)
+grep -r "password\|contraseña\|clave" ~/storage/shared/ 2>/dev/null | head -10
+```
+
+#### Parte 3: Conexión a Bandit (10 min)
+
+```bash
+# 1. Conectarse a OverTheWire Bandit
+ssh bandit0@bandit.labs.overthewire.org -p 2220
+
+# 2. Resolver nivel 0 (como práctica)
+# (Usa los comandos del Módulo 5 del Ebook Guía)
+
+# 3. Documentar en tu diario
+cat << EOF >> ~/wargames-notas.txt
+=== Sesión Termux - $(date) ===
+- Conexión SSH desde Android: exitosa
+- Nivel resuelto: 0
+- Aprendí: Puedo usar SSH desde mi teléfono
+EOF
+```
+
+### Entregables del Mini-Reto
+
+| Entregable | Archivo |
+|------------|---------|
+| Auditoría de red | `~/auditoria-red.txt` |
+| Notas de wargames | `~/wargames-notas.txt` |
+| Capturas de pantalla | Opcional |
+
+---
+
+## 5. Conexión con NIST CSF 2.0 y Abacom
+
+### 5.1 — Alineación con NIST CSF 2.0
+
+| Función NIST | Aplicación en Termux |
+|--------------|----------------------|
+| **PROTECT** (PR.AC) | Control de acceso con SSH keys, permisos de archivos |
+| **PROTECT** | PR.PT) | Uso de herramientas de seguridad (nmap, hydra) |
+| **IDENTIFY** (ID.AM) | Inventario de dispositivos en red local |
+| **IDENTIFY** (ID.RA) | Evaluación de vulnerabilidades con nmap |
+| **DETECT** (DE.CM) | Monitoreo de red y puertos abiertos |
+| **RESPOND** (RS.MA) | Respuesta a incidentes documentada en Git |
+
+### 5.2 — Alineación con Unidades Abacom
+
+| Unidad Abacom | Uso de Termux |
+|---------------|---------------|
+| **Unidad 1: Gestión de Riesgo** | Auditorías de red local, documentación |
+| **Unidad 2: Marco NIST CSF 2.0** | Práctica de funciones PROTECT, IDENTIFY, DETECT |
+| **Unidad 3: Hardening y IAM** | Configuración de SSH, usuarios, permisos |
+| **Unidad 4: Vectores de Ataque** | Escaneo con nmap, práctica con Bandit |
+| **Unidad 5: Respuesta a Incidentes** | Documentación forense, cadena de custodia |
+
+### 5.3 — Seguridad Móvil y Buenas Prácticas
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              SEGURIDAD MÓVIL CON TERMUX                         │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ✅ HACER:                                                      │
+│  • Usar SSH keys en lugar de contraseñas                        │
+│  • Mantener paquetes actualizados (pkg upgrade)                 │
+│  • Usar VPN en redes públicas                                   │
+│  • Documentar todo en Git                                       │
+│  • Usar tmux para sesiones persistentes                         │
+│                                                                 │
+│  ❌ NO HACER:                                                   │
+│  • No atacar redes sin autorización                             │
+│  • No almacenar contraseñas en texto plano                      │
+│  • No usar Termux en redes públicas sin VPN                     │
+│  • No instalar paquetes de fuentes no confiables                │
+│  • No compartir tu IP pública en foros                          │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 5.4 — Configuración de SSH Seguro
+
+```bash
+# 1. Generar clave SSH (en Termux)
+ssh-keygen -t ed25519 -C "termux-tu_nombre"
+
+# 2. Ver tu clave pública
+cat ~/.ssh/id_ed25519.pub
+
+# 3. Conectar a Bandit con SSH
+ssh bandit0@bandit.labs.overthewire.org -p 2220
+
+# 4. Para conexiones frecuentes, configurar ~/.ssh/config
+cat >> ~/.ssh/config << 'EOF'
+Host bandit
+    HostName bandit.labs.overthewire.org
+    Port 2220
+    User bandit0
+EOF
+
+# Ahora puedes conectarte con:
+ssh bandit
+```
+
+### 5.5 — Persistencia con tmux
+
+```bash
+# Instalar tmux
+pkg install tmux
+
+# Crear una nueva sesión
+tmux new -s trabajo
+
+# Dentro de tmux, tu sesión sigue activa aunque cierres Termux
+
+# Para desconectarte de la sesión (sin cerrar): Ctrl+B, luego D
+
+# Para reconectarte:
+tmux attach -t trabajo
+
+# Listar sesiones activas:
+tmux ls
+```
+
+---
+
+## 6. Resolución de Problemas Comunes
+
+| Problema | Solución |
+|----------|----------|
+| `pkg update` falla | Cambiar mirror: `termux-change-repo` |
+| `termux-setup-storage` no funciona | Aceptar permisos en el popup de Android |
+| SSH no conecta | Verificar puerto 8022 no esté ocupado |
+| nmap requiere root | Usa `nmap -sT` (TCP connect) en lugar de `-sS` |
+| Python pip falla | Instalar: `pkg install python-pip` |
+| proot-distro no inicia | Actualizar: `pkg upgrade proot proot-distro` |
+| Teclado extra no aparece | Ejecutar: `termux-reload-settings` |
+| Almacenamiento lleno | Limpiar: `pkg clean` y `apt clean` |
+
+---
+
+## 7. Recursos Adicionales
+
+| Recurso | Enlace | Descripción |
+|---------|--------|-------------|
+| Termux Wiki | [wiki.termux.com](https://wiki.termux.com) | Documentación oficial |
+| Termux GitHub | [github.com/termux](https://github.com/termux) | Código fuente y releases |
+| PRoot-Distro | [github.com/termux/proot-distro](https://github.com/termux/proot-distro) | Distros Linux en Termux |
+| Termux:API | [wiki.termux.com/wiki/Termux:API](https://wiki.termux.com/wiki/Termux:API) | Integración con Android |
+| F-Droid | [f-droid.org](https://f-droid.org) | Tienda de apps open source |
+
+---
+
+## 8. Conclusión
+
+Termux democratiza el acceso a herramientas de ciberseguridad. Ya no necesitas una computadora costosa para practicar — tu dispositivo Android es suficiente para:
+
+- Aprender Linux y línea de comandos
+- Practicar con nmap, hydra, john y otras herramientas
+- Conectarte a wargames como Bandit
+- Documentar tu aprendizaje en Git
+- Realizar auditorías de red básicas
+
+**La ciberseguridad está al alcance de tu mano. Literalmente.**
+
+---
+
+> **"No es la herramienta la que hace al profesional, sino la dedicación con la que la usa. Tu teléfono Android es más poderoso de lo que crees."**
+
+---
+
+← [Proyecto Integrador (Capstone)](./capstone-proyecto-integrador.qmd) | [Inicio](./index.qmd) → | [Bandit Masterclass](./apendice-bandit-masterclass.qmd) 🎯 →
+
+---
+
+*Apéndice generado para el curso Fundamentos de Ciberseguridad — Agosto 2026 — Abacom*

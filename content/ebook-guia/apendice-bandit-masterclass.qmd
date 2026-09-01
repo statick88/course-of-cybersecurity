@@ -1,0 +1,860 @@
+---
+title: "Apéndice: Bandit Masterclass — Guía Definitiva de Wargames"
+module: "ebook-guia-bandit-masterclass"
+type: "apendice"
+description: "Guía avanzada de superación de OverTheWire Bandit: conexión desde múltiples entornos, estrategias por nivel, documentación forense y troubleshooting"
+author: "Diego Saavedra — Abacom"
+fecha: "2026-09-01"
+---
+
+# Apéndice: Bandit Masterclass — Guía Definitiva de Wargames
+
+![Terminal de hacking ético — Bandit Masterclass](images/hacker-terminal.jpg){width=55% fig-alt="Terminal hacking" fig-align="center"}
+
+*Imagen: Representación de terminal de hacking ético. CC0 (Pixabay) vía Wikimedia Commons.*
+
+## 🎯 Propósito de este Apéndice
+
+Este documento es tu **manual de campo** para dominar OverTheWire Bandit. No es solo una lista de soluciones — es una metodología de resolución que te prepara para CTFs profesionales y certificaciones como OSCP, eJPT y CompTIA PenTest+.
+
+**Lo que aprenderás:**
+- Conectar desde cualquier entorno (Linux, Kali, Termux, Windows)
+- Patrones de resolución clasificados por habilidad técnica
+- Documentación forense con cadena de custodia
+- Troubleshooting de errores comunes
+- Alineación con NIST CSF 2.0 en cada reto
+
+---
+
+## 1. Anatomía de Conexión y Resolución en Múltiples Entornos
+
+### 1.1 — Fundamentos de Conexión SSH a Bandit
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    ANATOMÍA DE CONEXIÓN SSH                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ssh bandit{N}@bandit.labs.overthewire.org -p 2220             │
+│  │    │                              │                           │
+│  │    │                              └── Puerto 2220 (no estándar)│
+│  │    └── Usuario específico por nivel                          │
+│  └── Protocolo: Secure Shell                                    │
+│                                                                 │
+│  CONTRASEÑAS:                                                   │
+│  • Nivel 0: bandit0 (pública, es el punto de entrada)          │
+│  • Nivel N: se obtiene resolviendo el nivel N-1                 │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 1.2 — Conexión desde GNU/Linux (Nativo)
+
+```bash
+# Instalar OpenSSH (si no está instalado)
+sudo apt update && sudo apt install openssh-client -y
+
+# Conexión al nivel N (reemplaza N con el número de nivel)
+ssh banditN@bandit.labs.overthewire.org -p 2220
+
+# Ejemplo: Nivel 0
+ssh bandit0@bandit.labs.overthewire.org -p 2220
+# Contraseña: bandit0
+
+# Ejemplo: Nivel 5
+ssh bandit5@bandit.labs.overthewire.org -p 2220
+# Contraseña: [la obtenida en nivel 4]
+```
+
+### 1.3 — Conexión desde Kali Linux (VM o Live)
+
+```bash
+# Kali ya tiene OpenSSH preinstalado
+# Método 1: Conexión directa
+ssh bandit0@bandit.labs.overthewire.org -p 2220
+
+# Método 2: Usando sshpass (automatizar contraseña)
+# Instalar sshpass si no existe
+sudo apt install sshpass -y
+
+# Conexión con contraseña automática
+sshpass -p 'bandit0' ssh bandit0@bandit.labs.overthewire.org -p 2220
+
+# Método 3: Archivo de configuración SSH
+# Crear/editar ~/.ssh/config
+cat >> ~/.ssh/config << 'EOF'
+Host bandit
+    HostName bandit.labs.overthewire.org
+    Port 2220
+    User bandit0
+EOF
+
+# Ahora puedes conectarte simplemente con:
+ssh bandit
+```
+
+### 1.4 — Conexión desde Termux (Android)
+
+```bash
+# 1. Instalar OpenSSH en Termux
+pkg install openssh -y
+
+# 2. Conexión directa (igual que Linux)
+ssh bandit0@bandit.labs.overthewire.org -p 2220
+
+# 3. Para sesiones persistentes, usar tmux
+pkg install tmux -y
+tmux new -t bandit
+ssh bandit0@bandit.labs.overthewire.org -p 2220
+# Ctrl+B, D para desconectarte sin cerrar la sesión
+
+# 4. Configurar SSH config en Termux (igual)
+mkdir -p ~/.ssh
+cat >> ~/.ssh/config << 'EOF'
+Host bandit
+    HostName bandit.labs.overthewire.org
+    Port 2220
+    User bandit0
+EOF
+ssh bandit
+```
+
+### 1.5 — Conexión desde Windows
+
+```powershell
+# Método 1: OpenSSH Client (Windows 10+)
+# Verificar si está instalado:
+Get-WindowsCapability -Online | Where-Object Name -like 'OpenSSH*'
+# Instalar si es necesario:
+Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+
+# Conexión
+ssh bandit0@bandit.labs.overthewire.org -p 2220
+
+# Método 2: PuTTY (clásico)
+# - Host: bandit.labs.overthewire.org
+# - Port: 2220
+# - Connection type: SSH
+
+# Método 3: WSL (Windows Subsystem for Linux)
+# Instalar WSL, luego usar los comandos de Linux
+wsl
+ssh bandit0@bandit.labs.overthewire.org -p 2220
+```
+
+### 1.6 — Gestión de Claves SSH para Bandit
+
+```bash
+# Algunos niveles requieren autenticación por clave (ej: nivel 13→14)
+# Cuando obtengas una clave privada:
+
+# 1. Guardar la clave en un archivo
+nano ~/bandit13.key
+# Pegar el contenido de la clave privada
+
+# 2. Establecer permisos correctos (OBLIGATORIO)
+chmod 600 ~/bandit13.key
+# SSH rechaza claves con permisos demasiado abiertos
+
+# 3. Conectar usando la clave
+ssh -i ~/bandit13.key bandit14@bandit.labs.overthewire.org -p 2220
+
+# 4. Solución de errores de permisos
+# Si ves: "WARNING: UNPROTECTED PRIVATE KEY FILE!"
+chmod 600 ~/bandit13.key  # Propietario: lectura/escritura
+# o
+chmod 400 ~/bandit13.key  # Propietario: solo lectura
+```
+
+---
+
+## 2. Guía de Superación Estratégica
+
+### 2.1 — Metodología de Resolución
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              METODOLOGÍA DE RESOLUCIÓN DE RETOS                 │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  1. LEER la descripción completa del nivel                      │
+│  2. IDENTIFICAR qué habilidad se evalúa                         │
+│  3. HIPOTETIZAR qué comandos podrían funcionar                   │
+│  4. EJECUTAR paso a paso, documentando cada acción              │
+│  5. VERIFICAR la contraseña antes de continuar                  │
+│  6. REGISTRAR en el diario de wargames                          │
+│                                                                 │
+│  REGLA DE ORO: Si llevas >30 min sin progreso,                 │
+│  busca una pista. No es trampa — es aprendizaje.                │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 2.2 — Categorización de Retos por Habilidad
+
+#### Categoría A: Inspección de Archivos y Permisos
+
+| Nivel | Habilidad Principal | Clave de Resolución |
+|-------|---------------------|---------------------|
+| 0→1 | Lectura básica | `cat readme` |
+| 1→2 | Archivos con nombres especiales | `cat ./-(` | `cat < -` |
+| 2→3 | Espacios en nombres | `cat "spaces in this filename"` |
+| 3→4 | Archivos ocultos | `ls -la` + `cat .hidden` |
+| 4→5 | Identificación de tipo de archivo | `file ./*` + `cat` del ASCII |
+| 5→6 | Búsqueda con múltiples criterios | `find . -type f -size 1033c ! -executable` |
+| 6→7 | Búsqueda en todo el sistema | `find / -user bandit7 -group bandit6 -size 33c 2>/dev/null` |
+| 7→8 | Filtrado de texto | `grep "millionth" data.txt` |
+| 8→9 | Líneas únicas | `sort data.txt \| uniq -u` |
+| 9→10 | Texto en binarios | `strings data.txt \| grep "==="` |
+
+**Patrón de ataque:**
+```bash
+# 1. Listar todo (incluyendo ocultos)
+ls -la
+
+# 2. Identificar tipo de archivo
+file archivo
+
+# 3. Si es texto, leer directamente
+cat archivo
+
+# 4. Si es binario, usar strings
+strings archivo
+
+# 5. Si hay muchos archivos, buscar con criterios
+find . -type f -name "*.txt" -exec grep "patron" {} \;
+```
+
+#### Categoría B: Decodificación y Compresión
+
+| Nivel | Habilidad Principal | Clave de Resolución |
+|-------|---------------------|---------------------|
+| 10→11 | Decodificación Base64 | `base64 -d data.txt` |
+| 11→12 | Rot13 y codificación | `cat data.txt \| tr 'A-Za-z' 'N-ZA-Mn-za-m'` |
+| 12→13 | Descompresión múltiple | `xxd -r` + `gzip -d` + `bzip2 -d` + `tar -xf` (repetir) |
+
+**Patrón de ataque:**
+```bash
+# 1. Identificar tipo de codificación
+file data.txt
+head data.txt
+
+# 2. Base64
+base64 -d archivo
+
+# 3. Hexadecimal a binario
+xxd -r archivo_hex > archivo_bin
+
+# 4. Descompresión recursiva
+# Identificar tipo
+file archivo
+
+# gzip
+mv archivo archivo.gz && gzip -d archivo.gz
+
+# bzip2
+mv archivo archivo.bzip2 && bzip2 -d archivo.bzip2
+
+# tar
+tar -xf archivo.tar
+
+# Repetir hasta obtener texto legible
+
+# 5. Rot13
+cat archivo | tr 'A-Za-z' 'N-ZA-Mn-za-m'
+```
+
+#### Categoría C: Análisis de Red y Credenciales
+
+| Nivel | Habilidad Principal | Clave de Resolución |
+|-------|---------------------|---------------------|
+| 13→14 | Autorización por clave SSH | `ssh -i sshkey.private bandit14@localhost` |
+| 14→15 | Conexión por netcat | `nc localhost 30000` |
+| 15→16 | SSL/TLS con OpenSSL | `openssl s_client -connect localhost:30001` |
+| 16→17 | Escaneo de puertos | `nmap -sV -p 31000-32000 localhost` |
+| 17→18 | Comparación de archivos | `diff passwords.new passwords.old` |
+
+**Patrón de ataque:**
+```bash
+# 1. Conexión a servicios locales
+nc localhost 30000          # netcat
+openssl s_client -connect localhost:30001  # SSL
+
+# 2. Escaneo de puertos
+nmap -sV -p 31000-32000 localhost
+
+# 3. Identificar puertos SSL
+# Respuesta "Correct!" = puerto SSL
+
+# 4. Comparación de archivos
+diff archivo1 archivo2
+```
+
+#### Categoría D: Permisos y Escalada
+
+| Nivel | Habilidad Principal | Clave de Resolución |
+|-------|---------------------|---------------------|
+| 18→19 | Shell alternativo | `ssh bandit18@... -t "/bin/sh"` |
+| 19→20 | Binarios SUID | `./bandit20-do cat /etc/bandit_pass/bandit20` |
+| 20→21 | Reverse shell / conexiones | `nc -l -p 12345` + `./connect` |
+
+**Patrón de ataque:**
+```bash
+# 1. Binarios SUID (ejecutan como propietario)
+find / -perm -4000 -user bandit20 2>/dev/null
+./suid_binary comando
+
+# 2. Escapando de shells restringidas
+# Ver shell actual
+echo $SHELL
+
+# Cambiar a bash
+bash
+# o
+ssh user@host -t "/bin/sh"
+
+# 3. Conexiones reversas
+# Terminal 1: Escuchar
+nc -l -p 12345
+
+# Terminal 2: Conectar
+echo "contraseña" | nc localhost 12345
+```
+
+### 2.3 — Mapa Visual de Habilidades por Nivel
+
+```
+Niveles 0-5:    FUNDAMENTOS (ls, cat, file, find básico)
+                └── Lectura, permisos, tipos de archivo
+
+Niveles 6-10:   BÚSQUEDA AVANZADA (find, grep, sort, uniq, strings)
+                └── Filtrado, criterios múltiples, binarios
+
+Niveles 11-15:  CODIFICACIÓN Y RED (base64, netcat, SSL)
+                └── Decodificación, conexiones, puertos
+
+Niveles 16-20:  ANÁLISIS DE SERVICIOS (nmap, diff, shell escape)
+                └── Escaneo, comparación, escapes
+
+Niveles 21-25:  AUTOMATIZACIÓN (cron, scripts, bucles)
+                └── Tareas programadas, scripting
+
+Niveles 26-30:  ESCALADA Y EXPLOTACIÓN (SUID, Git, restricciones)
+                └── Privilegios, repositorios, límites
+
+Niveles 31-34:  MAESTRÍA (integración de todo)
+                └── Desafíos integradores
+```
+
+---
+
+## 3. Plantilla de Documentación y Cadena de Custodia
+
+### 3.1 — Importancia de la Documentación
+
+La documentación es **tan importante como la resolución del reto**. En entornos profesionales:
+- Demuestra **rigor metodológico**
+- Permite **reproducir** el análisis
+- Establece **cadena de custodia** para evidencias
+- Facilita **auditorías** y revisiones
+
+### 3.2 — Estructura del Diario de Wargames
+
+```markdown
+# Diario de Wargames — OverTheWire Bandit
+
+**Analista:** [Tu nombre completo]
+**Período:** Agosto 2026
+**Repositorio:** [enlace a tu Git]
+
+---
+
+## Nivel X → Nivel Y
+
+### Información del Reto
+- **Fecha de resolución:** [YYYY-MM-DD HH:MM]
+- **Tiempo empleado:** [minutos]
+- **Nivel de dificultad:** ⭐⭐⭐ (1-5)
+- **Categoría:** [Inspección/Decodificación/Red/Permisos]
+
+### Descripción del Problema
+[Copia o parafrasea la descripción del nivel]
+
+### Hipósis Inicial
+[¿Qué pensabas que necesitabas hacer?]
+
+### Proceso de Resolución
+
+#### Paso 1: [Descripción]
+```bash
+# Comando exacto usado
+comando --argumentos
+```
+**Resultado:** [salida relevante]
+
+#### Paso 2: [Descripción]
+```bash
+comando --argumentos
+```
+**Resultado:** [salida relevante]
+
+### Solución Final
+```bash
+# El comando que resolvió el reto
+comando_final --argumentos
+```
+
+**Contraseña obtenida:** `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+
+### Lecciones Aprendidas
+- [¿Qué aprendiste?]
+- [¿Qué error cometiste?]
+- [¿Cómo lo harías diferente?]
+
+### Conexión con NIST CSF 2.0
+| Función | Categoría | Aplicación |
+|---------|-----------|------------|
+| DETECT | DE.CM | Búsqueda de archivos sospechosos |
+| PROTECT | PR.AC | Análisis de permisos inadecuados |
+
+### Referencias
+- [Enlaces consultados]
+- [Man pages relevantes]
+
+---
+```
+
+### 3.3 — Ejemplo de Documentación Completa
+
+```markdown
+## Nivel 6 → Nivel 7
+
+### Información del Reto
+- **Fecha de resolución:** 2026-09-01 14:30
+- **Tiempo empleado:** 12 minutos
+- **Nivel de dificultad:** ⭐⭐⭐ (3/5)
+- **Categoría:** Búsqueda Avanzada
+
+### Descripción del Problema
+La contraseña está en algún lugar del servidor y tiene estas propiedades:
+- Propietario: usuario bandit7
+- Grupo: bandit6
+- Tamaño: 33 bytes
+
+### Hipótesis Inicial
+Necesito usar find con criterios de búsqueda combinados. El tamaño exacto (33 bytes) es la pista clave.
+
+### Proceso de Resolución
+
+#### Paso 1: Buscar archivo con criterios
+```bash
+find / -user bandit7 -group bandit6 -size 33c 2>/dev/null
+```
+**Resultado:** `/var/lib/dpkg/info/bandit7.password`
+
+#### Paso 2: Leer el archivo
+```bash
+cat /var/lib/dpkg/info/bandit7.password
+```
+**Resultado:** `z7WtoNQU2XfjmMtWA8u5rN4vzqu4v99S`
+
+### Solución Final
+```bash
+find / -user bandit7 -group bandit6 -size 33c 2>/dev/null | xargs cat
+```
+
+**Contraseña obtenida:** `z7WtoNQU2XfjmMtWA8u5rN4vzqu4v99S`
+
+### Lecciones Aprendidas
+- `find` con múltiples criterios es extremadamente preciso
+- `2>/dev/null` elimina errores de permisos y limpia la salida
+- El tamaño en bytes (`33c`) fue el filtro decisivo
+
+### Conexión con NIST CSF 2.0
+| Función | Categoría | Aplicación |
+|---------|-----------|------------|
+| DETECT | DE.CM | Búsqueda proactiva de archivos |
+| IDENTIFY | ID.AM | Inventario de activos del sistema |
+
+### Referencias
+- `man find`
+- OverTheWire Bandit Level 6 → 7
+```
+
+### 3.4 — Comandos de Documentación Rápida
+
+```bash
+# Guardar salida de un comando para evidencia
+comando | tee evidencia.txt
+
+# Capturar timestamp
+echo "=== $(date) ===" >> diario.md
+
+# Generar hash de un archivo (para verificar integridad)
+sha256sum archivo >> hashes.txt
+
+# Historial de comandos usados
+history | tail -20
+```
+
+---
+
+## 4. Resolución de Errores Comunes (Troubleshooting)
+
+### 4.1 — Tabla de Errores y Soluciones
+
+| Error | Causa Probable | Solución |
+|-------|----------------|----------|
+| `Permission denied (publickey,password)` | Contraseña incorrecta o usuario mal escrito | Verificar usuario `banditN` y contraseña exacta |
+| `Connection refused` | Puerto incorrecto o firewall | Verificar puerto 2220, no 22 |
+| `Connection timed out` | Red caída o IP incorrecta | Verificar conexión a internet |
+| `WARNING: UNPROTECTED PRIVATE KEY FILE` | Permisos de clave muy abiertos | `chmod 600 clave_privada` |
+| `Host key verification failed` | Cambio de huella del servidor | `ssh-keygen -R bandit.labs.overthewire.org` |
+| `No such file or directory` | Ruta mal escrita o archivo no existe | Verificar con `ls` la ubicación |
+| `Command not found` | Herramienta no instalada | Instalar con `pkg install` o `apt install` |
+| `Server alive interval` / sesión colgada | Timeout por inactividad | Configurar_keepalive (ver sección 4.3) |
+| `Too many authentication failures` | ssh-agent ofrece muchas claves | `ssh -o IdentitiesOnly=yes -i clave` |
+| Binario ilegible / caracteres extraños | Archivo no es texto | Usar `file` para identificar tipo, `strings` para extraer texto |
+
+### 4.2 — Solución Detallada: Permisos de Clave SSH
+
+```bash
+# ERROR: "WARNING: UNPROTECTED PRIVATE KEY FILE!"
+# "Permissions 0644 for 'clave' are too open"
+
+# CAUSA: SSH requiere permisos restrictivos por seguridad
+# SOLUCIÓN:
+
+# 1. Ver permisos actuales
+ls -la ~/.ssh/clave
+# -rw-r--r-- 1 user user 1234 Jan 1 12:00 clave  ← MAL (644)
+
+# 2. Establecer permisos correctos
+chmod 600 ~/.ssh/clave
+# o
+chmod 400 ~/.ssh/clave
+
+# 3. Verificar
+ls -la ~/.ssh/clave
+# -rw------- 1 user user 1234 Jan 1 12:00 clave  ← BIEN (600)
+
+# 4. Reconectar
+ssh -i ~/.ssh/clave banditN@bandit.labs.overthewire.org -p 2220
+```
+
+### 4.3 — Solución Detallada: Timeout de Sesión
+
+```bash
+# PROBLEMA: La sesión SSH se desconecta por inactividad
+# "Connection to bandit.labs.overthewire.org closed by remote host"
+
+# SOLUCIÓN 1: Configurar keepalive en el cliente
+# Agregar a ~/.ssh/config
+Host bandit
+    HostName bandit.labs.overthewire.org
+    Port 2220
+    User bandit0
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+
+# SOLUCIÓN 2: Usar tmux o screen (sesiones persistentes)
+# En Termux/Linux:
+tmux new -t bandit
+ssh bandit0@bandit.labs.overthewire.org -p 2220
+# Ctrl+B, D → la sesión sigue activa aunque se cierre SSH
+
+# SOLUCIÓN 3: Opción en línea de comandos
+ssh -o ServerAliveInterval=60 bandit0@bandit.labs.overthewire.org -p 2220
+```
+
+### 4.4 — Solución Detallada: Archivos Binarios Ilegibles
+
+```bash
+# PROBLEMA: Al leer un archivo, solo ves caracteres extraños
+# o "binary file matches"
+
+# DIAGNÓSTICO: Identificar tipo de archivo
+file archivo
+# Salida: "archivo: data" o "archivo: ELF 64-bit" o "archivo: gzip compressed"
+
+# SOLUCIONES POR TIPO:
+
+# 1. Si es texto con codificación rara
+strings archivo | grep -i "password\|flag\|bandit"
+
+# 2. Si es Base64
+base64 -d archivo
+
+# 3. Si es gzip
+mv archivo archivo.gz && gzip -d archivo.gz
+
+# 4. Si es bzip2
+mv archivo archivo.bz2 && bzip2 -d archivo.bz2
+
+# 5. Si es tar
+tar -xf archivo
+
+# 6. Si es hex dump
+xxd -r archivo > archivo_decodificado
+
+# 7. Si es binario compilado
+strings archivo | head -50
+strings archivo | grep -E "^\w{32}$"  # Busca posibles contraseñas
+
+# 8. Descompresión recursiva (múltiples capas)
+while true; do
+    file archivo | grep -q "gzip" && mv archivo archivo.gz && gzip -d archivo.gz
+    file archivo | grep -q "bzip2" && mv archivo archivo.bz2 && bzip2 -d archivo.bz2
+    file archivo | grep -q "tar" && tar -xf archivo
+    file archivo | grep -q "ASCII" && break
+done
+```
+
+### 4.5 — Solución Detallada: Pérdida de Contraseña
+
+```bash
+# PROBLEMA: Perdiste la contraseña de un nivel
+
+# SOLUCIÓN 1: Re-resolver el nivel anterior
+ssh bandit{N-1}@bandit.labs.overthewire.org -p 2220
+# Volver a hacer el reto
+
+# SOLUCIÓN 2: Buscar en tu diario de wargames
+grep -r "Nivel N" ~/wargames-notas.txt
+
+# SOLUCIÓN 3: Buscar en historial de comandos (si no has cerrado sesión)
+history | grep "bandit"
+
+# SOLUCIÓN 4: Si guardaste las contraseñas en un archivo
+cat ~/bandit-passwords.txt
+
+# PREVENCIÓN: SIEMPRE documentar contraseñas inmediatamente
+echo "Nivel X: contraseña" >> ~/bandit-passwords.txt
+```
+
+### 4.6 — Comandos de Diagnóstico de Red
+
+```bash
+# Verificar conectividad al servidor de Bandit
+ping bandit.labs.overthewire.org
+
+# Verificar puerto 2220
+nc -zv bandit.labs.overthewire.org 2220
+
+# Ver ruta de conexión
+traceroute bandit.labs.overthewire.org
+
+# SSH verbose (diagnóstico detallado)
+ssh -vvv bandit0@bandit.labs.overthewire.org -p 2220
+
+# Ver tu IP pública (para verificar cambios de IP)
+curl ifconfig.me
+```
+
+---
+
+## 5. Conexión con NIST CSF 2.0 y Abacom
+
+### 5.1 — Mapeo de Habilidades Bandit con NIST CSF 2.0
+
+| Habilidad Bandit | Función NIST | Categoría | Descripción |
+|------------------|--------------|-----------|-------------|
+| Búsqueda de archivos (find) | DETECT | DE.CM | Monitoreo continuo del sistema de archivos |
+| Análisis de permisos (ls -la) | PROTECT | PR.AC | Control de acceso y gestión de identidades |
+| Filtrado de logs (grep) | DETECT | DE.AE | Análisis de eventos adversos |
+| Conexiones de red (nc, openssl) | DETECT | DE.CM | Monitoreo de comunicaciones |
+| Documentación en Git | PROTECT | PR.IP | Protección de información |
+| Escaneo de puertos (nmap) | IDENTIFY | ID.RA | Evaluación de riesgos |
+| Análisis de binarios | DETECT | DE.AE | Análisis de eventos sospechosos |
+| Gestión de claves SSH | PROTECT | PR.AC | Autenticación segura |
+
+### 5.2 — Mapeo con Unidades Abacom
+
+| Habilidad Bandit | Unidad Abacom | Aplicación |
+|------------------|---------------|------------|
+| Permisos y usuarios | Unidad 3: Hardening y IAM | Control de accesos |
+| Conexiones y red | Unidad 3: Zero Trust | Verificación de conexiones |
+| Documentación | Unidad 5: Respuesta a Incidentes | Cadena de custodia |
+| Escaneo y auditoría | Unidad 4: Vulnerabilidades | Evaluación técnica |
+| Resolución de retos | Unidad 1: Gestión de Riesgo | Metodología de análisis |
+
+### 5.3 — Ejemplo de Análisis NIST en un Reto
+
+```markdown
+### Análisis NIST CSF 2.0 — Nivel 6→7
+
+**Reto:** Encontrar archivo con propietario bandit7, grupo bandit6, 33 bytes.
+
+**Comando:** `find / -user bandit7 -group bandit6 -size 33c 2>/dev/null`
+
+**Análisis NIST:**
+
+1. **DETECT — DE.CM (Continuous Monitoring)**
+   - El comando `find` realiza monitoreo proactivo del sistema de archivos
+   - Busca activos que cumplen criterios específicos de riesgo
+   - Equivale a un escaneo de configuración (configuration scan)
+
+2. **PROTECT — PR.AC (Access Control)**
+   - Identificar archivos con propietarios inusuales es control de acceso
+   - Un archivo de contraseñas en `/var/lib/dpkg/info/` con propietario
+     incorrecto indica fallo de control de acceso
+
+3. **IDENTIFY — ID.AM (Asset Management)**
+   - El tamaño exacto (33 bytes) es un atributo del activo
+   - Caracterizar activos por metadatos es gestión de activos
+
+**Lección profesional:**
+En un SOC real, este mismo comando se usa para buscar:
+- Archivos de contraseñas expuestos
+- Backdoors con permisos inusuales
+- Evidencia de escalada de privilegios
+```
+
+---
+
+## 6. Flujo de Trabajo Recomendado
+
+### 6.1 — Sesión de Estudio Tipo (2 horas)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              SESIÓN DE ESTUDIO DE WARGAMES                      │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Min 0-5:   Preparación                                        │
+│  • Abrir terminal / Termux                                     │
+│  • Abrir diario de wargames                                    │
+│  • Conectar al nivel actual                                    │
+│                                                                 │
+│  Min 5-10:  Lectura del reto                                   │
+│  • Leer descripción completa                                   │
+│  • Identificar categoría de habilidad                          │
+│  • Hipotetizar comandos necesarios                             │
+│                                                                 │
+│  Min 10-40: Resolución                                         │
+│  • Ejecutar comandos paso a paso                               │
+│  • Documentar cada acción                                      │
+│  • Si hay error >5 min: buscar pista                           │
+│                                                                 │
+│  Min 40-50: Verificación                                       │
+│  • Verificar contraseña obtenida                               │
+│  • Probar conexión al siguiente nivel                          │
+│                                                                 │
+│  Min 50-60: Documentación                                      │
+│  • Completar entrada en diario                                 │
+│  • Registrar lecciones aprendidas                              │
+│  • Análisis NIST CSF 2.0                                       │
+│                                                                 │
+│  Min 60-70: Commit en Git                                      │
+│  • git add y git commit                                        │
+│  • Subir a repositorio remoto                                  │
+│                                                                 │
+│  Min 70-120: Nivel siguiente (repetir ciclo)                   │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 6.2 — Checklist por Nivel
+
+Antes de pasar al siguiente nivel, verifica:
+
+- [ ] Leí la descripción completa
+- [ ] Ejecuté los comandos paso a paso
+- [ ] Obtuve la contraseña
+- [ ] Verifiqué la contraseña conectándome al siguiente nivel
+- [ ] Documenté en el diario de wargames
+- [ ] Registré el análisis NIST CSF 2.0
+- [ ] Hice commit en Git
+- [ ] Anoté las lecciones aprendidas
+
+---
+
+## 7. Recursos y Referencias
+
+### 7.1 — Oficiales
+
+| Recurso | Enlace | Descripción |
+|---------|--------|-------------|
+| OverTheWire Bandit | [overthewire.org/wargames/bandit](https://overthewire.org/wargames/bandit/) | Sitio oficial del wargame |
+| SSH man pages | `man ssh` | Documentación de SSH |
+| find man pages | `man find` | Documentación de find |
+| Termux Wiki | [wiki.termux.com](https://wiki.termux.com) | Documentación de Termux |
+
+### 7.2 — Cheat Sheets de Comandos
+
+```bash
+# === NAVEGACIÓN ===
+pwd                 # Directorio actual
+ls -la              # Lista con ocultos y permisos
+cd ~                # Ir a home
+cd -                # Volver al directorio anterior
+
+# === INSPECCIÓN DE ARCHIVOS ===
+file archivo        # Tipo de archivo
+cat archivo         # Mostrar contenido
+head -n 20 archivo  # Primeras 20 líneas
+tail -n 20 archivo  # Últimas 20 líneas
+less archivo        # Ver con scroll
+strings archivo     # Extraer texto de binarios
+xxd archivo         # Ver en hexadecimal
+
+# === BÚSQUEDA ===
+find / -name "*.txt"              # Buscar por nombre
+find / -user bandit7              # Buscar por propietario
+find / -size 33c                  # Buscar por tamaño
+find / -perm 777                  # Buscar por permisos
+grep "patron" archivo             # Buscar texto
+grep -r "patron" .                # Buscar recursivamente
+grep -i "patron" archivo         # Sin mayúsculas/minúsculas
+
+# === FILTRADO Y PROCESAMIENTO ===
+sort data.txt                     # Ordenar líneas
+sort data.txt | uniq -u           # Líneas únicas
+sort data.txt | uniq -c           # Contar ocurrencias
+base64 -d archivo                 # Decodificar Base64
+cat archivo | tr 'A-Za-z' 'N-ZA-Mn-za-m'  # Rot13
+
+# === COMPRESIÓN ===
+gzip -d archivo.gz                # Descomprimir gzip
+bzip2 -d archivo.bz2              # Descomprimir bzip2
+tar -xf archivo.tar               # Extraer tar
+tar -xzf archivo.tar.gz           # Extraer tar.gz
+
+# === RED ===
+nc host puerto                    # Conexión TCP básica
+openssl s_client -connect host:puerto  # Conexión SSL
+nmap -sV -p 30000-40000 host     # Escaneo de puertos
+
+# === PERMISOS ===
+chmod 600 archivo                 # Propietario: rw
+chmod 755 script                  # Ejecutable
+ls -la archivo                    # Ver permisos
+
+# === DOCUMENTACIÓN ===
+comando | tee salida.txt          # Guardar salida
+echo "=== $(date) ===" >> log     # Timestamp
+sha256sum archivo                 # Hash de verificación
+```
+
+---
+
+## 8. Conclusión
+
+Dominar Bandit no es solo memorizar comandos — es desarrollar **pensamiento analítico** y **metodología de investigación**. Cada nivel te prepara para desafíos más avanzados:
+
+- **Niveles 0-10:** Fundamentos de Linux y búsqueda
+- **Niveles 11-20:** Codificación, red y servicios
+- **Niveles 21-30:** Automatización, escalada y Git
+- **Niveles 31-34:** Maestría e integración
+
+**Recuerda:** La documentación es parte del trabajo profesional. Un analista que no documenta, no ha analitado.
+
+> **"Cada contraseña que encuentras no es un fin — es una lección. Cada comando que aprendes es una herramienta para toda tu carrera."**
+
+---
+
+*Apéndice generado para el curso Fundamentos de Ciberseguridad — Agosto 2026 — Abacom*
+
+---
+
+← [Módulo 6: Wargames Avanzados](./modulo-06-wargames-avanzados.qmd) | [Inicio](./index.qmd) → | [Apéndice Termux](./apendice-termux.qmd) 📱 →
