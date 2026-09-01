@@ -46,9 +46,52 @@ Correcciones derivadas de la Auditoría de Compliance Técnico para entrega inst
 | Tasa de éxito | 93% |
 | Estado | ✅ LISTO PARA PRODUCCIÓN |
 
+
 ---
 
-## [1.1.0] — Septiembre 2026
+## [1.2.1] — Septiembre 2026
+
+### ✏️ Auditoría de Corrección de Estilo
+
+Auditoría exhaustiva de estilo y ortografía completada para entrega institucional.
+
+#### Resultados de Auditoría
+
+| Métrica | Valor |
+|---------|-------|
+| Archivos auditados | 13 |
+| Líneas revisadas | ~5,800+ |
+| Errores encontrados y corregidos | 2 |
+| Caracteres extraños (cirílico, CJK) | 0 |
+| Problemas de Spanglish | 0 |
+| Estado | ✅ LISTO PARA ENTREGA INSTITUCIONAL |
+
+#### Correcciones Aplicadas
+
+- **`modulo-03-git.qmd`** (línea 244): "salí" → "sal" — forma imperativa correcta del verbo "salir"
+- **`apendice-termux.qmd`** (línea 280): Agregada comilla de cierre faltante en comando `echo`
+
+#### Archivos Auditados
+
+| Archivo | Estado |
+|---------|--------|
+| `index.qmd` | ✅ Sin errores |
+| `modulo-01-linux-consola.qmd` | ✅ Sin errores |
+| `modulo-02-kali-linux.qmd` | ✅ Sin errores |
+| `modulo-03-git.qmd` | ✅ Corregido |
+| `modulo-04-docker.qmd` | ✅ Sin errores |
+| `modulo-05-wargames.qmd` | ✅ Sin errores |
+| `modulo-06-wargames-avanzados.qmd` | ✅ Sin errores |
+| `capstone-proyecto-integrador.qmd` | ✅ Sin errores |
+| `apendice-termux.qmd` | ✅ Corregido |
+| `apendice-bandit-masterclass.qmd` | ✅ Sin errores |
+| `estrategia-didactica-retos.md` | ✅ Sin errores |
+| `research-alineacion-curricular.md` | ✅ Sin errores |
+| `images/ATRIBUCION.md` | ✅ Sin errores |
+
+#### Commit
+
+`fix(style): corrige errores de estilo identificados en auditoría`
 
 ### 🎨 Enriquecimiento Visual
 
