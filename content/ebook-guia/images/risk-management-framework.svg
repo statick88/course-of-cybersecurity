@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Author: Michael Shick <mike@shick.in> -->
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<!-- Based off of raster image from NIST Special Publication 800-37, "Applying
+     the Risk Management Framework to Federal Information Systems." -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   width="519.16809"
+   height="405.82614"
+   id="svg2">
+  <defs
+     id="defs4">
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="TriangleOutS"
+       style="overflow:visible">
+      <path
+         d="m 5.77,0 -8.65,5 0,-10 8.65,5 z"
+         transform="scale(0.2,0.2)"
+         id="path4131"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none" />
+    </marker>
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="TriangleOutS-0"
+       style="overflow:visible">
+      <path
+         d="m 5.77,0 -8.65,5 0,-10 8.65,5 z"
+         transform="scale(0.2,0.2)"
+         id="path4131-2"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none" />
+    </marker>
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="TriangleOutS-7"
+       style="overflow:visible">
+      <path
+         d="m 5.77,0 -8.65,5 0,-10 8.65,5 z"
+         transform="scale(0.2,0.2)"
+         id="path4131-5"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none" />
+    </marker>
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="TriangleOutS-4"
+       style="overflow:visible">
+      <path
+         d="m 5.77,0 -8.65,5 0,-10 8.65,5 z"
+         transform="scale(0.2,0.2)"
+         id="path4131-1"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none" />
+    </marker>
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="TriangleOutS-1"
+       style="overflow:visible">
+      <path
+         d="m 5.77,0 -8.65,5 0,-10 8.65,5 z"
+         transform="scale(0.2,0.2)"
+         id="path4131-11"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none" />
+    </marker>
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="TriangleOutS-04"
+       style="overflow:visible">
+      <path
+         d="m 5.77,0 -8.65,5 0,-10 8.65,5 z"
+         transform="scale(0.2,0.2)"
+         id="path4131-0"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none" />
+    </marker>
+  </defs>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(21.480437,-77.238313)"
+     id="layer1">
+    <rect
+       width="97.89106"
+       height="60.5"
+       x="188.05447"
+       y="236.86218"
+       id="rect2985"
+       style="fill:#e6e6e6;fill-opacity:1;stroke:#000000" />
+    <rect
+       width="97.89106"
+       height="60.5"
+       x="66.554474"
+       y="267.61218"
+       id="rect2985-8"
+       style="fill:#e6e6e6;fill-opacity:1;stroke:#000000" />
+    <rect
+       width="97.89106"
+       height="60.5"
+       x="309.76727"
+       y="267.61218"
+       id="rect2985-4"
+       style="fill:#e6e6e6;fill-opacity:1;stroke:#000000" />
+    <rect
+       width="97.89106"
+       height="60.5"
+       x="309.55447"
+       y="354.61218"
+       id="rect2985-5"
+       style="fill:#e6e6e6;fill-opacity:1;stroke:#000000" />
+    <rect
+       width="97.89106"
+       height="60.5"
+       x="66.554474"
+       y="354.61218"
+       id="rect2985-0"
+       style="fill:#e6e6e6;fill-opacity:1;stroke:#000000" />
+    <rect
+       width="97.89106"
+       height="60.5"
+       x="188.05447"
+       y="378.61218"
+       id="rect2985-3"
+       style="fill:#e6e6e6;fill-opacity:1;stroke:#000000" />
+    <text
+       x="236.74368"
+       y="327.15231"
+       id="text3033"
+       xml:space="preserve"
+       style="font-size:12.35168076px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif Bold"><tspan
+         x="236.74368"
+         y="327.15231"
+         id="tspan3035">Risk</tspan><tspan
+         x="236.74368"
+         y="342.59192"
+         id="tspan3037">Management</tspan><tspan
+         x="236.74368"
+         y="358.03152"
+         id="tspan3039">Framework</tspan></text>
+    <text
+       x="221.42184"
+       y="257.12476"
+       id="text3041"
+       xml:space="preserve"
+       style="font-size:9.68550873px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"><tspan
+         x="221.42184"
+         y="257.12476"
+         id="tspan3043">Step 1</tspan></text>
+    <text
+       x="204.77477"
+       y="274.30893"
+       id="text3045"
+       xml:space="preserve"
+       style="font-size:9.2059269px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"><tspan
+         x="204.77477"
+         y="274.30893"
+         id="tspan3047">CATEGORIZE</tspan></text>
+    <text
+       x="198.31319"
+       y="282.57867"
+       id="text3049"
+       xml:space="preserve"
+       style="font-size:7.69415951px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"><tspan
+         x="198.31319"
+         y="282.57867"
+         id="tspan3051">Information System</tspan></text>
+    <text
+       x="342.92184"
+       y="287.87476"
+       id="text3041-7"
+       xml:space="preserve"
+       style="font-size:9.68550873px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"><tspan
+         x="342.92184"
+         y="287.87476"
+         id="tspan3043-5">Step 2</tspan></text>
+    <text
+       x="338.84006"
+       y="305.05896"
+       id="text3045-9"
+       xml:space="preserve"
+       style="font-size:9.2059269px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"><tspan
+         x="338.84006"
+         y="305.05896"
+         id="tspan3047-7">SELECT</tspan></text>
+    <text
+       x="324.37088"
+       y="313.32867"
+       id="text3049-8"
+       xml:space="preserve"
+       style="font-size:7.69415951px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"><tspan
+         x="324.37088"
+         y="313.32867"
+         id="tspan3051-5">Security Controls</tspan></text>
+    <text
+       x="342.59317"
+       y="374.87476"
+       id="text3041-3"
+       xml:space="preserve"
+       style="font-size:9.68550873px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"><tspan
+         x="342.59317"
+         y="374.87476"
+         id="tspan3043-8">Step 3</tspan></text>
+    <text
+       x="327.07263"
+       y="392.05896"
+       id="text3045-3"
+       xml:space="preserve"
+       style="font-size:9.2059269px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"><tspan
+         x="327.07263"
+         y="392.05896"
+         id="tspan3047-79">IMPLEMENT</tspan></text>
+    <text
+       x="324.15805"
+       y="400.32867"
+       id="text3049-3"
+       xml:space="preserve"
+       style="font-size:7.69415951px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"><tspan
+         x="324.15805"
+         y="400.32867"
+         id="tspan3051-7">Security Controls</tspan></text>
+    <text
+       x="220.97729"
+       y="398.87476"
+       id="text3041-74"
+       xml:space="preserve"
+       style="font-size:9.68550873px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"><tspan
+         x="220.97729"
+         y="398.87476"
+         id="tspan3043-1">Step 4</tspan></text>
+    <text
+       x="218.2173"
+       y="416.05896"
+       id="text3045-90"
+       xml:space="preserve"
+       style="font-size:9.2059269px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"><tspan
+         x="218.2173"
+         y="416.05896"
+         id="tspan3047-9">ASSESS</tspan></text>
+    <text
+       x="202.65805"
+       y="424.32867"
+       id="text3049-88"
+       xml:space="preserve"
+       style="font-size:7.69415951px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"><tspan
+         x="202.65805"
+         y="424.32867"
+         id="tspan3051-58">Security Controls</tspan></text>
+    <text
+       x="99.607353"
+       y="374.87476"
+       id="text3041-37"
+       xml:space="preserve"
+       style="font-size:9.68550873px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"><tspan
+         x="99.607353"
+         y="374.87476"
+         id="tspan3043-13">Step 5</tspan></text>
+    <text
+       x="85.969566"
+       y="392.05896"
+       id="text3045-8"
+       xml:space="preserve"
+       style="font-size:9.2059269px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"><tspan
+         x="85.969566"
+         y="392.05896"
+         id="tspan3047-0">AUTHORIZE</tspan></text>
+    <text
+       x="76.813187"
+       y="400.32867"
+       id="text3049-9"
+       xml:space="preserve"
+       style="font-size:7.69415951px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"><tspan
+         x="76.813187"
+         y="400.32867"
+         id="tspan3051-79">Information System</tspan></text>
+    <text
+       x="99.53878"
+       y="287.87476"
+       id="text3041-2"
+       xml:space="preserve"
+       style="font-size:9.68550873px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"><tspan
+         x="99.53878"
+         y="287.87476"
+         id="tspan3043-4">Step 6</tspan></text>
+    <text
+       x="90.514091"
+       y="305.05896"
+       id="text3045-37"
+       xml:space="preserve"
+       style="font-size:9.2059269px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"><tspan
+         x="90.514091"
+         y="305.05896"
+         id="tspan3047-1">MONITOR</tspan></text>
+    <text
+       x="81.158058"
+       y="313.32867"
+       id="text3049-2"
+       xml:space="preserve"
+       style="font-size:7.69415951px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"><tspan
+         x="81.158058"
+         y="313.32867"
+         id="tspan3051-2">Security Controls</tspan></text>
+    <path
+       d="m 346.69116,249.34121 17.84412,0"
+       id="path3209"
+       style="fill:none;stroke:#000000;stroke-width:7.95783806;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#TriangleOutS)" />
+    <path
+       d="m 432.01353,329.34056 0,17.84412"
+       id="path3209-1"
+       style="fill:none;stroke:#000000;stroke-width:7.95783806;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#TriangleOutS)" />
+    <path
+       d="m 370.73444,434.1119 -17.84412,0"
+       id="path3209-17"
+       style="fill:none;stroke:#000000;stroke-width:7.95783806;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#TriangleOutS)" />
+    <path
+       d="m 127.52164,434.1119 -17.84412,0"
+       id="path3209-17-7"
+       style="fill:none;stroke:#000000;stroke-width:7.95783806;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#TriangleOutS)" />
+    <path
+       d="m 103.47837,249.34121 17.84412,0"
+       id="path3209-17-7-7"
+       style="fill:none;stroke:#000000;stroke-width:7.95783806;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#TriangleOutS)" />
+    <path
+       d="m 44.281849,353.38384 0,-17.84412"
+       id="path3209-1-8"
+       style="fill:none;stroke:#000000;stroke-width:7.95783806;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#TriangleOutS)" />
+    <text
+       x="75.376167"
+       y="232.78888"
+       id="text3049-5"
+       xml:space="preserve"
+       style="font-size:7.69415951px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"><tspan
+         x="75.376167"
+         y="232.78888"
+         id="tspan3051-1">Repeat as necessary</tspan></text>
+    <path
+       d="m 42.6875,118.9375 c -12.444077,0 -22.46875,10.02467 -22.46875,22.46875 l 0,42.28125 c 0,12.44408 10.024673,22.4375 22.46875,22.4375 l 84.15625,0 61.21875,36.28125 -32.8125,-36.28125 5.28125,0 C 172.97533,206.125 183,196.13158 183,183.6875 l 0,-42.28125 c 0,-12.44408 -10.02467,-22.46875 -22.46875,-22.46875 l -117.84375,0 z"
+       id="rect4564"
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:3.39837408;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+    <path
+       d="m 433.51972,118.9375 c 12.44408,0 22.46875,10.02467 22.46875,22.46875 l 0,42.28125 c 0,12.44408 -10.02467,22.4375 -22.46875,22.4375 l -84.15625,0 -61.21875,36.28125 32.8125,-36.28125 -5.28125,0 c -12.44408,0 -22.46875,-9.99342 -22.46875,-22.4375 l 0,-42.28125 c 0,-12.44408 10.02467,-22.46875 22.46875,-22.46875 l 117.84375,0 z"
+       id="rect4564-6"
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:3.39837408;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+    <text
+       x="237.61224"
+       y="134.44952"
+       id="text3033-6"
+       xml:space="preserve"
+       style="font-size:12.35168076px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"><tspan
+         x="237.61224"
+         y="134.44952"
+         id="tspan3039-9">PROCESS</tspan><tspan
+         x="237.61224"
+         y="149.88913"
+         id="tspan4621">OVERVIEW</tspan></text>
+    <text
+       x="236.16792"
+       y="176.26974"
+       id="text3033-6-6"
+       xml:space="preserve"
+       style="font-size:10.37598991px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif Bold Italic"><tspan
+         x="236.16792"
+         y="176.26974"
+         id="tspan4621-8">Starting</tspan><tspan
+         x="236.16792"
+         y="189.23973"
+         id="tspan4649">Point</tspan></text>
+    <text
+       x="34.562443"
+       y="139.18245"
+       id="text4651"
+       xml:space="preserve"
+       style="font-size:10.64493847px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"><tspan
+         x="34.562443"
+         y="139.18245"
+         id="tspan4653">Architecture Description</tspan></text>
+    <text
+       x="100.64751"
+       y="157.66914"
+       id="text4661"
+       xml:space="preserve"
+       style="font-size:8.28941536px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"><tspan
+         x="100.64751"
+         y="157.66914"
+         id="tspan4663">Architecture Reference Models</tspan><tspan
+         x="100.64751"
+         y="168.03091"
+         id="tspan4665">Segment and Solution Architectures</tspan><tspan
+         x="100.64751"
+         y="178.39268"
+         id="tspan4667">Mission and Business Processes</tspan><tspan
+         x="100.64751"
+         y="188.75446"
+         id="tspan4669">Information System Boundaries</tspan></text>
+    <text
+       x="315.33643"
+       y="139.10709"
+       id="text4651-0"
+       xml:space="preserve"
+       style="font-size:10.64493847px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"><tspan
+         x="315.33643"
+         y="139.10709"
+         id="tspan4653-8">Organizational Inputs</tspan></text>
+    <text
+       x="374.12686"
+       y="157.66914"
+       id="text4661-1"
+       xml:space="preserve"
+       style="font-size:8.28941536px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"><tspan
+         x="374.12686"
+         y="157.66914"
+         id="tspan4663-0">Laws, Directives, Policy Guidance</tspan><tspan
+         x="374.12686"
+         y="168.03091"
+         id="tspan4665-2">Strategic Goals and Objectives</tspan><tspan
+         x="374.12686"
+         y="178.39268"
+         id="tspan4667-2">Priorities and Resource Availibility</tspan><tspan
+         x="374.12686"
+         y="188.75446"
+         id="tspan4669-9">Supply Chain Considerations</tspan></text>
+    <text
+       x="251.04848"
+       y="28.348654"
+       transform="translate(-21.480437,77.238313)"
+       id="text4728"
+       xml:space="preserve"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"><tspan
+         x="251.04848"
+         y="28.348654"
+         id="tspan4730"></tspan></text>
+  </g>
+</svg>

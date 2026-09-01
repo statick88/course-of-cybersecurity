@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg1"
+   width="1123"
+   height="378"
+   viewBox="0 0 1123 378"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <rect
+       x="126.03816"
+       y="56.402077"
+       width="374.01825"
+       height="38.679237"
+       id="rect8" />
+  </defs>
+  <g
+     id="g1">
+    <g
+       id="layer2">
+      <g
+         id="layer9">
+        <g
+           id="layer13">
+          <text
+             xml:space="preserve"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.3333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:1.002;stroke-linecap:round;stroke-dasharray:none"
+             x="891.91846"
+             y="290.07095"
+             id="text18-6"><tspan
+               id="tspan18-9"
+               x="891.91846"
+               y="290.07095">Kernel</tspan></text>
+          <path
+             style="fill:none;stroke:#000000;stroke-width:0.985737;stroke-linecap:round"
+             id="rect4-7"
+             width="142.46307"
+             height="56.196533"
+             x="657.88953"
+             y="162.70122"
+             d="m 668.55815,162.70122 h 121.12583 c 5.91042,0 10.66862,4.7582 10.66862,10.66862 v 34.85929 c 0,5.91042 -4.7582,10.66862 -10.66862,10.66862 H 668.55815 c -5.91042,0 -10.66862,-4.7582 -10.66862,-10.66862 v -34.85929 c 0,-5.91042 4.7582,-10.66862 10.66862,-10.66862 z"
+             ry="10.668621"
+             transform="matrix(1.3240011,0,0,0.99738362,-53.86117,95.119712)" />
+        </g>
+        <g
+           id="layer11">
+          <g
+             id="layer15">
+            <path
+               style="fill:none;stroke:#000000;stroke-width:1.002;stroke-linecap:round;stroke-dasharray:none"
+               d="m 817.80977,190.55491 32.56152,0.24457"
+               id="path7" />
+            <path
+               style="fill:#000000;stroke:none;stroke-width:1.002;stroke-linecap:round;stroke-dasharray:none"
+               d="m 801.76809,190.79948 16.04168,-5.87042 v 11.25171 l -16.04168,-5.38129"
+               id="path4" />
+          </g>
+          <g
+             id="layer14">
+            <path
+               style="fill:none;stroke:#000000;stroke-width:0.985737;stroke-linecap:round"
+               id="rect4-5"
+               width="142.46307"
+               height="56.196533"
+               x="657.88953"
+               y="162.70122"
+               d="m 668.55815,162.70122 h 121.12583 c 5.91042,0 10.66862,4.7582 10.66862,10.66862 v 34.85929 c 0,5.91042 -4.7582,10.66862 -10.66862,10.66862 H 668.55815 c -5.91042,0 -10.66862,-4.7582 -10.66862,-10.66862 v -34.85929 c 0,-5.91042 4.7582,-10.66862 10.66862,-10.66862 z"
+               ry="10.668621"
+               transform="matrix(0.85344558,0,0,1.0013256,288.89838,-0.25292956)" />
+            <text
+               xml:space="preserve"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.3333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:1.002;stroke-linecap:round;stroke-dasharray:none"
+               x="878.9635"
+               y="194.70714"
+               id="text19"><tspan
+                 id="tspan19"
+                 x="878.9635"
+                 y="194.70714"
+                 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.3333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">Application</tspan></text>
+          </g>
+          <g
+             id="layer12">
+            <text
+               xml:space="preserve"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:1.002;stroke-linecap:round;stroke-dasharray:none"
+               x="701.15747"
+               y="189.24808"
+               id="text15-7"><tspan
+                 x="701.15747"
+                 y="189.24808"
+                 id="tspan16-8">Filesystem</tspan></text>
+            <text
+               xml:space="preserve"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:1.002;stroke-linecap:round;stroke-dasharray:none"
+               x="660.84729"
+               y="201.11359"
+               id="text17-6"><tspan
+                 id="tspan17-8"
+                 x="660.84729"
+                 y="201.11359">(Libraries, configuration, etc.)</tspan></text>
+            <path
+               style="fill:none;stroke:#000000;stroke-width:0.985737;stroke-linecap:round"
+               id="rect4"
+               width="142.46307"
+               height="56.196533"
+               x="657.88953"
+               y="162.70122"
+               d="m 668.55815,162.70122 h 121.12583 c 5.91042,0 10.66862,4.7582 10.66862,10.66862 v 34.85929 c 0,5.91042 -4.7582,10.66862 -10.66862,10.66862 H 668.55815 c -5.91042,0 -10.66862,-4.7582 -10.66862,-10.66862 v -34.85929 c 0,-5.91042 4.7582,-10.66862 10.66862,-10.66862 z"
+               ry="10.668621"
+               transform="matrix(1.009919,0,0,0.99991398,-6.5232075,0.01641284)" />
+          </g>
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:1.00157;stroke-linecap:round"
+             id="rect3"
+             width="332.78622"
+             height="102.84445"
+             x="650.22253"
+             y="132.3163"
+             ry="3.4055016" />
+          <text
+             xml:space="preserve"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:1.002;stroke-linecap:round;stroke-dasharray:none"
+             x="684.70227"
+             y="147.73199"
+             id="text13"><tspan
+               id="tspan13"
+               x="684.70227"
+               y="147.73199">Container</tspan></text>
+        </g>
+        <g
+           id="layer10">
+          <path
+             style="fill:none;stroke:#000000;stroke-width:0.985737;stroke-linecap:round"
+             id="rect4-7-6"
+             width="142.46307"
+             height="56.196533"
+             x="657.88953"
+             y="162.70122"
+             d="m 668.55815,162.70122 h 121.12583 c 5.91042,0 10.66862,4.7582 10.66862,10.66862 v 34.85929 c 0,5.91042 -4.7582,10.66862 -10.66862,10.66862 H 668.55815 c -5.91042,0 -10.66862,-4.7582 -10.66862,-10.66862 v -34.85929 c 0,-5.91042 4.7582,-10.66862 10.66862,-10.66862 z"
+             ry="10.668621"
+             transform="matrix(1.3286748,0,0,0.99734834,-265.34444,95.126444)" />
+          <text
+             xml:space="preserve"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.3333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:1.002;stroke-linecap:round;stroke-dasharray:none"
+             x="616.4577"
+             y="296.73959"
+             id="text17-4"><tspan
+               id="tspan17-7"
+               x="616.4577"
+               y="296.73959">(Libraries, configuration, etc.)</tspan></text>
+          <text
+             xml:space="preserve"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.3333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:1.002;stroke-linecap:round;stroke-dasharray:none"
+             x="670.79089"
+             y="281.48178"
+             id="text15-2"><tspan
+               x="670.79089"
+               y="281.48178"
+               id="tspan16-5">Filesystem</tspan></text>
+        </g>
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:1.002;stroke-linecap:round;stroke-dasharray:none"
+           x="734.35596"
+           y="120.05135"
+           id="text12"><tspan
+             id="tspan12"
+             x="734.35596"
+             y="120.05135">Virtual machine</tspan></text>
+        <rect
+           style="fill:none;stroke:#000000;stroke-width:1.00157;stroke-linecap:round"
+           id="rect2"
+           width="420.58774"
+           height="238.92194"
+           x="596.80481"
+           y="94.580528"
+           ry="3.4055016" />
+        <g
+           id="layer16">
+          <path
+             style="fill:#000000;stroke:none;stroke-width:1.002;stroke-linecap:round;stroke-dasharray:none"
+             d="m 911.49592,257.39524 -5.90055,-16.98747 11.0289,0.11141 z"
+             id="path5" />
+          <path
+             style="fill:none;stroke:#000000;stroke-width:1.002;stroke-linecap:round;stroke-dasharray:none"
+             d="m 911.10982,240.46348 0.0537,-21.52849"
+             id="path8" />
+        </g>
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:1.002;stroke-linecap:round;stroke-dasharray:none"
+         x="670.83813"
+         y="70.768227"
+         id="text11"><tspan
+           id="tspan11"
+           x="670.83813"
+           y="70.768227">Application running in container</tspan></text>
+    </g>
+    <g
+       id="layer1">
+      <g
+         id="layer3">
+        <g
+           id="layer4">
+          <text
+             xml:space="preserve"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.3333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:1.002;stroke-linecap:round;stroke-dasharray:none"
+             x="113.72599"
+             y="296.70847"
+             id="text17"><tspan
+               id="tspan17"
+               x="113.72599"
+               y="296.70847">(Libraries, configuration, etc.)</tspan></text>
+          <text
+             xml:space="preserve"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.3333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:1.002;stroke-linecap:round;stroke-dasharray:none"
+             x="168.05917"
+             y="281.45065"
+             id="text15"><tspan
+               x="168.05917"
+               y="281.45065"
+               id="tspan16">Filesystem</tspan></text>
+          <path
+             style="fill:none;stroke:#000000;stroke-width:0.985737;stroke-linecap:round"
+             id="rect4-7-9"
+             width="142.46307"
+             height="56.196533"
+             x="657.88953"
+             y="162.70122"
+             d="m 668.55815,162.70122 h 121.12583 c 5.91042,0 10.66862,4.7582 10.66862,10.66862 v 34.85929 c 0,5.91042 -4.7582,10.66862 -10.66862,10.66862 H 668.55815 c -5.91042,0 -10.66862,-4.7582 -10.66862,-10.66862 v -34.85929 c 0,-5.91042 4.7582,-10.66862 10.66862,-10.66862 z"
+             ry="10.668621"
+             transform="matrix(1.3286748,0,0,0.99734834,-767.9136,95.126445)" />
+        </g>
+        <g
+           id="layer7">
+          <path
+             style="fill:none;stroke:#000000;stroke-width:0.985737;stroke-linecap:round"
+             id="rect4-7-9-5"
+             width="142.46307"
+             height="56.196533"
+             x="657.88953"
+             y="162.70122"
+             d="m 668.55815,162.70122 h 121.12583 c 5.91042,0 10.66862,4.7582 10.66862,10.66862 v 34.85929 c 0,5.91042 -4.7582,10.66862 -10.66862,10.66862 H 668.55815 c -5.91042,0 -10.66862,-4.7582 -10.66862,-10.66862 v -34.85929 c 0,-5.91042 4.7582,-10.66862 10.66862,-10.66862 z"
+             ry="10.668621"
+             transform="matrix(1.3286748,0,0,0.99734834,-552.78877,95.126445)" />
+          <text
+             xml:space="preserve"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.3333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:1.002;stroke-linecap:round;stroke-dasharray:none"
+             x="396.87607"
+             y="290.12665"
+             id="text18"><tspan
+               id="tspan18"
+               x="396.87607"
+               y="290.12665">Kernel</tspan></text>
+        </g>
+        <g
+           id="layer8">
+          <path
+             style="fill:none;stroke:#000000;stroke-width:0.985737;stroke-linecap:round"
+             id="rect4-7-9-3"
+             width="142.46307"
+             height="56.196533"
+             x="657.88953"
+             y="162.70122"
+             d="m 668.55815,162.70122 h 121.12583 c 5.91042,0 10.66862,4.7582 10.66862,10.66862 v 34.85929 c 0,5.91042 -4.7582,10.66862 -10.66862,10.66862 H 668.55815 c -5.91042,0 -10.66862,-4.7582 -10.66862,-10.66862 v -34.85929 c 0,-5.91042 4.7582,-10.66862 10.66862,-10.66862 z"
+             ry="10.668621"
+             transform="matrix(0.84854,0,0,1.0013823,-308.58443,-26.116098)" />
+          <text
+             xml:space="preserve"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.3333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:1.002;stroke-linecap:round;stroke-dasharray:none"
+             x="277.90405"
+             y="168.35379"
+             id="text14"><tspan
+               id="tspan14"
+               x="277.90405"
+               y="168.35379">Application</tspan></text>
+        </g>
+        <g
+           id="layer6">
+          <path
+             style="fill:none;stroke:#000000;stroke-width:1.002;stroke-linecap:round;stroke-dasharray:none"
+             d="M 401.43154,248.29517 310.10396,193.08424"
+             id="path6" />
+          <path
+             style="fill:#000000;stroke:none;stroke-width:1.002;stroke-linecap:round;stroke-dasharray:none"
+             d="m 398.91078,252.54896 5.04152,-8.50757 12.02371,13.35484 z"
+             id="path3" />
+        </g>
+        <g
+           id="layer5">
+          <path
+             style="fill:none;stroke:#000000;stroke-width:1.002;stroke-linecap:round;stroke-dasharray:none"
+             d="m 214.81629,248.61027 95.28767,-55.52603"
+             id="path2" />
+          <path
+             style="fill:#000000;stroke:none;stroke-width:1.002;stroke-linecap:round;stroke-dasharray:none"
+             d="m 200.85118,257.39623 11.05048,-13.35484 5.82926,9.13776 z"
+             id="path1" />
+        </g>
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:1.002;stroke-linecap:round;stroke-dasharray:none"
+           x="224.34792"
+           y="119.73625"
+           id="text9"><tspan
+             id="tspan9"
+             x="224.34792"
+             y="119.73625">Virtual machine</tspan></text>
+        <rect
+           style="fill:none;stroke:#000000;stroke-width:1.00157;stroke-linecap:round"
+           id="rect1"
+           width="420.70221"
+           height="237.92036"
+           x="98.120445"
+           y="95.081314"
+           ry="3.4055016" />
+      </g>
+      <text
+         xml:space="preserve"
+         id="text8"
+         style="text-align:start;writing-mode:lr-tb;direction:ltr;white-space:pre;shape-inside:url(#rect8);display:inline;fill:none;stroke:#000000;stroke-width:1.002;stroke-linecap:round;stroke-dasharray:none"
+         transform="translate(2.5207632,-1.575477)"><tspan
+           x="126.03906"
+           y="72.343706"
+           id="tspan2"><tspan
+             style="font-size:18.6667px;-inkscape-font-specification:'sans-serif, Normal';fill:#000000;stroke:none"
+             id="tspan1">Application running directly in host system</tspan></tspan></text>
+    </g>
+  </g>
+</svg>
